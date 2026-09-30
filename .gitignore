@@ -1,0 +1,5 @@
+site/_preview/
+site/corpus.json
+site/repo/
+__pycache__/
+*.pyc
