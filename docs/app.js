@@ -27,8 +27,9 @@
       /* the canonical event names; legacy call sites map onto them */
       var ALIAS = { project_open: "project_opened", lab_note_open: "lab_note_opened",
                     recruiter_mode_open: "recruiter_mode_opened",
-                    ask_gaurav_question: "copilot_used", ask_gaurav_unanswered: "copilot_used",
-                    constellation_interaction: "corpus_opened", search_query: "corpus_opened" };
+                    ask_gaurav_question: "copilot_question", ask_gaurav_unanswered: "copilot_question",
+                    constellation_interaction: "corpus_opened", search_query: "corpus_opened",
+                    case_study_open: "study_opened" };
       if (ALIAS[event]) event = ALIAS[event];
       var rec = { event: event, at: Date.now() };
       if (payload) rec.detail = payload;
@@ -80,7 +81,7 @@
 
   /* ------------------------------------------------------------------ home */
   (function () {
-    var s = C.site_config, f = s.current_focus;
+    var s = C.site_config, f = s.current_focus, ob = s.orbit || {};
     var K = (window.GOS_CORPUS || { counts: {} }).counts;
     var m = document.getElementById("home-mount");
     var latest = C.lab_notes[0];
@@ -102,12 +103,14 @@
             }).join("") + '</div>' +
         '</div>' +
         '<div>' +
-          '<div class="orbit" id="orbit" aria-hidden="true">' +
+          '<div class="orbit" id="orbit" role="group" aria-label="Product orbit: the domains I work across and the loop I work in">' +
             '<div class="orbit-plane"><div class="ring r2"></div><div class="ring r1"></div></div>' +
-            '<div class="spin" id="ring-inner"></div><div class="spin" id="ring-outer"></div>' +
-            '<div class="orbit-core"><div class="om">GAURAV<span class="dot">.</span>OS</div><div class="ol">PRODUCT SYSTEM</div></div>' +
+            '<div class="spin" id="ring-inner"></div>' +
+            '<div class="orbit-core"><div class="om">' + esc((ob.core || "GAURAV.OS").replace(".", "\u0000")).replace("\u0000", '<span class="dot">.</span>') +
+              '</div><div class="ol">' + esc(ob.core_label || "") + '</div></div>' +
           '</div>' +
-          '<div class="orbit-cap">INNER: DOMAINS · OUTER: OPERATING LOOP</div>' +
+          '<div class="orbit-loop" id="orbit-loop"></div>' +
+          '<div class="orbit-cap" id="orbit-cap" data-rest="' + esc(ob.caption || "") + '">' + esc(ob.caption || "") + '</div>' +
         '</div>' +
       '</div>' +
       '<div class="panels">' +
@@ -163,32 +166,116 @@
   /* ----------------------------------------------------------- product orbit */
   (function () {
     var orbitEl = document.getElementById("orbit");
-    var inner = document.getElementById("ring-inner"), outer = document.getElementById("ring-outer");
+    var inner = document.getElementById("ring-inner");
     var core = document.querySelector(".orbit-core");
     if (!inner || !orbitEl) return;
-    var FLAT = 0.5, nodes = [];
-    function ring(mount, labels, speed, phase, lead) {
-      labels.forEach(function (lb, i) {
-        var n = el("div", "onode" + (lead ? " lead" : ""));
-        n.appendChild(el("span", null, lb));
+    var OB = (C.site_config.orbit) || {};
+    var cap = document.getElementById("orbit-cap");
+    var FLAT = 0.58, nodes = [];
+
+    /* A node explains itself. Hover or focus swaps the caption line for that
+       node's meaning; leaving restores it. The caption is the one place the
+       text appears, so it never collides with the diagram.                 */
+    function explain(txt) { if (cap) cap.textContent = txt || cap.getAttribute("data-rest") || ""; }
+
+    function ring(mount, items, speed, phase, lead) {
+      (items || []).forEach(function (it, i) {
+        var n = el("button", "onode" + (lead ? " lead" : ""));
+        n.type = "button";
+        n.appendChild(el("span", null, it.label));
+        if (it.blurb) {
+          n.setAttribute("aria-label", it.label + " — " + it.blurb);
+          n.title = it.blurb;
+          n.addEventListener("mouseenter", function () { explain(it.blurb); });
+          n.addEventListener("mouseleave", function () { explain(null); });
+          n.addEventListener("focus", function () { explain(it.blurb); });
+          n.addEventListener("blur", function () { explain(null); });
+          n.addEventListener("click", function () { explain(it.blurb); });
+        }
         mount.appendChild(n);
-        nodes.push({ el: n, base: (2 * Math.PI / labels.length) * i + phase, speed: speed, ring: lead ? "in" : "out" });
+        nodes.push({ el: n, base: (2 * Math.PI / (items.length || 1)) * i + phase,
+                     speed: speed, ring: lead ? "in" : "out" });
       });
     }
-    ring(inner, ["RESEARCH", "HEALTHCARE", "PRODUCT", "AI"], 0.052, Math.PI / 4, true);
-    ring(outer, ["BUILD", "MEASURE", "LEARN"], -0.034, 0, false);
+    ring(inner, OB.inner, 0.052, Math.PI / 4, true);
+
+    /* The operating loop sits beneath the diagram rather than on a second
+       ring. Two concentric rings of ~90px labels cannot pass each other in
+       this space without colliding, and a collision reads as a bug.       */
+    (function () {
+      var mount = document.getElementById("orbit-loop");
+      if (!mount) return;
+      (OB.outer || []).forEach(function (it, i) {
+        if (i) mount.appendChild(el("span", "loop-arr", "\u2192"));
+        var b = el("button", "loopchip"); b.type = "button";
+        b.appendChild(document.createTextNode(it.label));
+        if (it.blurb) {
+          b.setAttribute("aria-label", it.label + " \u2014 " + it.blurb);
+          b.title = it.blurb;
+          b.addEventListener("mouseenter", function () { explain(it.blurb); });
+          b.addEventListener("mouseleave", function () { explain(null); });
+          b.addEventListener("focus", function () { explain(it.blurb); });
+          b.addEventListener("blur", function () { explain(null); });
+        }
+        mount.appendChild(b);
+      });
+    })();
+
+    /* Below this width the labels cannot orbit without colliding, so the
+       diagram stops spinning and squares up instead of shrinking until it is
+       unreadable: inner domains at the four cardinal points, operating loop
+       listed beneath as text.                                              */
+    /* Whether there is room for labels to orbit without colliding. A label is
+       ~90px wide; below this box width they cannot pass each other, so the
+       diagram squares up instead of shrinking until it is unreadable.      */
+    var COMPACT_AT = 350;
+    function compact() { return orbitEl.clientWidth < COMPACT_AT; }
+
+    /* The core carries a wordmark; it has to stay legible and on one line as
+       the circle shrinks, and the sublabel is dropped once it no longer fits. */
+    function sizeCore(px) {
+      var om = core.querySelector(".om"), ol = core.querySelector(".ol");
+      if (om) { om.style.fontSize = Math.max(8, Math.min(12, px * 0.135)).toFixed(1) + "px";
+                om.style.whiteSpace = "nowrap"; om.style.letterSpacing = px < 80 ? ".04em" : ".1em"; }
+      if (ol) ol.style.display = px < 86 ? "none" : "";
+    }
 
     var innerR = 100, outerR = 150;
     function layout() {
       var w = orbitEl.clientWidth; if (!w) return;
+      orbitEl.classList.toggle("compact", compact());
+      if (compact()) {
+        innerR = Math.max(62, (w / 2) - 58);
+        var cs = Math.max(64, Math.min(92, w * 0.28));
+        core.style.width = cs + "px"; core.style.height = cs + "px";
+        sizeCore(cs);
+        var r1c = orbitEl.querySelector(".ring.r1"), r2c = orbitEl.querySelector(".ring.r2");
+        if (r1c) { r1c.style.width = (innerR * 200 / w) + "%"; r1c.style.height = r1c.style.width; }
+        if (r2c) { r2c.style.width = r1c ? r1c.style.width : "0%"; r2c.style.height = r2c.style.width; }
+        nodes.forEach(function (n, i) {
+          if (n.ring === "out") { n.el.style.transform = ""; n.el.style.opacity = ""; return; }
+          var a = -Math.PI / 2 + (Math.PI / 2) * i;      /* N, E, S, W */
+          n.el.style.transform = "translate(" + (Math.cos(a) * innerR) + "px," +
+                                 (Math.sin(a) * innerR * 0.78) + "px)";
+          n.el.style.opacity = "1"; n.el.style.zIndex = 4;
+        });
+        return;
+      }
+      /* One label ring now, so it takes the full radius. The core is sized to
+         clear it: a label is ~26px tall and the ring is flattened by FLAT, so
+         the vertical reach is R*FLAT and the core must stay inside that.    */
       var pad = w < 330 ? 46 : 56;
       outerR = Math.max(74, (w / 2) - pad);
-      var coreSize = Math.max(70, Math.min(104, w * 0.25));
-      innerR = Math.max(outerR * 0.66, coreSize / 2 + 48);
+      innerR = outerR;
+      /* the tight case is a label on the diagonal: its inner corner sits at
+         (R*cos45, R*FLAT*sin45) minus half the label, so the core stays well
+         inside that. */
+      var coreSize = Math.max(58, Math.min(72, Math.min(w * 0.2, (innerR * FLAT * 0.707 - 15) * 2)));
       core.style.width = coreSize + "px"; core.style.height = coreSize + "px";
+      sizeCore(coreSize);
       var r1 = orbitEl.querySelector(".ring.r1"), r2 = orbitEl.querySelector(".ring.r2");
       if (r1) { r1.style.width = (innerR * 200 / w) + "%"; r1.style.height = r1.style.width; }
-      if (r2) { r2.style.width = (outerR * 200 / w) + "%"; r2.style.height = r2.style.width; }
+      if (r2) { r2.style.width = (coreSize * 1.7 * 100 / w) + "%"; r2.style.height = r2.style.width; }
       place(0);
     }
     function place(t) {
@@ -208,7 +295,11 @@
     if (!reduce) {
       var running = true, t0 = null;
       if ("IntersectionObserver" in window) new IntersectionObserver(function (e) { running = e[0].isIntersecting; }).observe(orbitEl);
-      (function tick(ts) { if (t0 === null) t0 = ts; if (running) place((ts - t0) / 1000); requestAnimationFrame(tick); })(0);
+      (function tick(ts) {
+        if (t0 === null) t0 = ts;
+        if (running && !compact()) place((ts - t0) / 1000);   /* compact is static */
+        requestAnimationFrame(tick);
+      })(0);
     }
   })();
 

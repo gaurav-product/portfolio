@@ -125,7 +125,7 @@ match the tree, every GitHub link resolves, constellation renders, atlas search 
 every filter work, day-by-day navigation works, the copilot refuses unsupported
 questions, recruiter mode works, intro autoplay / skip / replay / no-forced-replay,
 reduced motion, keyboard navigation, no console errors and no horizontal overflow at
-any width. Current state: **71/71**.
+any width. Current state: **91/91**.
 
 ## GitHub Pages
 

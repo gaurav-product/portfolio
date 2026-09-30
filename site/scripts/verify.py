@@ -417,6 +417,121 @@ async def main():
         check("operating model reachable by keyboard",
               await k.evaluate("() => document.querySelector('.mstep').getAttribute('aria-pressed')==='true'"))
 
+        print("\n=== PRODUCT ORBIT ===")
+        ob = await page(1280, 1000)
+        o1 = await ob.evaluate("""() => {
+            const ns = [...document.querySelectorAll('#orbit .onode')];
+            return {count: ns.length, tags: [...new Set(ns.map(n => n.tagName))],
+                    labelled: ns.every(n => (n.getAttribute('aria-label')||'').includes('\u2014')),
+                    labels: ns.map(n => n.textContent.trim())}; }""")
+        check("orbit renders the 4 domains from content", o1["count"] == 4, o1["labels"])
+        lp = await ob.evaluate("""() => { const b = [...document.querySelectorAll('#orbit-loop .loopchip')];
+            return {n: b.length, labels: b.map(x => x.textContent.trim()),
+                    explained: b.every(x => (x.getAttribute('aria-label')||'').includes('\u2014'))}; }""")
+        check("operating loop renders beneath the diagram, each stage explained",
+              lp["n"] == 3 and lp["explained"], lp["labels"])
+        check("orbit nodes are real buttons, each explained", o1["tags"] == ["BUTTON"] and o1["labelled"], o1["tags"])
+        rest = await ob.evaluate("() => document.getElementById('orbit-cap').textContent")
+        await ob.evaluate("() => document.querySelector('#orbit .onode').dispatchEvent(new MouseEvent('mouseenter'))")
+        hov = await ob.evaluate("() => document.getElementById('orbit-cap').textContent")
+        check("hovering a node reveals its explanation", hov != rest and len(hov) > 30, hov[:60])
+        await ob.evaluate("() => document.querySelector('#orbit .onode').dispatchEvent(new MouseEvent('mouseleave'))")
+        back = await ob.evaluate("() => document.getElementById('orbit-cap').textContent")
+        check("leaving restores the caption", back == rest, back)
+        check("desktop keeps the rotating orbit, not the simplified one",
+              await ob.evaluate("() => !document.getElementById('orbit').classList.contains('compact')"), rest)
+        geo = await ob.evaluate("""() => {
+            const core = document.querySelector('.orbit-core').getBoundingClientRect();
+            const box = document.getElementById('orbit').getBoundingClientRect();
+            const r = [...document.querySelectorAll('#ring-inner .onode span')]
+                        .map(n => n.getBoundingClientRect()).filter(b => b.width > 0);
+            return {onCore: r.filter(b => !(b.right < core.left || core.right < b.left ||
+                                            b.bottom < core.top || core.bottom < b.top)).length,
+                    outside: r.filter(b => b.left < box.left - 1 || b.right > box.right + 1).length}; }""")
+        check("desktop: no label sits on the core", geo["onCore"] == 0, geo)
+        check("desktop: no label escapes the orbit box", geo["outside"] == 0, geo)
+        cw = await ob.evaluate("""() => { const c = document.querySelector('.orbit-core'),
+              om = c.querySelector('.om'), cb = c.getBoundingClientRect(), ob2 = om.getBoundingClientRect();
+            return {lines: Math.round(ob2.height / parseFloat(getComputedStyle(om).fontSize) / 1.2),
+                    fits: ob2.width <= cb.width - 2 && ob2.height <= cb.height - 2}; }""")
+        check("core wordmark stays on one line inside the circle",
+              cw["lines"] <= 1 and cw["fits"], cw)
+        check("labels are not hard-coded in the UI layer",
+              await ob.evaluate("() => !!(window.GOS_CONTENT && GOS_CONTENT.site_config.orbit && GOS_CONTENT.site_config.orbit.inner.length === 4)"))
+        await ob.close()
+
+        oc = await page(390, 844)
+        comp = await oc.evaluate("""() => {
+            const o = document.getElementById('orbit'), ns = [...o.querySelectorAll('#ring-inner .onode')];
+            const box = o.getBoundingClientRect();
+            const r = ns.map(n => n.querySelector('span').getBoundingClientRect());
+            let overlap = 0;
+            for (let i = 0; i < r.length; i++) for (let j = i + 1; j < r.length; j++)
+                if (!(r[i].right < r[j].left || r[j].right < r[i].left ||
+                      r[i].bottom < r[j].top || r[j].bottom < r[i].top)) overlap++;
+            const core = document.querySelector('.orbit-core').getBoundingClientRect();
+            let hitsCore = r.filter(b => !(b.right < core.left || core.right < b.left ||
+                                           b.bottom < core.top || core.bottom < b.top)).length;
+            return {compact: o.classList.contains('compact'), overlap: overlap, hitsCore: hitsCore,
+                    inside: r.every(b => b.left >= box.left - 1 && b.right <= box.right + 1),
+                    cap: document.getElementById('orbit-cap').textContent}; }""")
+        check("390: orbit simplifies instead of shrinking", comp["compact"], comp)
+        check("390: no label collides with another", comp["overlap"] == 0, comp["overlap"])
+        check("390: no label sits on the core", comp["hitsCore"] == 0, comp["hitsCore"])
+        check("390: labels stay inside the orbit box", comp["inside"], comp)
+        cw390 = await oc.evaluate("""() => { const c = document.querySelector('.orbit-core'),
+              om = c.querySelector('.om'), cb = c.getBoundingClientRect(), b = om.getBoundingClientRect();
+            return {fits: b.width <= cb.width - 2 && b.height <= cb.height - 2,
+                    lines: Math.round(b.height / parseFloat(getComputedStyle(om).fontSize) / 1.15)}; }""")
+        check("390: core wordmark stays on one line inside the circle",
+              cw390["fits"] and cw390["lines"] <= 1, cw390)
+        check("390: caption is the content caption, not a rewritten one",
+              "ORBIT" in comp["cap"], comp["cap"])
+        check("390: operating loop still present beneath the orbit",
+              await oc.evaluate("() => document.querySelectorAll('#orbit-loop .loopchip').length") == 3)
+        await oc.screenshot(path=str(OUT / "orbit-390.png"))
+        await oc.close()
+
+        ot = await page(768, 1024)
+        t768 = await ot.evaluate("""() => {
+            const r = [...document.querySelectorAll('#orbit .onode span')].map(n => n.getBoundingClientRect()).filter(b => b.width > 0 && b.height > 0);
+            let overlap = 0;
+            for (let i = 0; i < r.length; i++) for (let j = i + 1; j < r.length; j++)
+                if (!(r[i].right < r[j].left || r[j].right < r[i].left ||
+                      r[i].bottom < r[j].top || r[j].bottom < r[i].top)) overlap++;
+            return {compact: document.getElementById('orbit').classList.contains('compact'), overlap}; }""")
+        check("768: orbit is the simplified one and does not collide",
+              t768["compact"] and t768["overlap"] == 0, t768)
+        await ot.close()
+
+        ol = await page(1024, 900)
+        t1024 = await ol.evaluate("""() => {
+            const r = [...document.querySelectorAll('#orbit .onode span')].map(n => n.getBoundingClientRect()).filter(b => b.width > 0 && b.height > 0);
+            let overlap = 0;
+            for (let i = 0; i < r.length; i++) for (let j = i + 1; j < r.length; j++)
+                if (!(r[i].right < r[j].left || r[j].right < r[i].left ||
+                      r[i].bottom < r[j].top || r[j].bottom < r[i].top)) overlap++;
+            return {compact: document.getElementById('orbit').classList.contains('compact'), overlap}; }""")
+        check("1024: orbit does not collide", t1024["overlap"] == 0, t1024)
+        await ol.close()
+
+        # the rotating orbit, sampled through a full revolution
+        od = await page(1440, 900)
+        worst = 0
+        for _ in range(12):
+            await od.wait_for_timeout(450)
+            n = await od.evaluate("""() => {
+                const r = [...document.querySelectorAll('#orbit .onode span')].map(n => n.getBoundingClientRect()).filter(b => b.width > 0 && b.height > 0);
+                let o = 0;
+                for (let i = 0; i < r.length; i++) for (let j = i + 1; j < r.length; j++)
+                    if (!(r[i].right < r[j].left || r[j].right < r[i].left ||
+                          r[i].bottom < r[j].top || r[j].bottom < r[i].top)) o++;
+                return o; }""")
+            worst = max(worst, n)
+        check("1440: rotating labels never collide, sampled through a revolution",
+              worst == 0, "worst overlap: %d" % worst)
+        await od.close()
+
         print("\n=== TABLET / MOBILE ===")
         for w, h, name in ((1440, 900, "xl"), (1024, 900, "l"), (768, 1024, "t"), (390, 844, "m")):
             pg = await page(w, h)

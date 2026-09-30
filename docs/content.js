@@ -48,6 +48,24 @@ window.GOS_CONTENT = {
       exploring: { label: "CURRENTLY EXPLORING", value: "AI Product Management", note: "Where AI earns its place in a product — and where it shouldn't be" },
       writing: { label: "CURRENTLY WRITING", value: "Lab Notes", note: "Five drafts in the queue" }
     },
+    /* The Product Orbit. Labels and their explanations live here, not in the
+       UI — app.js reads this and renders whatever it finds.                 */
+    orbit: {
+      core: "GAURAV.OS",
+      core_label: "PRODUCT SYSTEM",
+      caption: "ORBIT: DOMAINS · BELOW: OPERATING LOOP",
+      inner: [
+        { label: "RESEARCH",   blurb: "Evidence, experimentation, psychometrics and structured inquiry." },
+        { label: "HEALTHCARE", blurb: "Designing responsibly in high-stakes domains." },
+        { label: "PRODUCT",    blurb: "Problem framing, prioritization, experimentation and decision making." },
+        { label: "AI",         blurb: "AI-enabled product thinking, evaluation, orchestration and applied systems." }
+      ],
+      outer: [
+        { label: "BUILD",   blurb: "Ship the smallest thing that can be judged." },
+        { label: "MEASURE", blurb: "Instrument it before it ships, or the result is an opinion." },
+        { label: "LEARN",   blurb: "Write down what changed — including what did not work." }
+      ]
+    },
     featured_project: "aaroh",
     current_experiment: "exp-001",
     product_question: {
@@ -595,12 +613,15 @@ window.GOS_CONTENT = {
       created_at: "2026-09-30", used_by: ["intro", "og:image"], status: "LIVE" }
   ],
 
-  /* ------------------------------------------------- analytics event names */
+  /* ------------------------------------------------- analytics event names
+     The canonical names, as they reach the data layer. Call sites may use
+     older names; app.js maps those onto these. Event names and a timestamp
+     only — no identifiers, no personal data, no third-party beacons.      */
   analytics_events: [
-    "portfolio_view", "project_open", "aaroh_open", "careconnect_open", "phonepe_open",
-    "ghargyaan_open", "nexus_open", "ask_gaurav_question", "ask_gaurav_unanswered",
-    "lab_note_open", "challenge_started", "challenge_completed", "recruiter_mode_open",
-    "search_query", "intro_played", "intro_skipped", "resume_click", "linkedin_click",
-    "github_click", "contact_click"
+    "portfolio_view",
+    "intro_started", "intro_completed", "intro_skipped", "intro_replayed", "intro_failed",
+    "project_opened", "study_opened", "corpus_opened",
+    "copilot_question", "challenge_started", "challenge_completed",
+    "lab_note_opened", "recruiter_mode_opened"
   ]
 };
