@@ -586,6 +586,55 @@ async def main():
               await rs.evaluate("() => !document.querySelector('.reader')"))
         await rs.close()
 
+        print("\n=== PRODUCTION QUALITY BAR ===")
+        qb = await page(1280, 1000)
+        await qb.evaluate("() => { document.querySelectorAll('section.mod').forEach(s => s.scrollIntoView()); window.scrollTo(0,0); }")
+        await qb.wait_for_timeout(900)
+        q = await qb.evaluate("""() => {
+            const bad = {};
+            // href/src that resolved to a literal null or undefined
+            bad.nullAttrs = [...document.querySelectorAll('[href],[src]')]
+                .map(e => e.getAttribute('href') || e.getAttribute('src'))
+                .filter(v => v === 'null' || v === 'undefined' || v === '');
+            // internal anchors must point at an element that exists
+            bad.deadAnchors = [...document.querySelectorAll('a[href^=\"#\"]')]
+                .map(a => a.getAttribute('href')).filter(h => h.length > 1)
+                .filter(h => { try { return !document.querySelector(h); } catch (e) { return true; } });
+            // every GitHub link is absolute and points at one of the two repos
+            bad.badGithub = [...document.querySelectorAll('a[href*=\"github\"]')]
+                .map(a => a.getAttribute('href'))
+                .filter(h => !/^https:\/\/github\.com\/gaurav-product(\/|$)/.test(h));
+            // media referenced by the content layer
+            const C = window.GOS_CONTENT || {};
+            bad.media = (C.media || []).map(m => m.path).filter(Boolean);
+            bad.resume = (C.site_config.contact.resume || {}).file || null;
+            // interactive elements that are real buttons/links, not divs
+            bad.fakeButtons = [...document.querySelectorAll('[onclick],[role=\"button\"]')]
+                .filter(e => !['BUTTON','A'].includes(e.tagName)).length;
+            return bad; }""")
+        check("no href/src resolves to null, undefined or empty", len(q["nullAttrs"]) == 0, q["nullAttrs"][:5])
+        check("every internal anchor points at a real section", len(q["deadAnchors"]) == 0, q["deadAnchors"][:5])
+        check("every GitHub link is absolute and in the owner's namespace", len(q["badGithub"]) == 0, q["badGithub"][:3])
+        check("no div pretending to be a button", q["fakeButtons"] == 0, q["fakeButtons"])
+
+        # every media path the content layer names is actually fetchable
+        missing = []
+        for m in q["media"] + ([q["resume"]] if q["resume"] else []):
+            st = await qb.evaluate("""async (p) => { try { const r = await fetch(p, {method: 'GET'});
+                return r.status; } catch (e) { return 0; } }""", m)
+            if st != 200:
+                missing.append((m, st))
+        check("every media path in the content layer resolves", not missing, missing)
+
+        # buttons that do nothing: no listener, no form, no handler attribute
+        dead = await qb.evaluate("""() => [...document.querySelectorAll('button')]
+            .filter(b => !b.disabled && !b.onclick && !b.getAttribute('data-ev') &&
+                         !b.form && !b.closest('form'))
+            .filter(b => !(window.__gosHasListener && window.__gosHasListener(b)))
+            .length""")
+        print("  NOTE  buttons without an inline handler (listeners are not observable): %d" % dead)
+        await qb.close()
+
         print("\n=== TABLET / MOBILE ===")
         for w, h, name in ((1440, 900, "xl"), (1024, 900, "l"), (768, 1024, "t"), (390, 844, "m"), (360, 800, "xs")):
             pg = await page(w, h)
