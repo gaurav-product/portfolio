@@ -123,6 +123,8 @@
         '<a class="btn btn-secondary" href="#ask">ASK GAURAV</a>' +
         '<button class="btn btn-secondary" id="hero-recruiter" aria-pressed="false">RECRUITER MODE</button>' +
         '<button class="btn btn-secondary" id="hero-intro">▶ WATCH INTRO · ' + esc(C.intro.duration_note) + '</button>' +
+        (s.contact.resume && s.contact.resume.file ? '<a class="btn btn-secondary" data-ev="resume_clicked" href="' + esc(s.contact.resume.file) +
+          '" download="' + esc(s.contact.resume.filename) + '">' + esc(s.contact.resume.label) + ' ↓</a>' : "") +
       '</div>' +
       '<div class="corpus-tease">' +
         '<div class="ct-lines"><span>90 DAYS</span><span>90 PRODUCT PROBLEMS</span><span class="hot">1 PRODUCT MIND</span></div>' +
@@ -716,8 +718,52 @@
       inner.appendChild(el("div", "chips", '<span class="chip gold">' + esc(n.status) + ' · NOT PUBLISHED</span>' +
         n.tags.map(function (t) { return '<span class="chip dim">' + esc(t) + '</span>'; }).join("")));
       inner.appendChild(el("div", "reader-body", n.content));
+
+      /* sources and the project a note belongs to — rendered only when the
+         record carries them, never invented to fill the shape.            */
+      if (n.sources && n.sources.length) {
+        inner.appendChild(el("h4", "rd-h", "SOURCES"));
+        inner.appendChild(el("ul", "rd-src", n.sources.map(function (sr) {
+          return sr.url ? '<li><a href="' + esc(sr.url) + '" target="_blank" rel="noopener">' + esc(sr.title || sr.url) + '</a></li>'
+                        : '<li>' + esc(sr.title || sr) + '</li>';
+        }).join("")));
+      }
+      var rel = n.related_project && C.projects.filter(function (p) { return p.id === n.related_project; })[0];
+      if (rel) {
+        var rl = el("a", "chip gold", "RELATED: " + esc((rel.name || rel.title || rel.id).toUpperCase()));
+        rl.href = "#work"; rl.addEventListener("click", closeReader);
+        var rw = el("div", "chips"); rw.style.marginTop = "18px"; rw.appendChild(rl);
+        inner.appendChild(rw);
+      }
+
+      /* previous / next through the notes, in the order the archive shows   */
+      var all = C.lab_notes, idx = all.indexOf(n);
+      var nav = el("div", "cs-nav");
+      var prev = el("button", "ghost-btn", "← PREVIOUS NOTE");
+      var next = el("button", "ghost-btn", "NEXT NOTE →");
+      if (idx <= 0) prev.disabled = true;
+      if (idx < 0 || idx >= all.length - 1) next.disabled = true;
+      prev.addEventListener("click", function () { if (idx > 0) { closeReader(); openReader(all[idx - 1]); } });
+      next.addEventListener("click", function () { if (idx < all.length - 1) { closeReader(); openReader(all[idx + 1]); } });
+      var copy = el("button", "ghost-btn", "COPY LINK");
+      copy.addEventListener("click", function () {
+        var url = location.origin + location.pathname + "#note-" + (n.slug || n.id);
+        try { location.hash = "note-" + (n.slug || n.id); } catch (e) {}
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () { copy.textContent = "LINK COPIED"; },
+                                                  function () { copy.textContent = url; });
+        } else { copy.textContent = url; }
+      });
+      nav.appendChild(prev); nav.appendChild(copy); nav.appendChild(next);
+      inner.appendChild(nav);
+      readerEl.__nav = { prev: prev, next: next };
       readerEl.appendChild(inner);
       readerEl.addEventListener("click", function (e) { if (e.target === readerEl) closeReader(); });
+      readerEl.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowLeft" && !prev.disabled) { e.preventDefault(); prev.click(); }
+        if (e.key === "ArrowRight" && !next.disabled) { e.preventDefault(); next.click(); }
+      });
+      readerEl.tabIndex = -1;
       document.body.appendChild(readerEl);
       close.focus();
       GOS.track("lab_note_open", n.id);
@@ -824,7 +870,7 @@
         '<a class="link" data-ev="github_click" href="https://' + ct.github + '" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">' + esc(ct.github) + '</span></a>' +
         '<a class="link" data-ev="contact_click" href="mailto:' + ct.email + '"><span class="k">Email</span><span class="v">' + esc(ct.email) + '</span></a>' +
         '<a class="link" data-ev="contact_click" href="tel:' + ct.phone.replace(/\s/g, "") + '"><span class="k">Phone</span><span class="v">' + esc(ct.phone) + '</span></a>' +
-        '<a class="link" data-ev="resume_click" href="mailto:' + ct.email + '?subject=Resume%20request"><span class="k">Resume</span><span class="v">' + esc(ct.resume_note) + ' →</span></a>' +
+        (ct.resume && ct.resume.file ? '<a class="link" data-ev="resume_clicked" href="' + esc(ct.resume.file) + '" download="' + esc(ct.resume.filename) + '"><span class="k">Resume</span><span class="v">' + esc(ct.resume.label) + ' ↓</span></a>' : "") +
       '</div>' +
       '<footer>Built by ' + esc(C.site_config.owner) + ' · ' + esc(C.site_config.role) + ' · ' + esc(C.site_config.discipline) + '<br>' +
       '<span style="color:var(--muted)">' + esc(C.site_config.location) + ' · ' + esc(C.site_config.version) + ' · content updated ' + esc(C.site_config.updated) + '</span></footer>';
@@ -845,7 +891,7 @@
           '<a class="chip" data-ev="contact_click" href="mailto:' + ct.email + '">EMAIL →</a>' +
           '<a class="chip" data-ev="linkedin_click" href="https://' + ct.linkedin + '" target="_blank" rel="noopener">LINKEDIN →</a>' +
           '<a class="chip" data-ev="github_click" href="https://' + ct.github + '" target="_blank" rel="noopener">GITHUB →</a>' +
-          '<a class="chip" data-ev="resume_click" href="mailto:' + ct.email + '?subject=Resume%20request">RESUME →</a>' +
+          (ct.resume && ct.resume.file ? '<a class="chip gold" data-ev="resume_clicked" href="' + esc(ct.resume.file) + '" download="' + esc(ct.resume.filename) + '">' + esc(ct.resume.label) + ' ↓</a>' : "") +
         '</div>' +
       '</header>' +
 
@@ -896,7 +942,7 @@
           '<a class="link" href="https://' + ct.github + '" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">' + esc(ct.github) + '</span></a>' +
           '<a class="link" href="mailto:' + ct.email + '"><span class="k">Email</span><span class="v">' + esc(ct.email) + '</span></a>' +
           '<a class="link" href="tel:' + ct.phone.replace(/\s/g, "") + '"><span class="k">Phone</span><span class="v">' + esc(ct.phone) + '</span></a>' +
-          '<a class="link" href="mailto:' + ct.email + '?subject=Resume%20request"><span class="k">Resume</span><span class="v">' + esc(ct.resume_note) + ' →</span></a>' +
+          (ct.resume && ct.resume.file ? '<a class="link" data-ev="resume_clicked" href="' + esc(ct.resume.file) + '" download="' + esc(ct.resume.filename) + '"><span class="k">Resume</span><span class="v">' + esc(ct.resume.label) + ' ↓</span></a>' : "") +
         '</div>' +
         '<p class="small" style="margin-top:var(--s2)">Recruiter Mode is the fast view. Switch back for the case studies, decision logs and the portfolio copilot.</p>' +
       '</section>';

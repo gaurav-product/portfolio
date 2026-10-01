@@ -39,7 +39,18 @@ window.GOS_CONTENT = {
       phone: "+91 81275 12340",
       linkedin: "linkedin.com/in/gaurav-singh-product",
       github: "github.com/gaurav-product",
-      resume_note: "Request the PDF by email"
+      /* DOWNLOAD RESUME appears in the hero, Contact and Recruiter Mode the
+         moment `file` names a real PDF. Drop the PDF into site/media/, set the
+         path here, rebuild — no UI file is touched. It is left null because
+         the CV carries a phone number and address, and publishing that to a
+         public repository is your decision to make, not mine.              */
+      resume: {
+        file: null,
+        intended_file: "media/gaurav-kumar-singh-apm-resume.pdf",
+        label: "DOWNLOAD RESUME",
+        filename: "Gaurav-Kumar-Singh-APM-Resume.pdf",
+        note: "The same CV every record on this site is checked against."
+      }
     },
     /* homepage auto-fills from these pointers — never edit the UI for this */
     current_focus: {
@@ -269,6 +280,7 @@ window.GOS_CONTENT = {
       title: "What building an AI health product taught me about AI UX",
       date: "Sep 2026", date_note: "Draft", category: "AI Product",
       tags: ["Aaroh", "AI UX", "Constraints"], reading_time: "4 min",
+      related_project: "aaroh", sources: [],
       status: "DRAFT", featured: true, published: false, cover_image: null,
       excerpt: "The most important interface decision in Aaroh was a refusal.",
       content: "<p>Every AI health product faces the same fork in the first week of design: do you let the model name the thing, or not?</p><h4>The constraint</h4><p>Aaroh's answer is written into the product as an invariant — understand, explain, recommend, support, and never diagnose. It is not a disclaimer at the bottom of a screen. It is a rule that decides whether a user story passes review.</p><h4>What that does to the UX</h4><p>Once the product cannot hand over a label, the entire interface has to earn trust another way. Intake stops being a form and becomes a conversation that structures what the person already knows about themselves. The output stops being a verdict and becomes a map of contributing factors a person can read, disagree with, and take to a practitioner.</p><h4>The uncomfortable part</h4><p>This is a worse demo. A product that says \"here is what you likely have\" lands harder in thirty seconds than one that says \"here is what seems to be contributing, and here is who to talk to.\"</p><p>My bet is that the second one survives contact with a real user's second week. That bet is currently unvalidated — Aaroh has no live users — and I would rather say so than dress a design principle up as a proven result.</p>"

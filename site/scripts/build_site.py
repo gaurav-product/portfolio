@@ -69,6 +69,15 @@ def main():
     # Pages serves paths beginning with an underscore oddly; .nojekyll disables Jekyll.
     (DIST / ".nojekyll").write_text("")
 
+    # every media path the content layer names must actually ship
+    content = "\n".join(l for l in (ROOT / "content.js").read_text(encoding="utf-8").splitlines()
+                        if "intended_file" not in l)
+    import re as _re
+    missing = [m for m in sorted(set(_re.findall(r'"(media/[^"]+)"', content)))
+               if not (DIST / m).exists()]
+    for m in missing:
+        print("  MISSING: content.js references %s, which is not in the build" % m)
+
     total = sum(f.stat().st_size for f in DIST.rglob("*") if f.is_file())
     print("built docs/ — %d files, %.1f KB" %
           (len(list(DIST.rglob("*"))), total / 1024))

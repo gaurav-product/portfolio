@@ -532,8 +532,62 @@ async def main():
               worst == 0, "worst overlap: %d" % worst)
         await od.close()
 
+        print("\n=== RESUME, SEO, READER ===")
+        rs = await page(1280, 1000)
+        seo = await rs.evaluate("""() => ({title: document.title,
+            og: (document.querySelector('meta[property=\"og:title\"]')||{}).content,
+            desc: (document.querySelector('meta[name=\"description\"]')||{}).content,
+            ogimg: (document.querySelector('meta[property=\"og:image\"]')||{}).content,
+            ogurl: (document.querySelector('meta[property=\"og:url\"]')||{}).content})""")
+        check("title is the one the brief specifies",
+              seo["title"] == "Gaurav Kumar Singh \u2014 AI Product Manager | GAURAV.OS", seo["title"])
+        check("Open Graph title matches", seo["og"] == seo["title"], seo["og"])
+        check("OG image is the poster", seo["ogimg"] == "media/gaurav-os-poster.jpg", seo["ogimg"])
+        check("no production domain invented", not seo["ogurl"], seo["ogurl"])
+
+        res = await rs.evaluate("""() => {
+            const r = (window.GOS_CONTENT||{}).site_config.contact.resume || {};
+            const links = [...document.querySelectorAll('[data-ev=\"resume_clicked\"]')];
+            return {file: r.file, shown: links.length,
+                    hrefs: links.map(a => a.getAttribute('href')),
+                    dl: links.every(a => a.hasAttribute('download'))}; }""")
+        if res["file"]:
+            check("resume download renders and points at the shipped file",
+                  res["shown"] >= 1 and res["dl"] and all(h == res["file"] for h in res["hrefs"]), res)
+        else:
+            check("no resume link is rendered while no PDF is supplied (no 404 button)",
+                  res["shown"] == 0, res)
+
+        # lab note reader: navigation, copy link, no invented sections
+        await rs.evaluate("() => document.getElementById('lab').scrollIntoView()")
+        await rs.wait_for_timeout(400)
+        await rs.evaluate("() => document.querySelector('.note-card').click()")
+        await rs.wait_for_timeout(400)
+        rd = await rs.evaluate("""() => { const r = document.querySelector('.reader');
+            if (!r) return null;
+            const b = [...r.querySelectorAll('.cs-nav button')].map(x => x.textContent.trim());
+            return {open: true, nav: b, body: !!r.querySelector('.reader-body'),
+                    srcShown: !!r.querySelector('.rd-src'),
+                    related: !!r.querySelector('.chip.gold')}; }""")
+        check("note reader opens with previous / copy / next", bool(rd) and len(rd["nav"]) == 3, rd and rd["nav"])
+        check("no empty SOURCES block when the note has none", bool(rd) and not rd["srcShown"], rd)
+        copied = await rs.evaluate("""() => { const b = [...document.querySelectorAll('.reader .cs-nav button')]
+                .find(x => /COPY/.test(x.textContent)); b.click(); return true; }""")
+        await rs.wait_for_timeout(300)
+        check("copy link sets a shareable hash", "#note-" in await rs.evaluate("() => location.hash || ''"),
+              await rs.evaluate("() => location.hash"))
+        await rs.keyboard.press("ArrowRight")
+        await rs.wait_for_timeout(400)
+        check("arrow keys move between notes",
+              await rs.evaluate("() => !!document.querySelector('.reader')"))
+        await rs.keyboard.press("Escape")
+        await rs.wait_for_timeout(300)
+        check("Escape closes the note reader",
+              await rs.evaluate("() => !document.querySelector('.reader')"))
+        await rs.close()
+
         print("\n=== TABLET / MOBILE ===")
-        for w, h, name in ((1440, 900, "xl"), (1024, 900, "l"), (768, 1024, "t"), (390, 844, "m")):
+        for w, h, name in ((1440, 900, "xl"), (1024, 900, "l"), (768, 1024, "t"), (390, 844, "m"), (360, 800, "xs")):
             pg = await page(w, h)
             o = await pg.evaluate(PROBE)
             check(f"{w} no horizontal overflow", o[0] <= o[1], o)
