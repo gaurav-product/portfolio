@@ -482,6 +482,23 @@
       list.forEach(function (s) { var a = el("a", "chip gold", s[0]); a.href = "#" + s[1]; row.appendChild(a); });
       return row;
     }
+
+    /* Corpus figures inside copilot answers are written as {{token}} and resolved
+       from the generated corpus at render time. Hand-typed numbers go stale the
+       moment the repository changes; these cannot. */
+    function corpusFigures(html) {
+      var K = (window.GOS_CORPUS || {}).counts || {};
+      var n = function (v) { return typeof v === "number" ? v.toLocaleString("en-US") : "NOT DOCUMENTED"; };
+      var map = {
+        written: n(K.written), directories: n(K.directories), empty: n(K.empty),
+        sources: n(K.sources), assumption_files: n(K.assumption_files), verified: n(K.verified),
+        words_m: typeof K.words === "number" ? (K.words / 1e6).toFixed(2).replace(/0$/, "") : "NOT DOCUMENTED"
+      };
+      return String(html).replace(/\{\{(\w+)\}\}/g, function (m, k) {
+        return Object.prototype.hasOwnProperty.call(map, k) ? map[k] : m;
+      });
+    }
+
     function answer(q, entry) {
       if (askBusy) return; askBusy = true;
       addMsg("you", "<p>" + esc(q) + "</p>");
@@ -496,7 +513,7 @@
           trace(-1);
           GOS.track("ask_gaurav_unanswered", "no_evidence_figure");
         } else if (entry) {
-          body.innerHTML = entry.a;
+          body.innerHTML = corpusFigures(entry.a);
           body.appendChild(el("div", "grounded", "◆ GROUNDED IN PORTFOLIO EVIDENCE"));
           body.appendChild(sources(entry.sources));
           trace(4);

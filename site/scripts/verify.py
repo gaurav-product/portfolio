@@ -220,7 +220,34 @@ async def main():
         await d.click(".ask-send")
         await d.wait_for_timeout(1900)
         t2 = await d.inner_text("#thread")
-        check("copilot answers corpus question with sources", "89" in t2 and "SOURCE:" in t2)
+        check("copilot answers corpus question with sources", "SOURCE:" in t2)
+        # The figures inside copilot answers are {{tokens}} resolved from the generated
+        # corpus at render time. These assertions read the live corpus, so they cannot
+        # be satisfied by a hand-typed number that happens to match today.
+        live = await d.evaluate("() => window.GOS_CORPUS.counts")
+        fmt = lambda v: "{:,}".format(v)
+        check("the corpus answer quotes the generated written count",
+              fmt(live["written"]) in t2, {"written": fmt(live["written"])})
+        check("the corpus answer quotes the generated source count",
+              fmt(live["sources"]) in t2, {"sources": fmt(live["sources"])})
+        check("the corpus answer quotes the generated empty count",
+              fmt(live["empty"]) in t2, {"empty": fmt(live["empty"])})
+        check("no copilot answer leaks an unresolved {{token}}",
+              "{{" not in t2 and "}}" not in t2)
+        check("no knowledge-base answer contains a hand-typed corpus figure",
+              await d.evaluate("""() => {
+                  const stale = ['89 written','1 empty','1,099,524','1,382'];
+                  return GOS_CONTENT.copilot_kb.every(e =>
+                      !stale.some(x => String(e.a).includes(x)));
+              }"""))
+        check("every {{token}} used in the knowledge base resolves",
+              await d.evaluate("""() => {
+                  const K = window.GOS_CORPUS.counts, ok = ['written','directories','empty',
+                      'sources','assumption_files','verified','words_m'];
+                  return GOS_CONTENT.copilot_kb.every(e =>
+                      (String(e.a).match(/\{\{(\w+)\}\}/g) || []).every(m =>
+                          ok.includes(m.slice(2,-2))));
+              }"""))
         await d.screenshot(path=str(OUT / "d-ask.png"))
 
         # day-by-day navigation inside a study
