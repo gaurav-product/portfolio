@@ -124,9 +124,16 @@ async def main():
 
         # corpus counts rendered from the repo
         counts = await d.evaluate("() => window.GOS_CORPUS.counts")
-        check("corpus loaded: 90 dirs / 89 written", counts["directories"] == 90 and counts["written"] == 89, counts)
+        check("corpus counts are internally consistent",
+              counts["directories"] == 90 and counts["written"] + counts["empty"] == counts["directories"], counts)
         check("Day 90 present", await d.evaluate("() => window.GOS_CORPUS.studies.some(s=>s.day===90)"))
-        check("Day 74 flagged empty", await d.evaluate("() => window.GOS_CORPUS.studies.find(s=>s.day===74).empty === true"))
+        empty_days = await d.evaluate("() => window.GOS_CORPUS.studies.filter(s=>s.empty).map(s=>s.day)")
+        check("empty studies in the data match the empty count",
+              len(empty_days) == counts["empty"], empty_days)
+        check("Day 74 (Cipla) is written, not hollow",
+              await d.evaluate("() => { const s = window.GOS_CORPUS.studies.find(x=>x.day===74);\n                  return !!s && s.empty === false && s.words > 1000; }"))
+        check("the Day 74 / Day 75 numbering anomaly is still surfaced",
+              await d.evaluate("() => (window.GOS_CORPUS.anomalies.day_mismatch||[]).some(m=>m.day===74 && m.internal===75)"))
 
         ov = await d.evaluate(PROBE)
         check("1280 no horizontal overflow", ov[0] <= ov[1], ov)
@@ -168,9 +175,14 @@ async def main():
         await d.wait_for_timeout(350)
         check("day-range filter works", "30 OF 90" in await d.inner_text("#atlas-count"), await d.inner_text("#atlas-count"))
         await d.evaluate("""() => [...document.querySelectorAll('#f-day button')].find(b=>b.textContent==='ALL').click()""")
-        await d.evaluate("""() => [...document.querySelectorAll('#f-comp button')].find(b=>b.textContent.includes('MISSING')).click()""")
-        await d.wait_for_timeout(350)
-        check("completeness filter isolates the empty study", "1 OF 90" in await d.inner_text("#atlas-count"), await d.inner_text("#atlas-count"))
+        has_missing = await d.evaluate("""() => !![...document.querySelectorAll('#f-comp button')].find(b=>b.textContent.includes('MISSING'))""")
+        if has_missing:
+            await d.evaluate("""() => [...document.querySelectorAll('#f-comp button')].find(b=>b.textContent.includes('MISSING')).click()""")
+            await d.wait_for_timeout(350)
+            check("completeness filter matches the empty count",
+                  ("%d OF 90" % counts["empty"]) in await d.inner_text("#atlas-count"), await d.inner_text("#atlas-count"))
+        else:
+            check("no MISSING filter offered because no study is empty", counts["empty"] == 0, counts["empty"])
         await d.evaluate("""() => [...document.querySelectorAll('#f-comp button')].find(b=>b.textContent==='ALL').click()""")
         await d.screenshot(path=str(OUT / "d-atlas.png"))
         await d.evaluate("""() => [...document.querySelectorAll('#f-cat button')].find(b=>b.textContent==='ALL').click()""")
@@ -190,7 +202,10 @@ async def main():
               await d.evaluate("""() => { const s=window.GOS_CORPUS.stages.map(x=>x.studies.map(y=>y.day).join());
                 return new Set(s).size === s.length; }"""))
         check("validation flags computed", await d.evaluate("() => Object.keys(window.GOS_CORPUS.validation_summary).length") >= 5)
-        check("completeness status present", await d.evaluate("() => window.GOS_CORPUS.completeness_counts.MISSING === 1"))
+        check("completeness counts cover every study",
+              await d.evaluate("""() => Object.values(window.GOS_CORPUS.completeness_counts)
+                  .reduce((a,b)=>a+b,0) === window.GOS_CORPUS.counts.directories"""),
+              await d.evaluate("() => window.GOS_CORPUS.completeness_counts"))
         await d.screenshot(path=str(OUT / "d-method.png"))
 
         # copilot: must refuse, must not topic-match into a company answer
@@ -224,10 +239,13 @@ async def main():
         await d.wait_for_timeout(300)
 
         # completeness filter isolates the missing study
-        await d.evaluate("""() => [...document.querySelectorAll('#f-comp button')].find(b=>b.textContent.indexOf('MISSING')>-1).click()""")
-        await d.wait_for_timeout(400)
-        check("completeness filter finds exactly the empty study",
-              "1 OF 90" in await d.inner_text("#atlas-count"), await d.inner_text("#atlas-count"))
+        if await d.evaluate("""() => !![...document.querySelectorAll('#f-comp button')].find(b=>b.textContent.indexOf('MISSING')>-1)"""):
+            await d.evaluate("""() => [...document.querySelectorAll('#f-comp button')].find(b=>b.textContent.indexOf('MISSING')>-1).click()""")
+            await d.wait_for_timeout(400)
+            check("completeness filter matches the empty count",
+                  ("%d OF 90" % counts["empty"]) in await d.inner_text("#atlas-count"), await d.inner_text("#atlas-count"))
+        else:
+            check("completeness filter offers no MISSING bucket when nothing is empty", counts["empty"] == 0)
         await d.evaluate("""() => [...document.querySelectorAll('#f-comp button')].find(b=>b.textContent==='ALL').click()""")
 
         # day band filter

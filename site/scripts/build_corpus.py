@@ -178,6 +178,37 @@ for key, label, flags, basis in STAGES:
                      "evidence": e["evidence_level"]} for e in picks],
     })
 
+
+def _contradictions(rows):
+    """Compare the root README's standing claims with what the tree actually holds."""
+    out = []
+    written = len([r for r in rows if not r["readme_empty"]])
+    total = len(rows)
+    if written < total:
+        out.append({"claim": "Root README badge reads status: complete, 90/90 case studies.",
+                    "tree": "%d of %d directories contain a written case study." % (written, total)})
+    empty = [r for r in rows if r["readme_empty"]]
+    footnote_subject = [r for r in rows if r["internal_day"] == 75]
+    if not empty and footnote_subject:
+        r = footnote_subject[0]
+        out.append({"claim": "Root README footnote: \u201cThe Day 75 README.md is currently empty.\u201d",
+                    "tree": "No empty study remains. %s (directory Day-%d, which numbers itself Day 75) "
+                            "now holds a written README of %s bytes. The footnote follows the document\u2019s "
+                            "own internal numbering and has not been updated."
+                            % (r["company"], r["day"], format(r["readme_bytes"], ","))})
+    window = [r for r in rows if 60 <= r["day"] <= 90 and r["checks"]]
+    checks = sum(r["checks"] for r in window)
+    if checks != 4499 and window:
+        lo = min(r["checks"] for r in window)
+        hi = max(r["checks"] for r in window)
+        out.append({"claim": "Root README: 4,499 programmatic checks across Days 60\u201390, 79 to 344 per study.",
+                    "tree": "Reproduced from the study files: %d studies, %s checks, min %d, max %d. "
+                            "The gap is Day 74 (Cipla), rebuilt after its original README was lost \u2014 "
+                            "its gate now carries %d checks where the original recorded 107."
+                            % (len(window), format(checks, ","), lo, hi,
+                               next((r["checks"] for r in rows if r["day"] == 74), 0))})
+    return out
+
 corpus = {
     "stages": stages,
     "repo": "https://github.com/gaurav-product/product-management-case-studies",
@@ -201,16 +232,10 @@ corpus = {
                          for r in rows if r["readme_empty"]],
         "day_mismatch": [{"day": r["day"], "internal": r["internal_day"], "company": r["company"]}
                          for r in rows if r["internal_day"] and r["internal_day"] != r["day"]],
-        "index_contradictions": [
-            {"claim": "Root README badge reads status: complete, 90/90 case studies.",
-             "tree": "89 of 90 directories contain a written case study."},
-            {"claim": "Root README footnote: \u201cThe Day 75 README.md is currently empty.\u201d",
-             "tree": "Day-75-Medi-Assist/README.md is 77,138 bytes. Day-74-Cipla/README.md is 0 bytes. "
-                     "The footnote follows the document\u2019s own internal numbering, where Day-75 calls itself Day 74."},
-            {"claim": "Root README: 4,499 programmatic checks across Days 60\u201390, 79 to 344 per study.",
-             "tree": "Reproduced exactly from the study files \u2014 31 studies, 4,499 checks, min 79, max 344. "
-                     "It includes the 107 checks recorded in Day 74\u2019s ASSUMPTIONS.md, whose case study was never written."},
-        ],
+        # Contradictions are COMPUTED against the tree, never asserted. A claim is
+        # listed only while the tree still disagrees with it; when the repository
+        # catches up, the entry disappears on the next regeneration.
+        "index_contradictions": _contradictions(rows),
     },
     "completeness_counts": dict(Counter(completeness(r) for r in rows)),
     "validation_summary": dict(Counter(f["flag"] for r in rows for f in validation(r))),
