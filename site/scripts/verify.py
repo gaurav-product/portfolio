@@ -469,7 +469,8 @@ async def main():
             return {count: ns.length, tags: [...new Set(ns.map(n => n.tagName))],
                     labelled: ns.every(n => (n.getAttribute('aria-label')||'').includes('\u2014')),
                     labels: ns.map(n => n.textContent.trim())}; }""")
-        check("orbit renders the 4 domains from content", o1["count"] == 4, o1["labels"])
+        check("orbit renders every domain the content layer carries",
+              o1["count"] == await ob.evaluate("() => GOS_CONTENT.site_config.orbit.inner.length"), o1["labels"])
         lp = await ob.evaluate("""() => { const b = [...document.querySelectorAll('#orbit-loop .loopchip')];
             return {n: b.length, labels: b.map(x => x.textContent.trim()),
                     explained: b.every(x => (x.getAttribute('aria-label')||'').includes('\u2014'))}; }""")
@@ -479,7 +480,12 @@ async def main():
         rest = await ob.evaluate("() => document.getElementById('orbit-cap').textContent")
         await ob.evaluate("() => document.querySelector('#orbit .onode').dispatchEvent(new MouseEvent('mouseenter'))")
         hov = await ob.evaluate("() => document.getElementById('orbit-cap').textContent")
-        check("hovering a node reveals its explanation", hov != rest and len(hov) > 30, hov[:60])
+        # The caption must be that node's own blurb from the content layer — compared
+        # against the record, not against a length, so copy can change freely.
+        want = await ob.evaluate("""() => { const l = document.querySelector('#orbit .onode').textContent.trim();
+            const r = GOS_CONTENT.site_config.orbit.inner.find(x => x.label === l); return r && r.blurb; }""")
+        check("hovering a node reveals that node's explanation from content",
+              hov != rest and want and want in hov, {"shown": hov[:70], "record": want})
         await ob.evaluate("() => document.querySelector('#orbit .onode').dispatchEvent(new MouseEvent('mouseleave'))")
         back = await ob.evaluate("() => document.getElementById('orbit-cap').textContent")
         check("leaving restores the caption", back == rest, back)
@@ -501,8 +507,17 @@ async def main():
                     fits: ob2.width <= cb.width - 2 && ob2.height <= cb.height - 2}; }""")
         check("core wordmark stays on one line inside the circle",
               cw["lines"] <= 1 and cw["fits"], cw)
-        check("labels are not hard-coded in the UI layer",
-              await ob.evaluate("() => !!(window.GOS_CONTENT && GOS_CONTENT.site_config.orbit && GOS_CONTENT.site_config.orbit.inner.length === 4)"))
+        # The orbit is content-driven: the rendered nodes must BE the content records,
+        # so a domain cannot be added, renamed or dropped in the UI layer.
+        check("orbit nodes are exactly the five content records, in order",
+              await ob.evaluate("""() => {
+                  const want = GOS_CONTENT.site_config.orbit.inner.map(x => x.label);
+                  const got = [...document.querySelectorAll('#orbit .onode')].map(x => x.textContent.trim());
+                  return want.length === 5 && JSON.stringify(want) === JSON.stringify(got); }"""),
+              await ob.evaluate("() => [...document.querySelectorAll('#orbit .onode')].map(x => x.textContent.trim())"))
+        check("every orbit node carries its own explanation from content",
+              await ob.evaluate("""() => GOS_CONTENT.site_config.orbit.inner.every(x =>
+                  x.id && x.label && typeof x.blurb === 'string' && x.blurb.length > 10)"""))
         await ob.close()
 
         oc = await page(390, 844)

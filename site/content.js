@@ -65,11 +65,14 @@ window.GOS_CONTENT = {
       core: "GAURAV.OS",
       core_label: "PRODUCT SYSTEM",
       caption: "ORBIT: DOMAINS · BELOW: OPERATING LOOP",
+      /* The five domains are the single source of truth for the Product Orbit on
+         every surface. `id` is the stable key; `blurb` is the node's caption. */
       inner: [
-        { label: "RESEARCH",   blurb: "Evidence, experimentation, psychometrics and structured inquiry." },
-        { label: "HEALTHCARE", blurb: "Designing responsibly in high-stakes domains." },
-        { label: "PRODUCT",    blurb: "Problem framing, prioritization, experimentation and decision making." },
-        { label: "AI",         blurb: "AI-enabled product thinking, evaluation, orchestration and applied systems." }
+        { id: "research",   label: "RESEARCH",   blurb: "Evidence before certainty." },
+        { id: "ai",         label: "AI",         blurb: "Technology should amplify reasoning, not replace reasoning." },
+        { id: "healthcare", label: "HEALTHCARE", blurb: "Build for trust, safety and real-world constraints." },
+        { id: "product",    label: "PRODUCT",    blurb: "Turn ambiguous problems into measurable systems." },
+        { id: "behaviour",  label: "BEHAVIOUR",  blurb: "Understand people before designing for them." }
       ],
       outer: [
         { label: "BUILD",   blurb: "Ship the smallest thing that can be judged." },

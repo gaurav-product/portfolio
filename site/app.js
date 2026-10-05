@@ -254,9 +254,15 @@
         var r1c = orbitEl.querySelector(".ring.r1"), r2c = orbitEl.querySelector(".ring.r2");
         if (r1c) { r1c.style.width = (innerR * 200 / w) + "%"; r1c.style.height = r1c.style.width; }
         if (r2c) { r2c.style.width = r1c ? r1c.style.width : "0%"; r2c.style.height = r2c.style.width; }
-        nodes.forEach(function (n, i) {
+        /* Evenly spaced around the full circle, starting at the top, however many
+           domains the content layer carries — four sit on the cardinal points,
+           five form a pentagon. Never a fixed quarter-turn, which would stack
+           the fifth node on top of the first. */
+        var inCount = nodes.filter(function (x) { return x.ring === "in"; }).length || 1;
+        var step = (Math.PI * 2) / inCount, k = 0;
+        nodes.forEach(function (n) {
           if (n.ring === "out") { n.el.style.transform = ""; n.el.style.opacity = ""; return; }
-          var a = -Math.PI / 2 + (Math.PI / 2) * i;      /* N, E, S, W */
+          var a = -Math.PI / 2 + step * (k++);
           n.el.style.transform = "translate(" + (Math.cos(a) * innerR) + "px," +
                                  (Math.sin(a) * innerR * 0.78) + "px)";
           n.el.style.opacity = "1"; n.el.style.zIndex = 4;
