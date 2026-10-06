@@ -37,6 +37,26 @@
     }
   };
 
+  /* ------------------------------------------- open to product opportunities */
+  /* One record in the content layer, three deliberate placements: the hero,
+     the contact channel and Recruiter Mode. Stated positioning only — no
+     claim about outcomes, availability dates or anything unverified.      */
+  function openBlock(where) {
+    var O = (C.site_config || {}).opportunity;
+    if (!O || !O.enabled) return "";
+    var href = where === "recruiter" ? (O.cta_href_recruiter || O.cta_href) : O.cta_href;
+    var body = where === "hero" ? O.line : O.line + " " + O.detail;
+    return '<div class="open' + (where === "recruiter" ? " rec-open" : where === "contact" ? " contact-open" : "") + '">' +
+      '<div class="open-k"><span class="pulse"></span>' + esc(O.label) + '</div>' +
+      '<p class="open-b">' + esc(body) + '</p>' +
+      '<div class="open-r">' + (O.roles || []).map(function (r) {
+        return '<span>' + esc(r) + '</span>'; }).join("") + '</div>' +
+      (where === "contact" ? "" :
+        '<div class="open-cta"><a class="btn btn-secondary" data-ev="contact_click" href="' +
+        esc(href) + '">' + esc(O.cta_label) + ' \u2192</a></div>') +
+    '</div>';
+  }
+
   /* --------------------------------------------------------- ambient field */
   (function () {
     var c = document.getElementById("field");
@@ -98,6 +118,7 @@
           '<div class="mono" style="font-size:9.5px;letter-spacing:.24em;color:var(--dim);margin-top:8px">' + esc(s.system || "").toUpperCase() + '</div>' +
           '<p class="hero-line">Building at the intersection of<br><b>AI × Healthcare × Research × Human Behaviour</b></p>' +
           '<p class="position">I research behaviour, frame problems, build products, measure outcomes, and use AI <b>where it creates genuine product value</b>.</p>' +
+          openBlock("hero") +
           '<div class="hero-tags">' + (s.narrative || []).map(function (n, i) {
               return '<span class="chip' + (i === 0 ? " gold" : " dim") + '">' + esc(n) + '</span>';
             }).join("") + '</div>' +
@@ -888,6 +909,7 @@
     document.getElementById("contact-mount").innerHTML =
       '<div class="eyebrow"><span class="num">10</span> Open channel</div>' +
       '<p class="contact-line">Let\'s build something<br>worth shipping.</p>' +
+      openBlock("contact") +
       '<div class="links">' +
         '<a class="link" data-ev="linkedin_click" href="https://' + ct.linkedin + '" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span class="v">' + esc(ct.linkedin) + '</span></a>' +
         '<a class="link" data-ev="github_click" href="https://' + ct.github + '" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">' + esc(ct.github) + '</span></a>' +
@@ -909,6 +931,7 @@
         '<div class="rec-sum">' + s.summary.map(function (l, i) {
           return '<div><b>' + String(i + 1).padStart(2, "0") + '</b><span>' + esc(l) + '</span></div>';
         }).join("") + '</div>' +
+        openBlock("recruiter") +
         '<div class="chips" style="margin-top:var(--s3)">' +
           '<span class="chip">' + esc(s.location) + '</span><span class="chip gold">SEEKING ' + esc(s.seeking.toUpperCase()) + '</span>' +
           '<a class="chip" data-ev="contact_click" href="mailto:' + ct.email + '">EMAIL →</a>' +
@@ -1112,6 +1135,16 @@
      underneath before a single frame arrives.                              */
   var introEl = null, introVideo = null, introDone = false;
 
+  /* Sound preference. Stored, never assumed: the browser, not this file,
+     decides whether an unmuted start is allowed, and the control always
+     shows the state the <video> element is actually in.                   */
+  function soundPref() {
+    try { return localStorage.getItem("gos-intro-sound") === "1"; } catch (e) { return false; }
+  }
+  function setSoundPref(on) {
+    try { localStorage.setItem("gos-intro-sound", on ? "1" : "0"); } catch (e) {}
+  }
+
   function endIntro(how) {
     if (!introEl) return;
     var node = introEl, v = introVideo;
@@ -1166,16 +1199,40 @@
       '<div class="ov-name">' + esc(C.site_config.owner) + '</div><div class="ov-sub">' +
       esc(C.site_config.role.toUpperCase()) + '</div>');
 
-    var skip = el("button", "ov br ov-skip", (C_i.skip_label || "SKIP INTRO") + " →");
+    /* no .ov/.br here: the cluster below owns the positioning, so SKIP stays
+       in the flex flow instead of being absolutely placed on top of SOUND */
+    var skip = el("button", "ov-skip", (C_i.skip_label || "SKIP INTRO") + " →");
+    skip.type = "button";
     skip.addEventListener("click", function () { endIntro("skip"); });
 
-    var sound = el("button", "ov sound", "♪ SOUND ON");
-    sound.setAttribute("aria-pressed", "false");
+    /* A labelled toggle: stable accessible name, aria-pressed carries the
+       state, and the visible text and dot report what the element is
+       really doing — never what we hoped it would do.                      */
+    var sound = el("button", "ov-sound", '<i class="sdot" aria-hidden="true"></i><span class="slab">SOUND OFF</span>');
+    sound.type = "button";
+    sound.setAttribute("aria-label", "Intro film sound");
+    var slab = sound.querySelector(".slab");
+    function syncSound() {
+      var on = !v.muted;
+      sound.setAttribute("aria-pressed", on ? "true" : "false");
+      slab.textContent = on ? "SOUND ON" : "SOUND OFF";
+      sound.title = on ? "Turn intro sound off" : "Turn intro sound on";
+    }
+    syncSound();
     sound.addEventListener("click", function () {
-      v.muted = !v.muted;
-      sound.textContent = v.muted ? "♪ SOUND ON" : "♪ SOUND OFF";
-      sound.setAttribute("aria-pressed", v.muted ? "false" : "true");
+      var wantOn = v.muted;
+      v.muted = !wantOn;
+      setSoundPref(wantOn);
+      /* A click is a user gesture, so this is the moment a blocked film can
+         legitimately start — and the moment sound can legitimately begin. */
+      if (v.paused) {
+        var pc = v.play();
+        if (pc && pc.catch) pc.catch(function () { v.muted = true; syncSound(); });
+      }
+      syncSound();
+      GOS.track(wantOn ? "intro_sound_on" : "intro_sound_off");
     });
+    v.addEventListener("volumechange", syncSound);
 
     var bar = el("div", "film-bar", "<i></i>");
     var fill = bar.querySelector("i");
@@ -1196,7 +1253,9 @@
     introEl.appendChild(stage);
     introEl.appendChild(vign);
     introEl.appendChild(load);
-    [ovTL, ovBL, skip, sound, bar].forEach(function (n) { introEl.appendChild(n); });
+    var actions = el("div", "ov br ov-actions");
+    actions.appendChild(sound); actions.appendChild(skip);
+    [ovTL, ovBL, actions, bar].forEach(function (n) { introEl.appendChild(n); });
     document.body.appendChild(introEl);
     document.body.style.overflow = "hidden";
     skip.focus();
@@ -1220,14 +1279,39 @@
       var play = el("button", "ov ov-play", "▶ PLAY INTRO");
       play.addEventListener("click", function () {
         play.remove();
+        /* a real gesture: honour the stored sound choice here */
+        if (soundPref()) { v.muted = false; }
+        syncSound();
         var p2 = v.play();
-        if (p2 && p2.catch) p2.catch(function () { endIntro("error"); });
+        if (p2 && p2.catch) p2.catch(function () {
+          v.muted = true; syncSound();
+          var p3 = v.play();
+          if (p3 && p3.catch) p3.catch(function () { endIntro("error"); });
+        });
       });
       introEl.appendChild(play);
       introEl.classList.add("ready");
     }
-    var pr = v.play();
-    if (pr && pr.catch) pr.catch(offerGesture);
+
+    /* Start policy: at most one attempt with sound (only if the viewer chose
+       it before), at most one muted fallback, then the gesture button.
+       A blocked autoplay is never retried in a loop and never throws.     */
+    var started = false;
+    (function start() {
+      if (started) return; started = true;
+      var wantSound = soundPref();
+      v.muted = !wantSound; v.defaultMuted = !wantSound;
+      syncSound();
+      var p1 = v.play();
+      if (!p1 || !p1.catch) return;
+      p1.catch(function () {
+        if (!introEl) return;
+        if (!wantSound) { offerGesture(); return; }
+        v.muted = true; v.defaultMuted = true; syncSound();
+        var p2 = v.play();
+        if (p2 && p2.catch) p2.catch(offerGesture);
+      });
+    })();
     GOS.track(opts && opts.replay ? "intro_replayed" : "intro_started");
   }
 

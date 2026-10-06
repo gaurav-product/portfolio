@@ -345,15 +345,49 @@ async def main():
         check("homepage already rendered beneath the film",
               await i.evaluate("() => !!document.querySelector('#home-mount .hero-mark')"))
         ov = await i.evaluate("""() => ({tl: !!document.querySelector('.ov.tl'), bl: !!document.querySelector('.ov.bl'),
-             skip: !!document.querySelector('.ov-skip'), sound: !!document.querySelector('.ov.sound')})""")
+             skip: !!document.querySelector('.ov-skip'), sound: !!document.querySelector('.ov-sound')})""")
         check("overlays: top-left, bottom-left, skip, sound", all(ov.values()), ov)
         io = await i.evaluate(PROBE)
         check("film stage: no horizontal overflow", io[0] <= io[1], io)
         await i.screenshot(path=str(OUT / "film.png"))
 
-        # sound toggle
-        await i.evaluate("() => document.querySelector('.ov.sound').click()")
-        check("sound can be turned on", await i.evaluate("() => !document.querySelector('.intro video.film').muted"))
+        # sound control: muted start, accessible toggle, honest state
+        s0 = await i.evaluate("""() => { const b=document.querySelector('.ov-sound'),
+            v=document.querySelector('.intro video.film');
+            return {muted: v.muted, pressed: b.getAttribute('aria-pressed'),
+                    name: b.getAttribute('aria-label'), label: b.querySelector('.slab').textContent,
+                    tag: b.tagName, type: b.type, dot: !!b.querySelector('.sdot')}; }""")
+        check("intro starts muted (never blasts audio)", s0["muted"] is True, s0)
+        check("sound control is a real button", s0["tag"] == "BUTTON" and s0["type"] == "button", s0)
+        check("sound control has an accessible name", bool(s0["name"]), s0)
+        check("sound control reports state OFF before use",
+              s0["pressed"] == "false" and s0["label"] == "SOUND OFF" and s0["dot"], s0)
+        check("sound control sits beside skip in one cluster",
+              await i.evaluate("() => !!document.querySelector('.ov-actions .ov-sound') && "
+                               "!!document.querySelector('.ov-actions .ov-skip')"))
+
+        await i.evaluate("() => document.querySelector('.ov-sound').click()")
+        s1 = await i.evaluate("""() => { const b=document.querySelector('.ov-sound'),
+            v=document.querySelector('.intro video.film');
+            return {muted: v.muted, pressed: b.getAttribute('aria-pressed'),
+                    label: b.querySelector('.slab').textContent,
+                    pref: localStorage.getItem('gos-intro-sound')}; }""")
+        check("sound can be turned on", s1["muted"] is False, s1)
+        check("aria-pressed and label follow the real state",
+              s1["pressed"] == "true" and s1["label"] == "SOUND ON", s1)
+        check("sound choice is remembered", s1["pref"] == "1", s1)
+
+        await i.evaluate("() => document.querySelector('.ov-sound').click()")
+        s2 = await i.evaluate("""() => { const b=document.querySelector('.ov-sound'),
+            v=document.querySelector('.intro video.film');
+            return {muted: v.muted, pressed: b.getAttribute('aria-pressed'),
+                    label: b.querySelector('.slab').textContent,
+                    pref: localStorage.getItem('gos-intro-sound')}; }""")
+        check("sound can be turned off again",
+              s2["muted"] is True and s2["pressed"] == "false" and s2["label"] == "SOUND OFF", s2)
+        check("sound-off choice is remembered", s2["pref"] == "0", s2)
+        check("sound control is keyboard reachable",
+              await i.evaluate("() => document.querySelector('.ov-sound').tabIndex >= 0"))
 
         # runs to completion -> holds the final frame -> hands over
         await i.wait_for_timeout(4200)
@@ -416,7 +450,108 @@ async def main():
         await r2.keyboard.press("Escape")
         await r2.wait_for_timeout(800)
         check("Escape closes the film", await r2.evaluate("() => !document.querySelector('.intro')"))
+
+        # return visit with sound previously enabled: one unmuted attempt, honest
+        # fallback, no error, no retry loop
+        await r2.evaluate("() => { try{localStorage.setItem('gos-intro-sound','1')}catch(e){} }")
+        await r2.evaluate("() => document.getElementById('hero-intro').click()")
+        await r2.wait_for_timeout(1500)
+        rv = await r2.evaluate("""() => { const b=document.querySelector('.ov-sound'),
+            v=document.querySelector('.intro video.film');
+            return {has: !!b, muted: v ? v.muted : null, pressed: b ? b.getAttribute('aria-pressed') : null,
+                    label: b ? b.querySelector('.slab').textContent : null,
+                    err: v ? !!v.error : null, playing: v ? v.currentTime > 0.05 : null}; }""")
+        check("return visit with sound enabled still plays the film",
+              rv["has"] and rv["playing"] and not rv["err"], rv)
+        check("return visit: control state matches the element, whatever policy allowed",
+              (rv["pressed"] == "true") == (rv["muted"] is False)
+              and rv["label"] == ("SOUND ON" if rv["muted"] is False else "SOUND OFF"), rv)
+        await r2.evaluate("() => { try{localStorage.setItem('gos-intro-sound','0')}catch(e){} }")
+        await r2.keyboard.press("Escape")
+        await r2.wait_for_timeout(600)
+
+        # the sound control must stay usable and clear of skip on small screens
+        for w in (390, 360):
+            sp = await page(w, 844, skip_intro=False, film="test-clip.webm")
+            await sp.wait_for_timeout(1400)
+            g = await sp.evaluate("""(vw) => { const b=document.querySelector('.ov-sound'),
+                k=document.querySelector('.ov-skip'), n=document.querySelector('.ov.bl');
+                if(!b||!k) return null;
+                const B=b.getBoundingClientRect(), K=k.getBoundingClientRect(),
+                      N=n?n.getBoundingClientRect():null;
+                const hit=(a,c)=>!(a.right<=c.left||c.right<=a.left||a.bottom<=c.top||c.bottom<=a.top);
+                return {inside: B.left>=0 && B.right<=vw, tall: B.height>=32, wide: B.width>=60,
+                        clearOfSkip: !hit(B,K), clearOfName: N?!hit(B,N):true,
+                        vis: getComputedStyle(b).opacity}; }""", w)
+            check(str(w) + ": sound control is within the viewport", g and g["inside"], g)
+            check(str(w) + ": sound control keeps a usable hit area", g and g["tall"] and g["wide"], g)
+            check(str(w) + ": sound control overlaps nothing",
+                  g and g["clearOfSkip"] and g["clearOfName"], g)
+            check(str(w) + ": sound control is visible from the first frame",
+                  g and float(g["vis"]) > 0.9, g)
+            op = await sp.evaluate(PROBE)
+            check(str(w) + ": film overlays cause no horizontal overflow", op[0] <= op[1], op)
+            await sp.close()
         await r2.close()
+
+        print("\n=== OPEN TO PRODUCT OPPORTUNITIES ===")
+        o = await page(1280, 1000)
+        rec = await o.evaluate("() => window.GOS_CONTENT.site_config.opportunity")
+        check("positioning lives in the content layer, not in the UI file",
+              bool(rec and rec.get("label") and rec.get("roles")), rec and rec.get("label"))
+        hero = await o.evaluate("""() => { const b=document.querySelector('#home-mount .open');
+            if(!b) return null;
+            return {k: b.querySelector('.open-k').textContent.trim(),
+                    body: b.querySelector('.open-b').textContent.trim(),
+                    roles: [...b.querySelectorAll('.open-r span')].map(x=>x.textContent),
+                    cta: b.querySelector('.open-cta a') ? b.querySelector('.open-cta a').getAttribute('href') : null,
+                    ctaText: b.querySelector('.open-cta a') ? b.querySelector('.open-cta a').textContent.trim() : null}; }""")
+        check("hero carries the OPEN TO PRODUCT OPPORTUNITIES signal",
+              hero and hero["k"] == rec["label"], hero and hero["k"])
+        check("hero copy is the content record, not a rewritten one",
+              hero and hero["body"] == rec["line"], hero and hero["body"])
+        check("hero lists the roles from content, in order",
+              hero and hero["roles"] == rec["roles"], hero and hero["roles"])
+        check("hero CTA points at a real section",
+              hero and hero["cta"] == rec["cta_href"]
+              and await o.evaluate("(h) => !!document.querySelector(h)", hero["cta"]),
+              hero and hero["cta"])
+        con = await o.evaluate("""() => { const b=document.querySelector('#contact-mount .open');
+            return b ? {k: b.querySelector('.open-k').textContent.trim(),
+                        body: b.querySelector('.open-b').textContent.trim()} : null; }""")
+        check("contact channel repeats the signal once, with the detail",
+              con and con["k"] == rec["label"] and rec["detail"] in con["body"], con)
+        check("the signal appears in the lab experience exactly twice",
+              await o.evaluate("() => document.querySelectorAll('.lab-only .open').length") == 2)
+        check("no invented contact destination",
+              await o.evaluate("""() => [...document.querySelectorAll('#contact-mount a[href]')]
+                 .every(a => /^(#|mailto:|tel:|https:\\/\\/(www\\.)?(linkedin|github)\\.com)/.test(a.getAttribute('href')))"""))
+        # recruiter mode
+        await o.evaluate("() => document.getElementById('hero-recruiter').click()")
+        await o.wait_for_timeout(500)
+        rm2 = await o.evaluate("""() => { const b=document.querySelector('#recruiter .rec-open');
+            if(!b) return null;
+            const a=b.querySelector('.open-cta a');
+            return {k: b.querySelector('.open-k').textContent.trim(),
+                    roles: [...b.querySelectorAll('.open-r span')].map(x=>x.textContent),
+                    cta: a ? a.getAttribute('href') : null,
+                    target: a ? !!document.querySelector(a.getAttribute('href')) : false,
+                    vis: b.getBoundingClientRect().height > 0}; }""")
+        check("Recruiter Mode states the opportunity prominently",
+              rm2 and rm2["k"] == rec["label"] and rm2["vis"], rm2)
+        check("Recruiter Mode lists the roles", rm2 and rm2["roles"] == rec["roles"], rm2 and rm2["roles"])
+        check("Recruiter Mode CTA resolves inside Recruiter Mode",
+              rm2 and rm2["cta"] == rec["cta_href_recruiter"] and rm2["target"], rm2 and rm2["cta"])
+        check("Recruiter Mode seeking line is no longer narrowed to one title",
+              "PRODUCT MANAGEMENT" in await o.evaluate(
+                  "() => document.querySelector('#recruiter .chip.gold').textContent.toUpperCase()"))
+        await o.evaluate("() => document.getElementById('hero-recruiter').click()")
+        await o.wait_for_timeout(500)
+        check("leaving Recruiter Mode restores the lab experience exactly",
+              await o.evaluate("""() => document.documentElement.getAttribute('data-mode') === 'lab'
+                  && document.querySelector('#work').getBoundingClientRect().height > 0
+                  && document.querySelectorAll('.lab-only .open').length === 2"""))
+        await o.close()
 
         print("\n=== INTRO: failure path ===")
         e2 = await page(1280, 1000, skip_intro=False, quiet=True)

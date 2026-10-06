@@ -28,7 +28,20 @@ window.GOS_CONTENT = {
     version: "v4.0",
     updated: "29 September 2026",
     corpus_note: "The 90-day corpus below is read directly from the GitHub repository, not retyped.",
-    seeking: "Associate Product Manager roles",
+    seeking: "Product Management roles",
+    /* Stated positioning, not an inference. Gaurav is open to product roles
+       across domains; the portfolio says so once in the hero, once at the
+       contact channel and once in Recruiter Mode — nowhere else.          */
+    opportunity: {
+      enabled: true,
+      label: "OPEN TO PRODUCT OPPORTUNITIES",
+      line: "I'm open to Product Management opportunities across AI, healthcare, consumer, SaaS and emerging technology.",
+      detail: "I'm particularly interested in teams where I can combine product thinking, research, AI and human behaviour to solve meaningful problems.",
+      roles: ["APM", "Product Manager", "AI Product", "Healthcare Product", "Consumer", "SaaS"],
+      cta_label: "LET'S TALK",
+      cta_href: "#contact",
+      cta_href_recruiter: "#rec-contact"
+    },
     summary: [
       "3+ years in HealthTech product, user research and behavioral analytics — 30+ structured user interviews, 500+ users tracked, findings adopted across 3 feature iterations.",
       "Owned a digital mindfulness platform end to end, PRD through release, where funnel analysis across 50+ cohorts drove a 20–25% lift in user consistency.",
