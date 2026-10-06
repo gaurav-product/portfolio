@@ -389,6 +389,25 @@ async def main():
         check("sound control is keyboard reachable",
               await i.evaluate("() => document.querySelector('.ov-sound').tabIndex >= 0"))
 
+        # the film is aria-modal: focus must start inside it and stay inside it
+        f0 = await i.evaluate("""() => { const a=document.activeElement;
+            return {inDialog: !!(a && a.closest && a.closest('.intro')),
+                    tag: a && a.tagName, text: a ? (a.textContent||'').trim().slice(0,22) : null}; }""")
+        check("focus starts inside the film overlay", f0["inDialog"], f0)
+        seen = []
+        for _ in range(4):
+            await i.keyboard.press("Tab")
+            seen.append(await i.evaluate("""() => { const a=document.activeElement;
+                return (a && a.closest && a.closest('.intro')) ? (a.className||'') : 'ESCAPED'; }"""))
+        check("Tab stays on the film's own controls", "ESCAPED" not in seen, seen)
+        check("Tab cycles between the sound and skip controls",
+              all(("ov-sound" in c) or ("ov-skip" in c) for c in seen), seen)
+        ring = await i.evaluate("""() => { const a=document.activeElement, c=getComputedStyle(a);
+            return {w: c.outlineWidth, style: c.outlineStyle, color: c.outlineColor,
+                    fv: a.matches(':focus-visible')}; }""")
+        check("the focused film control shows a real visible focus ring",
+              ring["fv"] and ring["style"] != "none" and ring["w"] not in ("0px", ""), ring)
+
         # runs to completion -> holds the final frame -> hands over
         await i.wait_for_timeout(4200)
         check("film ends and hands over to the interface",

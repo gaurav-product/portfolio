@@ -1261,7 +1261,17 @@
     skip.focus();
 
     introEl.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") { e.preventDefault(); endIntro("skip"); }
+      if (e.key === "Escape") { e.preventDefault(); endIntro("skip"); return; }
+      /* aria-modal means modal: Tab stays on the film's own controls instead
+         of walking the hundreds of focusable elements rendered beneath it */
+      if (e.key !== "Tab") return;
+      var f = [].slice.call(introEl.querySelectorAll("button:not([disabled])"))
+                .filter(function (n) { return n.getClientRects().length > 0; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1], a = document.activeElement;
+      if (!introEl.contains(a)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+      else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
     });
 
     /* never block: if nothing is playing within 6s, step aside */
