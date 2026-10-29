@@ -78,44 +78,18 @@
     return t ? '<span class="ev-label' + (/NOT IN PRODUCTION/.test(t) ? " warn" : "") + '">' + esc(t) + '</span>' : "";
   }
 
-  /* --------------------------------------------------------- ambient field */
-  (function () {
-    var c = document.getElementById("field");
-    /* decoration only: skipped under reduced motion and on narrow screens,
-       where CSS hides it anyway and the animation loop would be wasted     */
-    if (!c || reduce || window.matchMedia("(max-width: 1000px)").matches) { if (c) c.style.display = "none"; return; }
-    var ctx = c.getContext("2d"), dots = [], w = 0, h = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    function size() {
-      w = c.clientWidth; h = c.clientHeight; c.width = w * dpr; c.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var n = Math.min(34, Math.round(w * h / 34000)); dots = [];
-      for (var i = 0; i < n; i++) dots.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1 + .35, vx: (Math.random() - .5) * .07, vy: (Math.random() - .5) * .07, a: Math.random() * .3 + .1 });
-    }
-    function frame() {
-      if (!document.hidden && root.getAttribute("data-mode") !== "recruiter") {
-        ctx.clearRect(0, 0, w, h);
-        for (var i = 0; i < dots.length; i++) {
-          var d = dots[i]; d.x += d.vx; d.y += d.vy;
-          if (d.x < 0) d.x = w; if (d.x > w) d.x = 0; if (d.y < 0) d.y = h; if (d.y > h) d.y = 0;
-          ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.284); ctx.fillStyle = "rgba(210,166,60," + d.a + ")"; ctx.fill();
-        }
-      }
-      requestAnimationFrame(frame);
-    }
-    size(); window.addEventListener("resize", size); requestAnimationFrame(frame);
-  })();
-
   /* ------------------------------------------------------------ navigation */
   (function () {
     var mount = document.getElementById("lab-nav"), group = null;
     C.navigation.forEach(function (n) {
-      if (n.group !== group) { group = n.group; mount.appendChild(el("div", "rail-group", group)); }
+      if (n.group !== group) { group = n.group; mount.appendChild(el("div", "rail-group", esc(group))); }
       var a = el("a", "navlink", '<span class="idx">' + n.idx + "</span>" + esc(n.label));
       a.href = "#" + n.id;
       mount.appendChild(a);
     });
     var rn = document.getElementById("rec-nav");
-    rn.appendChild(el("div", "rail-group", "Résumé view"));
-    [["rec-work", "Selected work"], ["rec-exp", "Experience"], ["rec-skills", "Skills"], ["rec-edu", "Education"], ["rec-cred", "Credentials"], ["rec-contact", "Contact"]]
+    rn.appendChild(el("div", "rail-group", "Recruiter view"));
+    [["rec-work", "Selected work"], ["rec-exp", "Experience"], ["rec-skills", "Skills"], ["rec-edu", "Education"], ["rec-cred", "Certifications"], ["rec-contact", "Contact"]]
       .forEach(function (r, i) {
         var a = el("a", "navlink", '<span class="idx">' + String(i + 1).padStart(2, "0") + "</span>" + r[1]);
         a.href = "#" + r[0]; rn.appendChild(a);
@@ -127,9 +101,9 @@
   })();
 
   /* ------------------------------------------------------------------ home */
-  /* The first screen answers, in order: who Gaurav is, which roles he is
-     seeking, and the three verified proof points behind that — then the
-     actions a recruiter takes next. Everything else lives further down.   */
+  /* The first screen answers, in order: who Gaurav is, what product work he
+     does, which roles he is seeking, and the three proof points behind it —
+     then the five actions a recruiter takes next.                         */
   (function () {
     var s = C.site_config, ct = s.contact;
     var m = document.getElementById("home-mount");
@@ -143,22 +117,21 @@
     }).join("");
 
     m.innerHTML =
-      '<p class="kicker">' + esc(s.discipline) + '</p>' +
+      '<p class="kicker">' + esc(s.discipline) + ' · ' + esc(s.location) + '</p>' +
       '<h1 class="hero-name" id="hero-name">' + esc(s.owner) + '</h1>' +
-      '<p class="hero-title">' + esc(s.role) + '</p>' +
+      '<p class="hero-pos">' + esc(s.headline) + '</p>' +
       '<p class="hero-intro">' + esc(s.intro) + '</p>' +
       seekRow() +
       '<div class="cta-row">' +
-        cvLink("btn btn-primary", "DOWNLOAD CV ↓") +
-        '<a class="btn btn-secondary" data-ev="contact_click" href="mailto:' + esc(ct.email) + '">EMAIL ME</a>' +
-        '<button class="btn btn-secondary" id="hero-recruiter" aria-pressed="false" title="A one-page résumé view of this portfolio">RECRUITER MODE</button>' +
-        '<a class="btn btn-secondary" href="#work">CASE STUDIES ↓</a>' +
+        '<a class="btn btn-primary" href="#work">VIEW WORK ↓</a>' +
+        '<a class="btn btn-secondary" href="#ask" data-ev="ask_opened">ASK GAURAV</a>' +
+        cvLink("btn btn-secondary", "DOWNLOAD CV ↓") +
+        '<a class="btn btn-secondary" data-ev="contact_click" href="mailto:' + esc(ct.email) + '" aria-label="Email Gaurav at ' + esc(ct.email) + '">EMAIL</a>' +
+        '<button class="btn btn-secondary" id="hero-recruiter" type="button" aria-pressed="false" title="A one-page résumé view of this portfolio">RECRUITER VIEW</button>' +
       '</div>' +
-      '<p class="hero-meta">' + esc(s.location) + ' · <a href="mailto:' + esc(ct.email) + '" data-ev="contact_click">' + esc(ct.email) + '</a>' +
-        ' · <a href="https://' + esc(ct.linkedin) + '" target="_blank" rel="noopener" data-ev="linkedin_click">LinkedIn<span class="sr"> (opens in a new tab)</span></a></p>' +
       '<h2 class="sr">Proof</h2>' +
       '<div class="proof">' + cards + '</div>' +
-      '<p class="proof-note">Every figure on this site comes from my CV or my own product documentation. Unvalidated work carries its status — draft, concept, in progress, not in production.</p>';
+      '<p class="proof-note">Every figure here comes from my CV or my own product records. Unfinished work carries its real status — in progress, concept, demo mode, not in production.</p>';
   })();
 
   /* ------------------------------------------------------------------ work */
@@ -282,12 +255,10 @@
 
   (function () {
     var m = document.getElementById("work-mount");
-    var all = C.projects.slice().sort(byOrder);
-    var primary = all.filter(function (p) { return p.tier === "primary"; });
-    var rest = all.filter(function (p) { return p.tier !== "primary"; });
+    var primary = C.projects.slice().sort(byOrder).filter(function (p) { return p.tier === "primary"; });
     m.innerHTML = '<div class="eyebrow"><span class="num">02</span> Selected work</div>' +
       '<h2 class="title" id="work-title">Three case studies, <em>in full</em></h2>' +
-      '<p class="dek">A shipped product I owned, two years of user research that changed a roadmap, and a self-directed build where discovery overturned my own brief. Each carries its evidence label.</p>' +
+      '<p class="dek">A product I owned from discovery to release, two years of user research that changed a roadmap, and a self-directed build where discovery overturned my own brief. Each carries its evidence label.</p>' +
       '<div class="work-index">' + primary.map(function (p, i) {
         return '<a class="wi" href="#case-' + p.id + '">' +
           '<span class="n">0' + (i + 1) + '</span>' +
@@ -296,55 +267,105 @@
       }).join("") + '</div>';
     primary.forEach(function (p) { m.appendChild(renderCase(p, true)); });
 
-    if (rest.length) {
-      var mw = el("div", "more-work");
-      mw.innerHTML = '<span class="sect-label">More product work</span>' +
-        '<p class="small" style="margin-top:8px;max-width:62ch">Earlier and in-progress builds. Open any one for the full record — status labels are unchanged.</p>';
-      var list = el("div", null); list.style.marginTop = "var(--s2)";
-      rest.forEach(function (p) {
-        var d = el("details", "mw");
-        d.id = "more-" + p.id;
-        d.innerHTML = '<summary><span><span class="t">' + esc(p.name) + '</span><span class="s">' + esc(p.subtitle) + ' · ' + esc(p.period) + '</span></span>' +
-          '<span class="x"><span class="chip ' + p.status_tone + '">' + esc(p.status) + '</span></span></summary>';
-        var body = el("div", "mw-body");
-        body.appendChild(renderCase(p, false));
-        d.appendChild(body);
-        list.appendChild(d);
-      });
-      mw.appendChild(list);
-      m.appendChild(mw);
-    }
-
-    /* project_open analytics */
     m.addEventListener("click", function (e) {
       var a = e.target.closest ? e.target.closest(".wi") : null;
-      if (!a) return;
-      var id = (a.getAttribute("href") || "").replace("#case-", "");
-      GOS.track("project_open", id);
+      if (a) GOS.track("project_open", (a.getAttribute("href") || "").replace("#case-", ""));
+    });
+  })();
+
+  /* --------------------------------------------------------- product lab */
+  /* The AI & Product Lab: one card per build, each with its real status,
+     and the full record one click away in a collapsed disclosure.         */
+  (function () {
+    var m = document.getElementById("product-lab-mount");
+    var lab = C.projects.slice().sort(byOrder).filter(function (p) { return p.tier === "lab"; });
+    var K = (window.GOS_CORPUS || { counts: {} }).counts;
+    function card(p) {
+      return '<article class="lab-card" aria-labelledby="lab-t-' + p.id + '">' +
+        '<span class="lk">' + esc(p.role) + ' · ' + esc(p.period) + '</span>' +
+        '<h3 id="lab-t-' + p.id + '">' + esc(p.name) + '</h3>' +
+        '<p class="ls"><b>' + esc(p.subtitle) + '.</b> ' + esc(p.card || p.headline) + '</p>' +
+        (p.status_note ? '<p class="ln">' + esc(p.status_note) + '</p>' : "") +
+        '<div class="lf"><span class="chip ' + p.status_tone + '">' + esc(p.status) + '</span>' +
+          '<a class="chip" href="#case-' + p.id + '">FULL RECORD →</a></div>' +
+      '</article>';
+    }
+    m.innerHTML = '<div class="eyebrow"><span class="num">03</span> AI &amp; Product Lab</div>' +
+      '<h2 class="title" id="product-lab-title">AI &amp; Product <em>Lab</em></h2>' +
+      '<p class="dek">Self-directed AI and product builds, each labelled by what it actually is. None of these is a live product with users.</p>' +
+      '<div class="lab-grid">' + lab.map(card).join("") +
+        '<article class="lab-card corpus" aria-labelledby="lab-t-corpus">' +
+          '<span class="lk">Author · 90 days</span>' +
+          '<h3 id="lab-t-corpus">90-day product case-study corpus</h3>' +
+          '<p class="ls">One product case study a day for 90 days, read here straight from the public repository — searchable, filterable, and graded by how much evidence each study carries.</p>' +
+          '<div class="lm"><span>' + esc(K.written) + ' written</span><span>' + esc((K.words / 1e6).toFixed(2)) + 'M words</span><span>' + esc((K.sources || 0).toLocaleString("en-US")) + ' references</span></div>' +
+          '<div class="lf"><span class="chip">PUBLIC REPOSITORY</span><a class="chip" href="#constellation">EXPLORE THE CORPUS →</a></div>' +
+        '</article>' +
+      '</div>' +
+      '<div class="lab-records"><span class="sect-label">Full records</span></div>';
+    var list = m.querySelector(".lab-records");
+    lab.forEach(function (p) {
+      var d = el("details", "mw");
+      d.id = "more-" + p.id;
+      d.innerHTML = '<summary><span><span class="t">' + esc(p.name) + '</span><span class="s">' + esc(p.subtitle) + ' · ' + esc(p.period) + '</span></span>' +
+        '<span class="x"><span class="chip ' + p.status_tone + '">' + esc(p.status) + '</span></span></summary>';
+      var body = el("div", "mw-body");
+      body.appendChild(renderCase(p, false));
+      d.appendChild(body);
+      list.appendChild(d);
     });
     m.addEventListener("toggle", function (e) {
-      if (e.target.open) GOS.track("project_open", e.target.id.replace("more-", ""));
+      if (e.target.open && e.target.id) GOS.track("project_open", e.target.id.replace("more-", ""));
     }, true);
   })();
 
-  /* A link to a case inside a collapsed <details> opens it first, so every
-     #case-* anchor on the page — search, copilot sources, proof cards —
-     lands on visible content.                                             */
+  /* A link to anything inside a collapsed <details> — a lab record, or a
+     section of Explore the Lab — opens every enclosing disclosure first, so
+     nav links, proof cards, search and copilot sources land on content.   */
+  function openTo(t) {
+    var opened = false, d = t;
+    while (d && d.closest && (d = d.parentElement ? d.parentElement.closest("details") : null)) {
+      if (!d.open) { d.open = true; opened = true; }
+    }
+    if (t.tagName === "DETAILS" && !t.open) { t.open = true; opened = true; }
+    return opened;
+  }
   function revealHash() {
     var id = (location.hash || "").slice(1);
     if (!id) return;
     var t = null;
     try { t = document.getElementById(decodeURIComponent(id)); } catch (e) { return; }
-    var d = t && t.closest ? t.closest("details") : null;
-    if (d && !d.open) { d.open = true; t.scrollIntoView(); }
+    if (t && openTo(t)) t.scrollIntoView({ behavior: "instant", block: "start" });
   }
   window.addEventListener("hashchange", revealHash);
+  /* the same hash clicked twice fires no hashchange — open on the click too */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a || a.getAttribute("href").length < 2) return;
+    var t = document.getElementById(a.getAttribute("href").slice(1));
+    if (t && openTo(t)) {
+      /* the page just grew by the opened section: jump, don't animate a
+         ten-thousand-pixel smooth scroll                                  */
+      e.preventDefault();
+      try { history.pushState(null, "", a.getAttribute("href")); } catch (x) {}
+      t.scrollIntoView({ behavior: "instant", block: "start" });
+    }
+  });
+  /* The canvases inside Explore the Lab measure themselves on resize; opening
+     the disclosure is the moment they first have a size to measure.      */
+  (function () {
+    var ex = document.getElementById("explore-details");
+    if (!ex) return;
+    ex.addEventListener("toggle", function () {
+      if (ex.open) { window.dispatchEvent(new Event("resize")); GOS.track("lab_explored"); }
+    });
+  })();
 
   /* ------------------------------------------------------------- how i think */
   (function () {
     var m = document.getElementById("thinking-mount");
     var ob = C.site_config.orbit || {}, pq = C.site_config.product_question;
-    m.innerHTML = '<div class="eyebrow"><span class="num">R4</span> Operating model</div>' +
+    m.innerHTML = '<div class="eyebrow"><span class="num">L4</span> Operating model</div>' +
       '<h2 class="title">How I <em>Think</em></h2>' +
       '<p class="dek">One operating model, run over and over. Every stage carries evidence of two kinds: what I did in my own products, and how many of the 90 case studies contain that stage.</p>' +
       '<div class="orbit-block">' +
@@ -520,30 +541,35 @@
     }
   })();
   /* ------------------------------------------------------------- ask gaurav */
+  /* Answers from a fixed index of documented facts — never a live model.
+     Every answer is the same four parts (role, work, evidence, status), and
+     anything not in the index is refused in plain words, never inferred.  */
   var askBusy = false;
   (function () {
     var cfg = C.copilot_config;
     var m = document.getElementById("ask-mount");
-    m.innerHTML = '<div class="eyebrow"><span class="num">06</span> Portfolio copilot</div>' +
-      '<h2 class="title">Ask <em>Gaurav</em></h2>' +
-      '<p class="dek">' + esc(cfg.subtitle) + ' The retrieval index is my own portfolio — nothing else.</p>' +
-      '<div class="copilot" style="margin-top:var(--s3)">' +
-        '<div class="copilot-head"><div class="trace" id="trace" aria-hidden="true">' +
-          cfg.trace.map(function (t, i) { return '<span class="step">' + esc(t) + '</span>' + (i < cfg.trace.length - 1 ? "<span>→</span>" : ""); }).join("") +
-        '</div><span class="chip dim">' + esc(cfg.badge) + '</span></div>' +
-        '<div class="thread" id="thread" role="log" aria-live="polite" aria-label="Copilot conversation"></div>' +
-        '<form class="ask-form" id="ask-form">' +
-          '<label class="sr" for="ask-input">Ask about Gaurav\'s product work</label>' +
-          '<input class="ask-input" id="ask-input" type="text" autocomplete="off" placeholder="' + esc(cfg.placeholder) + '">' +
-          '<button class="ask-send" type="submit">ASK →</button>' +
-        '</form>' +
-        '<div class="prompt-bar"><span class="step-label" style="margin:0">Suggested questions</span><div class="prompt-list" id="prompts"></div></div>' +
+    m.innerHTML = '<div class="eyebrow"><span class="num">04</span> Ask Gaurav</div>' +
+      '<h2 class="title" id="ask-title">Ask <em>Gaurav</em></h2>' +
+      '<p class="dek">' + esc(cfg.subtitle) + '</p>' +
+      '<div class="ask-wrap">' +
+        '<div class="copilot">' +
+          '<div class="copilot-head"><div class="trace" id="trace" aria-hidden="true">' +
+            cfg.trace.map(function (t, i) { return '<span class="step">' + esc(t) + '</span>' + (i < cfg.trace.length - 1 ? "<span>→</span>" : ""); }).join("") +
+          '</div><span class="chip dim">' + esc(cfg.badge) + '</span></div>' +
+          '<div class="thread" id="thread" role="log" aria-live="polite" aria-label="Ask Gaurav conversation" tabindex="0"></div>' +
+          '<form class="ask-form" id="ask-form">' +
+            '<label class="sr" for="ask-input">Ask a question about Gaurav\'s work</label>' +
+            '<input class="ask-input" id="ask-input" type="text" autocomplete="off" enterkeyhint="send" placeholder="' + esc(cfg.placeholder) + '">' +
+            '<button class="ask-send" type="submit">ASK →</button>' +
+          '</form>' +
+        '</div>' +
+        '<div class="ask-side"><h3 class="step-label" id="prompts-label" style="margin:0">Suggested questions</h3>' +
+          '<div class="prompt-list" id="prompts" role="group" aria-labelledby="prompts-label"></div></div>' +
       '</div>' +
-      '<p class="small" style="margin-top:var(--s2)"><b style="color:var(--bone);font-weight:500">How this actually works.</b> ' + esc(cfg.explainer) + '</p>';
+      '<p class="small" style="margin-top:var(--s2)"><b style="color:var(--bone);font-weight:500">How this works.</b> ' + esc(cfg.explainer) + '</p>';
 
     var thread = document.getElementById("thread");
     var steps = Array.prototype.slice.call(document.querySelectorAll("#trace .step"));
-
     function trace(i) {
       steps.forEach(function (s, ix) { s.classList.toggle("on", ix === i); s.classList.toggle("done", i >= 0 && ix < i); });
     }
@@ -554,20 +580,19 @@
       thread.appendChild(msg); thread.scrollTop = thread.scrollHeight;
       return msg;
     }
+    /* every source chip lands on an element that exists — projects on their
+       case, everything else on its section                                 */
     function sources(list) {
       var row = el("div", "src-row");
       row.appendChild(el("span", "lbl", "SOURCE:"));
-      var MAP = { journey: "journey-details", research: "case-live-your-best-life" };
       list.forEach(function (s) {
-        var id = projById(s[1]) ? "case-" + s[1] : (MAP[s[1]] || s[1]);
-        var a = el("a", "chip gold", s[0]); a.href = "#" + id; row.appendChild(a);
+        var id = projById(s[1]) ? "case-" + s[1] : s[1];
+        var a = el("a", "chip gold", esc(s[0])); a.href = "#" + id; row.appendChild(a);
       });
       return row;
     }
-
-    /* Corpus figures inside copilot answers are written as {{token}} and resolved
-       from the generated corpus at render time. Hand-typed numbers go stale the
-       moment the repository changes; these cannot. */
+    /* Corpus figures inside answers are {{tokens}} resolved from the generated
+       corpus at render time, so they cannot drift from the repository.     */
     function corpusFigures(html) {
       var K = (window.GOS_CORPUS || {}).counts || {};
       var n = function (v) { return typeof v === "number" ? v.toLocaleString("en-US") : "NOT DOCUMENTED"; };
@@ -580,53 +605,64 @@
         return Object.prototype.hasOwnProperty.call(map, k) ? map[k] : m;
       });
     }
+    function structured(e) {
+      var wrap = function (h) { return /^\s*</.test(h) ? h : "<p>" + h + "</p>"; };
+      return '<dl class="answer">' +
+        [["ROLE", e.role, ""], ["WORK", e.work, ""], ["EVIDENCE", e.evidence, ""], ["STATUS", e.status, " status"]].map(function (r) {
+          return '<div class="ar' + r[2] + '"><dt>' + r[0] + '</dt><dd>' + corpusFigures(wrap(r[1])) + '</dd></div>';
+        }).join("") + '</dl>';
+    }
 
     function answer(q, entry) {
       if (askBusy) return; askBusy = true;
-      addMsg("you", "<p>" + esc(q) + "</p>");
-      var t = addMsg("gaurav", '<span class="typing"><i></i><i></i><i></i></span>');
+      var asked = addMsg("you", "<p>" + esc(q) + "</p>");
+      var t = addMsg("gaurav", '<span class="typing" aria-label="Looking up the answer"><i></i><i></i><i></i></span>');
       var body = t.querySelector(".body"), d = reduce ? 0 : 1;
       trace(0);
-      [[1, 300], [2, 640], [3, 980]].forEach(function (st) { setTimeout(function () { trace(st[0]); }, st[1] * d); });
+      [[1, 160], [2, 320], [3, 480]].forEach(function (st) { setTimeout(function () { trace(st[0]); }, st[1] * d); });
       setTimeout(function () {
         if (entry === "no-evidence") {
           body.innerHTML = cfg.no_evidence_reply;
-          body.appendChild(el("div", "grounded", "◆ NO FIGURE EXISTS — NOTHING INVENTED"));
-          trace(-1);
-          GOS.track("ask_gaurav_unanswered", "no_evidence_figure");
+          body.appendChild(el("div", "grounded", "◆ NOT DOCUMENTED — NOTHING INVENTED"));
+          GOS.track("copilot_question", "no_evidence_figure");
         } else if (entry) {
-          body.innerHTML = corpusFigures(entry.a);
-          body.appendChild(el("div", "grounded", "◆ GROUNDED IN PORTFOLIO EVIDENCE"));
+          body.innerHTML = structured(entry);
+          body.appendChild(el("div", "grounded", "◆ FROM DOCUMENTED RECORDS"));
           body.appendChild(sources(entry.sources));
-          trace(4);
-          GOS.track("ask_gaurav_question", entry.id);
+          GOS.track("copilot_question", entry.id);
         } else {
           body.innerHTML = cfg.refusal;
-          body.appendChild(el("div", "grounded", "◆ NO MATCHING EVIDENCE — NOTHING INVENTED"));
-          trace(-1);
-          GOS.track("ask_gaurav_unanswered");
+          body.appendChild(el("div", "grounded", "◆ NOT DOCUMENTED — NOTHING INVENTED"));
+          GOS.track("copilot_question", "unanswered");
         }
-        thread.scrollTop = thread.scrollHeight; askBusy = false;
-        setTimeout(function () { trace(-1); }, 1600 * d);
-      }, 1100 * d);
+        trace(entry && entry !== "no-evidence" ? 4 : -1);
+        thread.scrollTop = asked.offsetTop - 12; askBusy = false;
+        setTimeout(function () { trace(-1); }, 1400 * d);
+      }, 600 * d);
     }
+    /* Keys match whole words only, so "live" never matches "deliver" and
+       "program" never matches "programming".
+       The honesty guard runs first: a request for a figure that does not
+       exist refuses even when the question names a project that does.     */
     function match(q) {
       var s = q.toLowerCase(), best = null, score = 0;
-      /* honesty guard first: a request for a figure we don't have refuses,
-         even when the question also names a project we do cover */
-      var blocked = (cfg.no_evidence_terms || []).some(function (t) { return s.indexOf(t) > -1; });
-      if (blocked) return "no-evidence";
+      if ((cfg.no_evidence_terms || []).some(function (t) { return s.indexOf(t) > -1; })) return "no-evidence";
       C.copilot_kb.forEach(function (e) {
         var n = 0;
-        e.keys.forEach(function (k) { if (s.indexOf(k) > -1) n += k.length; });
-        if (s.indexOf(e.q.toLowerCase().slice(0, 14)) > -1) n += 40;
+        e.keys.forEach(function (k) {
+          if (new RegExp("(^|[^a-z0-9])" + k.replace(/[.*+?^${}()|[\]\\\/]/g, "\\$&") + "($|[^a-z0-9])").test(s)) n += k.length;
+        });
+        if (s.indexOf(e.q.toLowerCase().slice(0, 18)) > -1) n += 40;
         if (n > score) { score = n; best = e; }
       });
-      return score >= 3 ? best : null;
+      return score >= 4 ? best : null;
     }
+    GOS.askMatch = match;
+
     var pl = document.getElementById("prompts");
-    C.copilot_kb.forEach(function (e) {
-      var b = el("button", "prompt-btn", "→  " + e.q);
+    C.copilot_kb.filter(function (e) { return e.suggested; }).forEach(function (e) {
+      var b = el("button", "prompt-btn", esc(e.q));
+      b.type = "button";
       b.addEventListener("click", function () { answer(e.q, e); });
       pl.appendChild(b);
     });
@@ -643,7 +679,7 @@
   /* -------------------------------------------------------------- challenge */
   (function () {
     var m = document.getElementById("challenge-mount");
-    m.innerHTML = '<div class="eyebrow"><span class="num">07</span> Product thinking, live</div>' +
+    m.innerHTML = '<div class="eyebrow"><span class="num">L5</span> Product challenges</div>' +
       '<h2 class="title">Challenge <em>Gaurav</em></h2>' +
       '<p class="dek">Three problems close to ones I have actually faced. Choose what you would decide first, add why if you want to, then see my documented approach.</p>' +
       '<div class="chips" style="margin-top:var(--s2)"><span class="chip dim">NO SCORE · NO CORRECT ANSWER</span><span class="chip dim">DEMONSTRATION, NOT ASSESSMENT</span></div>' +
@@ -710,7 +746,7 @@
     var cfg = C.lab_config;
     var m = document.getElementById("lab-mount");
     var published = C.lab_notes.filter(function (n) { return n.published; });
-    m.innerHTML = '<div class="eyebrow"><span class="num">08</span> Writing engine &amp; lab bench</div>' +
+    m.innerHTML = '<div class="eyebrow"><span class="num">L6</span> Lab Notes &amp; AI experiments</div>' +
       '<h2 class="title">Lab <em>Notes</em></h2>' +
       '<p class="dek">' + esc(cfg.subtitle) + '</p>' +
       '<span class="step-label" style="margin-top:var(--s3)">Publishing queue · order set, no dates committed</span>' +
@@ -830,7 +866,7 @@
       var rel = n.related_project && C.projects.filter(function (p) { return p.id === n.related_project; })[0];
       if (rel) {
         var rl = el("a", "chip gold", "RELATED: " + esc((rel.name || rel.title || rel.id).toUpperCase()));
-        rl.href = "#work"; rl.addEventListener("click", closeReader);
+        rl.href = "#case-" + rel.id; rl.addEventListener("click", closeReader);
         var rw = el("div", "chips"); rw.style.marginTop = "18px"; rw.appendChild(rl);
         inner.appendChild(rw);
       }
@@ -875,9 +911,9 @@
     }
   })();
 
-  /* ------------------------------------------------------------------ about */
-  /* Experience and education first — the record a recruiter checks. The
-     longer journey sits behind one disclosure; nothing in it is dropped.  */
+  /* ------------------------------------------------------- the CV record */
+  /* Experience, Education and Certifications: the record a recruiter checks,
+     rendered verbatim from the content layer.                              */
   function expItem(e) {
     return '<div class="rec-item"><div class="h"><h3 class="r">' + esc(e.role) + ' — ' + esc(e.org) + '</h3><div class="d">' + esc(e.period) + '</div></div>' +
       '<div class="o">' + esc(e.where) + '</div><ul>' + e.bullets.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + '</ul></div>';
@@ -888,82 +924,47 @@
   var CRED_GROUPS = ["Professional certifications", "Courses & learning paths"];
 
   (function () {
-    var m = document.getElementById("about-mount");
-    var j = C.journey, r = C.research;
-    var h = '<div class="eyebrow"><span class="num">03</span> The record</div>' +
-      '<h2 class="title" id="about-title">Experience &amp; <em>education</em></h2>' +
-
-      '<span class="sect-label" style="margin-top:var(--s4)">Experience</span><div style="margin-top:var(--s2)">' +
-      C.experience.map(expItem).join("") + '</div>' +
-
-      '<span class="sect-label" style="margin-top:var(--s5)">Education</span><div style="margin-top:var(--s2)">' +
-      C.education.map(eduItem).join("") + '</div>' +
-
-      '<span class="sect-label" style="margin-top:var(--s5)">Credentials</span>' +
-      '<p class="small" style="margin-top:8px">Separated by what the source actually calls them — a learning path is listed as a learning path, not upgraded to a certification.</p>' +
-      '<div class="stack" style="margin-top:var(--s2)">' +
-      CRED_GROUPS.map(function (g) {
-        var rows = C.credentials.filter(function (c) { return c.group === g; });
-        if (!rows.length) return "";
-        return '<div class="card"><div class="mono" style="font-size:10.5px;letter-spacing:.17em;color:var(--gold)">' + esc(g.toUpperCase()) + '</div>' +
-          rows.map(function (c) {
-            return '<div style="margin-top:11px"><div class="small" style="color:var(--dim)">' + esc(c.issuer) + '</div>' +
-              '<div class="chips" style="margin-top:7px">' + c.items.map(function (i) { return '<span class="chip">' + esc(i) + '</span>'; }).join("") + '</div></div>';
-          }).join("") + '</div>';
-      }).join("") + '</div>' +
-
-      '<span class="sect-label" style="margin-top:var(--s5)">Toolkit</span>' +
-      '<p class="small" style="margin-top:8px">Exactly what is on my CV — no aspirational tools.</p><div id="toolkit"></div>' +
-
-      '<details class="mw" style="margin-top:var(--s5)" id="journey-details"><summary><span><span class="t">The full journey, 2017 to now</span>' +
-        '<span class="s">' + esc(j.arc.join(" → ")) + ' — ' + esc(j.note) + '</span></span><span class="x">OPEN</span></summary>' +
-        '<div class="mw-body"><div class="journey" id="journey"></div>' +
-        '<div class="card" id="research-record" style="margin-top:var(--s3)">' +
-          '<div class="mono" style="font-size:10.5px;letter-spacing:.17em;color:var(--gold)">RESEARCH RECORD · ' + esc(r.org.toUpperCase()) + '</div>' +
-          '<p style="margin-top:9px">' + esc(r.produced) + '</p><p class="note">' + esc(r.note) + '</p>' +
-        '</div></div>' +
-      '</details>' +
-
-      '<div class="cta-band"><p>Hiring for a healthcare product, APM or product analyst role? The CV has all of this on one page.</p>' +
-        '<div class="cta-row">' + cvLink("btn btn-primary", "DOWNLOAD CV ↓") +
-        '<a class="btn btn-secondary" href="#contact">CONTACT →</a></div></div>';
-    m.innerHTML = h;
-
-    var jw = document.getElementById("journey");
-    j.stops.forEach(function (s, i) {
-      var last = i === j.stops.length - 1;
-      var st = el("button", "stop");
-      st.type = "button";
-      st.setAttribute("data-open", last ? "true" : "false");
-      st.setAttribute("aria-expanded", last ? "true" : "false");
-      st.innerHTML = '<div class="stop-when">' + esc(s.when) + ' <span class="stop-phase">' + esc(s.phase) + '</span></div>' +
-        '<div class="stop-what">' + esc(s.what) + '</div><div class="stop-where">' + esc(s.where) + '</div>';
-      var det = el("div", "stop-detail", esc(s.detail));
-      det.hidden = !last;
-      st.addEventListener("click", function () {
-        var open = det.hidden; det.hidden = !open;
-        st.setAttribute("data-open", open ? "true" : "false");
-        st.setAttribute("aria-expanded", open ? "true" : "false");
-      });
-      st.appendChild(det); jw.appendChild(st);
-    });
-
+    document.getElementById("experience-mount").innerHTML =
+      '<div class="eyebrow"><span class="num">05</span> Experience</div>' +
+      '<h2 class="title" id="experience-title"><em>Experience</em></h2>' +
+      '<div style="margin-top:var(--s3)">' + C.experience.map(expItem).join("") + '</div>' +
+      '<span class="sect-label" style="margin-top:var(--s5)">Skills</span>' +
+      '<p class="small" style="margin-top:8px">Exactly what is on my CV — no aspirational tools.</p><div id="toolkit"></div>';
     var tw = document.getElementById("toolkit");
     C.skills.forEach(function (g) {
       var sec = el("div", "tool-group");
-      sec.appendChild(el("h3", null, g.group));
+      sec.appendChild(el("h3", null, esc(g.group)));
       var chips = el("div", "chips");
-      g.items.forEach(function (t) { chips.appendChild(el("span", "chip", t)); });
+      g.items.forEach(function (t) { chips.appendChild(el("span", "chip", esc(t))); });
       sec.appendChild(chips); tw.appendChild(sec);
     });
+
+    document.getElementById("education-mount").innerHTML =
+      '<div class="eyebrow"><span class="num">06</span> Education</div>' +
+      '<h2 class="title" id="education-title"><em>Education</em></h2>' +
+      '<div style="margin-top:var(--s3)">' + C.education.map(eduItem).join("") + '</div>';
+
+    document.getElementById("certifications-mount").innerHTML =
+      '<div class="eyebrow"><span class="num">07</span> Certifications</div>' +
+      '<h2 class="title" id="certifications-title"><em>Certifications</em> &amp; learning</h2>' +
+      '<p class="dek">Separated by what the source actually calls them — a learning path is listed as a learning path, not upgraded to a certification. The AI-Enabled Product Management Program is listed under Education.</p>' +
+      '<div class="cert-grid">' + CRED_GROUPS.map(function (g) {
+        var rows = C.credentials.filter(function (c) { return c.group === g; });
+        if (!rows.length) return "";
+        return '<div class="card"><h3 class="mono" style="font-size:10.5px;letter-spacing:.17em;color:var(--gold)">' + esc(g.toUpperCase()) + '</h3>' +
+          rows.map(function (c) {
+            return '<div style="margin-top:12px"><div class="small" style="color:var(--muted)">' + esc(c.issuer) + '</div>' +
+              '<ul class="cert-list">' + c.items.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join("") + '</ul></div>';
+          }).join("") + '</div>';
+      }).join("") + '</div>';
   })();
 
   /* ---------------------------------------------------------------- contact */
   (function () {
     var ct = C.site_config.contact;
     document.getElementById("contact-mount").innerHTML =
-      '<div class="eyebrow"><span class="num">04</span> Contact</div>' +
-      '<h2 class="contact-line" id="contact-title">Let\'s talk about your<br>healthcare product role.</h2>' +
+      '<div class="eyebrow"><span class="num">08</span> Contact</div>' +
+      '<h2 class="contact-line" id="contact-title">Let\'s talk about your<br>AI or healthcare product role.</h2>' +
       '<a class="mail-big" data-ev="contact_click" href="mailto:' + esc(ct.email) + '">' + esc(ct.email) + '</a>' +
       '<div class="cta-row">' +
         cvLink("btn btn-primary", "DOWNLOAD CV (PDF) ↓") +
@@ -986,42 +987,20 @@
       '<span>' + esc(C.site_config.version) + ' · content updated ' + esc(C.site_config.updated) + '</span>';
   })();
 
-  /* ------------------------------------------------- research & experiments */
-  /* The secondary area. Everything here is real and kept, but none of it
-     is needed to judge the product work above — so it says so up front.  */
+  /* ------------------------------------------------------------- intro film */
+  /* Inside Explore the Lab, on demand only. Nothing is fetched until the
+     visitor presses Watch.                                                 */
   (function () {
-    var m = document.getElementById("research-mount");
-    var s = C.site_config, f = s.current_focus, I = C.intro || {};
-    var K = (window.GOS_CORPUS || { counts: {} }).counts;
-    var links = [
-      ["R1", "constellation", "90-day case-study corpus", K.written + " written studies across " + K.directories + " day directories, read from the repository"],
-      ["R2", "atlas", "Product Atlas", "All 90 studies, searchable and filterable"],
-      ["R3", "evolution", "Evolution", "How the method changed over the 90 days"],
-      ["R4", "thinking", "How I think", "The operating model, principles and product orbit"],
-      ["R5", "ask", "AI portfolio copilot", "Ask questions; answers come only from a fixed index"],
-      ["R6", "challenge", "Product challenges", "Three scenarios with my documented approach"],
-      ["R7", "lab", "Lab Notes & AI experiments", "Five drafts and five experiments, each with its status"]
-    ];
-    m.innerHTML =
-      '<span class="re-tag">SECONDARY · FOR DEPTH</span>' +
-      '<div class="eyebrow"><span class="num">R0</span> Research &amp; Experiments</div>' +
-      '<h2 class="title" id="research-title">Research &amp; <em>Experiments</em></h2>' +
-      '<p class="dek">For anyone who wants to go deeper: a 90-day product case-study corpus, a grounded portfolio copilot, product challenges, lab notes and a short intro film. None of it is needed to evaluate the work above.</p>' +
-      '<div class="re-grid">' + links.map(function (l) {
-        return '<a class="re-link" href="#' + l[1] + '"><span class="k">' + l[0] + '</span><span class="t">' + esc(l[2]) + '</span><span class="d">' + esc(l[3]) + '</span></a>';
-      }).join("") + '</div>' +
+    var m = document.getElementById("film-mount"), I = C.intro || {};
+    m.innerHTML = '<div class="eyebrow"><span class="num">L7</span> Intro film</div>' +
+      '<h2 class="title" id="film-title">The intro <em>film</em></h2>' +
       (I.enabled && I.video ?
         '<div class="film-card">' +
-          (I.poster ? '<img src="' + esc(I.poster) + '" alt="" width="168" height="95" loading="lazy" decoding="async">' : "") +
-          '<div class="fc"><div class="mono" style="font-size:10.5px;letter-spacing:.16em;color:var(--gold)">INTRO FILM · ' + esc(I.duration_note || "") + '</div>' +
-          '<p class="small" style="margin-top:6px">A short film made for this portfolio. It only plays when you ask it to.</p></div>' +
+          (I.poster ? '<img src="' + esc(I.poster) + '" alt="Still frame from the GAURAV.OS intro film" width="200" height="113" loading="lazy" decoding="async">' : "") +
+          '<div class="fc"><div class="mono" style="font-size:10.5px;letter-spacing:.16em;color:var(--gold)">' + esc(I.duration_note || "") + ' · ON DEMAND</div>' +
+          '<p class="small" style="margin-top:6px">A short film made for this portfolio. It only plays when you press Watch, and can be skipped at any moment.</p></div>' +
           '<button class="btn btn-secondary" id="film-btn" type="button">▶ WATCH INTRO · ' + esc(I.duration_note || "") + '</button>' +
-        '</div>' : "") +
-      '<div class="panels">' +
-        [f.building, f.completed, f.exploring, f.writing].map(function (p) {
-          return '<div class="panel"><div class="k">' + esc(p.label) + '</div><div class="v">' + esc(p.value) + '</div><div class="m">' + esc(p.note) + '</div></div>';
-        }).join("") +
-      '</div>';
+        '</div>' : '<p class="small">The film is not available.</p>');
   })();
 
   /* -------------------------------------------------------- recruiter view */
@@ -1032,12 +1011,14 @@
       '<header class="rec-head">' +
         '<h1 class="rec-name">' + esc(s.owner) + '</h1>' +
         '<div class="rec-role">' + esc(s.role) + ' · ' + esc(s.discipline) + '</div>' +
+        '<p class="hero-pos" style="font-size:22px">' + esc(s.headline) + '</p>' +
         '<div class="rec-sum">' + (s.proof_points || []).map(function (pp, i) {
           return '<div><b>' + String(i + 1).padStart(2, "0") + '</b><span>' + esc(pp.claim) + ' ' + evLabel(pp.evidence) + '</span></div>';
         }).join("") + '</div>' +
         openBlock("recruiter") +
         '<div class="chips" style="margin-top:var(--s3)">' +
           cvLink("chip gold", esc((ct.resume || {}).label || "") + " ↓") +
+          '<button class="chip gold" type="button" id="rec-ask">ASK GAURAV →</button>' +
           '<span class="chip">' + esc(s.location) + '</span><span class="chip gold">SEEKING: ' + esc(s.seeking.toUpperCase()) + '</span>' +
           '<a class="chip" data-ev="contact_click" href="mailto:' + esc(ct.email) + '">EMAIL →</a>' +
           '<a class="chip" data-ev="linkedin_click" href="https://' + esc(ct.linkedin) + '" target="_blank" rel="noopener">LINKEDIN →</a>' +
@@ -1048,7 +1029,7 @@
         }).join("") + '</div>' +
       '</header>' +
 
-      '<section class="rec-sec" id="rec-work"><h2 class="rec-h">Selected work</h2>' +
+      '<section class="rec-sec" id="rec-work"><h2 class="rec-h">Selected work &amp; lab</h2>' +
         all.map(function (p) {
           return '<div class="rec-item"><div class="h"><h3 class="r">' + esc(p.name) + ' — ' + esc(p.subtitle) + '</h3><div class="d">' + esc(p.period) + '</div></div>' +
             '<div class="o">' + esc(p.role) + ' · ' + esc(p.status) + '</div><ul>' + (p.recruiter || []).map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + '</ul></div>';
@@ -1065,7 +1046,7 @@
 
       '<section class="rec-sec" id="rec-edu"><h2 class="rec-h">Education</h2>' + C.education.map(eduItem).join("") + '</section>' +
 
-      '<section class="rec-sec" id="rec-cred"><h2 class="rec-h">Credentials</h2>' +
+      '<section class="rec-sec" id="rec-cred"><h2 class="rec-h">Certifications</h2>' +
         CRED_GROUPS.map(function (g) {
           var rows = C.credentials.filter(function (c) { return c.group === g; });
           if (!rows.length) return "";
@@ -1082,7 +1063,7 @@
           '<div class="link"><span class="k">Based in</span><span class="v">' + esc(s.location) + '</span></div>' +
           cvLink("link", '<span class="k">CV</span><span class="v">' + esc((ct.resume || {}).label || "") + ' ↓</span>') +
         '</div>' +
-        '<p class="small" style="margin-top:var(--s2)">Recruiter Mode is the one-page view. Switch back for the full case studies, decision logs and the Research &amp; Experiments area.</p>' +
+        '<p class="small" style="margin-top:var(--s2)">Recruiter View is the one-page résumé. Switch back for the full case studies, Ask Gaurav and Explore the Lab.</p>' +
       '</section>';
   })();
 
@@ -1092,13 +1073,19 @@
     root.setAttribute("data-mode", on ? "recruiter" : "lab");
     toggles.forEach(function (b) {
       b.setAttribute("aria-pressed", on ? "true" : "false");
-      if (b.id === "hero-recruiter") b.textContent = on ? "EXIT RECRUITER MODE" : "RECRUITER MODE";
+      if (b.id === "hero-recruiter") b.textContent = on ? "EXIT RECRUITER VIEW" : "RECRUITER VIEW";
     });
     store("gos-mode", on ? "recruiter" : "lab");
     if (on) GOS.track("recruiter_mode_open");
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   }
   toggles.forEach(function (b) { b.addEventListener("click", function () { setMode(root.getAttribute("data-mode") !== "recruiter"); }); });
+  var recAsk = document.getElementById("rec-ask");
+  if (recAsk) recAsk.addEventListener("click", function () {
+    setMode(false);
+    var t = document.getElementById("ask");
+    if (t) { t.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); var i = document.getElementById("ask-input"); if (i) i.focus({ preventScroll: true }); }
+  });
   /* ?view=recruiter is a shareable link straight into the one-page view */
   var askedRecruiter = /[?&]view=recruiter\b/.test(location.search);
   if (askedRecruiter || store("gos-mode") === "recruiter") setMode(true); else root.setAttribute("data-mode", "lab");
@@ -1133,9 +1120,9 @@
         text: [n.title, n.excerpt, n.category, n.tags.join(" "), n.week, strip(n.content)].join(" ") });
     });
     C.experiments.forEach(function (x) { ix.push({ type: "EXPERIMENT", title: x.name, excerpt: x.question + " (" + x.status + ")", href: "#lab" }); });
-    C.experience.forEach(function (e) { ix.push({ type: "EXPERIENCE", title: e.role + " — " + e.org, excerpt: e.period, href: "#about" }); });
-    C.skills.forEach(function (g) { g.items.forEach(function (s) { ix.push({ type: "SKILL", title: s, excerpt: g.group, href: "#about" }); }); });
-    C.education.forEach(function (e) { ix.push({ type: "EDUCATION", title: e.what, excerpt: e.org + " · " + e.period, href: "#about" }); });
+    C.experience.forEach(function (e) { ix.push({ type: "EXPERIENCE", title: e.role + " — " + e.org, excerpt: e.period, href: "#experience" }); });
+    C.skills.forEach(function (g) { g.items.forEach(function (s) { ix.push({ type: "SKILL", title: s, excerpt: g.group, href: "#experience" }); }); });
+    C.education.forEach(function (e) { ix.push({ type: "EDUCATION", title: e.what, excerpt: e.org + " · " + e.period, href: "#education" }); });
     ((window.GOS_CORPUS || {}).studies || []).forEach(function (cs) {
       ix.push({ type: "CASE STUDY", title: "Day " + cs.day + " — " + cs.company,
         excerpt: cs.summary === "NOT DOCUMENTED" ? cs.category + " · not documented" : cs.summary.slice(0, 120),

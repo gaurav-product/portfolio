@@ -1,11 +1,11 @@
-# Portfolio source — Gaurav Kumar Singh, Healthcare Product Manager
+# Portfolio source — Gaurav Kumar Singh, AI Product Professional
 
-A recruiter-first portfolio: the hero leads with name, target roles (Healthcare PM, APM,
-Product Analyst, HealthTech) and three verified proof points, followed by three primary
-case studies, the CV record and contact. The 90-day case-study corpus, the copilot,
-challenges, lab notes and the intro film sit in a secondary **Research & Experiments**
-area. The corpus is **read from a repository**, normalized, validated and rendered —
-nothing on the page is typed in by hand twice.
+The hero leads with name, positioning, five target roles and three verified proof
+points; then Selected Work, the AI & Product Lab, Ask Gaurav, Experience, Education,
+Certifications and Contact. The 90-day case-study corpus, Atlas, Evolution, How I
+Think, challenges, Lab Notes and the intro film sit in a collapsed **Explore the Lab**.
+The corpus is **read from a repository**, normalized, validated and rendered — nothing
+on the page is typed in by hand twice.
 
 ---
 

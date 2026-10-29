@@ -97,7 +97,7 @@ async def main():
             print("browser: bundled Chromium (no H.264 — film checks will not be meaningful)")
         errs = []
 
-        async def page(w, h, skip_intro=True, reduced=False, film=None, quiet=False):
+        async def page(w, h, skip_intro=True, reduced=False, film=None, quiet=False, explore=True):
             ctx = await b.new_context(viewport={"width": w, "height": h},
                                       reduced_motion="reduce" if reduced else "no-preference")
             pg = await ctx.new_page()
@@ -115,6 +115,11 @@ async def main():
                 pg.on("response", lambda r: errs.append(f"{w}px HTTP {r.status}: {r.url}") if r.status >= 400 else None)
             await pg.goto(URL)
             await pg.wait_for_timeout(2000)
+            # Explore the Lab is collapsed by default; most corpus checks need it
+            # open. The first-screen and IA checks build their own pages instead.
+            if explore:
+                await pg.evaluate("() => { const d = document.getElementById('explore-details'); if (d && !d.open) d.open = true; }")
+                await pg.wait_for_timeout(400)
             # The film never autoplays; skip_intro=False opens it the way a
             # visitor does, from its button in Research & Experiments.
             if not skip_intro:
@@ -218,7 +223,7 @@ async def main():
         await d.click(".ask-send")
         await d.wait_for_timeout(1900)
         t = await d.inner_text("#thread")
-        check("copilot refuses revenue question", "don't have enough portfolio evidence" in t)
+        check("copilot refuses revenue question", "isn't documented" in t)
         check("copilot did not answer with a company figure", "billion" not in t.lower() and "$" not in t)
         await d.fill("#ask-input", "tell me about the 90 day challenge")
         await d.click(".ask-send")
@@ -242,14 +247,14 @@ async def main():
               await d.evaluate("""() => {
                   const stale = ['89 written','1 empty','1,099,524','1,382'];
                   return GOS_CONTENT.copilot_kb.every(e =>
-                      !stale.some(x => String(e.a).includes(x)));
+                      !stale.some(x => JSON.stringify(e).includes(x)));
               }"""))
         check("every {{token}} used in the knowledge base resolves",
               await d.evaluate("""() => {
                   const K = window.GOS_CORPUS.counts, ok = ['written','directories','empty',
                       'sources','assumption_files','verified','words_m'];
                   return GOS_CONTENT.copilot_kb.every(e =>
-                      (String(e.a).match(/\\{\\{(\\w+)\\}\\}/g) || []).every(m =>
+                      (JSON.stringify(e).match(/\\{\\{(\\w+)\\}\\}/g) || []).every(m =>
                           ok.includes(m.slice(2,-2))));
               }"""))
         await d.screenshot(path=str(OUT / "d-ask.png"))
@@ -471,7 +476,7 @@ async def main():
         check("a reload never autoplays the film",
               await r2.evaluate("() => !document.querySelector('.intro')"))
         check("film control is present and labelled",
-              "WATCH INTRO" in await r2.inner_text("#film-btn"))
+              "WATCH INTRO" in await r2.evaluate("() => document.getElementById('film-btn').textContent"))
         await r2.evaluate("() => document.getElementById('film-btn').click()")
         await r2.wait_for_timeout(1200)
         check("replay replays the film", await r2.evaluate("() => !!document.querySelector('.intro video.film')"))
@@ -527,8 +532,8 @@ async def main():
         rec = await o.evaluate("() => window.GOS_CONTENT.site_config.opportunity")
         check("positioning lives in the content layer, not in the UI file",
               bool(rec and rec.get("label") and rec.get("roles")), rec and rec.get("label"))
-        check("the roles are the four target roles, in order",
-              rec["roles"] == ["Healthcare Product Manager", "Associate Product Manager",
+        check("the roles are the five target roles, in order",
+              rec["roles"] == ["AI Product Manager", "Healthcare Product Manager", "Associate Product Manager",
                                "Product Analyst", "HealthTech Product"], rec["roles"])
         hero = await o.evaluate("""() => { const b=document.querySelector('#home-mount .seek');
             return b ? {k: b.querySelector('.seek-k').textContent.trim(),
@@ -545,7 +550,7 @@ async def main():
         check("the full statement appears in the lab experience exactly once",
               await o.evaluate("() => document.querySelectorAll('.lab-only .open').length") == 1)
         check("no broad 'across industries' positioning survives anywhere on the page",
-              await o.evaluate("""() => !/consumer, SaaS and emerging|across industries|Product Professional/i
+              await o.evaluate("""() => !/consumer, SaaS and emerging|across industries|(^|[^I] )Product Professional/i
                                     .test(document.body.innerText)"""))
         check("no invented contact destination",
               await o.evaluate("""() => [...document.querySelectorAll('#contact-mount a[href]')]
@@ -571,8 +576,8 @@ async def main():
         check("Recruiter Mode leads with the three proof points",
               await o.evaluate("""() => { const t = document.querySelector('#recruiter .rec-sum').textContent;
                   return GOS_CONTENT.site_config.proof_points.every(p => t.includes(p.claim)); }"""))
-        check("Recruiter Mode seeking line names healthcare roles",
-              "HEALTHCARE PM" in await o.evaluate(
+        check("Recruiter View seeking line names the AI and healthcare roles",
+              "AI PM · HEALTHCARE PM" in await o.evaluate(
                   "() => [...document.querySelectorAll('#recruiter .chip.gold')].map(x=>x.textContent).join(' ').toUpperCase()"))
         await o.evaluate("() => document.getElementById('rail-recruiter').click()")
         await o.wait_for_timeout(500)
@@ -777,11 +782,11 @@ async def main():
             ld: (() => { try { return JSON.parse(document.querySelector('script[type=\"application/ld+json\"]').textContent); }
                          catch (e) { return null; } })(),
             h1: [...document.querySelectorAll('h1')].filter(h => h.getClientRects().length).map(h => h.textContent.trim())})""")
-        check("title leads with the name and the healthcare identity",
-              seo["title"].startswith("Gaurav Kumar Singh — Healthcare Product Manager"), seo["title"])
+        check("title leads with the name and the AI product identity",
+              seo["title"].startswith("Gaurav Kumar Singh — AI Product Professional"), seo["title"])
         check("Open Graph title matches", seo["og"] == seo["title"], seo["og"])
         check("description names the target roles and a verified proof point",
-              "Product Analyst" in seo["desc"] and "Evamastu" in seo["desc"] and len(seo["desc"]) <= 300, len(seo["desc"]))
+              "AI PM" in seo["desc"] and "Product Analyst" in seo["desc"] and "Evamastu" in seo["desc"] and len(seo["desc"]) <= 300, len(seo["desc"]))
         check("OG image is the poster", seo["ogimg"] == "media/gaurav-os-poster.jpg", seo["ogimg"])
         # The source carries no site URL; the build writes it from the one SITE
         # setting. Check the built docs/ against that setting.
@@ -835,6 +840,10 @@ async def main():
             const b = new Uint8Array(await r.arrayBuffer());
             return {status: r.status, magic: String.fromCharCode(...b.slice(0, 5)), size: b.length}; }""", res["file"])
         check("the CV PDF is a real PDF", pdf["status"] == 200 and pdf["magic"] == "%PDF-" and pdf["size"] > 20000, pdf)
+        import re as _re2
+        _pdf = (pathlib.Path(__file__).resolve().parents[2] / "docs" / "media" / "gaurav-kumar-singh-cv.pdf").read_bytes()
+        _pages = len(_re2.findall(rb"/Type\s*/Page[^s]", _pdf))
+        check("the CV PDF is two pages", _pages == 2, _pages)
         cvp = await b.new_context(viewport={"width": 390, "height": 844})
         cvg = await cvp.new_page()
         await cvg.goto(URL.replace("index.html", "cv.html")); await cvg.wait_for_timeout(600)
@@ -926,11 +935,13 @@ async def main():
 
         print("\n=== RECRUITER-FIRST: the first screen and the proof ===")
         PROOF = {
-            "evamastu": "Owned the PRD through release; cohort analysis supported a 20–25% lift in user consistency.",
-            "live-your-best-life": "30+ structured user interviews; the research informed three major feature iterations.",
-            "careconnect": "Reframed the problem when discovery contradicted my own brief, then built and tested an MVP.",
+            "evamastu": "Owned discovery through release and wrote the full PRD; cohort analysis across 50+ participant cohorts supported a 20–25% lift in consistency over six weeks.",
+            "live-your-best-life": "30+ structured user interviews and engagement tracked for 500+ users; the research influenced three major feature iterations.",
+            "careconnect": "Reframed a caregiver marketplace into a post-discharge care accountability layer, then built an MVP with 65 unit/integration tests and 30 end-to-end journeys.",
         }
-        for w, h in ((1440, 900), (1280, 800), (390, 844)):
+        HEADLINE = "AI product professional building evidence-led, safety-conscious products from discovery to delivery."
+        BUTTONS = ["VIEW WORK", "ASK GAURAV", "DOWNLOAD CV", "EMAIL", "RECRUITER VIEW"]
+        for w, h in ((1440, 900), (1280, 800), (1024, 768), (768, 1024), (390, 844), (360, 800)):
             fs = await b.new_context(viewport={"width": w, "height": h})
             fp = await fs.new_page()
             mp4hits = []
@@ -939,24 +950,39 @@ async def main():
             g = await fp.evaluate("""(vh) => {
                 const vis = (sel) => { const e = document.querySelector(sel); if (!e) return null;
                     const r = e.getBoundingClientRect(); return {top: r.top, bottom: r.bottom}; };
-                return {name: vis('#hero-name'), seek: vis('#home-mount .seek'),
-                        cv: vis('#home-mount .cta-row .btn-primary'), rec: vis('#hero-recruiter'),
+                return {name: vis('#hero-name'), pos: vis('#home-mount .hero-pos'), seek: vis('#home-mount .seek'),
+                        cta: vis('#home-mount .cta-row'),
                         cards: [...document.querySelectorAll('#home-mount .proof-card')].map(c => {
                             const r = c.getBoundingClientRect(); return {top: r.top, bottom: r.bottom}; }),
-                        intro: !!document.querySelector('.intro')}; }""", h)
+                        intro: !!document.querySelector('.intro'),
+                        explore: document.getElementById('explore-details').open}; }""", h)
             check(f"{w}: no intro film over the first screen", not g["intro"])
             check(f"{w}: the film file is never fetched on a first visit", not mp4hits, mp4hits[:1])
-            check(f"{w}: name, target roles, CV and Recruiter Mode are all in the first screen",
-                  all(g[k] and g[k]["bottom"] <= h for k in ("name", "seek", "cv", "rec")), g)
+            check(f"{w}: Explore the Lab starts collapsed", g["explore"] is False)
+            check(f"{w}: name, positioning and target roles are in the first screen",
+                  all(g[k] and g[k]["bottom"] <= h for k in ("name", "pos", "seek")), g)
             if w >= 1000:
-                check(f"{w}: all three proof cards are in the first screen",
-                      len(g["cards"]) == 3 and all(c["bottom"] <= h for c in g["cards"]), g["cards"])
+                check(f"{w}: the five actions and all three proof cards are in the first screen",
+                      g["cta"]["bottom"] <= h and len(g["cards"]) == 3 and all(c["bottom"] <= h for c in g["cards"]),
+                      {"cta": g["cta"], "cards": g["cards"]})
             else:
-                check(f"{w}: the first proof card starts in the first screen",
-                      len(g["cards"]) == 3 and g["cards"][0]["top"] < h, g["cards"][:1])
+                check(f"{w}: the actions are in the first screen and the proof cards follow directly",
+                      g["cta"]["bottom"] <= h and len(g["cards"]) == 3 and g["cards"][0]["top"] < h + 120,
+                      {"cta": g["cta"], "first": g["cards"][:1]})
             await fs.close()
 
-        rf = await page(1280, 1000)
+        rf = await page(1280, 1000, explore=False)
+        hero = await rf.evaluate("""() => ({
+            h1: [...document.querySelectorAll('h1')].filter(e => e.getClientRects().length).map(e => e.textContent.trim()),
+            pos: document.querySelector('#home-mount .hero-pos').textContent.trim(),
+            buttons: [...document.querySelectorAll('#home-mount .cta-row > *')].map(b => b.textContent.replace(/[\\u2193\\u2192]/g, '').trim()),
+            roles: [...document.querySelectorAll('#home-mount .role')].map(r => r.textContent),
+            ask: document.querySelector('#home-mount .cta-row a[href="#ask"]') !== null})""")
+        check("the name is the only visible h1", hero["h1"] == ["Gaurav Kumar Singh"], hero["h1"])
+        check("the hero states the AI-product positioning", hero["pos"] == HEADLINE, hero["pos"])
+        check("the hero offers View Work, Ask Gaurav, Download CV, Email and Recruiter View, in order",
+              hero["buttons"] == BUTTONS, hero["buttons"])
+        check("the hero role chips lead with AI Product Manager", hero["roles"][:1] == ["AI Product Manager"], hero["roles"])
         pc = await rf.evaluate("""() => [...document.querySelectorAll('#home-mount .proof-card')].map(a => ({
             href: a.getAttribute('href'), claim: a.querySelector('.pc').textContent,
             ev: a.querySelector('.ev-label').textContent}))""")
@@ -964,46 +990,104 @@ async def main():
               [c["claim"] for c in pc] == list(PROOF.values()), [c["claim"][:30] for c in pc])
         check("each proof card links to its case study",
               [c["href"] for c in pc] == ["#case-" + k for k in PROOF], [c["href"] for c in pc])
-        check("CareConnect's proof card says it is not in production", "NOT IN PRODUCTION" in pc[2]["ev"], pc[2]["ev"])
+        check("CareConnect's proof card is labelled exactly 'MVP · NOT IN PRODUCTION'",
+              pc[2]["ev"] == "MVP · NOT IN PRODUCTION", pc[2]["ev"])
         prim = await rf.evaluate("""() => [...document.querySelectorAll('#work-mount > .case.primary')].map(c => c.id)""")
-        check("the three proof projects are the primary case studies, in order",
+        check("Selected Work is Evamastu, Live Your Best Life and CareConnect, in order",
               prim == ["case-" + k for k in PROOF], prim)
         cc = await rf.evaluate("""() => { const c = document.getElementById('case-careconnect');
             return {flag: !!c.querySelector('.prod-flag'), text: c.textContent}; }""")
         check("CareConnect case states plainly that it is not in production",
               cc["flag"] and "CareConnect is not in production" in cc["text"])
-        check("nothing calls CareConnect shipped or completed",
-              await rf.evaluate("""() => { const p = GOS_CONTENT.projects.find(x => x.id === 'careconnect');
-                  const kb = GOS_CONTENT.copilot_kb.find(x => x.id === 'kb3').a;
-                  return p.status !== 'COMPLETED' && !/shipped/i.test(kb) &&
-                         !p.recruiter.some(b => /^Shipped/.test(b)); }"""))
-        more = await rf.evaluate("""() => [...document.querySelectorAll('#work-mount details.mw')].map(d => d.id)""")
-        check("the other builds are kept, collapsed below the primary three",
-              more == ["more-aaroh", "more-phonepe", "more-ghargyaan", "more-nexus"], more)
+
+        print("\n=== INFORMATION ARCHITECTURE ===")
+        ia = await rf.evaluate("""() => {
+            const ids = ['home','work','product-lab','ask','experience','education','certifications','contact','explore-details'];
+            const pos = ids.map(i => document.getElementById(i));
+            const ex = document.getElementById('explore-details');
+            const inLab = ['constellation','atlas','evolution','thinking','challenge','lab','film']
+                .every(i => ex.contains(document.getElementById(i)));
+            return {missing: ids.filter((i, k) => !pos[k]),
+                    ordered: pos.every((e, i) => i === 0 || (pos[i-1].compareDocumentPosition(e) & 4)),
+                    inLab, labOrder: [...ex.querySelectorAll('section.mod')].map(s => s.id),
+                    open: ex.open,
+                    lab: [...document.querySelectorAll('#product-lab-mount .lab-card h3')].map(h => h.textContent)}; }""")
+        check("sections exist and follow the brief's order (Hero → … → Contact → Explore the Lab)",
+              not ia["missing"] and ia["ordered"], ia)
+        check("corpus, Atlas, Evolution, How I Think, challenges, Lab Notes and the film are inside Explore the Lab",
+              ia["inLab"], ia["labOrder"])
+        check("the intro film is the last item in Explore the Lab", ia["labOrder"][-1:] == ["film"], ia["labOrder"])
+        check("Explore the Lab is collapsed by default", ia["open"] is False)
+        check("AI & Product Lab lists Aaroh, GharGyaan, Nexus, PhonePe and the 90-day corpus",
+              ia["lab"] == ["Aaroh", "GharGyaan", "Nexus", "PhonePe Smart Spend Coach", "90-day product case-study corpus"], ia["lab"])
+        await rf.evaluate("() => document.querySelector('a.navlink[href=\"#atlas\"]').click()")
+        await rf.wait_for_timeout(500)
+        check("a nav link into the lab opens Explore the Lab and lands on the section",
+              await rf.evaluate("""() => document.getElementById('explore-details').open &&
+                  Math.abs(document.getElementById('atlas').getBoundingClientRect().top) < 120"""))
+        check("the constellation sizes itself once the lab is open",
+              await rf.evaluate("() => { const c = document.getElementById('const-canvas'); return !!c && c.width > 0; }"))
         await rf.evaluate("() => { location.hash = '#case-aaroh'; }")
         await rf.wait_for_timeout(300)
-        check("a link to a collapsed case opens it",
+        check("a link to a collapsed lab record opens it",
               await rf.evaluate("() => document.getElementById('more-aaroh').open"))
-        order = await rf.evaluate("""() => { const ids = ['home','work','about','contact','research'];
-            const z = document.querySelector('.re-zone');
-            const inZone = ['research','constellation','atlas','evolution','thinking','ask','challenge','lab']
-                .every(i => z.contains(document.getElementById(i)));
-            const pos = ids.map(i => document.getElementById(i));
-            const ordered = pos.every((e, i) => i === 0 || (pos[i-1].compareDocumentPosition(e) & 4));
-            return {inZone, ordered}; }""")
-        check("corpus, atlas, evolution, copilot, challenges, lab and film live in Research & Experiments",
-              order["inZone"], order)
-        check("portfolio sections come before Research & Experiments", order["ordered"], order)
-        check("the film control lives in Research & Experiments",
-              await rf.evaluate("() => !!document.querySelector('#research #film-btn')"))
-        edu = await rf.evaluate("() => document.getElementById('about').innerText")
-        check("education carries 'MCA — Chaudhary Charan Singh University, Meerut' (2022–2024)",
-              "MCA — Chaudhary Charan Singh University, Meerut" in edu and "2022–2024" in edu)
+
+        print("\n=== STATUS LANGUAGE ===")
+        st = await rf.evaluate("""() => {
+            const P = GOS_CONTENT.projects, out = {};
+            P.forEach(p => out[p.id] = p.status);
+            const unfinished = P.filter(p => !['evamastu', 'live-your-best-life'].includes(p.id));
+            const bad = [];
+            const claim = /\\b(shipped|completed?|launched|went live|is live|now live|in production)\\b/i;
+            const allowed = /\\b(not in production|not live|no live users|zero live users|not shipped)\\b/gi;
+            unfinished.forEach(p => {
+                const status = p.status.replace(allowed, '');
+                if (/SHIPPED|COMPLETE|\\bLIVE\\b|IN PRODUCTION/.test(status)) bad.push(p.id + ' status: ' + p.status);
+                const nodes = [document.getElementById('case-' + p.id), document.getElementById('lab-t-' + p.id)]
+                    .filter(Boolean).map(n => n.closest('article') || n);
+                nodes.forEach(n => { const t = n.textContent.replace(allowed, '');
+                    const m = t.match(claim); if (m) bad.push(p.id + ': "' + m[0] + '"'); });
+            });
+            const kb = JSON.stringify(GOS_CONTENT.copilot_kb) + JSON.stringify(GOS_CONTENT.challenges) + JSON.stringify(GOS_CONTENT.lab_notes);
+            return {statuses: out, bad, abRan: /A\\/B (test )?ran|ran \\d+ days/i.test(kb)}; }""")
+        check("CareConnect's status is exactly 'MVP · NOT IN PRODUCTION'",
+              st["statuses"]["careconnect"] == "MVP · NOT IN PRODUCTION", st["statuses"]["careconnect"])
+        check("no unfinished project is called shipped, live, completed or in production",
+              not st["bad"], st["bad"])
+        check("Aaroh: in progress, strategy reset, zero live users, non-diagnostic",
+              st["statuses"]["aaroh"] == "IN PROGRESS · STRATEGY RESET" and await rf.evaluate(
+                  """() => { const t = document.getElementById('product-lab').textContent;
+                      return /Eight consented practitioners/.test(t) && /zero live users/.test(t) && /non-diagnostic/.test(t); }"""),
+              st["statuses"]["aaroh"])
+        check("GharGyaan: concept, not live, 21 emergency categories, 214-case suite",
+              st["statuses"]["ghargyaan"] == "CONCEPT · NOT LIVE" and await rf.evaluate(
+                  """() => { const t = document.getElementById('product-lab').textContent;
+                      return /21 emergency categories/.test(t) && /214-case evaluation suite/.test(t); }"""),
+              st["statuses"]["ghargyaan"])
+        check("PhonePe: A/B test designed, not run, and no text says it ran",
+              st["statuses"]["phonepe"] == "CASE STUDY · A/B DESIGNED, NOT RUN" and not st["abRan"],
+              [st["statuses"]["phonepe"], st["abRan"]])
+
+        print("\n=== EDUCATION & CERTIFICATIONS ===")
+        edu = await rf.evaluate("() => document.getElementById('education').innerText")
+        for line in ("MCA — Chaudhary Charan Singh University, Meerut", "M.Sc. — S-VYASA University, Bengaluru",
+                     "B.Sc. — University of Patanjali, Haridwar",
+                     "AI-Enabled Product Management Program — Masai School with IIT Roorkee faculty"):
+            check("education lists '" + line + "'", line in edu)
+        for period in ("2022–2024", "2020–2022", "2017–2020", "Dec 2025–Aug 2026"):
+            check("education carries the period " + period, period in edu)
         check("the superseded MCA institution appears nowhere",
               await rf.evaluate("() => !/Maharaja Agrasen/.test(document.body.innerHTML + JSON.stringify(GOS_CONTENT))"))
         check("every experience bullet from the CV is rendered verbatim",
-              await rf.evaluate("""() => { const t = document.getElementById('about').textContent;
+              await rf.evaluate("""() => { const t = document.getElementById('experience').textContent;
                   return GOS_CONTENT.experience.every(e => e.bullets.every(b => t.includes(b))); }"""))
+        certs = await rf.evaluate("() => document.getElementById('certifications').innerText")
+        check("certifications keep the documented credential wording",
+              all(x in certs for x in ("Claude Developer Platform", "Claude Agent Development",
+                                       "Model Context Protocol (MCP)", "Claude Code Learning Path")), certs[:120])
+        check("the learning path is not upgraded to a certification",
+              await rf.evaluate("""() => { const g = [...document.querySelectorAll('#certifications .card')]
+                  .find(c => /COURSES/.test(c.textContent)); return !!g && /Claude Code Learning Path/.test(g.textContent); }"""))
 
         pub = await rf.evaluate("""() => { const txt = (sel) => document.querySelector(sel).textContent;
             const all = document.documentElement.outerHTML + JSON.stringify(GOS_CONTENT);
@@ -1016,7 +1100,94 @@ async def main():
         check("no phone number anywhere: no tel: link, not in the page, not in content.js",
               pub["noTel"] and pub["noNumber"] and pub["noField"], pub)
         check("Contact keeps email, LinkedIn, GitHub and New Delhi", pub["contact"], pub)
-        check("Recruiter Mode contact keeps email, LinkedIn, GitHub and New Delhi", pub["rec"], pub)
+        check("Recruiter View contact keeps email, LinkedIn, GitHub and New Delhi", pub["rec"], pub)
+
+        print("\n=== ASK GAURAV ===")
+        SUGGESTED = ["What AI products has Gaurav built?", "How does Gaurav approach AI safety?",
+                     "What makes him different from a generic PM?",
+                     "Tell me about his IIT Roorkee product-management program.",
+                     "What can Gaurav own end to end?", "Which projects are live, in progress, or not in production?"]
+        ag = await page(1280, 1000, explore=False)
+        got = await ag.evaluate("() => [...document.querySelectorAll('#prompts button')].map(b => b.textContent.trim())")
+        check("Ask Gaurav offers the six suggested questions, in order", got == SUGGESTED, got)
+        check("every knowledge-base answer has role, work, evidence and status",
+              await ag.evaluate("() => GOS_CONTENT.copilot_kb.every(k => k.role && k.work && k.evidence && k.status)"))
+        check("Ask Gaurav is reachable from the hero", await ag.evaluate("() => !!document.querySelector('#home-mount a[href=\"#ask\"]')"))
+        for i, q in enumerate(SUGGESTED):
+            await ag.evaluate("(i) => document.querySelectorAll('#prompts button')[i].click()", i)
+            await ag.wait_for_function("() => !document.querySelector('#thread .typing')", timeout=5000)
+            last = await ag.evaluate("""() => { const m = [...document.querySelectorAll('#thread .msg:not(.user)')].pop();
+                return {dt: [...m.querySelectorAll('dl.answer dt')].map(d => d.textContent),
+                        src: m.querySelectorAll('.src-row a').length,
+                        dead: [...m.querySelectorAll('.src-row a')].filter(a => !document.querySelector(a.getAttribute('href'))).length}; }""")
+            check("answer " + str(i + 1) + " gives ROLE, WORK, EVIDENCE, STATUS with live source links",
+                  last["dt"] == ["ROLE", "WORK", "EVIDENCE", "STATUS"] and last["src"] > 0 and last["dead"] == 0, last)
+        st_ans = await ag.evaluate("() => [...document.querySelectorAll('#thread .msg:not(.user)')].pop().textContent")
+        check("the status answer gives CareConnect's exact label and says only Evamastu shipped",
+              "MVP · NOT IN PRODUCTION" in st_ans and "Only Evamastu shipped" in st_ans)
+        for q in ("What is Gaurav's favourite programming language?", "Where did Gaurav go to school as a child?",
+                  "How much revenue does Aaroh make?"):
+            await ag.fill("#ask-input", q)
+            await ag.press("#ask-input", "Enter")
+            await ag.wait_for_function("() => !document.querySelector('#thread .typing')", timeout=5000)
+            t = await ag.evaluate("() => [...document.querySelectorAll('#thread .msg:not(.user)')].pop().textContent")
+            check("undocumented question refused, not inferred: " + q[:38], "isn't documented" in t and "ROLE" not in t, t[:80])
+        kb = await ag.evaluate("""() => ['who built Aaroh and is it live', 'tell me about evamastu', 'how does he deliver work',
+                                        'what was his live your best life research'].map(q => (GOS.askMatch(q) || {}).id || null)""")
+        check("free-typed questions reach the right documented answer", kb == ["kb-ai-products", "kb-end-to-end", "kb-end-to-end", "kb-different"], kb)
+        # keyboard: Tab to a suggested question and press Enter
+        await ag.evaluate("() => document.querySelector('#prompts button').focus()")
+        n_before = await ag.evaluate("() => document.querySelectorAll('#thread .msg').length")
+        await ag.keyboard.press("Enter")
+        await ag.wait_for_function("() => !document.querySelector('#thread .typing')", timeout=5000)
+        check("a suggested question answers from the keyboard",
+              await ag.evaluate("() => document.querySelectorAll('#thread .msg').length") == n_before + 2)
+        await ag.evaluate("() => document.getElementById('hero-recruiter').click()")
+        await ag.wait_for_timeout(400)
+        await ag.evaluate("() => document.getElementById('rec-ask').click()")
+        await ag.wait_for_timeout(900)
+        check("Recruiter View has an Ask Gaurav button that lands on the copilot",
+              await ag.evaluate("""() => document.documentElement.getAttribute('data-mode') === 'lab' &&
+                  document.activeElement && document.activeElement.id === 'ask-input'"""))
+        await ag.screenshot(path=str(OUT / "ask.png"))
+        await ag.close()
+
+        print("\n=== MARGIN ART, FOCUS, REDUCED MOTION ===")
+        for w, h in ((1440, 900), (1280, 800)):
+            mc = await b.new_context(viewport={"width": w, "height": h})
+            mp = await mc.new_page()
+            await mp.goto(URL); await mp.wait_for_timeout(1200)
+            ma = await mp.evaluate("""() => { const a = document.querySelector('.margin-art');
+                const shown = getComputedStyle(a).display !== 'none';
+                const r = a.getBoundingClientRect();
+                const text = [...document.querySelectorAll('main .wrap')].map(e => e.getBoundingClientRect())
+                    .filter(b => b.width > 0);
+                const right = Math.max(...text.map(b => b.right));
+                return {shown, left: r.left, right, aria: a.getAttribute('aria-hidden'),
+                        clear: !shown || r.left >= right}; }""")
+            check(f"{w}: the GAURAV.OS watermark sits only in the margin, never behind text",
+                  ma["clear"] and ma["aria"] == "true", ma)
+            if w == 1440:
+                check("1440: the watermark and motif are shown where the margin can hold them", ma["shown"], ma)
+            else:
+                check("1280: the watermark is hidden where the margin is too narrow", not ma["shown"], ma)
+            await mc.close()
+        fk = await page(1280, 1000, explore=False)
+        await fk.keyboard.press("Tab"); await fk.keyboard.press("Tab")
+        ring = await fk.evaluate("""() => { const a = document.activeElement, c = getComputedStyle(a);
+            return {tag: a.tagName, fv: a.matches(':focus-visible'), style: c.outlineStyle, w: c.outlineWidth}; }""")
+        check("keyboard focus is visible", ring["fv"] and ring["style"] != "none" and ring["w"] not in ("0px", ""), ring)
+        await fk.close()
+        rm2 = await page(1280, 1000, reduced=True, explore=False)
+        mot = await rm2.evaluate("""() => ({
+            btn: getComputedStyle(document.querySelector('.btn')).transitionDuration,
+            intro: !!document.querySelector('.intro video'),
+            smooth: getComputedStyle(document.documentElement).scrollBehavior,
+            pulse: getComputedStyle(document.querySelector('.pulse')).animationIterationCount})""")
+        check("reduced motion: transitions effectively off, no smooth scroll, no repeating animation, no film",
+              all(float(x.rstrip("s")) < 0.01 for x in mot["btn"].split(",")) and mot["smooth"] == "auto"
+              and mot["pulse"] == "1" and not mot["intro"], mot)
+        await rm2.close()
 
         print("\n=== ACCESSIBILITY ===")
         a11y = await rf.evaluate("""() => {

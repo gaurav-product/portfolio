@@ -128,7 +128,7 @@
     var m = document.getElementById("constellation-mount");
     var K = X.counts;
     m.innerHTML =
-      '<div class="eyebrow"><span class="num">R1</span> The 90-day corpus</div>' +
+      '<div class="eyebrow"><span class="num">L1</span> The 90-day corpus</div>' +
       '<h2 class="title">90 days. 90 subjects.<br><em>One product mind.</em></h2>' +
       '<p class="dek">Every node is a directory in the repository. Distance from the centre is the day, size is how much evidence the study carries, and colour is where the subject sits. Select a node to open the study.</p>' +
       '<div class="const-wrap">' +
@@ -295,7 +295,7 @@
     var EVID = ["VERIFIED", "DOCUMENTED", "SOURCED", "NARRATIVE"];
 
     m.innerHTML =
-      '<div class="eyebrow"><span class="num">R2</span> Explorer</div>' +
+      '<div class="eyebrow"><span class="num">L2</span> Explorer</div>' +
       '<h2 class="title">Product <em>Atlas</em></h2>' +
       '<p class="dek">All 90, searchable. Every row links to the study and to its source on GitHub — the evidence is never more than one click away.</p>' +
       '<div class="atlas-controls">' +
@@ -433,7 +433,7 @@
     var outOf10 = function (v) { return v + "/10"; };
 
     m.innerHTML =
-      '<div class="eyebrow"><span class="num">R3</span> Method over time</div>' +
+      '<div class="eyebrow"><span class="num">L3</span> Method over time</div>' +
       '<h2 class="title">The evolution of my<br><em>product thinking</em></h2>' +
       '<p class="dek">Four measures, each counted from the repository across nine ten-day blocks. Two of them show a hard discipline change with a date attached.</p>' +
       '<div class="viz-grid">' +

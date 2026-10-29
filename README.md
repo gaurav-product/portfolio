@@ -1,41 +1,35 @@
-# Gaurav Kumar Singh — Healthcare Product Manager
+# Gaurav Kumar Singh — AI Product Professional
 
-The portfolio of Gaurav Kumar Singh, seeking **Healthcare Product Manager, Associate
-Product Manager, Product Analyst and HealthTech** roles. It is built recruiter-first:
-the first screen says who Gaurav is, which roles he is seeking, and the three verified
-proof points behind that — with a CV download, email and Recruiter Mode one click away.
-
-Behind the portfolio sits a secondary **Research & Experiments** area: 90 product case
-studies read from a repository and rendered as a constellation, an atlas and an
-evolution view, plus a grounded copilot, product challenges, lab notes and an intro
-film. Nothing a visitor reads is typed in twice.
+The portfolio of Gaurav Kumar Singh: *an AI product professional building evidence-led,
+safety-conscious products from discovery to delivery.* He is seeking **AI Product
+Manager, Healthcare Product Manager, Associate Product Manager, Product Analyst and
+HealthTech** roles. The first screen says who he is, what product work he does, which
+roles he is seeking and the three proof points behind it, with View Work · Ask Gaurav ·
+Download CV · Email · Recruiter View one click away. Nothing a visitor reads is typed in
+twice: every word comes from `site/content.js` or the generated corpus.
 
 **Production URL:** https://gaurav-os.lovable.app/ — set once in `site/scripts/build_site.py` (`SITE`); see *Production URL* below.
+That address is served by a **separate Lovable project**, not by this repository — see
+`LOVABLE_HANDOFF.md`.
 
 ---
 
 ## What it contains
 
-**Portfolio** — what a hiring manager needs, in this order:
+In page order:
 
 | Section | What it is |
 |---|---|
-| **Hero** | Name, healthcare identity, the four target roles, three verified proof points, and Download CV · Email · Recruiter Mode. |
-| **Selected work** | Three case studies in full — Evamastu, Live Your Best Life, CareConnect (MVP, **not in production**) — then Aaroh, PhonePe Smart Spend Coach, GharGyaan and Nexus, collapsed. |
-| **Experience & education** | The CV record verbatim, credentials, toolkit, and the full journey behind one disclosure. |
-| **Contact & CV** | Email, CV (PDF and web page), LinkedIn, GitHub, New Delhi. No phone number is published. |
-| **Recruiter Mode** | The one-page view, reachable from the hero, the rail, the top bar, or `?view=recruiter`. |
+| **Hero** | Name (the only h1), positioning line, five target-role chips, three proof cards, and View Work · Ask Gaurav · Download CV · Email · Recruiter View. |
+| **Selected Work** | Evamastu (shipped), Live Your Best Life research, and CareConnect — **MVP · NOT IN PRODUCTION** — in full. |
+| **AI & Product Lab** | Aaroh (in progress, strategy reset, zero live users), GharGyaan (concept, not live), Nexus (MVP, demo mode, not live), PhonePe Smart Spend Coach (A/B test designed, not run), and the 90-day corpus. Full records behind disclosures. |
+| **Ask Gaurav** | Answers from a fixed index of documented facts — never a live model. Every answer gives **role, work, evidence and status**; anything undocumented is refused in plain words. |
+| **Experience · Education · Certifications** | The CV record verbatim. Learning paths are not upgraded to certifications. |
+| **Contact & CV** | Email, CV (PDF and web page), LinkedIn, GitHub, New Delhi. No phone number and no street address. |
+| **Explore the Lab** | Collapsed by default: 90-day corpus (Constellation), Product Atlas, Evolution, How I Think, product challenges, Lab Notes and the intro film. Any link into it opens it. |
+| **Recruiter View** | The one-page résumé, from the hero, the rail, the top bar, or `?view=recruiter`, with its own Ask Gaurav entry. |
 
-**Research & Experiments** — secondary, for depth:
-
-| Section | What it is |
-|---|---|
-| **Intro film** | A 65-second film. It plays only when a visitor presses *Watch intro* — never on load. |
-| **90-day corpus** | 90 case studies as Constellation, Atlas and Evolution, with an evidence model. |
-| **How I Think** | The operating model and product orbit, with the corpus as evidence. |
-| **AI copilot** | Answers only from a fixed index — and refuses before topic-matching. |
-| **Challenges** | Product scenarios with the reasoning revealed after you commit to an answer. |
-| **Lab Notes** | Drafts and AI experiments, each with its status. |
+The intro film never autoplays and is never fetched until a visitor presses *Watch*.
 
 The 90-day case studies are **not** duplicated here. They live in their own archive —
 [gaurav-product/product-management-case-studies](https://github.com/gaurav-product/product-management-case-studies)
@@ -81,7 +75,7 @@ are ever manufactured.
 11.43 MiB. Produced externally and used unmodified.
 
 It never autoplays: a recruiter's first screen is the portfolio, and the 12 MB file
-is only fetched when a visitor presses `WATCH INTRO` in Research & Experiments.
+is only fetched when a visitor presses `WATCH INTRO` in Explore the Lab.
 `SKIP INTRO` is available immediately; a full watch ends on a final-frame hold. Under
 reduced motion the poster is shown with a `CLOSE` control instead.
 
@@ -159,16 +153,22 @@ disagrees with its tree, both readings are surfaced rather than silently reconci
 python3 site/scripts/verify.py
 ```
 
-Runs headless Chromium at **1440 / 1280 / 1024 / 768 / 390 / 360** and asserts: the
-first screen shows name, target roles, CV and Recruiter Mode (and all three proof cards
-on desktop); the proof points are worded as verified and link to the three primary case
-studies; CareConnect is labelled not in production; the MCA entry; CV download
-everywhere and a real PDF; no phone number published; SEO metadata with no unconfirmed URL; WCAG AA contrast on every text token, no text
-under 10px, skip link; corpus counts match the tree; every GitHub link resolves; atlas
-search and filters; the copilot refuses unsupported questions; Recruiter Mode; the film
-never autoplays and is never fetched on first visit, and skip / sound / focus trap work
-when it is opened; reduced motion; keyboard navigation; no console errors and no
-horizontal overflow at any width.
+Runs headless Chromium at **1440 / 1280 / 1024 / 768 / 390 / 360** and asserts:
+- **first screen** — name, positioning and target roles at every width; the five actions
+  and all three proof cards at 1024 and up; no film over it, and the film never fetched;
+- **structure** — the brief's section order, Explore the Lab collapsed by default, links
+  into it opening it, the constellation sizing once open;
+- **claims** — proof cards worded as verified; CareConnect exactly `MVP · NOT IN
+  PRODUCTION`; no unfinished project called shipped, live, completed or in production;
+  Aaroh, GharGyaan and PhonePe statuses; no text saying the A/B test ran; education and
+  credential wording; no phone number anywhere;
+- **Ask Gaurav** — the six suggested questions, every answer in role / work / evidence /
+  status with live source links, undocumented questions refused, keyboard use, and the
+  Recruiter View entry point;
+- **quality** — one h1, skip link to `main`, accessible names, alt text, WCAG AA contrast
+  on every text token, no text under 10px, visible focus, reduced motion, the watermark
+  only in the margin, no horizontal overflow, no console errors — plus the corpus,
+  Atlas, film player, CV, SEO and production-URL checks.
 
 ## GitHub Pages
 

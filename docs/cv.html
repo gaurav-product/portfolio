@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Gaurav Kumar Singh — CV · Healthcare Product Manager</title>
-<meta name="description" content="One-page CV of Gaurav Kumar Singh, healthcare product manager seeking Healthcare PM, Associate PM, Product Analyst and HealthTech roles.">
+<title>Gaurav Kumar Singh — CV · AI Product Professional</title>
+<meta name="description" content="CV of Gaurav Kumar Singh, AI product professional seeking AI Product Manager, Healthcare PM, Associate PM, Product Analyst and HealthTech roles.">
 <link rel="canonical" href="https://gaurav-os.lovable.app/cv.html">
 <meta name="robots" content="index, follow">
 <!-- The printable CV. Rendered from content.js — the same records the site
@@ -22,7 +22,7 @@
   .role{font-size:12pt;margin-top:3px;font-weight:600}
   .seek{font-size:10pt;color:var(--muted);margin-top:4px}
   .contact{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:9.5pt;margin-top:8px;color:var(--muted)}
-  h2{font-size:9pt;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:16px 0 6px;
+  h2{font-size:9pt;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:12px 0 5px;
     padding-bottom:3px;border-bottom:1px solid var(--line)}
   ul{margin:3px 0 0;padding-left:16px}
   li{margin-bottom:2px}
@@ -38,7 +38,7 @@
   .bar a,.bar button{font:inherit;padding:9px 14px;border:1px solid #9A9488;background:#fff;color:#14191D;text-decoration:none;cursor:pointer;border-radius:2px}
   .bar a:focus-visible,.bar button:focus-visible{outline:2px solid #6E520E;outline-offset:2px}
   @media (max-width:600px){ body{padding:22px 18px} .bar{padding:12px 18px} .ih{flex-direction:column;gap:0} }
-  @page{size:A4;margin:12mm 13mm}
+  @page{size:A4;margin:11mm 13mm}
   @media print{ html{background:#fff} body{padding:0;max-width:none} .bar{display:none} }
 </style>
 </head>
@@ -65,6 +65,7 @@
   var h =
     '<header><h1>' + esc(s.owner) + '</h1>' +
     '<div class="role">' + esc(s.role) + '</div>' +
+    '<div class="seek" style="color:var(--ink)">' + esc(s.headline) + '</div>' +
     '<div class="seek">' + esc(s.opportunity.line) + '</div>' +
     '<div class="contact"><span>' + esc(s.location) + '</span>' +
       '<a href="mailto:' + esc(ct.email) + '">' + esc(ct.email) + '</a>' +
@@ -94,7 +95,7 @@
     }).join("") + '</div>' +
 
     '<h2>Skills</h2><div class="skills">' + C.skills.map(function (g) {
-      return '<div><b>' + esc(g.group.charAt(0) + g.group.slice(1).toLowerCase()) + ':</b> ' + esc(g.items.join(", ")) + '</div>';
+      return '<div><b>' + esc(g.group.toLowerCase().replace(/\b\w/g, function (c) { return c.toUpperCase(); }).replace(/\bAi\b/g, "AI")) + ':</b> ' + esc(g.items.join(", ")) + '</div>';
     }).join("") + '</div>';
   document.getElementById("cv").innerHTML = h;
 })();
