@@ -21,10 +21,10 @@ PAGES = ["cv.html"]
 # The public production URL, e.g. "https://example.com/". The one place it
 # is set. When set, the build writes the canonical link, og:url, absolute
 # og/twitter image URLs, the structured-data url, a sitemap and its robots.txt
-# line. Left empty on purpose until the production address is confirmed:
-# nothing is then emitted, rather than a guessed domain.
+# line. Confirmed by Gaurav as the production address (the published Lovable
+# site). Set it to "" to emit none of these; --site overrides it per build.
 #     python3 site/scripts/build_site.py --site https://example.com/
-SITE = ""
+SITE = "https://gaurav-os.lovable.app/"
 if "--site" in sys.argv:
     SITE = sys.argv[sys.argv.index("--site") + 1]
 if SITE and not SITE.endswith("/"):

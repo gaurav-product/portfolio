@@ -778,12 +778,33 @@ async def main():
         check("description names the target roles and a verified proof point",
               "Product Analyst" in seo["desc"] and "Evamastu" in seo["desc"] and len(seo["desc"]) <= 300, len(seo["desc"]))
         check("OG image is the poster", seo["ogimg"] == "media/gaurav-os-poster.jpg", seo["ogimg"])
-        # No production URL is confirmed, so the source carries none: the build
-        # adds canonical / og:url / ld url / sitemap only once SITE is set.
-        check("no unconfirmed production URL: no canonical, no og:url, no github.io",
-              not seo["canon"] and not seo["ogurl"] and "github.io" not in seo["html"]
-              and '"url":' not in seo["html"].split('application/ld+json')[1].split('</script>')[0],
-              [seo["canon"], seo["ogurl"]])
+        # The source carries no site URL; the build writes it from the one SITE
+        # setting. Check the built docs/ against that setting.
+        check("source hard-codes no site URL (it comes from the build)",
+              not seo["canon"] and not seo["ogurl"] and "github.io" not in seo["html"], [seo["canon"], seo["ogurl"]])
+        import importlib.util, re as _re
+        _spec = importlib.util.spec_from_file_location("build_site", str(pathlib.Path(__file__).resolve().parent / "build_site.py"))
+        _bs = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_bs)
+        SITE = _bs.SITE
+        DOCS = pathlib.Path(__file__).resolve().parents[2] / "docs"   # the committed build output
+        check("production URL is the confirmed Lovable address", SITE == "https://gaurav-os.lovable.app/", SITE)
+        built = (DOCS / "index.html").read_text()
+        ld = json.loads(built.split('application/ld+json">')[1].split("</script>")[0])
+        check("built page: canonical and og:url are the production URL",
+              '<link rel="canonical" href="%s">' % SITE in built and '<meta property="og:url" content="%s">' % SITE in built)
+        check("built page: structured-data url is the production URL", ld.get("url") == SITE, ld.get("url"))
+        check("built page: OG and Twitter images are absolute on the production URL",
+              '<meta property="og:image" content="%smedia/gaurav-os-poster.jpg">' % SITE in built
+              and '<meta name="twitter:image" content="%smedia/gaurav-os-poster.jpg">' % SITE in built)
+        check("built page: no other site URL leaks in",
+              "github.io" not in built and not _re.search(r"id-preview--", built))
+        sm = (DOCS / "sitemap.xml").read_text()
+        check("sitemap lists the home page and CV on the production URL",
+              _re.findall(r"<loc>([^<]+)</loc>", sm) == [SITE, SITE + "cv.html"], sm)
+        check("robots.txt points at the sitemap",
+              ("Sitemap: %ssitemap.xml" % SITE) in (DOCS / "robots.txt").read_text())
+        check("built CV page: canonical on the production URL",
+              '<link rel="canonical" href="%scv.html">' % SITE in (DOCS / "cv.html").read_text())
         check("favicon declared inline (no 404)", seo["icon"])
         check("JSON-LD Person parses and carries the verified MCA institution",
               bool(seo["ld"]) and any("Chaudhary Charan Singh" in a["name"]

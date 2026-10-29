@@ -10,7 +10,7 @@ studies read from a repository and rendered as a constellation, an atlas and an
 evolution view, plus a grounded copilot, product challenges, lab notes and an intro
 film. Nothing a visitor reads is typed in twice.
 
-**Production URL:** not yet confirmed. Set it once in `site/scripts/build_site.py` (`SITE`, or `--site`) — see *Production URL* below.
+**Production URL:** https://gaurav-os.lovable.app/ — set once in `site/scripts/build_site.py` (`SITE`); see *Production URL* below.
 
 ---
 
@@ -114,14 +114,14 @@ It also copies `cv.html` and writes `robots.txt`.
 
 The canonical link, `og:url`, absolute Open Graph / Twitter image URLs, the
 structured-data `url` and `sitemap.xml` all need the real public address. It is set in
-exactly one place and is **empty by default**, so nothing points at a guessed domain:
+exactly one place — `SITE` in `build_site.py`, currently `https://gaurav-os.lovable.app/`.
+To build for a different address:
 
 ```bash
 python3 site/scripts/build_site.py --out docs --site https://your-production-domain/
 ```
 
-(or set `SITE` in `build_site.py`). With it empty, those tags and the sitemap are
-simply omitted. Generated files
+Set `SITE` to `""` and those tags and the sitemap are omitted entirely. Generated files
 are never hand-edited after a build.
 
 ## The CV
