@@ -249,7 +249,7 @@ async def main():
                   const K = window.GOS_CORPUS.counts, ok = ['written','directories','empty',
                       'sources','assumption_files','verified','words_m'];
                   return GOS_CONTENT.copilot_kb.every(e =>
-                      (String(e.a).match(/\{\{(\w+)\}\}/g) || []).every(m =>
+                      (String(e.a).match(/\\{\\{(\\w+)\\}\\}/g) || []).every(m =>
                           ok.includes(m.slice(2,-2))));
               }"""))
         await d.screenshot(path=str(OUT / "d-ask.png"))
@@ -412,8 +412,13 @@ async def main():
         check("the focused film control shows a real visible focus ring",
               ring["fv"] and ring["style"] != "none" and ring["w"] not in ("0px", ""), ring)
 
-        # runs to completion -> holds the final frame -> hands over
-        await i.wait_for_timeout(4200)
+        # runs to completion -> holds the final frame -> hands over. Wait for the
+        # hand-over itself (clip + 0.9s hold + 0.62s fade), not a fixed sleep,
+        # which raced the clip's real length on a slow run.
+        try:
+            await i.wait_for_function("() => !document.querySelector('.intro')", timeout=12000)
+        except Exception:
+            pass
         check("film ends and hands over to the interface",
               await i.evaluate("() => !document.querySelector('.intro')"))
         check("interface usable after the film",
@@ -544,7 +549,7 @@ async def main():
                                     .test(document.body.innerText)"""))
         check("no invented contact destination",
               await o.evaluate("""() => [...document.querySelectorAll('#contact-mount a[href]')]
-                 .every(a => /^(#|mailto:|media\\/|cv\.html$|https:\\/\\/(www\.)?(linkedin|github)\.com)/.test(a.getAttribute('href')))"""))
+                 .every(a => /^(#|mailto:|media\\/|cv\\.html$|https:\\/\\/(www\\.)?(linkedin|github)\\.com)/.test(a.getAttribute('href')))"""))
         # recruiter mode, opened from the hero
         await o.evaluate("() => document.getElementById('hero-recruiter').click()")
         await o.wait_for_timeout(500)
@@ -887,7 +892,7 @@ async def main():
             // every GitHub link is absolute and points at one of the two repos
             bad.badGithub = [...document.querySelectorAll('a[href*=\"github\"]')]
                 .map(a => a.getAttribute('href'))
-                .filter(h => !/^https:\/\/github\.com\/gaurav-product(\/|$)/.test(h));
+                .filter(h => !/^https:\\/\\/github\\.com\\/gaurav-product(\\/|$)/.test(h));
             // media referenced by the content layer
             const C = window.GOS_CONTENT || {};
             bad.media = (C.media || []).map(m => m.path).filter(Boolean);
@@ -1006,7 +1011,7 @@ async def main():
             const has = (t) => t.includes(ct.email) && t.includes(ct.linkedin) && t.includes(ct.github)
                                && t.includes('New Delhi');
             return {noTel: !document.querySelector('a[href^="tel:"]'),
-                    noNumber: !/81275|12340|\+91/.test(all), noField: !('phone' in ct),
+                    noNumber: !/81275|12340|\\+91/.test(all), noField: !('phone' in ct),
                     contact: has(txt('#contact-mount')), rec: has(txt('#rec-contact'))}; }""")
         check("no phone number anywhere: no tel: link, not in the page, not in content.js",
               pub["noTel"] and pub["noNumber"] and pub["noField"], pub)
@@ -1061,7 +1066,7 @@ async def main():
         await rf.close()
 
         print("\n=== TABLET / MOBILE ===")
-        for w, h, name in ((1440, 900, "xl"), (1024, 900, "l"), (768, 1024, "t"), (390, 844, "m"), (360, 800, "xs")):
+        for w, h, name in ((1440, 900, "xl"), (1280, 800, "d"), (1024, 900, "l"), (768, 1024, "t"), (390, 844, "m"), (360, 800, "xs")):
             pg = await page(w, h)
             o = await pg.evaluate(PROBE)
             check(f"{w} no horizontal overflow", o[0] <= o[1], o)
@@ -1074,6 +1079,35 @@ async def main():
             o2 = await pg.evaluate(PROBE)
             check(f"{w} atlas no overflow", o2[0] <= o2[1], o2)
             await pg.screenshot(path=str(OUT / f"{name}-atlas.png"))
+
+            # accessibility at this width: the same criteria the 1280 audit applies,
+            # re-measured here because type, layout and visibility change by breakpoint
+            await pg.evaluate("() => { document.querySelectorAll('section.mod').forEach(s => s.scrollIntoView()); window.scrollTo(0, 0); }")
+            await pg.wait_for_timeout(500)
+            aw = await pg.evaluate("""() => {
+                const shown = (e) => e.getClientRects().length > 0 && getComputedStyle(e).visibility !== 'hidden';
+                const small = [...document.querySelectorAll('body *')].filter(e => shown(e) &&
+                    [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) &&
+                    parseFloat(getComputedStyle(e).fontSize) < 10).map(e => e.className + ':' + getComputedStyle(e).fontSize);
+                const nameless = [...document.querySelectorAll('button, a[href]')].filter(e => shown(e) &&
+                    !(e.textContent.trim() || e.getAttribute('aria-label'))).map(e => e.outerHTML.slice(0, 60));
+                return {small: small.slice(0, 4), nSmall: small.length, nameless: nameless.slice(0, 3),
+                        noAlt: document.querySelectorAll('img:not([alt])').length,
+                        h1: [...document.querySelectorAll('h1')].filter(shown).map(x => x.textContent.trim()),
+                        skip: !!document.querySelector('a.skip[href="#main"]') && !!document.querySelector('main#main')}; }""")
+            check(f"{w} a11y: no visible text under 10px", aw["nSmall"] == 0, aw["small"])
+            check(f"{w} a11y: every visible button and link has an accessible name", not aw["nameless"], aw["nameless"])
+            check(f"{w} a11y: every image declares alt text", aw["noAlt"] == 0, aw["noAlt"])
+            check(f"{w} a11y: one visible h1, the name", aw["h1"] == ["Gaurav Kumar Singh"], aw["h1"])
+            check(f"{w} a11y: skip link and main landmark present", aw["skip"])
+            await pg.evaluate("() => document.getElementById('top-recruiter').offsetParent ? document.getElementById('top-recruiter').click() : document.getElementById('rail-recruiter').click()")
+            await pg.wait_for_timeout(500)
+            orc = await pg.evaluate(PROBE)
+            rh1 = await pg.evaluate("() => [...document.querySelectorAll('h1')].filter(e => e.getClientRects().length).map(x => x.textContent.trim())")
+            check(f"{w} Recruiter Mode: no horizontal overflow", orc[0] <= orc[1], orc)
+            check(f"{w} Recruiter Mode: one visible h1, the name", rh1 == ["Gaurav Kumar Singh"], rh1)
+            await pg.screenshot(path=str(OUT / f"{name}-recruiter.png"))
+            await pg.close()
 
         check("no console/page errors", not errs, errs[:4])
         print("\n" + "=" * 46)
