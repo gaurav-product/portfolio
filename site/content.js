@@ -68,14 +68,15 @@ window.GOS_CONTENT = {
     ],
     contact: {
       email: "gauravkumarsingh773@gmail.com",
-      phone: "+91 81275 12340",
+      /* No phone number: content.js is served publicly, so the number is not
+         stored here at all. Public contact is email, LinkedIn, GitHub, city. */
       linkedin: "linkedin.com/in/gaurav-singh-product",
       github: "github.com/gaurav-product",
       /* DOWNLOAD CV appears in the hero, Contact, the rail and Recruiter
          Mode whenever `file` names a PDF. The shipped PDF is generated from
          cv.html, which renders this content layer — so it can never say
-         more than the site does. It deliberately leaves out the phone number
-         and street address. To ship your own CV instead, drop the PDF into
+         more than the site does. It carries no phone number and no street
+         address. To ship your own CV instead, drop the PDF into
          site/media/ under this name (or change `file`) and rebuild.        */
       resume: {
         file: "media/gaurav-kumar-singh-cv.pdf",
@@ -517,9 +518,9 @@ window.GOS_CONTENT = {
   /* ------------------------------------------------------------- education */
   education: [
     { id: "ed1", what: "AI-Enabled Product Management Program", org: "Masai School and IIT Roorkee Faculty", period: "Dec 2025 – Aug 2026", kind: "program" },
-    /* Stated by Gaurav as the verified entry; replaces an earlier record of the
-       institution. Render exactly: MCA — Chaudhary Charan Singh University,
-       Meerut (2022–2024).                                                    */
+    /* Confirmed by Gaurav as the verified entry; replaces an earlier record of
+       the institution. Render exactly: MCA — Chaudhary Charan Singh
+       University, Meerut (2022–2024).                                        */
     { id: "ed2", what: "MCA", org: "Chaudhary Charan Singh University, Meerut", period: "2022–2024", kind: "degree" },
     { id: "ed3", what: "M.Sc.", org: "S-VYASA University, Bengaluru", period: "2020 – 2022", kind: "degree" },
     { id: "ed4", what: "B.Sc.", org: "University of Patanjali, Haridwar", period: "2017 – 2020", kind: "degree" }

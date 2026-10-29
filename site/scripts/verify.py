@@ -544,7 +544,7 @@ async def main():
                                     .test(document.body.innerText)"""))
         check("no invented contact destination",
               await o.evaluate("""() => [...document.querySelectorAll('#contact-mount a[href]')]
-                 .every(a => /^(#|mailto:|tel:|media\\/|cv\.html$|https:\\/\\/(www\.)?(linkedin|github)\.com)/.test(a.getAttribute('href')))"""))
+                 .every(a => /^(#|mailto:|media\\/|cv\.html$|https:\\/\\/(www\.)?(linkedin|github)\.com)/.test(a.getAttribute('href')))"""))
         # recruiter mode, opened from the hero
         await o.evaluate("() => document.getElementById('hero-recruiter').click()")
         await o.wait_for_timeout(500)
@@ -761,13 +761,13 @@ async def main():
 
         print("\n=== CV, SEO, READER ===")
         rs = await page(1280, 1000)
-        LIVE = "https://gaurav-product.github.io/portfolio/"
         seo = await rs.evaluate("""() => ({title: document.title,
             og: (document.querySelector('meta[property=\"og:title\"]')||{}).content,
             desc: (document.querySelector('meta[name=\"description\"]')||{}).content,
             ogimg: (document.querySelector('meta[property=\"og:image\"]')||{}).content,
             ogurl: (document.querySelector('meta[property=\"og:url\"]')||{}).content,
-            canon: (document.querySelector('link[rel=\"canonical\"]')||{}).href,
+            canon: (document.querySelector('link[rel=\"canonical\"]')||{}).href || null,
+            html: document.documentElement.outerHTML,
             icon: !!document.querySelector('link[rel=\"icon\"]'),
             ld: (() => { try { return JSON.parse(document.querySelector('script[type=\"application/ld+json\"]').textContent); }
                          catch (e) { return null; } })(),
@@ -777,10 +777,13 @@ async def main():
         check("Open Graph title matches", seo["og"] == seo["title"], seo["og"])
         check("description names the target roles and a verified proof point",
               "Product Analyst" in seo["desc"] and "Evamastu" in seo["desc"] and len(seo["desc"]) <= 300, len(seo["desc"]))
-        check("OG image is the poster, absolute on the documented live URL",
-              seo["ogimg"] == LIVE + "media/gaurav-os-poster.jpg", seo["ogimg"])
-        check("canonical and og:url are the documented live URL (README), not invented",
-              seo["canon"] == LIVE and seo["ogurl"] == LIVE, [seo["canon"], seo["ogurl"]])
+        check("OG image is the poster", seo["ogimg"] == "media/gaurav-os-poster.jpg", seo["ogimg"])
+        # No production URL is confirmed, so the source carries none: the build
+        # adds canonical / og:url / ld url / sitemap only once SITE is set.
+        check("no unconfirmed production URL: no canonical, no og:url, no github.io",
+              not seo["canon"] and not seo["ogurl"] and "github.io" not in seo["html"]
+              and '"url":' not in seo["html"].split('application/ld+json')[1].split('</script>')[0],
+              [seo["canon"], seo["ogurl"]])
         check("favicon declared inline (no 404)", seo["icon"])
         check("JSON-LD Person parses and carries the verified MCA institution",
               bool(seo["ld"]) and any("Chaudhary Charan Singh" in a["name"]
@@ -975,6 +978,19 @@ async def main():
         check("every experience bullet from the CV is rendered verbatim",
               await rf.evaluate("""() => { const t = document.getElementById('about').textContent;
                   return GOS_CONTENT.experience.every(e => e.bullets.every(b => t.includes(b))); }"""))
+
+        pub = await rf.evaluate("""() => { const txt = (sel) => document.querySelector(sel).textContent;
+            const all = document.documentElement.outerHTML + JSON.stringify(GOS_CONTENT);
+            const ct = GOS_CONTENT.site_config.contact;
+            const has = (t) => t.includes(ct.email) && t.includes(ct.linkedin) && t.includes(ct.github)
+                               && t.includes('New Delhi');
+            return {noTel: !document.querySelector('a[href^="tel:"]'),
+                    noNumber: !/81275|12340|\+91/.test(all), noField: !('phone' in ct),
+                    contact: has(txt('#contact-mount')), rec: has(txt('#rec-contact'))}; }""")
+        check("no phone number anywhere: no tel: link, not in the page, not in content.js",
+              pub["noTel"] and pub["noNumber"] and pub["noField"], pub)
+        check("Contact keeps email, LinkedIn, GitHub and New Delhi", pub["contact"], pub)
+        check("Recruiter Mode contact keeps email, LinkedIn, GitHub and New Delhi", pub["rec"], pub)
 
         print("\n=== ACCESSIBILITY ===")
         a11y = await rf.evaluate("""() => {

@@ -18,8 +18,37 @@ DIST = pathlib.Path(sys.argv[sys.argv.index("--out") + 1]).resolve() if "--out" 
 RUNTIME = ["app.js", "content.js", "corpus.js", "corpus-ui.js"]
 # complete documents, copied as they are
 PAGES = ["cv.html"]
-# the live URL documented in README.md — used for robots.txt and the sitemap
-SITE = "https://gaurav-product.github.io/portfolio/"
+# The public production URL, e.g. "https://example.com/". The one place it
+# is set. When set, the build writes the canonical link, og:url, absolute
+# og/twitter image URLs, the structured-data url, a sitemap and its robots.txt
+# line. Left empty on purpose until the production address is confirmed:
+# nothing is then emitted, rather than a guessed domain.
+#     python3 site/scripts/build_site.py --site https://example.com/
+SITE = ""
+if "--site" in sys.argv:
+    SITE = sys.argv[sys.argv.index("--site") + 1]
+if SITE and not SITE.endswith("/"):
+    SITE += "/"
+
+
+def site_tags(page):
+    """Head tags that need the absolute production URL; empty when unset."""
+    if not SITE:
+        return ""
+    url = SITE + page
+    tags = '<link rel="canonical" href="%s">\n' % url
+    if page == "":
+        tags += '<meta property="og:url" content="%s">\n' % url
+    return tags
+
+
+def absolutize(html, page):
+    if not SITE:
+        return html.replace("<!--SITE-URL-->\n", "").replace("<!--SITE-URL-->", "")
+    html = html.replace("<!--SITE-URL-->\n", site_tags(page)).replace("<!--SITE-URL-->", site_tags(page))
+    html = html.replace('content="media/gaurav-os-poster.jpg"', 'content="%smedia/gaurav-os-poster.jpg"' % SITE)
+    return html.replace('{"@context":"https://schema.org","@type":"ProfilePage",',
+                        '{"@context":"https://schema.org","@type":"ProfilePage",\n "url":"%s",' % SITE)
 
 HEAD = """<!doctype html>
 <html lang="en">
@@ -51,20 +80,32 @@ def main():
         marker = fragment.find("<canvas")
     head_part, body_part = fragment[:marker], fragment[marker:]
 
-    (DIST / "index.html").write_text(HEAD + head_part + "</head>\n<body>\n" + body_part + TAIL,
+    (DIST / "index.html").write_text(absolutize(HEAD + head_part + "</head>\n<body>\n" + body_part + TAIL, ""),
                                      encoding="utf-8")
 
-    for f in RUNTIME + PAGES:
+    for f in RUNTIME:
         p = ROOT / f
         if p.exists():
             shutil.copy2(p, DIST / f)
+    for f in PAGES:
+        p = ROOT / f
+        if p.exists():
+            (DIST / f).write_text(absolutize(p.read_text(encoding="utf-8"), f), encoding="utf-8")
 
-    (DIST / "robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: %ssitemap.xml\n" % SITE)
-    (DIST / "sitemap.xml").write_text(
-        '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
-        "".join("  <url><loc>%s%s</loc></url>\n" % (SITE, page) for page in ("", "cv.html")) +
-        "</urlset>\n")
+    # A sitemap needs absolute URLs, so it exists only once SITE is set.
+    robots = "User-agent: *\nAllow: /\n"
+    if SITE:
+        robots += "Sitemap: %ssitemap.xml\n" % SITE
+        (DIST / "sitemap.xml").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+            "".join("  <url><loc>%s%s</loc></url>\n" % (SITE, page) for page in ("", "cv.html")) +
+            "</urlset>\n")
+    elif (DIST / "sitemap.xml").exists():
+        (DIST / "sitemap.xml").unlink()
+    (DIST / "robots.txt").write_text(robots)
+    if not SITE:
+        print("  NOTE: no production URL set (SITE / --site) — canonical, og:url and sitemap omitted")
 
     # The binaries live in the build output, committed once: docs/media is both
     # the deployed copy and the only copy in the repository. Anything present in

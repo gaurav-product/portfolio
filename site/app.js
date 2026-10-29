@@ -976,7 +976,7 @@
         '<a class="link" data-ev="linkedin_click" href="https://' + esc(ct.linkedin) + '" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span class="v">' + esc(ct.linkedin) + '</span></a>' +
         '<a class="link" data-ev="github_click" href="https://' + esc(ct.github) + '" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">' + esc(ct.github) + '</span></a>' +
         '<a class="link" data-ev="contact_click" href="mailto:' + esc(ct.email) + '"><span class="k">Email</span><span class="v">' + esc(ct.email) + '</span></a>' +
-        '<a class="link" data-ev="contact_click" href="tel:' + esc(ct.phone.replace(/\s/g, "")) + '"><span class="k">Phone</span><span class="v">' + esc(ct.phone) + '</span></a>' +
+        '<div class="link"><span class="k">Based in</span><span class="v">' + esc(C.site_config.location) + '</span></div>' +
         cvLink("link", '<span class="k">CV</span><span class="v">' + esc((ct.resume || {}).label || "") + ' ↓</span>') +
       '</div>';
 
@@ -1079,7 +1079,7 @@
           '<a class="link" href="mailto:' + esc(ct.email) + '"><span class="k">Email</span><span class="v">' + esc(ct.email) + '</span></a>' +
           '<a class="link" href="https://' + esc(ct.linkedin) + '" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span class="v">' + esc(ct.linkedin) + '</span></a>' +
           '<a class="link" href="https://' + esc(ct.github) + '" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">' + esc(ct.github) + '</span></a>' +
-          '<a class="link" href="tel:' + esc(ct.phone.replace(/\s/g, "")) + '"><span class="k">Phone</span><span class="v">' + esc(ct.phone) + '</span></a>' +
+          '<div class="link"><span class="k">Based in</span><span class="v">' + esc(s.location) + '</span></div>' +
           cvLink("link", '<span class="k">CV</span><span class="v">' + esc((ct.resume || {}).label || "") + ' ↓</span>') +
         '</div>' +
         '<p class="small" style="margin-top:var(--s2)">Recruiter Mode is the one-page view. Switch back for the full case studies, decision logs and the Research &amp; Experiments area.</p>' +

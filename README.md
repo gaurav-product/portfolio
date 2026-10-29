@@ -10,7 +10,7 @@ studies read from a repository and rendered as a constellation, an atlas and an
 evolution view, plus a grounded copilot, product challenges, lab notes and an intro
 film. Nothing a visitor reads is typed in twice.
 
-**Live:** https://gaurav-product.github.io/portfolio/
+**Production URL:** not yet confirmed. Set it once in `site/scripts/build_site.py` (`SITE`, or `--site`) — see *Production URL* below.
 
 ---
 
@@ -23,7 +23,7 @@ film. Nothing a visitor reads is typed in twice.
 | **Hero** | Name, healthcare identity, the four target roles, three verified proof points, and Download CV · Email · Recruiter Mode. |
 | **Selected work** | Three case studies in full — Evamastu, Live Your Best Life, CareConnect (MVP, **not in production**) — then Aaroh, PhonePe Smart Spend Coach, GharGyaan and Nexus, collapsed. |
 | **Experience & education** | The CV record verbatim, credentials, toolkit, and the full journey behind one disclosure. |
-| **Contact & CV** | Email, CV (PDF and web page), LinkedIn, GitHub, phone. |
+| **Contact & CV** | Email, CV (PDF and web page), LinkedIn, GitHub, New Delhi. No phone number is published. |
 | **Recruiter Mode** | The one-page view, reachable from the hero, the rail, the top bar, or `?view=recruiter`. |
 
 **Research & Experiments** — secondary, for depth:
@@ -108,7 +108,20 @@ writes the standalone document Pages needs and copies the runtime files beside i
 python3 site/scripts/build_site.py --out docs
 ```
 
-It also copies `cv.html` and writes `robots.txt` and `sitemap.xml`. Generated files
+It also copies `cv.html` and writes `robots.txt`.
+
+### Production URL
+
+The canonical link, `og:url`, absolute Open Graph / Twitter image URLs, the
+structured-data `url` and `sitemap.xml` all need the real public address. It is set in
+exactly one place and is **empty by default**, so nothing points at a guessed domain:
+
+```bash
+python3 site/scripts/build_site.py --out docs --site https://your-production-domain/
+```
+
+(or set `SITE` in `build_site.py`). With it empty, those tags and the sitemap are
+simply omitted. Generated files
 are never hand-edited after a build.
 
 ## The CV
@@ -150,7 +163,7 @@ Runs headless Chromium at **1440 / 1280 / 1024 / 768 / 390 / 360** and asserts: 
 first screen shows name, target roles, CV and Recruiter Mode (and all three proof cards
 on desktop); the proof points are worded as verified and link to the three primary case
 studies; CareConnect is labelled not in production; the MCA entry; CV download
-everywhere and a real PDF; SEO metadata; WCAG AA contrast on every text token, no text
+everywhere and a real PDF; no phone number published; SEO metadata with no unconfirmed URL; WCAG AA contrast on every text token, no text
 under 10px, skip link; corpus counts match the tree; every GitHub link resolves; atlas
 search and filters; the copilot refuses unsupported questions; Recruiter Mode; the film
 never autoplays and is never fetched on first visit, and skip / sound / focus trap work
