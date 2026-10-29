@@ -38,29 +38,52 @@
   };
 
   /* ------------------------------------------- open to product opportunities */
-  /* One record in the content layer, three deliberate placements: the hero,
-     the contact channel and Recruiter Mode. Stated positioning only — no
-     claim about outcomes, availability dates or anything unverified.      */
+  /* One record in the content layer, three deliberate placements: the hero
+     (as the compact seeking row), the contact channel and Recruiter Mode.
+     Stated positioning only — no claim about outcomes or availability.    */
   function openBlock(where) {
     var O = (C.site_config || {}).opportunity;
     if (!O || !O.enabled) return "";
     var href = where === "recruiter" ? (O.cta_href_recruiter || O.cta_href) : O.cta_href;
-    var body = where === "hero" ? O.line : O.line + " " + O.detail;
-    return '<div class="open' + (where === "recruiter" ? " rec-open" : where === "contact" ? " contact-open" : "") + '">' +
+    return '<div class="open' + (where === "recruiter" ? " rec-open" : " contact-open") + '">' +
       '<div class="open-k"><span class="pulse"></span>' + esc(O.label) + '</div>' +
-      '<p class="open-b">' + esc(body) + '</p>' +
+      '<p class="open-b">' + esc(O.line + " " + O.detail) + '</p>' +
       '<div class="open-r">' + (O.roles || []).map(function (r) {
         return '<span>' + esc(r) + '</span>'; }).join("") + '</div>' +
       (where === "contact" ? "" :
         '<div class="open-cta"><a class="btn btn-secondary" data-ev="contact_click" href="' +
-        esc(href) + '">' + esc(O.cta_label) + ' \u2192</a></div>') +
+        esc(href) + '">' + esc(O.cta_label) + ' →</a></div>') +
     '</div>';
+  }
+  function seekRow() {
+    var O = (C.site_config || {}).opportunity;
+    if (!O || !O.enabled) return "";
+    return '<div class="seek" aria-label="' + esc(O.line) + '">' +
+      '<span class="seek-k"><span class="pulse" aria-hidden="true"></span>' + esc(O.label) + '</span>' +
+      (O.roles || []).map(function (r) { return '<span class="role">' + esc(r) + '</span>'; }).join("") +
+    '</div>';
+  }
+
+  /* The CV: one record, rendered wherever a download is offered. Nothing is
+     rendered while no file is named, so there is never a 404 button.        */
+  function cvLink(cls, text) {
+    var R = (C.site_config.contact || {}).resume;
+    if (!R || !R.file) return "";
+    return '<a class="' + cls + '" data-ev="resume_clicked" href="' + esc(R.file) + '" download="' +
+      esc(R.filename) + '" type="application/pdf">' + (text || esc(R.label) + " ↓") + '</a>';
+  }
+  function projById(id) { return C.projects.filter(function (p) { return p.id === id; })[0]; }
+  function byOrder(a, b) { return a.order - b.order; }
+  function evLabel(t) {
+    return t ? '<span class="ev-label' + (/NOT IN PRODUCTION/.test(t) ? " warn" : "") + '">' + esc(t) + '</span>' : "";
   }
 
   /* --------------------------------------------------------- ambient field */
   (function () {
     var c = document.getElementById("field");
-    if (!c || reduce) { if (c) c.style.display = "none"; return; }
+    /* decoration only: skipped under reduced motion and on narrow screens,
+       where CSS hides it anyway and the animation loop would be wasted     */
+    if (!c || reduce || window.matchMedia("(max-width: 1000px)").matches) { if (c) c.style.display = "none"; return; }
     var ctx = c.getContext("2d"), dots = [], w = 0, h = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
     function size() {
       w = c.clientWidth; h = c.clientHeight; c.width = w * dpr; c.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -68,11 +91,13 @@
       for (var i = 0; i < n; i++) dots.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 1 + .35, vx: (Math.random() - .5) * .07, vy: (Math.random() - .5) * .07, a: Math.random() * .3 + .1 });
     }
     function frame() {
-      ctx.clearRect(0, 0, w, h);
-      for (var i = 0; i < dots.length; i++) {
-        var d = dots[i]; d.x += d.vx; d.y += d.vy;
-        if (d.x < 0) d.x = w; if (d.x > w) d.x = 0; if (d.y < 0) d.y = h; if (d.y > h) d.y = 0;
-        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.284); ctx.fillStyle = "rgba(210,166,60," + d.a + ")"; ctx.fill();
+      if (!document.hidden && root.getAttribute("data-mode") !== "recruiter") {
+        ctx.clearRect(0, 0, w, h);
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i]; d.x += d.vx; d.y += d.vy;
+          if (d.x < 0) d.x = w; if (d.x > w) d.x = 0; if (d.y < 0) d.y = h; if (d.y > h) d.y = 0;
+          ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.284); ctx.fillStyle = "rgba(210,166,60," + d.a + ")"; ctx.fill();
+        }
       }
       requestAnimationFrame(frame);
     }
@@ -84,7 +109,7 @@
     var mount = document.getElementById("lab-nav"), group = null;
     C.navigation.forEach(function (n) {
       if (n.group !== group) { group = n.group; mount.appendChild(el("div", "rail-group", group)); }
-      var a = el("a", "navlink", '<span class="idx">' + n.idx + "</span>" + n.label);
+      var a = el("a", "navlink", '<span class="idx">' + n.idx + "</span>" + esc(n.label));
       a.href = "#" + n.id;
       mount.appendChild(a);
     });
@@ -95,95 +120,258 @@
         var a = el("a", "navlink", '<span class="idx">' + String(i + 1).padStart(2, "0") + "</span>" + r[1]);
         a.href = "#" + r[0]; rn.appendChild(a);
       });
-    document.getElementById("rail-sub").textContent = "AI Product Lab · " + C.site_config.version;
-    document.getElementById("status-text").textContent = C.site_config.status_line;
+    document.getElementById("rail-sub").textContent = C.site_config.discipline;
+    /* the rail's CV link is static markup for no-JS; the content layer decides */
+    var rc = document.getElementById("rail-cv"), R = C.site_config.contact.resume || {};
+    if (rc) { if (R.file) { rc.href = R.file; rc.setAttribute("download", R.filename); } else rc.remove(); }
   })();
 
   /* ------------------------------------------------------------------ home */
+  /* The first screen answers, in order: who Gaurav is, which roles he is
+     seeking, and the three verified proof points behind that — then the
+     actions a recruiter takes next. Everything else lives further down.   */
   (function () {
-    var s = C.site_config, f = s.current_focus, ob = s.orbit || {};
-    var K = (window.GOS_CORPUS || { counts: {} }).counts;
+    var s = C.site_config, ct = s.contact;
     var m = document.getElementById("home-mount");
-    var latest = C.lab_notes[0];
-    var feat = C.projects.filter(function (p) { return p.id === s.featured_project; })[0];
-    var xp = C.experiments.filter(function (x) { return x.id === s.current_experiment; })[0];
+    var cards = (s.proof_points || []).map(function (pp) {
+      var p = projById(pp.project);
+      return '<a class="proof-card" href="#case-' + esc(pp.project) + '" data-ev="proof_opened">' +
+        '<span class="pk">' + esc(pp.label) + '</span>' +
+        '<span class="pc">' + esc(pp.claim) + '</span>' +
+        '<span class="pf"><span class="pl">' + esc(p ? p.period : "") + '</span>' + evLabel(pp.evidence) + '</span>' +
+      '</a>';
+    }).join("");
 
     m.innerHTML =
-      '<div class="hero-grid">' +
-        '<div>' +
-          '<div class="status"><span class="pulse"></span> ' + esc(s.status_line) + '</div>' +
-          '<h1 class="hero-mark" style="margin-top:18px">GAURAV<span class="dot">.</span>OS</h1>' +
-          '<div class="hero-person">' + esc(s.owner) + '</div>' +
-          '<div class="hero-role">' + esc(s.role) + '</div>' +
-          '<div class="mono" style="font-size:9.5px;letter-spacing:.24em;color:var(--dim);margin-top:8px">' + esc(s.system || "").toUpperCase() + '</div>' +
-          '<p class="hero-line">Building at the intersection of<br><b>AI × Healthcare × Research × Human Behaviour</b></p>' +
-          '<p class="position">I research behaviour, frame problems, build products, measure outcomes, and use AI <b>where it creates genuine product value</b>.</p>' +
-          openBlock("hero") +
-          '<div class="hero-tags">' + (s.narrative || []).map(function (n, i) {
-              return '<span class="chip' + (i === 0 ? " gold" : " dim") + '">' + esc(n) + '</span>';
-            }).join("") + '</div>' +
-        '</div>' +
-        '<div>' +
-          '<div class="orbit" id="orbit" role="group" aria-label="Product orbit: the domains I work across and the loop I work in">' +
-            '<div class="orbit-plane"><div class="ring r2"></div><div class="ring r1"></div></div>' +
-            '<div class="spin" id="ring-inner"></div>' +
-            '<div class="orbit-core"><div class="om">' + esc((ob.core || "GAURAV.OS").replace(".", "\u0000")).replace("\u0000", '<span class="dot">.</span>') +
-              '</div><div class="ol">' + esc(ob.core_label || "") + '</div></div>' +
-          '</div>' +
-          '<div class="orbit-loop" id="orbit-loop"></div>' +
-          '<div class="orbit-cap" id="orbit-cap" data-rest="' + esc(ob.caption || "") + '">' + esc(ob.caption || "") + '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="panels">' +
-        [f.building, f.completed, f.exploring, f.writing].map(function (p) {
-          return '<div class="panel"><div class="k">' + esc(p.label) + '</div><div class="v">' + esc(p.value) + '</div><div class="m">' + esc(p.note) + '</div></div>';
-        }).join("") +
-      '</div>' +
+      '<p class="kicker">' + esc(s.discipline) + '</p>' +
+      '<h1 class="hero-name" id="hero-name">' + esc(s.owner) + '</h1>' +
+      '<p class="hero-title">' + esc(s.role) + '</p>' +
+      '<p class="hero-intro">' + esc(s.intro) + '</p>' +
+      seekRow() +
       '<div class="cta-row">' +
-        '<a class="btn btn-primary" href="#work">EXPLORE MY WORK →</a>' +
-        '<a class="btn btn-secondary" href="#ask">ASK GAURAV</a>' +
-        '<button class="btn btn-secondary" id="hero-recruiter" aria-pressed="false">RECRUITER MODE</button>' +
-        '<button class="btn btn-secondary" id="hero-intro">▶ WATCH INTRO · ' + esc(C.intro.duration_note) + '</button>' +
-        (s.contact.resume && s.contact.resume.file ? '<a class="btn btn-secondary" data-ev="resume_clicked" href="' + esc(s.contact.resume.file) +
-          '" download="' + esc(s.contact.resume.filename) + '">' + esc(s.contact.resume.label) + ' ↓</a>' : "") +
+        cvLink("btn btn-primary", "DOWNLOAD CV ↓") +
+        '<a class="btn btn-secondary" data-ev="contact_click" href="mailto:' + esc(ct.email) + '">EMAIL ME</a>' +
+        '<button class="btn btn-secondary" id="hero-recruiter" aria-pressed="false" title="A one-page résumé view of this portfolio">RECRUITER MODE</button>' +
+        '<a class="btn btn-secondary" href="#work">CASE STUDIES ↓</a>' +
       '</div>' +
-      '<div class="corpus-tease">' +
-        '<div class="ct-lines"><span>90 DAYS</span><span>90 PRODUCT PROBLEMS</span><span class="hot">1 PRODUCT MIND</span></div>' +
-        '<a class="btn btn-primary" href="#constellation" data-ev="corpus_opened">EXPLORE THE CORPUS →</a>' +
-      '</div>' +
-      '<div class="const-hero">' +
-        '<div class="ch"><div class="n">' + K.written + '</div><div class="l">written case studies across ' + K.directories + ' day directories, read from the repository</div></div>' +
-        '<div class="ch"><div class="n">' + (K.words / 1000000).toFixed(2) + 'M</div><div class="l">words, with ' + K.sources.toLocaleString() + ' references cited</div></div>' +
-        '<div class="ch"><div class="n">' + K.verified + '</div><div class="l">studies documenting programmatic verification</div></div>' +
-      '</div>' +
-      '<div class="cta-row" style="margin-top:var(--s2)">' +
-        '<a class="btn btn-secondary" href="#atlas">SEARCH ALL 90 STUDIES</a>' +
-        '<a class="btn btn-secondary" href="#evolution">HOW THE METHOD CHANGED</a>' +
-      '</div>' +
-      '<span class="step-label" style="margin-top:var(--s5)">Live from the content layer</span>' +
-      '<div class="grid-3">' +
-        '<button class="card lift" id="home-note" style="text-align:left">' +
-          '<div class="mono" style="font-size:8.5px;letter-spacing:.17em;color:var(--gold)">LATEST LAB NOTE</div>' +
-          '<div style="font-family:\'Instrument Serif\',Georgia,serif;font-size:19px;color:var(--bone);margin-top:9px;line-height:1.24">' + esc(latest.title) + '</div>' +
-          '<div class="small" style="margin-top:7px">' + esc(latest.excerpt) + '</div>' +
-          '<div class="chips" style="margin-top:11px"><span class="chip dim">' + esc(latest.status) + '</span><span class="chip dim">' + esc(latest.reading_time) + '</span></div>' +
-        '</button>' +
-        '<a class="card lift" href="#case-' + feat.id + '" style="text-decoration:none">' +
-          '<div class="mono" style="font-size:8.5px;letter-spacing:.17em;color:var(--gold)">FEATURED PROJECT</div>' +
-          '<div style="font-family:\'Instrument Serif\',Georgia,serif;font-size:19px;color:var(--bone);margin-top:9px">' + esc(feat.name) + '</div>' +
-          '<div class="small" style="margin-top:7px">' + esc(feat.subtitle) + '</div>' +
-          '<div class="chips" style="margin-top:11px"><span class="chip ' + feat.status_tone + '">' + esc(feat.status) + '</span></div>' +
-        '</a>' +
-        '<a class="card lift" href="#lab" style="text-decoration:none">' +
-          '<div class="mono" style="font-size:8.5px;letter-spacing:.17em;color:var(--gold)">CURRENT EXPERIMENT</div>' +
-          '<div style="font-family:\'Instrument Serif\',Georgia,serif;font-size:19px;color:var(--bone);margin-top:9px">' + esc(xp.name) + '</div>' +
-          '<div class="small" style="margin-top:7px">' + esc(xp.question) + '</div>' +
-          '<div class="chips" style="margin-top:11px"><span class="chip ' + xp.tone + '"><span class="st-dot st-' + xp.tone + '"></span>' + esc(xp.status) + '</span></div>' +
-        '</a>' +
-      '</div>' +
-      '<p class="hero-note">This page is a product, not a résumé. Every figure on it comes from my CV or my own product docs — anything unvalidated is labelled as a hypothesis, a concept, a draft or in progress.</p>';
+      '<p class="hero-meta">' + esc(s.location) + ' · <a href="mailto:' + esc(ct.email) + '" data-ev="contact_click">' + esc(ct.email) + '</a>' +
+        ' · <a href="https://' + esc(ct.linkedin) + '" target="_blank" rel="noopener" data-ev="linkedin_click">LinkedIn<span class="sr"> (opens in a new tab)</span></a></p>' +
+      '<h2 class="sr">Proof</h2>' +
+      '<div class="proof">' + cards + '</div>' +
+      '<p class="proof-note">Every figure on this site comes from my CV or my own product documentation. Unvalidated work carries its status — draft, concept, in progress, not in production.</p>';
+  })();
 
-    document.getElementById("home-note").addEventListener("click", function () { openReader(latest); });
+  /* ------------------------------------------------------------------ work */
+  /* Three primary case studies, in full. The other builds follow as a
+     collapsed list — every record is still rendered, just not leading.    */
+  function accordion(items, render, openFirst) {
+    var wrapEl = el("div", null);
+    items.forEach(function (s, i) {
+      var a = el("div", "acc");
+      var bid = "acc-" + Math.random().toString(36).slice(2, 9);
+      var btn = el("button", "acc-btn", render.head(s, i));
+      btn.type = "button";
+      var body = el("div", "acc-body");
+      body.id = bid; btn.setAttribute("aria-controls", bid);
+      body.innerHTML = render.body(s, i);
+      var open = openFirst && i === 0;
+      body.hidden = !open;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.addEventListener("click", function () {
+        body.hidden = !body.hidden;
+        btn.setAttribute("aria-expanded", body.hidden ? "false" : "true");
+      });
+      a.appendChild(btn); a.appendChild(body); wrapEl.appendChild(a);
+    });
+    return wrapEl;
+  }
+
+  function renderCase(p, primary) {
+    var w = el("article", "case" + (primary ? " primary" : ""));
+    w.id = "case-" + p.id;
+    w.setAttribute("aria-labelledby", "case-t-" + p.id);
+    var pp = (C.site_config.proof_points || []).filter(function (x) { return x.project === p.id; })[0];
+    var h = '<div class="case-head">' +
+      '<h3 class="case-title" id="case-t-' + p.id + '">' + esc(p.name) + '</h3>' +
+      '<div class="case-sub">' + esc(p.subtitle) + '</div>' +
+      '<div class="case-meta"><span class="chip gold">' + esc(p.role) + '</span>' +
+      (p.org ? '<span class="chip">' + esc(p.org) + '</span>' : "") +
+      '<span class="chip">' + esc(p.period) + '</span>' +
+      '<span class="chip ' + p.status_tone + '">' + esc(p.status) + '</span>' +
+      (p.link ? '<a class="chip" href="' + esc(p.link.url) + '" target="_blank" rel="noopener">' + esc(p.link.label) + ' →<span class="sr"> (opens in a new tab)</span></a>' : '') +
+      '</div></div>';
+    if (pp) h += '<p class="case-proof">' + esc(pp.claim) + evLabel(pp.evidence) + '</p>';
+    if (p.production_note) h += '<p class="prod-flag"><b>NOT IN PRODUCTION</b><span>' + esc(p.production_note) + '</span></p>';
+    if (p.headline) h += '<p class="case-headline">' + esc(p.headline) + '</p>';
+    if (p.metrics) {
+      h += '<div class="metrics">' + p.metrics.map(function (x) {
+        return '<div class="metric"><div class="n">' + esc(x.n) + '</div><div class="l">' + esc(x.l) + '</div></div>';
+      }).join("") + '</div>';
+    }
+    if (p.exec) {
+      h += '<span class="step-label" style="margin-top:var(--s3)">Summary</span><div class="exec">' +
+        p.exec.map(function (c) {
+          return '<div class="exec-cell' + (c.alert ? " alert" : "") + '"><div class="k">' + esc(c.k) + '</div><div class="t">' + esc(c.t) + '</div></div>';
+        }).join("") + '</div>';
+    }
+    if (p.chain) {
+      h += '<div class="flow">' + p.chain.map(function (n, i) {
+        return '<span class="node' + (i === p.chain.length - 1 ? " now" : "") + '">' + esc(n) + '</span>' + (i < p.chain.length - 1 ? '<span class="arr">→</span>' : '');
+      }).join("") + '</div>';
+    }
+    if (p.pivot) {
+      h += '<div class="pivot">' + p.pivot.map(function (s) {
+        return '<div class="pv ' + (s.tone || "") + '"><div class="k">' + esc(s.k) + '</div><div class="t">' + esc(s.t) + '</div></div>';
+      }).join("") + '</div>';
+    }
+    if (p.funnel) {
+      h += '<span class="step-label" style="margin-top:var(--s4)">Pilot funnel</span><div class="funnel">' +
+        p.funnel.map(function (f) {
+          return '<div class="fbar"><span class="lab">' + esc(f.label) + '</span><span class="track">' +
+            '<span class="fill" style="width:' + f.width + '%"></span>' +
+            '<span class="val' + (f.outside ? " out" : "") + '">' + esc(f.value) + '</span></span></div>';
+        }).join("") + '</div>' +
+        (p.funnel_note ? '<p class="note">' + esc(p.funnel_note) + '</p>' : "");
+    }
+    w.innerHTML = h;
+
+    if (p.sections && p.sections.length) {
+      var accWrap = el("div", null);
+      accWrap.style.marginTop = "var(--s3)";
+      accWrap.appendChild(el("span", "step-label", "The record"));
+      accWrap.appendChild(accordion(p.sections, {
+        head: function (s) { return '<span>' + esc(s.label) + (s.tag ? ' <span class="chip dim" style="margin-left:8px">' + esc(s.tag) + '</span>' : "") + '</span><span class="caret" aria-hidden="true">›</span>'; },
+        body: function (s) {
+          var inner = s.body;
+          if (s.chips) inner += '<div class="chips" style="margin-top:11px">' + s.chips.map(function (c) { return '<span class="chip gold">' + esc(c) + '</span>'; }).join("") + '</div>';
+          if (s.flow) inner = '<div class="flow">' + s.flow.map(function (n, ix) { return '<span class="node' + (ix === s.flow.length - 1 ? " now" : "") + '">' + esc(n) + '</span>' + (ix < s.flow.length - 1 ? '<span class="arr">→</span>' : ''); }).join("") + '</div>' + inner;
+          return inner;
+        }
+      }, true));
+      w.appendChild(accWrap);
+    }
+
+    if (p.decision_log) {
+      var lw = el("div", null);
+      lw.style.marginTop = "var(--s4)";
+      lw.appendChild(el("span", "sect-label", "Decision log"));
+      lw.appendChild(el("p", "small", "The decisions that cost me something. Each records why, what it traded away, and the hypothesis it left open."));
+      var log = el("div", "log");
+      p.decision_log.forEach(function (d, i) {
+        var row = el("div", "log-row");
+        var btn = el("button", "log-btn", '<span class="id">D' + (i + 1) + '</span><span class="d">' + esc(d.decision) + '</span>');
+        btn.type = "button";
+        var body = el("div", "log-body");
+        body.id = "log-" + p.id + "-" + i; btn.setAttribute("aria-controls", body.id);
+        var dl = el("dl", "kv");
+        [["Why", d.why], ["Evidence", d.evidence], ["Trade-off", d.tradeoff], ["What changed", d.changed], ["Next hypothesis", d.next]].forEach(function (pair) {
+          dl.appendChild(el("dt", null, pair[0])); dl.appendChild(el("dd", null, pair[1]));
+        });
+        body.appendChild(dl); body.hidden = i !== 0;
+        btn.setAttribute("aria-expanded", i === 0 ? "true" : "false");
+        btn.addEventListener("click", function () {
+          body.hidden = !body.hidden;
+          btn.setAttribute("aria-expanded", body.hidden ? "false" : "true");
+        });
+        row.appendChild(btn); row.appendChild(body); log.appendChild(row);
+      });
+      lw.appendChild(log); w.appendChild(lw);
+    }
+    return w;
+  }
+
+  (function () {
+    var m = document.getElementById("work-mount");
+    var all = C.projects.slice().sort(byOrder);
+    var primary = all.filter(function (p) { return p.tier === "primary"; });
+    var rest = all.filter(function (p) { return p.tier !== "primary"; });
+    m.innerHTML = '<div class="eyebrow"><span class="num">02</span> Selected work</div>' +
+      '<h2 class="title" id="work-title">Three case studies, <em>in full</em></h2>' +
+      '<p class="dek">A shipped product I owned, two years of user research that changed a roadmap, and a self-directed build where discovery overturned my own brief. Each carries its evidence label.</p>' +
+      '<div class="work-index">' + primary.map(function (p, i) {
+        return '<a class="wi" href="#case-' + p.id + '">' +
+          '<span class="n">0' + (i + 1) + '</span>' +
+          '<span><span class="t">' + esc(p.name) + '</span><span class="s">' + esc(p.subtitle) + ' · ' + esc(p.role) + '</span></span>' +
+          '<span class="st"><span class="chip ' + p.status_tone + '">' + esc(p.status) + '</span></span></a>';
+      }).join("") + '</div>';
+    primary.forEach(function (p) { m.appendChild(renderCase(p, true)); });
+
+    if (rest.length) {
+      var mw = el("div", "more-work");
+      mw.innerHTML = '<span class="sect-label">More product work</span>' +
+        '<p class="small" style="margin-top:8px;max-width:62ch">Earlier and in-progress builds. Open any one for the full record — status labels are unchanged.</p>';
+      var list = el("div", null); list.style.marginTop = "var(--s2)";
+      rest.forEach(function (p) {
+        var d = el("details", "mw");
+        d.id = "more-" + p.id;
+        d.innerHTML = '<summary><span><span class="t">' + esc(p.name) + '</span><span class="s">' + esc(p.subtitle) + ' · ' + esc(p.period) + '</span></span>' +
+          '<span class="x"><span class="chip ' + p.status_tone + '">' + esc(p.status) + '</span></span></summary>';
+        var body = el("div", "mw-body");
+        body.appendChild(renderCase(p, false));
+        d.appendChild(body);
+        list.appendChild(d);
+      });
+      mw.appendChild(list);
+      m.appendChild(mw);
+    }
+
+    /* project_open analytics */
+    m.addEventListener("click", function (e) {
+      var a = e.target.closest ? e.target.closest(".wi") : null;
+      if (!a) return;
+      var id = (a.getAttribute("href") || "").replace("#case-", "");
+      GOS.track("project_open", id);
+    });
+    m.addEventListener("toggle", function (e) {
+      if (e.target.open) GOS.track("project_open", e.target.id.replace("more-", ""));
+    }, true);
+  })();
+
+  /* A link to a case inside a collapsed <details> opens it first, so every
+     #case-* anchor on the page — search, copilot sources, proof cards —
+     lands on visible content.                                             */
+  function revealHash() {
+    var id = (location.hash || "").slice(1);
+    if (!id) return;
+    var t = null;
+    try { t = document.getElementById(decodeURIComponent(id)); } catch (e) { return; }
+    var d = t && t.closest ? t.closest("details") : null;
+    if (d && !d.open) { d.open = true; t.scrollIntoView(); }
+  }
+  window.addEventListener("hashchange", revealHash);
+
+  /* ------------------------------------------------------------- how i think */
+  (function () {
+    var m = document.getElementById("thinking-mount");
+    var ob = C.site_config.orbit || {}, pq = C.site_config.product_question;
+    m.innerHTML = '<div class="eyebrow"><span class="num">R4</span> Operating model</div>' +
+      '<h2 class="title">How I <em>Think</em></h2>' +
+      '<p class="dek">One operating model, run over and over. Every stage carries evidence of two kinds: what I did in my own products, and how many of the 90 case studies contain that stage.</p>' +
+      '<div class="orbit-block">' +
+        '<span class="step-label">The domains I work across, and the loop I work in</span>' +
+        '<div class="orbit" id="orbit" role="group" aria-label="Product orbit: the domains I work across and the loop I work in">' +
+          '<div class="orbit-plane"><div class="ring r2"></div><div class="ring r1"></div></div>' +
+          '<div class="spin" id="ring-inner"></div>' +
+          '<div class="orbit-core"><div class="om">' + esc((ob.core || "GAURAV.OS").replace(".", "\u0000")).replace("\u0000", '<span class="dot">.</span>') +
+            '</div><div class="ol">' + esc(ob.core_label || "") + '</div></div>' +
+        '</div>' +
+        '<div class="orbit-loop" id="orbit-loop"></div>' +
+        '<div class="orbit-cap" id="orbit-cap" aria-live="polite" data-rest="' + esc(ob.caption || "") + '">' + esc(ob.caption || "") + '</div>' +
+      '</div>' +
+      '<span class="sect-label" style="margin-top:var(--s6)">Principles</span><div class="principles" id="principles" style="margin-top:var(--s2)"></div>' +
+      '<div class="card" style="margin-top:var(--s5);border-left:2px solid var(--gold)">' +
+        '<div class="mono" style="font-size:10.5px;letter-spacing:.17em;color:var(--gold)">CURRENT PRODUCT QUESTION · ' + esc(pq.status) + '</div>' +
+        '<p style="font-family:\'Instrument Serif\',Georgia,serif;font-size:23px;color:var(--bone);margin-top:11px;line-height:1.28">“' + esc(pq.text) + '”</p>' +
+        '<p class="small" style="margin-top:11px">' + esc(pq.note) + '</p>' +
+      '</div>';
+
+    var pw = document.getElementById("principles");
+    C.principles.forEach(function (p, i) {
+      var r = el("div", "principle");
+      r.appendChild(el("div", "i", String(i + 1).padStart(2, "0")));
+      r.appendChild(el("div", null, '<div class="t">' + esc(p[0]) + '</div><div class="s">' + esc(p[1]) + '</div>'));
+      pw.appendChild(r);
+    });
   })();
 
   /* ----------------------------------------------------------- product orbit */
@@ -258,8 +446,8 @@
        the circle shrinks, and the sublabel is dropped once it no longer fits. */
     function sizeCore(px) {
       var om = core.querySelector(".om"), ol = core.querySelector(".ol");
-      if (om) { om.style.fontSize = Math.max(8, Math.min(12, px * 0.135)).toFixed(1) + "px";
-                om.style.whiteSpace = "nowrap"; om.style.letterSpacing = px < 80 ? ".04em" : ".1em"; }
+      if (om) { om.style.fontSize = Math.max(10, Math.min(12, px * 0.135)).toFixed(1) + "px";   /* 10px floor: legibility */
+                om.style.whiteSpace = "nowrap"; om.style.letterSpacing = px < 80 ? "0" : ".1em"; }
       if (ol) ol.style.display = px < 86 ? "none" : "";
     }
 
@@ -331,143 +519,6 @@
       })(0);
     }
   })();
-
-  /* ------------------------------------------------------------------ work */
-  (function () {
-    var m = document.getElementById("work-mount");
-    var html = '<div class="eyebrow"><span class="num">04</span> Product universe</div>' +
-      '<h2 class="title">The <em>Work</em></h2>' +
-      '<p class="dek">Five builds. Three have outcomes worth reading; two are early and say so. Sections only exist where evidence exists.</p>' +
-      '<div class="work-index">';
-    C.projects.forEach(function (p) {
-      html += '<a class="wi" href="#case-' + p.id + '">' +
-        '<span class="n">0' + p.order + '</span>' +
-        '<span><span class="t">' + esc(p.name) + '</span><span class="s">' + esc(p.subtitle) + ' · ' + esc(p.domain) + '</span></span>' +
-        '<span class="st"><span class="chip ' + p.status_tone + '">' + esc(p.status) + '</span></span></a>';
-    });
-    html += '</div>';
-    m.innerHTML = html;
-
-    C.projects.forEach(function (p) {
-      var w = el("div", "case");
-      w.id = "case-" + p.id;
-      var h = '<div class="case-head">' +
-        '<div class="case-title">' + esc(p.name) + '</div>' +
-        '<div class="case-sub">' + esc(p.subtitle) + '</div>' +
-        '<div class="case-meta"><span class="chip gold">' + esc(p.role) + '</span><span class="chip">' + esc(p.period) + '</span>' +
-        '<span class="chip ' + p.status_tone + '">' + esc(p.status) + '</span>' +
-        (p.link ? '<a class="chip" href="' + p.link.url + '" target="_blank" rel="noopener">' + esc(p.link.label) + ' →</a>' : '') +
-        '</div></div>';
-      if (p.headline) h += '<p class="case-headline">' + esc(p.headline) + '</p>';
-      if (p.exec) {
-        h += '<span class="step-label" style="margin-top:var(--s3)">Executive summary</span><div class="exec">' +
-          p.exec.map(function (c) {
-            return '<div class="exec-cell' + (c.alert ? " alert" : "") + '"><div class="k">' + esc(c.k) + '</div><div class="t">' + esc(c.t) + '</div></div>';
-          }).join("") + '</div>';
-      }
-      if (p.chain) {
-        h += '<div class="flow">' + p.chain.map(function (n, i) {
-          return '<span class="node' + (i === p.chain.length - 1 ? " now" : "") + '">' + esc(n) + '</span>' + (i < p.chain.length - 1 ? '<span class="arr">→</span>' : '');
-        }).join("") + '</div>';
-      }
-      if (p.pivot) {
-        h += '<div class="pivot">' + p.pivot.map(function (s) {
-          return '<div class="pv ' + (s.tone || "") + '"><div class="k">' + esc(s.k) + '</div><div class="t">' + esc(s.t) + '</div></div>';
-        }).join("") + '</div>';
-      }
-      if (p.metrics) {
-        h += '<div class="metrics">' + p.metrics.map(function (x) {
-          return '<div class="metric"><div class="n">' + esc(x.n) + '</div><div class="l">' + esc(x.l) + '</div></div>';
-        }).join("") + '</div>';
-      }
-      if (p.funnel) {
-        h += '<span class="step-label" style="margin-top:var(--s4)">Pilot funnel</span><div class="funnel">' +
-          p.funnel.map(function (f) {
-            return '<div class="fbar"><span class="lab">' + esc(f.label) + '</span><span class="track">' +
-              '<span class="fill" style="width:' + f.width + '%"></span>' +
-              '<span class="val' + (f.outside ? " out" : "") + '">' + esc(f.value) + '</span></span></div>';
-          }).join("") + '</div>' +
-          (p.funnel_note ? '<p class="note">' + esc(p.funnel_note) + '</p>' : "");
-      }
-      w.innerHTML = h;
-
-      if (p.sections && p.sections.length) {
-        var accWrap = el("div", null);
-        accWrap.style.marginTop = "var(--s3)";
-        accWrap.appendChild(el("span", "step-label", "The record"));
-        p.sections.forEach(function (s, i) {
-          var a = el("div", "acc");
-          var btn = el("button", "acc-btn", '<span>' + esc(s.label) + (s.tag ? ' <span class="chip dim" style="margin-left:8px">' + esc(s.tag) + '</span>' : "") + '</span><span class="caret">›</span>');
-          var body = el("div", "acc-body");
-          var inner = s.body;
-          if (s.chips) inner += '<div class="chips" style="margin-top:11px">' + s.chips.map(function (c) { return '<span class="chip gold">' + esc(c) + '</span>'; }).join("") + '</div>';
-          if (s.flow) inner = '<div class="flow">' + s.flow.map(function (n, ix) { return '<span class="node' + (ix === s.flow.length - 1 ? " now" : "") + '">' + esc(n) + '</span>' + (ix < s.flow.length - 1 ? '<span class="arr">→</span>' : ''); }).join("") + '</div>' + inner;
-          body.innerHTML = inner;
-          body.hidden = i !== 0;
-          btn.setAttribute("aria-expanded", i === 0 ? "true" : "false");
-          btn.addEventListener("click", function () {
-            body.hidden = !body.hidden;
-            btn.setAttribute("aria-expanded", body.hidden ? "false" : "true");
-          });
-          a.appendChild(btn); a.appendChild(body); accWrap.appendChild(a);
-        });
-        w.appendChild(accWrap);
-      }
-
-      if (p.decision_log) {
-        var lw = el("div", null);
-        lw.style.marginTop = "var(--s4)";
-        lw.appendChild(el("span", "sect-label", "Decision log"));
-        lw.appendChild(el("p", "small", "The decisions that cost me something. Each records why, what it traded away, and the hypothesis it left open."));
-        var log = el("div", "log");
-        p.decision_log.forEach(function (d, i) {
-          var row = el("div", "log-row");
-          var btn = el("button", "log-btn", '<span class="id">D' + (i + 1) + '</span><span class="d">' + esc(d.decision) + '</span>');
-          var body = el("div", "log-body");
-          var dl = el("dl", "kv");
-          [["Why", d.why], ["Evidence", d.evidence], ["Trade-off", d.tradeoff], ["What changed", d.changed], ["Next hypothesis", d.next]].forEach(function (pair) {
-            dl.appendChild(el("dt", null, pair[0])); dl.appendChild(el("dd", null, pair[1]));
-          });
-          body.appendChild(dl); body.hidden = i !== 0;
-          btn.setAttribute("aria-expanded", i === 0 ? "true" : "false");
-          btn.addEventListener("click", function () {
-            body.hidden = !body.hidden;
-            btn.setAttribute("aria-expanded", body.hidden ? "false" : "true");
-          });
-          row.appendChild(btn); row.appendChild(body); log.appendChild(row);
-        });
-        lw.appendChild(log); w.appendChild(lw);
-      }
-      m.appendChild(w);
-    });
-
-    /* project_open analytics */
-    m.addEventListener("click", function (e) {
-      var a = e.target.closest ? e.target.closest(".wi") : null;
-      if (!a) return;
-      var id = (a.getAttribute("href") || "").replace("#case-", "");
-      GOS.track("project_open", id);
-      if (["aaroh", "careconnect", "phonepe", "ghargyaan", "nexus"].indexOf(id) > -1) GOS.track(id + "_open");
-    });
-  })();
-
-  /* ------------------------------------------------------------- how i think */
-  (function () {
-    var m = document.getElementById("thinking-mount");
-    m.innerHTML = '<div class="eyebrow"><span class="num">05</span> Operating model</div>' +
-      '<h2 class="title">How I <em>Think</em></h2>' +
-      '<p class="dek">One operating model, run over and over. Every stage carries evidence of two kinds: what I did in my own products, and how many of the 90 case studies contain that stage.</p>' +
-      '<span class="sect-label" style="margin-top:var(--s6)">Principles</span><div class="principles" id="principles" style="margin-top:var(--s2)"></div>';
-
-    var pw = document.getElementById("principles");
-    C.principles.forEach(function (p, i) {
-      var r = el("div", "principle");
-      r.appendChild(el("div", "i", String(i + 1).padStart(2, "0")));
-      r.appendChild(el("div", null, '<div class="t">' + esc(p[0]) + '</div><div class="s">' + esc(p[1]) + '</div>'));
-      pw.appendChild(r);
-    });
-  })();
-
   /* ------------------------------------------------------------- ask gaurav */
   var askBusy = false;
   (function () {
@@ -506,7 +557,11 @@
     function sources(list) {
       var row = el("div", "src-row");
       row.appendChild(el("span", "lbl", "SOURCE:"));
-      list.forEach(function (s) { var a = el("a", "chip gold", s[0]); a.href = "#" + s[1]; row.appendChild(a); });
+      var MAP = { journey: "journey-details", research: "case-live-your-best-life" };
+      list.forEach(function (s) {
+        var id = projById(s[1]) ? "case-" + s[1] : (MAP[s[1]] || s[1]);
+        var a = el("a", "chip gold", s[0]); a.href = "#" + id; row.appendChild(a);
+      });
       return row;
     }
 
@@ -661,7 +716,7 @@
       '<span class="step-label" style="margin-top:var(--s3)">Publishing queue · order set, no dates committed</span>' +
       '<div class="timeline" id="timeline"></div>' +
       '<div class="card" style="margin-top:var(--s2);border-color:rgba(210,166,60,.3);background:var(--gold-soft)">' +
-        '<div class="mono" style="font-size:9.5px;letter-spacing:.17em;color:var(--gold)">PUBLISHED: ' + published.length + ' · DRAFT: ' + (C.lab_notes.length - published.length) + '</div>' +
+        '<div class="mono" style="font-size:10.5px;letter-spacing:.17em;color:var(--gold)">PUBLISHED: ' + published.length + ' · DRAFT: ' + (C.lab_notes.length - published.length) + '</div>' +
         '<p class="small" style="margin-top:7px;color:var(--text)">' + esc(cfg.publishing_note) + '</p>' +
       '</div>' +
       '<span class="step-label" style="margin-top:var(--s4)">Featured</span><div class="stack" id="featured-notes"></div>' +
@@ -821,44 +876,36 @@
   })();
 
   /* ------------------------------------------------------------------ about */
+  /* Experience and education first — the record a recruiter checks. The
+     longer journey sits behind one disclosure; nothing in it is dropped.  */
+  function expItem(e) {
+    return '<div class="rec-item"><div class="h"><h3 class="r">' + esc(e.role) + ' — ' + esc(e.org) + '</h3><div class="d">' + esc(e.period) + '</div></div>' +
+      '<div class="o">' + esc(e.where) + '</div><ul>' + e.bullets.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + '</ul></div>';
+  }
+  function eduItem(e) {
+    return '<div class="rec-item"><div class="h"><h3 class="r">' + esc(e.what) + ' — ' + esc(e.org) + '</h3><div class="d">' + esc(e.period) + '</div></div></div>';
+  }
+  var CRED_GROUPS = ["Professional certifications", "Courses & learning paths"];
+
   (function () {
     var m = document.getElementById("about-mount");
     var j = C.journey, r = C.research;
-    var h = '<div class="eyebrow"><span class="num">09</span> How I got here</div>' +
-      '<h2 class="title">The <em>Journey</em></h2>' +
-      '<p class="dek">' + esc(j.note) + '</p>' +
-      '<div class="arc">' + j.arc.map(function (a, i) { return '<b>' + esc(a) + '</b>' + (i < j.arc.length - 1 ? "<span>→</span>" : ""); }).join("") + '</div>' +
-      '<div class="journey" id="journey"></div>' +
+    var h = '<div class="eyebrow"><span class="num">03</span> The record</div>' +
+      '<h2 class="title" id="about-title">Experience &amp; <em>education</em></h2>' +
 
-      '<span class="sect-label" style="margin-top:var(--s6)">Research record</span>' +
-      '<div class="card" style="margin-top:var(--s2)">' +
-        '<div class="chips"><span class="chip gold">' + esc(r.org) + '</span><span class="chip">' + esc(r.role) + '</span><span class="chip">' + esc(r.period) + '</span></div>' +
-        '<div class="metrics" style="margin-top:var(--s3)">' + r.metrics.map(function (x) {
-          return '<div class="metric"><div class="n">' + esc(x.n) + '</div><div class="l">' + esc(x.l) + '</div></div>';
-        }).join("") + '</div>' +
-        '<p style="margin-top:var(--s3)">' + esc(r.produced) + '</p>' +
-        '<p style="margin-top:11px">' + esc(r.now) + '</p>' +
-        '<p class="note">' + esc(r.note) + '</p>' +
-      '</div>' +
-
-      '<span class="sect-label" style="margin-top:var(--s6)">Experience</span><div style="margin-top:var(--s2)">' +
-      C.experience.map(function (e) {
-        return '<div class="rec-item"><div class="h"><div class="r">' + esc(e.role) + ' — ' + esc(e.org) + '</div><div class="d">' + esc(e.period) + '</div></div>' +
-          '<div class="o">' + esc(e.where) + '</div><ul>' + e.bullets.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + '</ul></div>';
-      }).join("") + '</div>' +
+      '<span class="sect-label" style="margin-top:var(--s4)">Experience</span><div style="margin-top:var(--s2)">' +
+      C.experience.map(expItem).join("") + '</div>' +
 
       '<span class="sect-label" style="margin-top:var(--s5)">Education</span><div style="margin-top:var(--s2)">' +
-      C.education.map(function (e) {
-        return '<div class="rec-item"><div class="h"><div class="r">' + esc(e.what) + '</div><div class="d">' + esc(e.period) + '</div></div><div class="o">' + esc(e.org) + '</div></div>';
-      }).join("") + '</div>' +
+      C.education.map(eduItem).join("") + '</div>' +
 
       '<span class="sect-label" style="margin-top:var(--s5)">Credentials</span>' +
       '<p class="small" style="margin-top:8px">Separated by what the source actually calls them — a learning path is listed as a learning path, not upgraded to a certification.</p>' +
       '<div class="stack" style="margin-top:var(--s2)">' +
-      ["Professional certifications", "Courses & learning paths"].map(function (g) {
+      CRED_GROUPS.map(function (g) {
         var rows = C.credentials.filter(function (c) { return c.group === g; });
         if (!rows.length) return "";
-        return '<div class="card"><div class="mono" style="font-size:9.5px;letter-spacing:.17em;color:var(--gold)">' + esc(g.toUpperCase()) + '</div>' +
+        return '<div class="card"><div class="mono" style="font-size:10.5px;letter-spacing:.17em;color:var(--gold)">' + esc(g.toUpperCase()) + '</div>' +
           rows.map(function (c) {
             return '<div style="margin-top:11px"><div class="small" style="color:var(--dim)">' + esc(c.issuer) + '</div>' +
               '<div class="chips" style="margin-top:7px">' + c.items.map(function (i) { return '<span class="chip">' + esc(i) + '</span>'; }).join("") + '</div></div>';
@@ -868,17 +915,25 @@
       '<span class="sect-label" style="margin-top:var(--s5)">Toolkit</span>' +
       '<p class="small" style="margin-top:8px">Exactly what is on my CV — no aspirational tools.</p><div id="toolkit"></div>' +
 
-      '<div class="card" style="margin-top:var(--s5);border-left:2px solid var(--gold)">' +
-        '<div class="mono" style="font-size:9.5px;letter-spacing:.17em;color:var(--gold)">CURRENT PRODUCT QUESTION · ' + esc(C.site_config.product_question.status) + '</div>' +
-        '<p style="font-family:\'Instrument Serif\',Georgia,serif;font-size:23px;color:var(--bone);margin-top:11px;line-height:1.28">“' + esc(C.site_config.product_question.text) + '”</p>' +
-        '<p class="small" style="margin-top:11px">' + esc(C.site_config.product_question.note) + '</p>' +
-      '</div>';
+      '<details class="mw" style="margin-top:var(--s5)" id="journey-details"><summary><span><span class="t">The full journey, 2017 to now</span>' +
+        '<span class="s">' + esc(j.arc.join(" → ")) + ' — ' + esc(j.note) + '</span></span><span class="x">OPEN</span></summary>' +
+        '<div class="mw-body"><div class="journey" id="journey"></div>' +
+        '<div class="card" id="research-record" style="margin-top:var(--s3)">' +
+          '<div class="mono" style="font-size:10.5px;letter-spacing:.17em;color:var(--gold)">RESEARCH RECORD · ' + esc(r.org.toUpperCase()) + '</div>' +
+          '<p style="margin-top:9px">' + esc(r.produced) + '</p><p class="note">' + esc(r.note) + '</p>' +
+        '</div></div>' +
+      '</details>' +
+
+      '<div class="cta-band"><p>Hiring for a healthcare product, APM or product analyst role? The CV has all of this on one page.</p>' +
+        '<div class="cta-row">' + cvLink("btn btn-primary", "DOWNLOAD CV ↓") +
+        '<a class="btn btn-secondary" href="#contact">CONTACT →</a></div></div>';
     m.innerHTML = h;
 
     var jw = document.getElementById("journey");
     j.stops.forEach(function (s, i) {
       var last = i === j.stops.length - 1;
       var st = el("button", "stop");
+      st.type = "button";
       st.setAttribute("data-open", last ? "true" : "false");
       st.setAttribute("aria-expanded", last ? "true" : "false");
       st.innerHTML = '<div class="stop-when">' + esc(s.when) + ' <span class="stop-phase">' + esc(s.phase) + '</span></div>' +
@@ -907,74 +962,111 @@
   (function () {
     var ct = C.site_config.contact;
     document.getElementById("contact-mount").innerHTML =
-      '<div class="eyebrow"><span class="num">10</span> Open channel</div>' +
-      '<p class="contact-line">Let\'s build something<br>worth shipping.</p>' +
+      '<div class="eyebrow"><span class="num">04</span> Contact</div>' +
+      '<h2 class="contact-line" id="contact-title">Let\'s talk about your<br>healthcare product role.</h2>' +
+      '<a class="mail-big" data-ev="contact_click" href="mailto:' + esc(ct.email) + '">' + esc(ct.email) + '</a>' +
+      '<div class="cta-row">' +
+        cvLink("btn btn-primary", "DOWNLOAD CV (PDF) ↓") +
+        '<a class="btn btn-secondary" data-ev="contact_click" href="mailto:' + esc(ct.email) + '">EMAIL ME</a>' +
+        '<a class="btn btn-secondary" data-ev="linkedin_click" href="https://' + esc(ct.linkedin) + '" target="_blank" rel="noopener">LINKEDIN<span class="sr"> (opens in a new tab)</span></a>' +
+        (ct.resume && ct.resume.page ? '<a class="btn btn-secondary" data-ev="resume_page" href="' + esc(ct.resume.page) + '">CV AS A WEB PAGE</a>' : "") +
+      '</div>' +
       openBlock("contact") +
       '<div class="links">' +
-        '<a class="link" data-ev="linkedin_click" href="https://' + ct.linkedin + '" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span class="v">' + esc(ct.linkedin) + '</span></a>' +
-        '<a class="link" data-ev="github_click" href="https://' + ct.github + '" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">' + esc(ct.github) + '</span></a>' +
-        '<a class="link" data-ev="contact_click" href="mailto:' + ct.email + '"><span class="k">Email</span><span class="v">' + esc(ct.email) + '</span></a>' +
-        '<a class="link" data-ev="contact_click" href="tel:' + ct.phone.replace(/\s/g, "") + '"><span class="k">Phone</span><span class="v">' + esc(ct.phone) + '</span></a>' +
-        (ct.resume && ct.resume.file ? '<a class="link" data-ev="resume_clicked" href="' + esc(ct.resume.file) + '" download="' + esc(ct.resume.filename) + '"><span class="k">Resume</span><span class="v">' + esc(ct.resume.label) + ' ↓</span></a>' : "") +
-      '</div>' +
-      '<footer>Built by ' + esc(C.site_config.owner) + ' · ' + esc(C.site_config.role) + ' · ' + esc(C.site_config.discipline) + '<br>' +
-      '<span style="color:var(--muted)">' + esc(C.site_config.location) + ' · ' + esc(C.site_config.version) + ' · content updated ' + esc(C.site_config.updated) + '</span></footer>';
+        '<a class="link" data-ev="linkedin_click" href="https://' + esc(ct.linkedin) + '" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span class="v">' + esc(ct.linkedin) + '</span></a>' +
+        '<a class="link" data-ev="github_click" href="https://' + esc(ct.github) + '" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">' + esc(ct.github) + '</span></a>' +
+        '<a class="link" data-ev="contact_click" href="mailto:' + esc(ct.email) + '"><span class="k">Email</span><span class="v">' + esc(ct.email) + '</span></a>' +
+        '<a class="link" data-ev="contact_click" href="tel:' + esc(ct.phone.replace(/\s/g, "")) + '"><span class="k">Phone</span><span class="v">' + esc(ct.phone) + '</span></a>' +
+        cvLink("link", '<span class="k">CV</span><span class="v">' + esc((ct.resume || {}).label || "") + ' ↓</span>') +
+      '</div>';
+
+    document.getElementById("site-footer").innerHTML =
+      esc(C.site_config.owner) + ' · ' + esc(C.site_config.role) + ' · ' + esc(C.site_config.location) +
+      ' · <a href="mailto:' + esc(ct.email) + '">' + esc(ct.email) + '</a><br>' +
+      '<span>' + esc(C.site_config.version) + ' · content updated ' + esc(C.site_config.updated) + '</span>';
+  })();
+
+  /* ------------------------------------------------- research & experiments */
+  /* The secondary area. Everything here is real and kept, but none of it
+     is needed to judge the product work above — so it says so up front.  */
+  (function () {
+    var m = document.getElementById("research-mount");
+    var s = C.site_config, f = s.current_focus, I = C.intro || {};
+    var K = (window.GOS_CORPUS || { counts: {} }).counts;
+    var links = [
+      ["R1", "constellation", "90-day case-study corpus", K.written + " written studies across " + K.directories + " day directories, read from the repository"],
+      ["R2", "atlas", "Product Atlas", "All 90 studies, searchable and filterable"],
+      ["R3", "evolution", "Evolution", "How the method changed over the 90 days"],
+      ["R4", "thinking", "How I think", "The operating model, principles and product orbit"],
+      ["R5", "ask", "AI portfolio copilot", "Ask questions; answers come only from a fixed index"],
+      ["R6", "challenge", "Product challenges", "Three scenarios with my documented approach"],
+      ["R7", "lab", "Lab Notes & AI experiments", "Five drafts and five experiments, each with its status"]
+    ];
+    m.innerHTML =
+      '<span class="re-tag">SECONDARY · FOR DEPTH</span>' +
+      '<div class="eyebrow"><span class="num">R0</span> Research &amp; Experiments</div>' +
+      '<h2 class="title" id="research-title">Research &amp; <em>Experiments</em></h2>' +
+      '<p class="dek">For anyone who wants to go deeper: a 90-day product case-study corpus, a grounded portfolio copilot, product challenges, lab notes and a short intro film. None of it is needed to evaluate the work above.</p>' +
+      '<div class="re-grid">' + links.map(function (l) {
+        return '<a class="re-link" href="#' + l[1] + '"><span class="k">' + l[0] + '</span><span class="t">' + esc(l[2]) + '</span><span class="d">' + esc(l[3]) + '</span></a>';
+      }).join("") + '</div>' +
+      (I.enabled && I.video ?
+        '<div class="film-card">' +
+          (I.poster ? '<img src="' + esc(I.poster) + '" alt="" width="168" height="95" loading="lazy" decoding="async">' : "") +
+          '<div class="fc"><div class="mono" style="font-size:10.5px;letter-spacing:.16em;color:var(--gold)">INTRO FILM · ' + esc(I.duration_note || "") + '</div>' +
+          '<p class="small" style="margin-top:6px">A short film made for this portfolio. It only plays when you ask it to.</p></div>' +
+          '<button class="btn btn-secondary" id="film-btn" type="button">▶ WATCH INTRO · ' + esc(I.duration_note || "") + '</button>' +
+        '</div>' : "") +
+      '<div class="panels">' +
+        [f.building, f.completed, f.exploring, f.writing].map(function (p) {
+          return '<div class="panel"><div class="k">' + esc(p.label) + '</div><div class="v">' + esc(p.value) + '</div><div class="m">' + esc(p.note) + '</div></div>';
+        }).join("") +
+      '</div>';
   })();
 
   /* -------------------------------------------------------- recruiter view */
   (function () {
     var s = C.site_config, ct = s.contact;
+    var all = C.projects.slice().sort(byOrder);
     document.getElementById("recruiter").innerHTML =
       '<header class="rec-head">' +
-        '<div class="rec-name">' + esc(s.owner) + '</div>' +
+        '<h1 class="rec-name">' + esc(s.owner) + '</h1>' +
         '<div class="rec-role">' + esc(s.role) + ' · ' + esc(s.discipline) + '</div>' +
-        '<div class="rec-sum">' + s.summary.map(function (l, i) {
-          return '<div><b>' + String(i + 1).padStart(2, "0") + '</b><span>' + esc(l) + '</span></div>';
+        '<div class="rec-sum">' + (s.proof_points || []).map(function (pp, i) {
+          return '<div><b>' + String(i + 1).padStart(2, "0") + '</b><span>' + esc(pp.claim) + ' ' + evLabel(pp.evidence) + '</span></div>';
         }).join("") + '</div>' +
         openBlock("recruiter") +
         '<div class="chips" style="margin-top:var(--s3)">' +
-          '<span class="chip">' + esc(s.location) + '</span><span class="chip gold">SEEKING ' + esc(s.seeking.toUpperCase()) + '</span>' +
-          '<a class="chip" data-ev="contact_click" href="mailto:' + ct.email + '">EMAIL →</a>' +
-          '<a class="chip" data-ev="linkedin_click" href="https://' + ct.linkedin + '" target="_blank" rel="noopener">LINKEDIN →</a>' +
-          '<a class="chip" data-ev="github_click" href="https://' + ct.github + '" target="_blank" rel="noopener">GITHUB →</a>' +
-          (ct.resume && ct.resume.file ? '<a class="chip gold" data-ev="resume_clicked" href="' + esc(ct.resume.file) + '" download="' + esc(ct.resume.filename) + '">' + esc(ct.resume.label) + ' ↓</a>' : "") +
+          cvLink("chip gold", esc((ct.resume || {}).label || "") + " ↓") +
+          '<span class="chip">' + esc(s.location) + '</span><span class="chip gold">SEEKING: ' + esc(s.seeking.toUpperCase()) + '</span>' +
+          '<a class="chip" data-ev="contact_click" href="mailto:' + esc(ct.email) + '">EMAIL →</a>' +
+          '<a class="chip" data-ev="linkedin_click" href="https://' + esc(ct.linkedin) + '" target="_blank" rel="noopener">LINKEDIN →</a>' +
+          '<a class="chip" data-ev="github_click" href="https://' + esc(ct.github) + '" target="_blank" rel="noopener">GITHUB →</a>' +
         '</div>' +
+        '<div class="rec-sum" style="margin-top:var(--s3)">' + s.summary.map(function (l) {
+          return '<div><b>•</b><span>' + esc(l) + '</span></div>';
+        }).join("") + '</div>' +
       '</header>' +
 
-      '<section class="rec-sec" id="rec-work"><h3>Selected work</h3>' +
-        C.projects.map(function (p) {
-          var bullets = "";
-          if (p.id === "aaroh") bullets = ["Ran 20+ customer discovery interviews; translated findings into a RICE/MoSCoW-prioritized roadmap and end-to-end product vision.", "Authored PRDs and user stories for conversational intake, root-cause mapping, and personalized recommendations.", "Built and validated the MVP with Claude API, Lovable and Cursor; defined the North Star Metric and instrumented activation, retention and adoption analytics.", "Now running a strategy reset on positioning and scope."];
-          else if (p.id === "careconnect") bullets = ["Repositioned from a caregiver marketplace to a post-discharge care accountability layer after discovery contradicted the original hypothesis; documented the pivot as a decision record.", "Shipped a working MVP (React, Express, TypeScript, SQLite) with 65 unit and integration tests, 30 end-to-end journeys, and a claim register grading every conclusion by evidence strength."];
-          else if (p.id === "phonepe") bullets = ["Scored 5 candidate features with RICE, wrote the PRD for the winner, built a 5-screen Figma prototype tested with 7 users.", "Analysed a 40,000-user pilot funnel (7.14% end-to-end), prioritized the 70% insight-to-action drop-off, and designed a 21-day A/B test with guardrail metrics."];
-          else if (p.id === "ghargyaan") bullets = ["Mobile-first PWA for everyday self-care and Indian traditional knowledge, with evidence labels on guidance and safety escalation toward professionals. Working name.", "Early build — no users and no measured outcomes yet."];
-          else bullets = ["Evidence-first “situation inbox” surfacing conflicts, changes, commitments and missing information across Gmail, Calendar and uploaded documents. Not a chatbot or second brain.", "MVP in demo mode; repository public. No adoption or accuracy figures measured yet."];
-          return '<div class="rec-item"><div class="h"><div class="r">' + esc(p.name) + ' — ' + esc(p.subtitle) + '</div><div class="d">' + esc(p.period) + '</div></div>' +
-            '<div class="o">' + esc(p.role) + ' · ' + esc(p.status) + '</div><ul>' + bullets.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + '</ul></div>';
+      '<section class="rec-sec" id="rec-work"><h2 class="rec-h">Selected work</h2>' +
+        all.map(function (p) {
+          return '<div class="rec-item"><div class="h"><h3 class="r">' + esc(p.name) + ' — ' + esc(p.subtitle) + '</h3><div class="d">' + esc(p.period) + '</div></div>' +
+            '<div class="o">' + esc(p.role) + ' · ' + esc(p.status) + '</div><ul>' + (p.recruiter || []).map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + '</ul></div>';
         }).join("") +
       '</section>' +
 
-      '<section class="rec-sec" id="rec-exp"><h3>Experience</h3>' +
-        C.experience.map(function (e) {
-          return '<div class="rec-item"><div class="h"><div class="r">' + esc(e.role) + ' — ' + esc(e.org) + '</div><div class="d">' + esc(e.period) + '</div></div>' +
-            '<div class="o">' + esc(e.where) + '</div><ul>' + e.bullets.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + '</ul></div>';
-        }).join("") +
-      '</section>' +
+      '<section class="rec-sec" id="rec-exp"><h2 class="rec-h">Experience</h2>' + C.experience.map(expItem).join("") + '</section>' +
 
-      '<section class="rec-sec" id="rec-skills"><h3>Skills</h3>' +
+      '<section class="rec-sec" id="rec-skills"><h2 class="rec-h">Skills</h2>' +
         C.skills.map(function (g) {
           return '<div class="rec-item"><div class="o" style="color:var(--text)"><b style="color:var(--bone);font-weight:500">' + esc(g.group) + '</b> — ' + esc(g.items.join(", ")) + '</div></div>';
         }).join("") +
       '</section>' +
 
-      '<section class="rec-sec" id="rec-edu"><h3>Education</h3>' +
-        C.education.map(function (e) {
-          return '<div class="rec-item"><div class="h"><div class="r">' + esc(e.what) + '</div><div class="d">' + esc(e.period) + '</div></div><div class="o">' + esc(e.org) + '</div></div>';
-        }).join("") +
-      '</section>' +
+      '<section class="rec-sec" id="rec-edu"><h2 class="rec-h">Education</h2>' + C.education.map(eduItem).join("") + '</section>' +
 
-      '<section class="rec-sec" id="rec-cred"><h3>Credentials</h3>' +
-        ["Professional certifications", "Courses & learning paths"].map(function (g) {
+      '<section class="rec-sec" id="rec-cred"><h2 class="rec-h">Credentials</h2>' +
+        CRED_GROUPS.map(function (g) {
           var rows = C.credentials.filter(function (c) { return c.group === g; });
           if (!rows.length) return "";
           return '<div class="rec-item"><div class="o" style="color:var(--text)"><b style="color:var(--bone);font-weight:500">' + esc(g) + '</b> — ' +
@@ -982,15 +1074,15 @@
         }).join("") +
       '</section>' +
 
-      '<section class="rec-sec" id="rec-contact" style="padding-bottom:56px"><h3>Contact</h3>' +
+      '<section class="rec-sec" id="rec-contact" style="padding-bottom:56px"><h2 class="rec-h">Contact</h2>' +
         '<div class="links">' +
-          '<a class="link" href="https://' + ct.linkedin + '" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span class="v">' + esc(ct.linkedin) + '</span></a>' +
-          '<a class="link" href="https://' + ct.github + '" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">' + esc(ct.github) + '</span></a>' +
-          '<a class="link" href="mailto:' + ct.email + '"><span class="k">Email</span><span class="v">' + esc(ct.email) + '</span></a>' +
-          '<a class="link" href="tel:' + ct.phone.replace(/\s/g, "") + '"><span class="k">Phone</span><span class="v">' + esc(ct.phone) + '</span></a>' +
-          (ct.resume && ct.resume.file ? '<a class="link" data-ev="resume_clicked" href="' + esc(ct.resume.file) + '" download="' + esc(ct.resume.filename) + '"><span class="k">Resume</span><span class="v">' + esc(ct.resume.label) + ' ↓</span></a>' : "") +
+          '<a class="link" href="mailto:' + esc(ct.email) + '"><span class="k">Email</span><span class="v">' + esc(ct.email) + '</span></a>' +
+          '<a class="link" href="https://' + esc(ct.linkedin) + '" target="_blank" rel="noopener"><span class="k">LinkedIn</span><span class="v">' + esc(ct.linkedin) + '</span></a>' +
+          '<a class="link" href="https://' + esc(ct.github) + '" target="_blank" rel="noopener"><span class="k">GitHub</span><span class="v">' + esc(ct.github) + '</span></a>' +
+          '<a class="link" href="tel:' + esc(ct.phone.replace(/\s/g, "")) + '"><span class="k">Phone</span><span class="v">' + esc(ct.phone) + '</span></a>' +
+          cvLink("link", '<span class="k">CV</span><span class="v">' + esc((ct.resume || {}).label || "") + ' ↓</span>') +
         '</div>' +
-        '<p class="small" style="margin-top:var(--s2)">Recruiter Mode is the fast view. Switch back for the case studies, decision logs and the portfolio copilot.</p>' +
+        '<p class="small" style="margin-top:var(--s2)">Recruiter Mode is the one-page view. Switch back for the full case studies, decision logs and the Research &amp; Experiments area.</p>' +
       '</section>';
   })();
 
@@ -1007,7 +1099,9 @@
     window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
   }
   toggles.forEach(function (b) { b.addEventListener("click", function () { setMode(root.getAttribute("data-mode") !== "recruiter"); }); });
-  if (store("gos-mode") === "recruiter") setMode(true); else root.setAttribute("data-mode", "lab");
+  /* ?view=recruiter is a shareable link straight into the one-page view */
+  var askedRecruiter = /[?&]view=recruiter\b/.test(location.search);
+  if (askedRecruiter || store("gos-mode") === "recruiter") setMode(true); else root.setAttribute("data-mode", "lab");
 
   /* --------------------------------------------------------------- mobile nav */
   var rail = document.getElementById("rail"), menuBtn = document.getElementById("menu-btn"), scrim = null;
@@ -1129,10 +1223,10 @@
   })();
 
   /* ------------------------------------------------------------------ intro */
-  /* The boot sequence. A real MP4 — never a CSS re-creation. Plays once per
-     viewer, skippable at any moment, replayable from the hero, and it can
-     never hold the interface hostage: the homepage is already rendered
-     underneath before a single frame arrives.                              */
+  /* The intro film. A real MP4 — never a CSS re-creation. It plays only when
+     a visitor asks for it from Research & Experiments: a recruiter's first
+     screen is never a 65-second film, and the 12 MB file is never fetched
+     unless someone chooses to watch. Skippable at any moment.              */
   var introEl = null, introVideo = null, introDone = false;
 
   /* Sound preference. Stored, never assumed: the browser, not this file,
@@ -1154,10 +1248,9 @@
     document.body.style.overflow = "";
     setTimeout(function () { if (node.parentNode) node.remove(); }, reduce ? 0 : 620);
     GOS.track(how === "skip" ? "intro_skipped" : how === "error" ? "intro_failed" : "intro_completed");
-    var hero = document.querySelector("#home-mount .hero-mark");
-    if (hero && !reduce) {
-      hero.classList.remove("boot"); void hero.offsetWidth; hero.classList.add("boot");
-    }
+    /* the film is opened from a button; focus goes back to it */
+    var opener = document.getElementById("film-btn");
+    if (opener) { try { opener.focus({ preventScroll: true }); } catch (e) { opener.focus(); } }
   }
 
   function buildIntro(opts) {
@@ -1342,7 +1435,7 @@
     introEl.appendChild(el("div", "ov tl",
       '<div class="ov-mark">GAURAV<i>.</i>OS</div><div class="ov-sub">' +
       esc(C.site_config.role.toUpperCase()) + '</div>'));
-    var enter = el("button", "ov br ov-skip", "ENTER GAURAV.OS →");
+    var enter = el("button", "ov br ov-skip", "CLOSE →");
     enter.addEventListener("click", function () { endIntro("skip"); });
     introEl.appendChild(enter);
     document.body.appendChild(introEl);
@@ -1353,28 +1446,16 @@
   function hasFilm() { return !!(C.intro && C.intro.enabled && C.intro.video); }
 
   (function wireIntro() {
-    var btn = document.getElementById("hero-intro");
-    if (!hasFilm()) {
-      if (btn) { btn.textContent = "INTRO FILM · PENDING"; btn.disabled = true; btn.style.opacity = ".5"; }
-      return;
-    }
-    if (btn) {
-      btn.textContent = "▶ WATCH INTRO · " + (C.intro.duration_note || "");
-      btn.addEventListener("click", function () {
-        if (introEl) return;
-        if (reduce) { buildStill(); return; }
-        buildIntro({ replay: true });
-      });
-    }
-    var seen = false;
-    try { seen = localStorage.getItem("gos-intro-seen") === "1"; } catch (e) {}
-    if (root.getAttribute("data-mode") === "recruiter") return;   /* recruiters skip the cinema */
-    if (reduce) { if (!seen) { try { localStorage.setItem("gos-intro-seen", "1"); } catch (e) {} buildStill(); } return; }
-    if (!seen) {
-      try { localStorage.setItem("gos-intro-seen", "1"); } catch (e) {}
+    var btn = document.getElementById("film-btn");
+    if (!btn || !hasFilm()) return;
+    btn.addEventListener("click", function () {
+      if (introEl) return;
+      if (reduce) { buildStill(); return; }
       buildIntro({ replay: false });
-    }
+    });
   })();
+
+  revealHash();
 
   GOS.track("portfolio_view");
 })();

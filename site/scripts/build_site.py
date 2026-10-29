@@ -16,6 +16,10 @@ import pathlib, shutil, sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DIST = pathlib.Path(sys.argv[sys.argv.index("--out") + 1]).resolve() if "--out" in sys.argv else ROOT / "docs"
 RUNTIME = ["app.js", "content.js", "corpus.js", "corpus-ui.js"]
+# complete documents, copied as they are
+PAGES = ["cv.html"]
+# the live URL documented in README.md — used for robots.txt and the sitemap
+SITE = "https://gaurav-product.github.io/portfolio/"
 
 HEAD = """<!doctype html>
 <html lang="en">
@@ -41,19 +45,26 @@ def main():
     fragment = src.read_text(encoding="utf-8")
 
     # the fragment opens with <title>/<meta>/<link>/<style>; everything from the
-    # first <canvas>/<div> onward is body content.
-    marker = fragment.find("<canvas")
+    # <!--BODY--> marker onward is body content.
+    marker = fragment.find("<!--BODY-->")
     if marker == -1:
-        marker = fragment.find("<div class=\"shell\"")
+        marker = fragment.find("<canvas")
     head_part, body_part = fragment[:marker], fragment[marker:]
 
     (DIST / "index.html").write_text(HEAD + head_part + "</head>\n<body>\n" + body_part + TAIL,
                                      encoding="utf-8")
 
-    for f in RUNTIME:
+    for f in RUNTIME + PAGES:
         p = ROOT / f
         if p.exists():
             shutil.copy2(p, DIST / f)
+
+    (DIST / "robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: %ssitemap.xml\n" % SITE)
+    (DIST / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+        "".join("  <url><loc>%s%s</loc></url>\n" % (SITE, page) for page in ("", "cv.html")) +
+        "</urlset>\n")
 
     # The binaries live in the build output, committed once: docs/media is both
     # the deployed copy and the only copy in the repository. Anything present in

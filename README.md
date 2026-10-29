@@ -1,13 +1,14 @@
-# GAURAV.OS
+# Gaurav Kumar Singh — Healthcare Product Manager
 
-**An AI product intelligence system.** The personal portfolio of Gaurav Kumar Singh —
-AI Product Manager, building at the intersection of AI, healthcare, research and human
-behaviour.
+The portfolio of Gaurav Kumar Singh, seeking **Healthcare Product Manager, Associate
+Product Manager, Product Analyst and HealthTech** roles. It is built recruiter-first:
+the first screen says who Gaurav is, which roles he is seeking, and the three verified
+proof points behind that — with a CV download, email and Recruiter Mode one click away.
 
-Not a portfolio template. The site is a product interface over a corpus: 90 product
-case studies are read from a repository, normalized, validated and rendered as a
-constellation, an atlas, an evolution view and a grounded copilot. Nothing a visitor
-reads is typed in twice.
+Behind the portfolio sits a secondary **Research & Experiments** area: 90 product case
+studies read from a repository and rendered as a constellation, an atlas and an
+evolution view, plus a grounded copilot, product challenges, lab notes and an intro
+film. Nothing a visitor reads is typed in twice.
 
 **Live:** https://gaurav-product.github.io/portfolio/
 
@@ -15,17 +16,26 @@ reads is typed in twice.
 
 ## What it contains
 
-| Layer | What it is |
+**Portfolio** — what a hiring manager needs, in this order:
+
+| Section | What it is |
 |---|---|
-| **Cinematic intro** | A 65-second film that plays once, skippable at any moment, replayable from the hero. |
-| **Identity + Product Orbit** | The positioning, and the domains and operating loop it runs on. |
-| **90-day corpus** | 90 case studies as Constellation, Atlas and Evolution, with an evidence model and an operating model. |
-| **Featured work** | Aaroh, CareConnect, PhonePe Smart Spend Coach, GharGyaan, Nexus. |
-| **How I Think** | The operating loop, with the corpus as its evidence. |
-| **Ask Gaurav** | A grounded copilot that answers only from a fixed index — and refuses before topic-matching. |
-| **Challenge Gaurav** | Product scenarios with the reasoning revealed after you commit to an answer. |
-| **Lab Notes** | The live thinking layer, published from the content file. |
-| **Recruiter Mode** | Profile, experience, education, projects, skills, credentials and contact, fast. |
+| **Hero** | Name, healthcare identity, the four target roles, three verified proof points, and Download CV · Email · Recruiter Mode. |
+| **Selected work** | Three case studies in full — Evamastu, Live Your Best Life, CareConnect (MVP, **not in production**) — then Aaroh, PhonePe Smart Spend Coach, GharGyaan and Nexus, collapsed. |
+| **Experience & education** | The CV record verbatim, credentials, toolkit, and the full journey behind one disclosure. |
+| **Contact & CV** | Email, CV (PDF and web page), LinkedIn, GitHub, phone. |
+| **Recruiter Mode** | The one-page view, reachable from the hero, the rail, the top bar, or `?view=recruiter`. |
+
+**Research & Experiments** — secondary, for depth:
+
+| Section | What it is |
+|---|---|
+| **Intro film** | A 65-second film. It plays only when a visitor presses *Watch intro* — never on load. |
+| **90-day corpus** | 90 case studies as Constellation, Atlas and Evolution, with an evidence model. |
+| **How I Think** | The operating model and product orbit, with the corpus as evidence. |
+| **AI copilot** | Answers only from a fixed index — and refuses before topic-matching. |
+| **Challenges** | Product scenarios with the reasoning revealed after you commit to an answer. |
+| **Lab Notes** | Drafts and AI experiments, each with its status. |
 
 The 90-day case studies are **not** duplicated here. They live in their own archive —
 [gaurav-product/product-management-case-studies](https://github.com/gaurav-product/product-management-case-studies)
@@ -39,8 +49,9 @@ over that corpus.
 ```
 site/                 source
 ├── index.html        shell: styles, tokens, empty mount points. No content.
-├── app.js            renders hero, featured work, copilot, challenges, lab notes, recruiter mode
+├── app.js            renders hero, work, record, contact, copilot, challenges, lab notes, recruiter mode
 ├── content.js        every word not from the corpus. Hand-maintained.
+├── cv.html           the printable CV, rendered from content.js (the PDF is printed from it)
 ├── corpus.js         GENERATED from the case-study repository. Never hand-edited.
 ├── corpus-ui.js      constellation, atlas, evolution, operating model
 ├── media/            asset documentation (the binaries live in docs/media)
@@ -69,10 +80,10 @@ are ever manufactured.
 `docs/media/gaurav-os-intro.mp4` — 1920×1080, H.264 High + AAC, 65s, faststart,
 11.43 MiB. Produced externally and used unmodified.
 
-It autoplays once over an already-rendered homepage, never as a blocking loader.
-`SKIP INTRO` is available immediately; a full watch ends on a final-frame hold. A
-returning visitor gets the homepage directly plus a `WATCH INTRO` control. Under
-reduced-motion the poster is shown with an `ENTER GAURAV.OS` control instead.
+It never autoplays: a recruiter's first screen is the portfolio, and the 12 MB file
+is only fetched when a visitor presses `WATCH INTRO` in Research & Experiments.
+`SKIP INTRO` is available immediately; a full watch ends on a final-frame hold. Under
+reduced motion the poster is shown with a `CLOSE` control instead.
 
 The film is named in exactly one place — `content.js → intro.video`. To replace it,
 drop the new file into `site/media/` and rebuild.
@@ -97,7 +108,22 @@ writes the standalone document Pages needs and copies the runtime files beside i
 python3 site/scripts/build_site.py --out docs
 ```
 
-Generated files are never hand-edited after a build.
+It also copies `cv.html` and writes `robots.txt` and `sitemap.xml`. Generated files
+are never hand-edited after a build.
+
+## The CV
+
+`docs/media/gaurav-kumar-singh-cv.pdf` is `site/cv.html` printed to PDF, so it says
+exactly what the site says. It carries email, LinkedIn, GitHub and city — no phone
+number and no street address. Regenerate it after a content change:
+
+```bash
+pip install playwright        # PW_CHROMIUM=/path/to/chromium if no managed browser
+python3 site/scripts/build_cv.py
+```
+
+To ship a hand-made CV instead, drop the PDF into `site/media/` under the same name
+(or point `content.js → site_config.contact.resume.file` at it) and rebuild.
 
 ## Regenerating the corpus
 
@@ -120,12 +146,16 @@ disagrees with its tree, both readings are surfaced rather than silently reconci
 python3 site/scripts/verify.py
 ```
 
-Runs headless Chromium at **1440 / 1280 / 1024 / 768 / 390** and asserts: corpus counts
-match the tree, every GitHub link resolves, constellation renders, atlas search and
-every filter work, day-by-day navigation works, the copilot refuses unsupported
-questions, recruiter mode works, intro autoplay / skip / replay / no-forced-replay,
-reduced motion, keyboard navigation, no console errors and no horizontal overflow at
-any width. Current state: **91/91**.
+Runs headless Chromium at **1440 / 1280 / 1024 / 768 / 390 / 360** and asserts: the
+first screen shows name, target roles, CV and Recruiter Mode (and all three proof cards
+on desktop); the proof points are worded as verified and link to the three primary case
+studies; CareConnect is labelled not in production; the MCA entry; CV download
+everywhere and a real PDF; SEO metadata; WCAG AA contrast on every text token, no text
+under 10px, skip link; corpus counts match the tree; every GitHub link resolves; atlas
+search and filters; the copilot refuses unsupported questions; Recruiter Mode; the film
+never autoplays and is never fetched on first visit, and skip / sound / focus trap work
+when it is opened; reduced motion; keyboard navigation; no console errors and no
+horizontal overflow at any width.
 
 ## GitHub Pages
 

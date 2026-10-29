@@ -91,7 +91,7 @@
       '</div>' +
       '<div class="cs-nav">' +
         '<button class="ghost-btn" id="cs-prev"' + (cs.day <= 1 ? ' disabled' : '') + '>← DAY ' + (cs.day - 1) + '</button>' +
-        '<span class="mono" style="font-size:9px;letter-spacing:.16em;color:var(--dim)">DAY ' + cs.day + ' OF 90</span>' +
+        '<span class="mono" style="font-size:10.5px;letter-spacing:.16em;color:var(--dim)">DAY ' + cs.day + ' OF 90</span>' +
         '<button class="ghost-btn" id="cs-next"' + (cs.day >= 90 ? ' disabled' : '') + '>DAY ' + (cs.day + 1) + ' →</button>' +
       '</div>';
 
@@ -128,7 +128,7 @@
     var m = document.getElementById("constellation-mount");
     var K = X.counts;
     m.innerHTML =
-      '<div class="eyebrow"><span class="num">01</span> The 90-day corpus</div>' +
+      '<div class="eyebrow"><span class="num">R1</span> The 90-day corpus</div>' +
       '<h2 class="title">90 days. 90 subjects.<br><em>One product mind.</em></h2>' +
       '<p class="dek">Every node is a directory in the repository. Distance from the centre is the day, size is how much evidence the study carries, and colour is where the subject sits. Select a node to open the study.</p>' +
       '<div class="const-wrap">' +
@@ -295,7 +295,7 @@
     var EVID = ["VERIFIED", "DOCUMENTED", "SOURCED", "NARRATIVE"];
 
     m.innerHTML =
-      '<div class="eyebrow"><span class="num">02</span> Explorer</div>' +
+      '<div class="eyebrow"><span class="num">R2</span> Explorer</div>' +
       '<h2 class="title">Product <em>Atlas</em></h2>' +
       '<p class="dek">All 90, searchable. Every row links to the study and to its source on GitHub — the evidence is never more than one click away.</p>' +
       '<div class="atlas-controls">' +
@@ -433,7 +433,7 @@
     var outOf10 = function (v) { return v + "/10"; };
 
     m.innerHTML =
-      '<div class="eyebrow"><span class="num">03</span> Method over time</div>' +
+      '<div class="eyebrow"><span class="num">R3</span> Method over time</div>' +
       '<h2 class="title">The evolution of my<br><em>product thinking</em></h2>' +
       '<p class="dek">Four measures, each counted from the repository across nine ten-day blocks. Two of them show a hard discipline change with a date attached.</p>' +
       '<div class="viz-grid">' +
@@ -484,7 +484,7 @@
       '</div>' +
 
       '<div class="card" style="margin-top:var(--s3);border-left:2px solid var(--gold)">' +
-        '<div class="mono" style="font-size:9.5px;letter-spacing:.17em;color:var(--gold)">DOCUMENTED CHANGE vs INTERPRETATION</div>' +
+        '<div class="mono" style="font-size:10.5px;letter-spacing:.17em;color:var(--gold)">DOCUMENTED CHANGE vs INTERPRETATION</div>' +
         '<p style="margin-top:11px"><b style="color:var(--bone);font-weight:500">Documented.</b> The assumptions file appears at Day 28 and never lapses. Verification language appears at Day 57 and is unbroken from Day 75. References per study peak at Days 31–50 and fall by more than half by Days 81–90. The last twenty-five days are almost entirely healthcare and health-AI subjects.</p>' +
         '<p style="margin-top:11px"><b style="color:var(--bone);font-weight:500">Interpretation — mine, not the data\'s.</b> I read that as breadth giving way to verification: early studies cite widely, later ones execute arithmetic and work primary sources, and the closing run narrows onto one question about what compels a company to publish evidence at all. That is a reading of the counts, not a finding in them.</p>' +
         '<p class="note">No psychological arc is claimed. What changed is what the documents contain.</p>' +

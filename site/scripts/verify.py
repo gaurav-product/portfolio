@@ -7,13 +7,13 @@ if not (SRC / "index.html").exists():                   # dev checkout layout
 OUT = SRC / "_preview"
 OUT.mkdir(exist_ok=True)
 
-frag = (SRC / "index.html").read_text()
-html = ("<!doctype html><html><head><meta charset='utf-8'>"
+frag = (SRC / "index.html").read_text().replace("<!--BODY-->", "</head><body>")
+html = ("<!doctype html><html lang='en'><head><meta charset='utf-8'>"
         "<meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'>"
         "<style>:root{color-scheme:light}body{margin:0;font:14px system-ui}"
         "img{max-width:100%}[hidden]{display:none!important}</style>" + frag + "</body></html>")
 (OUT / "index.html").write_text(html)
-for f in ("content.js", "app.js", "corpus.js", "corpus-ui.js"):
+for f in ("content.js", "app.js", "corpus.js", "corpus-ui.js", "cv.html"):
     (OUT / f).write_text((SRC / f).read_text())
 import shutil
 MEDIA = SRC / "media"
@@ -87,7 +87,13 @@ async def main():
             b = await p.chromium.launch(channel="chrome", args=["--autoplay-policy=no-user-gesture-required"])
             print("browser: Google Chrome channel")
         except Exception:
-            b = await p.chromium.launch()
+            # PW_CHROMIUM points at a preinstalled Chromium when Playwright's
+            # own browser download is not available
+            import os
+            exe = os.environ.get("PW_CHROMIUM") or ("/opt/pw-browsers/chromium"
+                  if pathlib.Path("/opt/pw-browsers/chromium").exists() else None)
+            b = await p.chromium.launch(executable_path=exe,
+                                        args=["--autoplay-policy=no-user-gesture-required"])
             print("browser: bundled Chromium (no H.264 — film checks will not be meaningful)")
         errs = []
 
@@ -108,14 +114,12 @@ async def main():
                 pg.on("console", lambda m: errs.append(f"{w}px console.error: {m.text}") if m.type == "error" else None)
                 pg.on("response", lambda r: errs.append(f"{w}px HTTP {r.status}: {r.url}") if r.status >= 400 else None)
             await pg.goto(URL)
-            # file:// shares one localStorage across contexts in Chrome, so the
-            # first-visit flag must be set or cleared explicitly per test.
-            if skip_intro:
-                await pg.evaluate("()=>{try{localStorage.setItem('gos-intro-seen','1')}catch(e){}}")
-            else:
-                await pg.evaluate("()=>{try{localStorage.removeItem('gos-intro-seen')}catch(e){}}")
-            await pg.reload()
-            await pg.wait_for_timeout(2500)
+            await pg.wait_for_timeout(2000)
+            # The film never autoplays; skip_intro=False opens it the way a
+            # visitor does, from its button in Research & Experiments.
+            if not skip_intro:
+                await pg.evaluate("() => document.getElementById('film-btn').click()")
+                await pg.wait_for_timeout(500)
             return pg
 
         print("\n=== DESKTOP 1280 ===")
@@ -310,7 +314,7 @@ async def main():
 
         print("\n=== INTRO FILM: the shipped asset (static) ===")
         import subprocess, json as _json
-        mp4 = "/home/claude/media/gaurav-os-intro.mp4"
+        mp4 = str(MEDIA / "gaurav-os-intro.mp4")
         pr = subprocess.run(["ffprobe", "-v", "error", "-print_format", "json",
                              "-show_streams", "-show_format", mp4], capture_output=True, text=True)
         meta = _json.loads(pr.stdout)
@@ -330,7 +334,7 @@ async def main():
         # shipped MP4 is verified statically above.
         i = await page(1280, 1000, skip_intro=False, film="test-clip.webm")
         await i.wait_for_timeout(1800)
-        check("film autoplays on first visit", await i.evaluate("() => !!document.querySelector('.intro video.film')"))
+        check("film opens from the Research & Experiments button", await i.evaluate("() => !!document.querySelector('.intro video.film')"))
         st = await i.evaluate("""() => { const v = document.querySelector('.intro video.film');
             return v ? {muted: v.muted, inline: v.playsInline, controls: v.controls,
                         t: v.currentTime, poster: !!v.getAttribute('poster'),
@@ -343,7 +347,7 @@ async def main():
         check("progress line advances",
               await i.evaluate("() => parseFloat((document.querySelector('.film-bar i').style.width||'0')) > 0"))
         check("homepage already rendered beneath the film",
-              await i.evaluate("() => !!document.querySelector('#home-mount .hero-mark')"))
+              await i.evaluate("() => !!document.querySelector('#home-mount .hero-name')"))
         ov = await i.evaluate("""() => ({tl: !!document.querySelector('.ov.tl'), bl: !!document.querySelector('.ov.bl'),
              skip: !!document.querySelector('.ov-skip'), sound: !!document.querySelector('.ov-sound')})""")
         check("overlays: top-left, bottom-left, skip, sound", all(ov.values()), ov)
@@ -449,7 +453,7 @@ async def main():
         else:
             check("undecodable film degrades to the homepage, not a dead screen",
                   "intro_failed" in probe["ev"] and
-                  await rm.evaluate("() => !!document.querySelector('#home-mount .hero-mark')"), probe["ev"])
+                  await rm.evaluate("() => !!document.querySelector('#home-mount .hero-name')"), probe["ev"])
         await rm.close()
 
         print("\n=== INTRO: skip, replay, return visit ===")
@@ -459,11 +463,11 @@ async def main():
         await r2.wait_for_timeout(900)
         check("skip dismisses the film", await r2.evaluate("() => !document.querySelector('.intro')"))
         await r2.reload(); await r2.wait_for_timeout(1800)
-        check("returning visitor goes straight to the homepage",
+        check("a reload never autoplays the film",
               await r2.evaluate("() => !document.querySelector('.intro')"))
-        check("replay control is present and labelled",
-              "WATCH INTRO" in await r2.inner_text("#hero-intro"))
-        await r2.evaluate("() => document.getElementById('hero-intro').click()")
+        check("film control is present and labelled",
+              "WATCH INTRO" in await r2.inner_text("#film-btn"))
+        await r2.evaluate("() => document.getElementById('film-btn').click()")
         await r2.wait_for_timeout(1200)
         check("replay replays the film", await r2.evaluate("() => !!document.querySelector('.intro video.film')"))
         await r2.keyboard.press("Escape")
@@ -473,7 +477,7 @@ async def main():
         # return visit with sound previously enabled: one unmuted attempt, honest
         # fallback, no error, no retry loop
         await r2.evaluate("() => { try{localStorage.setItem('gos-intro-sound','1')}catch(e){} }")
-        await r2.evaluate("() => document.getElementById('hero-intro').click()")
+        await r2.evaluate("() => document.getElementById('film-btn').click()")
         await r2.wait_for_timeout(1500)
         rv = await r2.evaluate("""() => { const b=document.querySelector('.ov-sound'),
             v=document.querySelector('.intro video.film');
@@ -513,39 +517,35 @@ async def main():
             await sp.close()
         await r2.close()
 
-        print("\n=== OPEN TO PRODUCT OPPORTUNITIES ===")
+        print("\n=== OPEN TO HEALTHCARE PRODUCT ROLES ===")
         o = await page(1280, 1000)
         rec = await o.evaluate("() => window.GOS_CONTENT.site_config.opportunity")
         check("positioning lives in the content layer, not in the UI file",
               bool(rec and rec.get("label") and rec.get("roles")), rec and rec.get("label"))
-        hero = await o.evaluate("""() => { const b=document.querySelector('#home-mount .open');
-            if(!b) return null;
-            return {k: b.querySelector('.open-k').textContent.trim(),
-                    body: b.querySelector('.open-b').textContent.trim(),
-                    roles: [...b.querySelectorAll('.open-r span')].map(x=>x.textContent),
-                    cta: b.querySelector('.open-cta a') ? b.querySelector('.open-cta a').getAttribute('href') : null,
-                    ctaText: b.querySelector('.open-cta a') ? b.querySelector('.open-cta a').textContent.trim() : null}; }""")
-        check("hero carries the OPEN TO PRODUCT OPPORTUNITIES signal",
+        check("the roles are the four target roles, in order",
+              rec["roles"] == ["Healthcare Product Manager", "Associate Product Manager",
+                               "Product Analyst", "HealthTech Product"], rec["roles"])
+        hero = await o.evaluate("""() => { const b=document.querySelector('#home-mount .seek');
+            return b ? {k: b.querySelector('.seek-k').textContent.trim(),
+                        roles: [...b.querySelectorAll('.role')].map(x=>x.textContent)} : null; }""")
+        check("hero carries the open-to-roles signal from content",
               hero and hero["k"] == rec["label"], hero and hero["k"])
-        check("hero copy is the content record, not a rewritten one",
-              hero and hero["body"] == rec["line"], hero and hero["body"])
         check("hero lists the roles from content, in order",
               hero and hero["roles"] == rec["roles"], hero and hero["roles"])
-        check("hero CTA points at a real section",
-              hero and hero["cta"] == rec["cta_href"]
-              and await o.evaluate("(h) => !!document.querySelector(h)", hero["cta"]),
-              hero and hero["cta"])
         con = await o.evaluate("""() => { const b=document.querySelector('#contact-mount .open');
             return b ? {k: b.querySelector('.open-k').textContent.trim(),
                         body: b.querySelector('.open-b').textContent.trim()} : null; }""")
-        check("contact channel repeats the signal once, with the detail",
-              con and con["k"] == rec["label"] and rec["detail"] in con["body"], con)
-        check("the signal appears in the lab experience exactly twice",
-              await o.evaluate("() => document.querySelectorAll('.lab-only .open').length") == 2)
+        check("contact channel states the signal once, with the detail",
+              con and con["k"] == rec["label"] and rec["line"] in con["body"] and rec["detail"] in con["body"], con)
+        check("the full statement appears in the lab experience exactly once",
+              await o.evaluate("() => document.querySelectorAll('.lab-only .open').length") == 1)
+        check("no broad 'across industries' positioning survives anywhere on the page",
+              await o.evaluate("""() => !/consumer, SaaS and emerging|across industries|Product Professional/i
+                                    .test(document.body.innerText)"""))
         check("no invented contact destination",
               await o.evaluate("""() => [...document.querySelectorAll('#contact-mount a[href]')]
-                 .every(a => /^(#|mailto:|tel:|https:\\/\\/(www\\.)?(linkedin|github)\\.com)/.test(a.getAttribute('href')))"""))
-        # recruiter mode
+                 .every(a => /^(#|mailto:|tel:|media\\/|cv\.html$|https:\\/\\/(www\.)?(linkedin|github)\.com)/.test(a.getAttribute('href')))"""))
+        # recruiter mode, opened from the hero
         await o.evaluate("() => document.getElementById('hero-recruiter').click()")
         await o.wait_for_timeout(500)
         rm2 = await o.evaluate("""() => { const b=document.querySelector('#recruiter .rec-open');
@@ -556,32 +556,44 @@ async def main():
                     cta: a ? a.getAttribute('href') : null,
                     target: a ? !!document.querySelector(a.getAttribute('href')) : false,
                     vis: b.getBoundingClientRect().height > 0}; }""")
+        check("Recruiter Mode opens from the hero",
+              await o.evaluate("() => document.documentElement.getAttribute('data-mode')") == "recruiter")
         check("Recruiter Mode states the opportunity prominently",
               rm2 and rm2["k"] == rec["label"] and rm2["vis"], rm2)
         check("Recruiter Mode lists the roles", rm2 and rm2["roles"] == rec["roles"], rm2 and rm2["roles"])
         check("Recruiter Mode CTA resolves inside Recruiter Mode",
               rm2 and rm2["cta"] == rec["cta_href_recruiter"] and rm2["target"], rm2 and rm2["cta"])
-        check("Recruiter Mode seeking line is no longer narrowed to one title",
-              "PRODUCT MANAGEMENT" in await o.evaluate(
-                  "() => document.querySelector('#recruiter .chip.gold').textContent.toUpperCase()"))
-        await o.evaluate("() => document.getElementById('hero-recruiter').click()")
+        check("Recruiter Mode leads with the three proof points",
+              await o.evaluate("""() => { const t = document.querySelector('#recruiter .rec-sum').textContent;
+                  return GOS_CONTENT.site_config.proof_points.every(p => t.includes(p.claim)); }"""))
+        check("Recruiter Mode seeking line names healthcare roles",
+              "HEALTHCARE PM" in await o.evaluate(
+                  "() => [...document.querySelectorAll('#recruiter .chip.gold')].map(x=>x.textContent).join(' ').toUpperCase()"))
+        await o.evaluate("() => document.getElementById('rail-recruiter').click()")
         await o.wait_for_timeout(500)
         check("leaving Recruiter Mode restores the lab experience exactly",
               await o.evaluate("""() => document.documentElement.getAttribute('data-mode') === 'lab'
                   && document.querySelector('#work').getBoundingClientRect().height > 0
-                  && document.querySelectorAll('.lab-only .open').length === 2"""))
+                  && document.querySelectorAll('.lab-only .open').length === 1"""))
         await o.close()
+        rq = await b.new_context(viewport={"width": 1280, "height": 900})
+        rqp = await rq.new_page()
+        await rqp.goto(URL + "?view=recruiter"); await rqp.wait_for_timeout(1200)
+        check("?view=recruiter is a shareable link into Recruiter Mode",
+              await rqp.evaluate("() => document.documentElement.getAttribute('data-mode')") == "recruiter")
+        await rq.close()
 
         print("\n=== INTRO: failure path ===")
         e2 = await page(1280, 1000, skip_intro=False, quiet=True)
         await e2.route("**/gaurav-os-intro.mp4", lambda route: route.abort())
-        await e2.evaluate("""() => { try{localStorage.removeItem('gos-intro-seen')}catch(e){} }""")
         await e2.reload()
+        await e2.wait_for_timeout(1500)
+        await e2.evaluate("() => document.getElementById('film-btn').click()")
         await e2.wait_for_timeout(3000)
         check("a film that cannot play never leaves a dead element",
               await e2.evaluate("() => !document.querySelector('.intro video.film[data-stuck]')"))
         check("homepage stays usable when the film fails",
-              await e2.evaluate("""() => !!document.querySelector('#home-mount .hero-mark')"""))
+              await e2.evaluate("""() => !!document.querySelector('#home-mount .hero-name')"""))
         await e2.close()
 
         print("\n=== REDUCED MOTION ===")
@@ -591,7 +603,7 @@ async def main():
               await r.evaluate("() => !document.querySelector('.intro video')"))
         check("reduced motion shows the still with a way in",
               await r.evaluate("""() => { const s=document.querySelector('.intro.still');
-                  return !!(s && s.querySelector('img.film') && /ENTER/.test(s.textContent)); }"""))
+                  return !!(s && s.querySelector('img.film') && /CLOSE/.test(s.textContent)); }"""))
         check("constellation still drawn (static)", await r.evaluate("""() => { const c=document.getElementById('const-canvas'); return c && c.width>0; }"""))
 
         print("\n=== KEYBOARD ===")
@@ -731,6 +743,7 @@ async def main():
 
         # the rotating orbit, sampled through a full revolution
         od = await page(1440, 900)
+        await od.evaluate("() => document.getElementById('orbit').scrollIntoView({block: 'center'})")
         worst = 0
         for _ in range(12):
             await od.wait_for_timeout(450)
@@ -746,31 +759,64 @@ async def main():
               worst == 0, "worst overlap: %d" % worst)
         await od.close()
 
-        print("\n=== RESUME, SEO, READER ===")
+        print("\n=== CV, SEO, READER ===")
         rs = await page(1280, 1000)
+        LIVE = "https://gaurav-product.github.io/portfolio/"
         seo = await rs.evaluate("""() => ({title: document.title,
             og: (document.querySelector('meta[property=\"og:title\"]')||{}).content,
             desc: (document.querySelector('meta[name=\"description\"]')||{}).content,
             ogimg: (document.querySelector('meta[property=\"og:image\"]')||{}).content,
-            ogurl: (document.querySelector('meta[property=\"og:url\"]')||{}).content})""")
-        check("title is the one the brief specifies",
-              seo["title"] == "Gaurav Kumar Singh \u2014 AI Product Manager | GAURAV.OS", seo["title"])
+            ogurl: (document.querySelector('meta[property=\"og:url\"]')||{}).content,
+            canon: (document.querySelector('link[rel=\"canonical\"]')||{}).href,
+            icon: !!document.querySelector('link[rel=\"icon\"]'),
+            ld: (() => { try { return JSON.parse(document.querySelector('script[type=\"application/ld+json\"]').textContent); }
+                         catch (e) { return null; } })(),
+            h1: [...document.querySelectorAll('h1')].filter(h => h.getClientRects().length).map(h => h.textContent.trim())})""")
+        check("title leads with the name and the healthcare identity",
+              seo["title"].startswith("Gaurav Kumar Singh — Healthcare Product Manager"), seo["title"])
         check("Open Graph title matches", seo["og"] == seo["title"], seo["og"])
-        check("OG image is the poster", seo["ogimg"] == "media/gaurav-os-poster.jpg", seo["ogimg"])
-        check("no production domain invented", not seo["ogurl"], seo["ogurl"])
+        check("description names the target roles and a verified proof point",
+              "Product Analyst" in seo["desc"] and "Evamastu" in seo["desc"] and len(seo["desc"]) <= 300, len(seo["desc"]))
+        check("OG image is the poster, absolute on the documented live URL",
+              seo["ogimg"] == LIVE + "media/gaurav-os-poster.jpg", seo["ogimg"])
+        check("canonical and og:url are the documented live URL (README), not invented",
+              seo["canon"] == LIVE and seo["ogurl"] == LIVE, [seo["canon"], seo["ogurl"]])
+        check("favicon declared inline (no 404)", seo["icon"])
+        check("JSON-LD Person parses and carries the verified MCA institution",
+              bool(seo["ld"]) and any("Chaudhary Charan Singh" in a["name"]
+                                      for a in seo["ld"]["mainEntity"]["alumniOf"]), seo["ld"] and seo["ld"]["@type"])
+        check("JSON-LD claims no job title", bool(seo["ld"]) and "jobTitle" not in seo["ld"]["mainEntity"])
+        check("exactly one visible h1, and it is the name", seo["h1"] == ["Gaurav Kumar Singh"], seo["h1"])
 
         res = await rs.evaluate("""() => {
             const r = (window.GOS_CONTENT||{}).site_config.contact.resume || {};
             const links = [...document.querySelectorAll('[data-ev=\"resume_clicked\"]')];
             return {file: r.file, shown: links.length,
                     hrefs: links.map(a => a.getAttribute('href')),
-                    dl: links.every(a => a.hasAttribute('download'))}; }""")
-        if res["file"]:
-            check("resume download renders and points at the shipped file",
-                  res["shown"] >= 1 and res["dl"] and all(h == res["file"] for h in res["hrefs"]), res)
-        else:
-            check("no resume link is rendered while no PDF is supplied (no 404 button)",
-                  res["shown"] == 0, res)
+                    dl: links.every(a => a.hasAttribute('download')),
+                    hero: !!document.querySelector('#home-mount .cta-row [data-ev=\"resume_clicked\"]'),
+                    contact: !!document.querySelector('#contact-mount [data-ev=\"resume_clicked\"]'),
+                    rail: !!document.querySelector('#rail-cv'),
+                    rec: !!document.querySelector('#recruiter [data-ev=\"resume_clicked\"]')}; }""")
+        check("CV download renders and points at the shipped file",
+              res["file"] and res["shown"] >= 4 and res["dl"] and all(h == res["file"] for h in res["hrefs"]), res)
+        check("CV download is offered in the hero, contact, rail and Recruiter Mode",
+              res["hero"] and res["contact"] and res["rail"] and res["rec"], res)
+        pdf = await rs.evaluate("""async (f) => { const r = await fetch(f);
+            const b = new Uint8Array(await r.arrayBuffer());
+            return {status: r.status, magic: String.fromCharCode(...b.slice(0, 5)), size: b.length}; }""", res["file"])
+        check("the CV PDF is a real PDF", pdf["status"] == 200 and pdf["magic"] == "%PDF-" and pdf["size"] > 20000, pdf)
+        cvp = await b.new_context(viewport={"width": 390, "height": 844})
+        cvg = await cvp.new_page()
+        await cvg.goto(URL.replace("index.html", "cv.html")); await cvg.wait_for_timeout(600)
+        cvt = await cvg.evaluate("() => document.body.innerText")
+        check("cv.html renders from the content layer",
+              "Gaurav Kumar Singh" in cvt and "Associate Product Manager" in cvt, len(cvt))
+        check("cv.html carries the MCA entry exactly",
+              "MCA — Chaudhary Charan Singh University, Meerut" in cvt and "2022–2024" in cvt)
+        check("cv.html leaves the phone number out", "81275" not in cvt)
+        check("cv.html: no horizontal overflow at 390", (await cvg.evaluate(PROBE))[0] <= 390)
+        await cvp.close()
 
         # lab note reader: navigation, copy link, no invented sections
         await rs.evaluate("() => document.getElementById('lab').scrollIntoView()")
@@ -848,6 +894,134 @@ async def main():
             .length""")
         print("  NOTE  buttons without an inline handler (listeners are not observable): %d" % dead)
         await qb.close()
+
+        print("\n=== RECRUITER-FIRST: the first screen and the proof ===")
+        PROOF = {
+            "evamastu": "Owned the PRD through release; cohort analysis supported a 20–25% lift in user consistency.",
+            "live-your-best-life": "30+ structured user interviews; the research informed three major feature iterations.",
+            "careconnect": "Reframed the problem when discovery contradicted my own brief, then built and tested an MVP.",
+        }
+        for w, h in ((1440, 900), (1280, 800), (390, 844)):
+            fs = await b.new_context(viewport={"width": w, "height": h})
+            fp = await fs.new_page()
+            mp4hits = []
+            fp.on("request", lambda r: mp4hits.append(r.url) if r.url.endswith(".mp4") else None)
+            await fp.goto(URL); await fp.wait_for_timeout(1500)
+            g = await fp.evaluate("""(vh) => {
+                const vis = (sel) => { const e = document.querySelector(sel); if (!e) return null;
+                    const r = e.getBoundingClientRect(); return {top: r.top, bottom: r.bottom}; };
+                return {name: vis('#hero-name'), seek: vis('#home-mount .seek'),
+                        cv: vis('#home-mount .cta-row .btn-primary'), rec: vis('#hero-recruiter'),
+                        cards: [...document.querySelectorAll('#home-mount .proof-card')].map(c => {
+                            const r = c.getBoundingClientRect(); return {top: r.top, bottom: r.bottom}; }),
+                        intro: !!document.querySelector('.intro')}; }""", h)
+            check(f"{w}: no intro film over the first screen", not g["intro"])
+            check(f"{w}: the film file is never fetched on a first visit", not mp4hits, mp4hits[:1])
+            check(f"{w}: name, target roles, CV and Recruiter Mode are all in the first screen",
+                  all(g[k] and g[k]["bottom"] <= h for k in ("name", "seek", "cv", "rec")), g)
+            if w >= 1000:
+                check(f"{w}: all three proof cards are in the first screen",
+                      len(g["cards"]) == 3 and all(c["bottom"] <= h for c in g["cards"]), g["cards"])
+            else:
+                check(f"{w}: the first proof card starts in the first screen",
+                      len(g["cards"]) == 3 and g["cards"][0]["top"] < h, g["cards"][:1])
+            await fs.close()
+
+        rf = await page(1280, 1000)
+        pc = await rf.evaluate("""() => [...document.querySelectorAll('#home-mount .proof-card')].map(a => ({
+            href: a.getAttribute('href'), claim: a.querySelector('.pc').textContent,
+            ev: a.querySelector('.ev-label').textContent}))""")
+        check("hero proof cards are the three verified proof points, worded as verified",
+              [c["claim"] for c in pc] == list(PROOF.values()), [c["claim"][:30] for c in pc])
+        check("each proof card links to its case study",
+              [c["href"] for c in pc] == ["#case-" + k for k in PROOF], [c["href"] for c in pc])
+        check("CareConnect's proof card says it is not in production", "NOT IN PRODUCTION" in pc[2]["ev"], pc[2]["ev"])
+        prim = await rf.evaluate("""() => [...document.querySelectorAll('#work-mount > .case.primary')].map(c => c.id)""")
+        check("the three proof projects are the primary case studies, in order",
+              prim == ["case-" + k for k in PROOF], prim)
+        cc = await rf.evaluate("""() => { const c = document.getElementById('case-careconnect');
+            return {flag: !!c.querySelector('.prod-flag'), text: c.textContent}; }""")
+        check("CareConnect case states plainly that it is not in production",
+              cc["flag"] and "CareConnect is not in production" in cc["text"])
+        check("nothing calls CareConnect shipped or completed",
+              await rf.evaluate("""() => { const p = GOS_CONTENT.projects.find(x => x.id === 'careconnect');
+                  const kb = GOS_CONTENT.copilot_kb.find(x => x.id === 'kb3').a;
+                  return p.status !== 'COMPLETED' && !/shipped/i.test(kb) &&
+                         !p.recruiter.some(b => /^Shipped/.test(b)); }"""))
+        more = await rf.evaluate("""() => [...document.querySelectorAll('#work-mount details.mw')].map(d => d.id)""")
+        check("the other builds are kept, collapsed below the primary three",
+              more == ["more-aaroh", "more-phonepe", "more-ghargyaan", "more-nexus"], more)
+        await rf.evaluate("() => { location.hash = '#case-aaroh'; }")
+        await rf.wait_for_timeout(300)
+        check("a link to a collapsed case opens it",
+              await rf.evaluate("() => document.getElementById('more-aaroh').open"))
+        order = await rf.evaluate("""() => { const ids = ['home','work','about','contact','research'];
+            const z = document.querySelector('.re-zone');
+            const inZone = ['research','constellation','atlas','evolution','thinking','ask','challenge','lab']
+                .every(i => z.contains(document.getElementById(i)));
+            const pos = ids.map(i => document.getElementById(i));
+            const ordered = pos.every((e, i) => i === 0 || (pos[i-1].compareDocumentPosition(e) & 4));
+            return {inZone, ordered}; }""")
+        check("corpus, atlas, evolution, copilot, challenges, lab and film live in Research & Experiments",
+              order["inZone"], order)
+        check("portfolio sections come before Research & Experiments", order["ordered"], order)
+        check("the film control lives in Research & Experiments",
+              await rf.evaluate("() => !!document.querySelector('#research #film-btn')"))
+        edu = await rf.evaluate("() => document.getElementById('about').innerText")
+        check("education carries 'MCA — Chaudhary Charan Singh University, Meerut' (2022–2024)",
+              "MCA — Chaudhary Charan Singh University, Meerut" in edu and "2022–2024" in edu)
+        check("the superseded MCA institution appears nowhere",
+              await rf.evaluate("() => !/Maharaja Agrasen/.test(document.body.innerHTML + JSON.stringify(GOS_CONTENT))"))
+        check("every experience bullet from the CV is rendered verbatim",
+              await rf.evaluate("""() => { const t = document.getElementById('about').textContent;
+                  return GOS_CONTENT.experience.every(e => e.bullets.every(b => t.includes(b))); }"""))
+
+        print("\n=== ACCESSIBILITY ===")
+        a11y = await rf.evaluate("""() => {
+            const L = (c) => { const m = c.match(/\\d+(\\.\\d+)?/g).slice(0, 3).map(Number).map(v => v / 255)
+                .map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+                return 0.2126 * m[0] + 0.7152 * m[1] + 0.0722 * m[2]; };
+            const cr = (a, b) => { const x = L(a), y = L(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+            const probe = (v) => { const d = document.createElement('i'); d.style.color = 'var(' + v + ')';
+                document.body.appendChild(d); const c = getComputedStyle(d).color; d.remove(); return c; };
+            const out = {};
+            for (const mode of ['lab', 'recruiter']) {
+                document.documentElement.setAttribute('data-mode', mode);
+                const bg = probe('--panel-2');
+                out[mode] = ['--dim', '--muted', '--gold', '--jade', '--text'].map(v => [v, +cr(probe(v), bg).toFixed(2)]);
+            }
+            document.documentElement.setAttribute('data-mode', 'lab');
+            const small = [...document.querySelectorAll('.lab-only *')].filter(e =>
+                e.childNodes.length && [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()) &&
+                e.getClientRects().length && parseFloat(getComputedStyle(e).fontSize) < 10)
+                .map(e => e.className + ':' + getComputedStyle(e).fontSize);
+            const skip = document.querySelector('a.skip');
+            return {contrast: out, small: small.slice(0, 5), nSmall: small.length,
+                    skip: !!skip && skip.getAttribute('href') === '#main' && !!document.querySelector('main#main'),
+                    unlabeled: [...document.querySelectorAll('button')].filter(b =>
+                        b.getClientRects().length && !(b.textContent.trim() || b.getAttribute('aria-label'))).length,
+                    imgs: [...document.querySelectorAll('img')].filter(i => !i.hasAttribute('alt')).length,
+                    lang: document.documentElement.lang}; }""")
+        worst = min(v for m in a11y["contrast"].values() for _, v in m)
+        check("every text colour token meets WCAG AA (4.5:1) on the darkest panel, both themes",
+              worst >= 4.5, a11y["contrast"])
+        check("no visible text smaller than 10px", a11y["nSmall"] == 0, a11y["small"])
+        check("skip link targets the main landmark", a11y["skip"])
+        check("every visible button has an accessible name", a11y["unlabeled"] == 0, a11y["unlabeled"])
+        check("every image declares alt text", a11y["imgs"] == 0, a11y["imgs"])
+        tb = await page(1280, 1000)
+        await tb.keyboard.press("Tab")
+        check("the first Tab lands on the skip link",
+              await tb.evaluate("() => document.activeElement && document.activeElement.classList.contains('skip')"))
+        await tb.keyboard.press("Enter")
+        await tb.wait_for_timeout(300)
+        check("the skip link moves focus into main",
+              await tb.evaluate("() => !!document.activeElement.closest('main')"))
+        await tb.close()
+        acc = await rf.evaluate("""() => [...document.querySelectorAll('.acc-btn')].every(b =>
+            b.getAttribute('aria-controls') && document.getElementById(b.getAttribute('aria-controls')))""")
+        check("every accordion button names the panel it controls", acc)
+        await rf.close()
 
         print("\n=== TABLET / MOBILE ===")
         for w, h, name in ((1440, 900, "xl"), (1024, 900, "l"), (768, 1024, "t"), (390, 844, "m"), (360, 800, "xs")):

@@ -1,11 +1,11 @@
-# GAURAV.OS
+# Portfolio source — Gaurav Kumar Singh, Healthcare Product Manager
 
-**An AI Product Intelligence System.** A personal product system for Gaurav Kumar Singh —
-AI Product Manager, building at the intersection of AI, healthcare, research and human behaviour.
-
-Not a portfolio template. The 90-day case-study corpus is **read from a repository**,
-normalized, validated, and rendered as a constellation, an atlas, an evolution view and
-a grounded copilot. Nothing on the page is typed in by hand twice.
+A recruiter-first portfolio: the hero leads with name, target roles (Healthcare PM, APM,
+Product Analyst, HealthTech) and three verified proof points, followed by three primary
+case studies, the CV record and contact. The 90-day case-study corpus, the copilot,
+challenges, lab notes and the intro film sit in a secondary **Research & Experiments**
+area. The corpus is **read from a repository**, normalized, validated and rendered —
+nothing on the page is typed in by hand twice.
 
 ---
 
@@ -16,7 +16,8 @@ Seven layers, deliberately separated.
 | Layer | File | Rule |
 |---|---|---|
 | **UI shell** | `index.html` | Styles, tokens and empty mount points. No content. |
-| **Interaction** | `app.js` | Renders the portfolio: hero, featured work, copilot, challenges, lab notes, recruiter mode. |
+| **Interaction** | `app.js` | Renders the portfolio: hero, work, record, contact, copilot, challenges, lab notes, recruiter mode. |
+| **CV** | `cv.html` | Printable CV rendered from `content.js`; `scripts/build_cv.py` prints it to the PDF. |
 | **Content** | `content.js` | Every word a visitor reads that is *not* from the corpus. Hand-maintained. |
 | **Corpus (data)** | `corpus.js` | **Generated.** The 90-day case-study corpus. Never hand-edit. |
 | **Corpus (UI)** | `corpus-ui.js` | Constellation, atlas, evolution, operating model, capability graph. |
@@ -120,8 +121,10 @@ Runs headless Chromium at **1440 / 1280 / 1024 / 768 / 390** and asserts: corpus
 the tree, Day 90 present, Day 74 flagged missing, every GitHub link resolves against the
 tree, constellation renders, atlas search and every filter work, day-by-day navigation
 works, the copilot refuses unsupported questions without topic-matching, recruiter mode
-works, intro autoplay / skip / no-replay, reduced motion, keyboard navigation, no console
-errors and no horizontal overflow at any width.
+works, intro never autoplays / skip / sound / focus trap, reduced motion, keyboard navigation, no console
+errors and no horizontal overflow at any width — plus the recruiter-first checks: first
+screen, proof wording, CareConnect's not-in-production label, the MCA entry, CV download,
+SEO metadata, WCAG AA contrast and the 10px text floor.
 
 ---
 

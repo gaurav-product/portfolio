@@ -18,51 +18,71 @@ window.GOS_CONTENT = {
     name: "GAURAV.OS",
     system: "AI Product Intelligence System",
     owner: "Gaurav Kumar Singh",
-    role: "AI Product Manager",
-    discipline: "Healthcare × AI × Research",
-    tagline: "Building at the intersection of AI, healthcare, research and human behaviour.",
+    /* Positioning, not a past job title. The titles actually held are in
+       experience[] and projects[] and are never upgraded.                  */
+    role: "Healthcare Product Manager",
+    discipline: "Healthcare · HealthTech · Product Analytics",
+    tagline: "Healthcare product work grounded in user research and behavioural analytics.",
+    /* The hero's one-paragraph answer to "who is this?". Every clause is a
+       CV fact restated: 3+ years, Evamastu PRD → release, Live Your Best Life. */
+    intro: "3+ years in HealthTech product, user research and behavioural analytics. I owned a digital mindfulness platform from PRD through release, after two years running structured user research for a US wellness team.",
     narrative: ["WATCH","EXPLORE","INVESTIGATE","VERIFY","UNDERSTAND","CONNECT"],
     positioning: "I research behaviour, frame problems, build products, measure outcomes, and use AI where it creates genuine product value.",
     location: "New Delhi, India",
     status_line: "SYSTEM STATUS: BUILDING",
-    version: "v4.0",
-    updated: "29 September 2026",
+    version: "v5.0",
+    updated: "29 October 2026",
     corpus_note: "The 90-day corpus below is read directly from the GitHub repository, not retyped.",
-    seeking: "Product Management roles",
-    /* Stated positioning, not an inference. Gaurav is open to product roles
-       across domains; the portfolio says so once in the hero, once at the
-       contact channel and once in Recruiter Mode — nowhere else.          */
+    seeking: "Healthcare PM · APM · Product Analyst · HealthTech",
+    /* Stated positioning, not an inference. The portfolio says it once in
+       the hero, once at the contact channel and once in Recruiter Mode —
+       nowhere else.                                                         */
     opportunity: {
       enabled: true,
-      label: "OPEN TO PRODUCT OPPORTUNITIES",
-      line: "I'm open to Product Management opportunities across AI, healthcare, consumer, SaaS and emerging technology.",
-      detail: "I'm particularly interested in teams where I can combine product thinking, research, AI and human behaviour to solve meaningful problems.",
-      roles: ["APM", "Product Manager", "AI Product", "Healthcare Product", "Consumer", "SaaS"],
+      label: "OPEN TO HEALTHCARE PRODUCT ROLES",
+      line: "I'm looking for Healthcare Product Manager, Associate Product Manager, Product Analyst and HealthTech product roles.",
+      detail: "I'm particularly interested in healthcare teams where I can combine product thinking, user research and analytics to solve meaningful problems.",
+      roles: ["Healthcare Product Manager", "Associate Product Manager", "Product Analyst", "HealthTech Product"],
       cta_label: "LET'S TALK",
       cta_href: "#contact",
       cta_href_recruiter: "#rec-contact"
     },
+    /* The three verified proof points the hero leads with. Each names the
+       project record it summarises and the evidence label it carries; the
+       wording is the verified wording and is not to be strengthened.        */
+    proof_points: [
+      { project: "evamastu", label: "EVAMASTU · ASSOCIATE PRODUCT MANAGER",
+        claim: "Owned the PRD through release; cohort analysis supported a 20–25% lift in user consistency.",
+        evidence: "FROM CV" },
+      { project: "live-your-best-life", label: "LIVE YOUR BEST LIFE · RESEARCH EXPERT",
+        claim: "30+ structured user interviews; the research informed three major feature iterations.",
+        evidence: "FROM CV" },
+      { project: "careconnect", label: "CARECONNECT · SELF-DIRECTED BUILD",
+        claim: "Reframed the problem when discovery contradicted my own brief, then built and tested an MVP.",
+        evidence: "MVP · NOT IN PRODUCTION" }
+    ],
     summary: [
       "3+ years in HealthTech product, user research and behavioral analytics — 30+ structured user interviews, 500+ users tracked, findings adopted across 3 feature iterations.",
-      "Owned a digital mindfulness platform end to end, PRD through release, where funnel analysis across 50+ cohorts drove a 20–25% lift in user consistency.",
-      "Currently building an AI health product with the Claude API, Cursor and Lovable, and seeking an Associate Product Manager role."
+      "Owned a digital mindfulness platform end to end, PRD through release, where cohort analysis across 50+ cohorts supported a 20–25% lift in user consistency.",
+      "Currently building an AI health product with the Claude API, Cursor and Lovable, and seeking Healthcare Product Manager, Associate Product Manager, Product Analyst or HealthTech product roles."
     ],
     contact: {
       email: "gauravkumarsingh773@gmail.com",
       phone: "+91 81275 12340",
       linkedin: "linkedin.com/in/gaurav-singh-product",
       github: "github.com/gaurav-product",
-      /* DOWNLOAD RESUME appears in the hero, Contact and Recruiter Mode the
-         moment `file` names a real PDF. Drop the PDF into site/media/, set the
-         path here, rebuild — no UI file is touched. It is left null because
-         the CV carries a phone number and address, and publishing that to a
-         public repository is your decision to make, not mine.              */
+      /* DOWNLOAD CV appears in the hero, Contact, the rail and Recruiter
+         Mode whenever `file` names a PDF. The shipped PDF is generated from
+         cv.html, which renders this content layer — so it can never say
+         more than the site does. It deliberately leaves out the phone number
+         and street address. To ship your own CV instead, drop the PDF into
+         site/media/ under this name (or change `file`) and rebuild.        */
       resume: {
-        file: null,
-        intended_file: "media/gaurav-kumar-singh-apm-resume.pdf",
-        label: "DOWNLOAD RESUME",
-        filename: "Gaurav-Kumar-Singh-APM-Resume.pdf",
-        note: "The same CV every record on this site is checked against."
+        file: "media/gaurav-kumar-singh-cv.pdf",
+        page: "cv.html",
+        label: "DOWNLOAD CV",
+        filename: "Gaurav-Kumar-Singh-CV.pdf",
+        note: "Generated from the same records this site renders."
       }
     },
     /* homepage auto-fills from these pointers — never edit the UI for this */
@@ -103,18 +123,21 @@ window.GOS_CONTENT = {
   },
 
   /* ------------------------------------------------------------ navigation */
+  /* Recruiter-first order: the portfolio a hiring manager needs, then the
+     secondary Research & Experiments area for anyone who wants depth.      */
   navigation: [
-    { id: "home",          label: "Home",           idx: "00", group: "System" },
-    { id: "constellation", label: "Constellation",  idx: "01", group: "90-Day Corpus" },
-    { id: "atlas",         label: "Product Atlas",  idx: "02", group: "90-Day Corpus" },
-    { id: "evolution",     label: "Evolution",      idx: "03", group: "90-Day Corpus" },
-    { id: "work",          label: "Featured Work",  idx: "04", group: "Products I Build" },
-    { id: "thinking",      label: "How I Think",    idx: "05", group: "Method" },
-    { id: "ask",           label: "Ask Gaurav",     idx: "06", group: "Interact" },
-    { id: "challenge",     label: "Challenge",      idx: "07", group: "Interact" },
-    { id: "lab",           label: "Lab Notes",      idx: "08", group: "Interact" },
-    { id: "about",         label: "About",          idx: "09", group: "Record" },
-    { id: "contact",       label: "Contact",        idx: "10", group: "Record" }
+    { id: "home",          label: "Overview",               idx: "01", group: "Portfolio" },
+    { id: "work",          label: "Selected work",          idx: "02", group: "Portfolio" },
+    { id: "about",         label: "Experience & education", idx: "03", group: "Portfolio" },
+    { id: "contact",       label: "Contact & CV",           idx: "04", group: "Portfolio" },
+    { id: "research",      label: "Overview & intro film",  idx: "R0", group: "Research & Experiments" },
+    { id: "constellation", label: "90-day corpus",          idx: "R1", group: "Research & Experiments" },
+    { id: "atlas",         label: "Product Atlas",          idx: "R2", group: "Research & Experiments" },
+    { id: "evolution",     label: "Evolution",              idx: "R3", group: "Research & Experiments" },
+    { id: "thinking",      label: "How I think",            idx: "R4", group: "Research & Experiments" },
+    { id: "ask",           label: "AI copilot",             idx: "R5", group: "Research & Experiments" },
+    { id: "challenge",     label: "Challenges",             idx: "R6", group: "Research & Experiments" },
+    { id: "lab",           label: "Lab Notes",              idx: "R7", group: "Research & Experiments" }
   ],
 
   /* --------------------------------------------------------------- journey */
@@ -128,7 +151,7 @@ window.GOS_CONTENT = {
         detail: "Deepened the behavioural and wellness grounding that still decides how I frame health problems." },
       { id: "j3", when: "Sep 2022 – Jul 2024", what: "Research Expert, Wellness Team", where: "Live Your Best Life (USA) · Remote", phase: "HEALTHCARE",
         detail: "30+ structured user interviews, behavioural pattern synthesis, onboarding drop-off analysis. Recommendations adopted across 3 major feature iterations; engagement tracked for 500+ users with weekly insight reports feeding sprint prioritization." },
-      { id: "j4", when: "2022 – 2024", what: "MCA", where: "Maharaja Agrasen Himalayan Garhwal University", phase: "HEALTHCARE",
+      { id: "j4", when: "2022–2024", what: "MCA", where: "Chaudhary Charan Singh University, Meerut", phase: "HEALTHCARE",
         detail: "The technical half — run alongside the research work, and the reason I can hold a build conversation rather than hand it over." },
       { id: "j5", when: "Nov 2024 – Apr 2025", what: "Product Management Intern", where: "Adhyatm Sadhna Kendra, New Delhi", phase: "PRODUCT",
         detail: "The transition into product. Ran parent and facilitator interviews for Evamastu and turned them into the problem statements behind the first product brief; built the initial backlog, a competitive scan, and user stories with acceptance criteria for the first assessment module." },
@@ -144,9 +167,79 @@ window.GOS_CONTENT = {
   },
 
   /* -------------------------------------------------------------- projects */
+  /* tier "primary" = the three case studies the portfolio leads with. Every
+     figure in a primary record is already stated in experience[] or
+     research[] — these records restructure CV facts, they add none.
+     recruiter[] is the résumé-view summary of each project.               */
   projects: [
     {
-      id: "aaroh", slug: "aaroh", order: 1, featured: true,
+      id: "evamastu", slug: "evamastu", order: 1, featured: true, tier: "primary",
+      name: "Evamastu", subtitle: "Digital mindfulness platform",
+      domain: "HealthTech / Wellness", role: "Associate Product Manager",
+      org: "Adhyatm Sadhna Kendra, New Delhi",
+      period: "Nov 2024 – Apr 2026", status: "RELEASED", status_tone: "jade",
+      evidence: "FROM CV",
+      headline: "Discovery through release — then the analytics that showed where onboarding was losing people.",
+      metrics: [
+        { n: "20–25%", l: "lift in user consistency in six weeks after the onboarding redesign" },
+        { n: "50+", l: "participant cohorts in the cohort analytics system" },
+        { n: "2", l: "funnel drop-offs found, which drove the redesign" },
+        { n: "12+", l: "feature requests scored with RICE and MoSCoW" }
+      ],
+      exec: [
+        { k: "DISCOVERY", t: "As Product Management Intern: parent and facilitator interviews, turned into the problem statements behind the first product brief." },
+        { k: "OWNERSHIP", t: "As Associate Product Manager: discovery through release, and the full PRD." },
+        { k: "SHIPPED", t: "A Parent Dashboard, a Child Wellness Assessment and 4 adaptive cognitive games." },
+        { k: "OUTCOME", t: "Cohort analysis found 2 funnel drop-offs; the onboarding redesign that followed lifted consistency 20–25% in six weeks.", alert: true }
+      ],
+      sections: [
+        { id: "discovery", label: "DISCOVERY", body: "<p>I joined as Product Management Intern (Nov 2024 – Apr 2025) and supported early discovery: I ran <b>parent and facilitator interviews</b> and turned the findings into the problem statements behind the first product brief.</p><p>From there I built the initial backlog and a competitive scan, and wrote user stories and acceptance criteria for the first assessment module.</p>" },
+        { id: "ownership", label: "OWNERSHIP: PRD THROUGH RELEASE", body: "<p>As Associate Product Manager (May 2025 – Apr 2026) I owned Evamastu from discovery through release and wrote the full PRD.</p><ul><li><b>Parent Dashboard</b></li><li><b>Child Wellness Assessment</b></li><li><b>4 adaptive cognitive games</b></li></ul>" },
+        { id: "analytics", label: "COHORT ANALYTICS", body: "<p>I built a cohort analytics system across <b>50+ participant cohorts</b>. Segmenting by cohort rather than averaging is what surfaced <b>2 funnel drop-offs</b> — an average across cohorts hides the one that is struggling.</p><p>Those two drop-offs drove an onboarding redesign, and consistency rose <b>20–25% in six weeks</b> after it.</p>" },
+        { id: "prioritization", label: "PRIORITIZATION & DELIVERY", body: "<p>Ran Agile sprint planning and backlog grooming, and scored <b>12+ feature requests with RICE and MoSCoW</b> to hold roadmap discipline and cut scope creep.</p>" },
+        { id: "evidence", label: "EVIDENCE", tag: "FROM CV", body: "<p class='note'>Every figure here is from my CV. The cohort data, dashboards and PRD are not published on this site, so no figure beyond these is quoted.</p>" }
+      ],
+      recruiter: [
+        "Owned discovery through release; wrote the full PRD and shipped a Parent Dashboard, Child Wellness Assessment and 4 adaptive cognitive games.",
+        "Built a cohort analytics system across 50+ participant cohorts; found 2 funnel drop-offs that drove an onboarding redesign — consistency rose 20–25% in 6 weeks.",
+        "Scored 12+ feature requests with RICE and MoSCoW; ran sprint planning and backlog grooming."
+      ]
+    },
+
+    {
+      id: "live-your-best-life", slug: "live-your-best-life", order: 2, featured: true, tier: "primary",
+      name: "Live Your Best Life", subtitle: "Wellness-team user research (USA, remote)",
+      domain: "Wellness / User Research", role: "Research Expert, Wellness Team",
+      org: "Live Your Best Life (USA) · Remote",
+      period: "Sep 2022 – Jul 2024", status: "RESEARCH ROLE", status_tone: "jade",
+      evidence: "FROM CV",
+      headline: "Two years of structured user research, written so a product team could act on it.",
+      metrics: [
+        { n: "30+", l: "structured user interviews" },
+        { n: "3", l: "major feature iterations informed by the research" },
+        { n: "500+", l: "users tracked for engagement" },
+        { n: "Weekly", l: "insight reports shaping sprint prioritization" }
+      ],
+      exec: [
+        { k: "RESEARCH", t: "30+ structured user interviews." },
+        { k: "SYNTHESIS", t: "Behavioural patterns and onboarding drop-offs, turned into recommendations." },
+        { k: "OUTCOME", t: "Recommendations adopted across 3 major feature iterations.", alert: true },
+        { k: "CADENCE", t: "Engagement tracked for 500+ users; weekly insight reports fed sprint prioritization." }
+      ],
+      sections: [
+        { id: "research", label: "WHAT I DID", body: "<p>As Research Expert on the Wellness Team (remote, for a US company) I conducted <b>30+ structured user interviews</b> and synthesized the behavioural patterns and onboarding drop-offs they revealed into product recommendations.</p>" },
+        { id: "impact", label: "WHAT IT CHANGED", body: "<p>The recommendations were <b>adopted across three major feature iterations</b>. Alongside the interviews I tracked engagement metrics for <b>500+ users</b> and delivered <b>weekly insight reports</b> that shaped sprint prioritization directly.</p>" },
+        { id: "carried", label: "WHAT I CARRIED FORWARD", body: "<p>At Evamastu it became a cohort analytics system across 50+ participant cohorts: two funnel drop-offs found, an onboarding redesign shipped, consistency up 20–25% in six weeks. At Aaroh it became 20+ discovery interviews before a roadmap existed. The order never changes — behaviour first, feature second.</p>" },
+        { id: "evidence", label: "EVIDENCE", tag: "FROM CV", body: "<p class='note'>The interview transcripts and synthesis documents are not published here. The numbers above are the ones I can stand behind.</p>" }
+      ],
+      recruiter: [
+        "Conducted 30+ structured user interviews; synthesized behavioral patterns and onboarding drop-offs into recommendations adopted across 3 major feature iterations.",
+        "Tracked engagement metrics for 500+ users and delivered weekly insight reports that shaped sprint prioritization."
+      ]
+    },
+
+    {
+      id: "aaroh", slug: "aaroh", order: 4, featured: true,
       name: "Aaroh", subtitle: "AI Root-Cause Health Platform",
       domain: "AI / Healthcare", role: "Founder & Product Manager",
       period: "May 2026 – Present", status: "IN PROGRESS", status_tone: "gold",
@@ -202,14 +295,24 @@ window.GOS_CONTENT = {
           tradeoff: "Resets narrative momentum and makes the project harder to describe in one line, for now.",
           changed: "In progress. Positioning and scope are both open.",
           next: "Narrow to the single job-to-be-done the discovery interviews most strongly support, and put that in front of users before building further." }
+      ],
+      recruiter: [
+        "Ran 20+ customer discovery interviews; translated findings into a RICE/MoSCoW-prioritized roadmap and end-to-end product vision.",
+        "Authored PRDs and user stories for conversational intake, root-cause mapping, and personalized recommendations.",
+        "Built and validated the MVP with Claude API, Lovable and Cursor; defined the North Star Metric and instrumented activation, retention and adoption analytics.",
+        "Now running a strategy reset on positioning and scope."
       ]
     },
 
     {
-      id: "careconnect", slug: "careconnect", order: 2, featured: true,
+      id: "careconnect", slug: "careconnect", order: 3, featured: true, tier: "primary",
       name: "CareConnect", subtitle: "Post-Discharge Care Accountability Layer",
       domain: "Healthcare / Product Discovery", role: "Self-directed product build",
-      period: "Sep 2026", status: "COMPLETED", status_tone: "jade",
+      period: "Sep 2026", status: "MVP · NOT IN PRODUCTION", status_tone: "gold",
+      evidence: "MVP · NOT IN PRODUCTION",
+      /* "Tested" means automated tests. The validation interviews are owed
+         work, and the product has never been deployed to real patients.   */
+      production_note: "CareConnect is not in production. It is a self-directed MVP: \"tested\" means 65 unit and integration tests and 30 end-to-end journeys — the validation interviews in its plan have not been run yet.",
       headline: "The story here is not the build. It is that I killed my own brief.",
       metrics: [
         { n: "65", l: "unit & integration tests" },
@@ -232,11 +335,15 @@ window.GOS_CONTENT = {
         { id: "iteration-2", label: "ITERATION 2: SHIPPING NOTHING ON PURPOSE", body: "<p>The second pass added <b>no features at all</b>. It did this instead:</p><ul><li>Challenged over-strong claims in my own documentation.</li><li>Renamed metrics that overstated what the system could prove — \"verified\" care days became \"documented\" care days, because documentation is what the product can evidence.</li><li>Added append-only corrections to care entries, so the record has a history rather than an edit.</li><li>Graded the 13 conclusions and wrote the validation plan for the research still outstanding.</li></ul><p>A feature-count reading of that iteration says nothing happened. A credibility reading says it was the most valuable pass in the project.</p>" },
         { id: "beachhead", label: "BEACHHEAD & SCOPE", body: "<p>Narrowed from \"families managing caregiving\" to a specific person in a specific window: <b>the adult child living away from their parent, supervising the first 30 days after a hospital discharge</b>.</p><p>Everything the product refuses to do follows from that choice.</p>" },
         { id: "differently", label: "WHAT I WOULD DO DIFFERENTLY", body: "<p>Run the interviews the validation plan describes before the second build pass, not after it. The claim register made the gap visible — which is exactly what it is for — but visible is not the same as closed.</p>" }
+      ],
+      recruiter: [
+        "Repositioned from a caregiver marketplace to a post-discharge care accountability layer after discovery contradicted the original hypothesis; documented the pivot as a decision record.",
+        "Built a working MVP (React, Express, TypeScript, SQLite) with 65 unit and integration tests, 30 end-to-end journeys, and a claim register grading every conclusion by evidence strength. Not in production."
       ]
     },
 
     {
-      id: "phonepe", slug: "phonepe-smart-spend-coach", order: 3, featured: true,
+      id: "phonepe", slug: "phonepe-smart-spend-coach", order: 5, featured: true,
       name: "PhonePe Smart Spend Coach", subtitle: "Feature Design & Growth Case",
       domain: "Fintech / Product Analytics", role: "Masai School × IIT Roorkee",
       period: "Aug 2026", status: "COMPLETED", status_tone: "jade",
@@ -255,11 +362,15 @@ window.GOS_CONTENT = {
         { id: "decision", label: "DECISION", body: "<p>Attack the insight-to-action step, not the top of the funnel. An insight-to-action gap is not fixed with more acquisition, more insights or a better model — it is fixed at the moment of delivery: timing, specificity, and whether the next step is small enough to take immediately.</p>" },
         { id: "experiment", label: "EXPERIMENT", body: "<p>A <b>21-day A/B test</b> aimed squarely at that step.</p><p class='note'>No result figures appear here because none are published in my CV. The case study is the design of the test, not a claimed win.</p>" },
         { id: "guardrails", label: "GUARDRAILS", body: "<p><b>Guardrail metrics defined up front</b>, so a lift in action could not be bought with harm elsewhere. An experiment that can only report its win is not an experiment.</p>" }
+      ],
+      recruiter: [
+        "Scored 5 candidate features with RICE, wrote the PRD for the winner, built a 5-screen Figma prototype tested with 7 users.",
+        "Analysed a 40,000-user pilot funnel (7.14% end-to-end), prioritized the 70% insight-to-action drop-off, and designed a 21-day A/B test with guardrail metrics."
       ]
     },
 
     {
-      id: "ghargyaan", slug: "ghargyaan", order: 4, featured: false,
+      id: "ghargyaan", slug: "ghargyaan", order: 6, featured: false,
       name: "GharGyaan", subtitle: "Everyday self-care & Indian household knowledge",
       domain: "Healthcare / PWA", role: "Self-directed product build",
       period: "Sep 2026", status: "IN PROGRESS", status_tone: "gold",
@@ -268,11 +379,15 @@ window.GOS_CONTENT = {
       sections: [
         { id: "concept", label: "WHAT IT IS", body: "<p>A mobile-first PWA for everyday self-care and Indian traditional knowledge. Working name — it may change.</p><p>Two design commitments carried over from Aaroh: <b>evidence labels</b> on every piece of guidance, so a reader can see what is well-supported and what is folk practice, and <b>safety escalation</b> that routes anything serious toward a human professional.</p><p>Explicitly not an AI doctor.</p>" },
         { id: "state", label: "CURRENT STATE", tag: "IN PROGRESS", body: "<p class='note'>This project is early. There are no users, no measured outcomes and no published research behind it yet — so there is nothing here presented as a result. What exists is the concept, the evidence-labelling commitment and the safety model. When there is evidence, it will appear here with its status attached.</p>" }
+      ],
+      recruiter: [
+        "Mobile-first PWA for everyday self-care and Indian traditional knowledge, with evidence labels on guidance and safety escalation toward professionals. Working name.",
+        "Early build — no users and no measured outcomes yet."
       ]
     },
 
     {
-      id: "nexus", slug: "nexus", order: 5, featured: false,
+      id: "nexus", slug: "nexus", order: 7, featured: false,
       name: "Nexus", subtitle: "Personal Decision & Context Engine",
       domain: "AI / Productivity", role: "Self-directed 0→1 build",
       period: "Sep 2026", status: "IN PROGRESS", status_tone: "gold",
@@ -282,6 +397,10 @@ window.GOS_CONTENT = {
       sections: [
         { id: "concept", label: "WHAT IT IS", body: "<p>An evidence-first system that surfaces four things across Gmail, Google Calendar and uploaded documents: <b>conflicts, changes, commitments and missing information</b>.</p><p>The framing matters as much as the build. It is deliberately <b>not a chatbot and not a second brain</b> — both of those put the burden of asking the right question back on the user. A situation inbox does the noticing.</p>" },
         { id: "state", label: "CURRENT STATE", tag: "IN PROGRESS", body: "<p>MVP runs in <b>demo mode</b>, with no fabricated users and no fabricated results. The repository is public.</p><p class='note'>No adoption, retention or accuracy numbers appear here because none have been measured. Demo mode is a build state, not traction.</p>" }
+      ],
+      recruiter: [
+        "Evidence-first “situation inbox” surfacing conflicts, changes, commitments and missing information across Gmail, Calendar and uploaded documents. Not a chatbot or second brain.",
+        "MVP in demo mode; repository public. No adoption or accuracy figures measured yet."
       ]
     }
   ],
@@ -398,7 +517,10 @@ window.GOS_CONTENT = {
   /* ------------------------------------------------------------- education */
   education: [
     { id: "ed1", what: "AI-Enabled Product Management Program", org: "Masai School and IIT Roorkee Faculty", period: "Dec 2025 – Aug 2026", kind: "program" },
-    { id: "ed2", what: "MCA, Master of Computer Applications", org: "Maharaja Agrasen Himalayan Garhwal University, Uttarakhand", period: "2022 – 2024", kind: "degree" },
+    /* Stated by Gaurav as the verified entry; replaces an earlier record of the
+       institution. Render exactly: MCA — Chaudhary Charan Singh University,
+       Meerut (2022–2024).                                                    */
+    { id: "ed2", what: "MCA", org: "Chaudhary Charan Singh University, Meerut", period: "2022–2024", kind: "degree" },
     { id: "ed3", what: "M.Sc.", org: "S-VYASA University, Bengaluru", period: "2020 – 2022", kind: "degree" },
     { id: "ed4", what: "B.Sc.", org: "University of Patanjali, Haridwar", period: "2017 – 2020", kind: "degree" }
   ],
@@ -506,7 +628,7 @@ window.GOS_CONTENT = {
       sources: [["Aaroh", "aaroh"], ["Decision log", "aaroh"]] },
     { id: "kb3", q: "What did Gaurav learn from CareConnect?",
       keys: ["careconnect", "pivot", "learn", "hypothesis", "caregiver", "marketplace", "claim register", "wrong"],
-      a: "<p>That being wrong early is cheaper than being wrong late — and that it only counts if it is documented.</p><ul><li>The brief started as a <b>caregiver marketplace</b>. Discovery contradicted it, so I repositioned it as a <b>post-discharge care accountability layer</b> and wrote the pivot up as a decision record rather than quietly rewriting history.</li><li>The MVP shipped as React, Express, TypeScript and SQLite with <b>65 unit and integration tests</b> and <b>30 end-to-end journeys</b>.</li><li>Every conclusion went into a <b>claim register grading it by evidence strength</b> — 13 conclusions graded.</li><li>Iteration 2 deliberately added <b>zero features</b>: it renamed metrics that overstated what the system could prove, and tightened claims instead.</li></ul>",
+      a: "<p>That being wrong early is cheaper than being wrong late — and that it only counts if it is documented.</p><ul><li>The brief started as a <b>caregiver marketplace</b>. Discovery contradicted it, so I repositioned it as a <b>post-discharge care accountability layer</b> and wrote the pivot up as a decision record rather than quietly rewriting history.</li><li>The MVP was built as React, Express, TypeScript and SQLite with <b>65 unit and integration tests</b> and <b>30 end-to-end journeys</b>. It is <b>not in production</b>.</li><li>Every conclusion went into a <b>claim register grading it by evidence strength</b> — 13 conclusions graded.</li><li>Iteration 2 deliberately added <b>zero features</b>: it renamed metrics that overstated what the system could prove, and tightened claims instead.</li></ul>",
       sources: [["CareConnect", "careconnect"]] },
     { id: "kb4", q: "Show me an example of analytical thinking.",
       keys: ["analytic", "analysis", "funnel", "data", "metric", "number", "phonepe", "spend", "cohort", "experiment", "a/b"],

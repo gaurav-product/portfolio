@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gaurav Kumar Singh — CV · Healthcare Product Manager</title>
+<meta name="description" content="One-page CV of Gaurav Kumar Singh, healthcare product manager seeking Healthcare PM, Associate PM, Product Analyst and HealthTech roles.">
+<link rel="canonical" href="https://gaurav-product.github.io/portfolio/cv.html">
+<meta name="robots" content="index, follow">
+<!-- The printable CV. Rendered from content.js — the same records the site
+     shows — so it cannot claim more than the portfolio does. The PDF the
+     site offers for download is this page, printed by scripts/build_cv.py.
+     Contact details: email, LinkedIn, GitHub, city. No phone, no address. -->
+<style>
+  :root{--ink:#14191D;--muted:#4F5A62;--line:#D8D3C8;--accent:#6E520E}
+  *{box-sizing:border-box}
+  html{background:#EEEBE4}
+  body{margin:0 auto;max-width:820px;background:#fff;color:var(--ink);
+    font:10.5pt/1.42 "Helvetica Neue",Arial,system-ui,sans-serif;padding:34px 40px 40px}
+  a{color:inherit}
+  h1{font-size:23pt;margin:0;letter-spacing:-.01em;font-weight:700}
+  .role{font-size:12pt;margin-top:3px;font-weight:600}
+  .seek{font-size:10pt;color:var(--muted);margin-top:4px}
+  .contact{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:9.5pt;margin-top:8px;color:var(--muted)}
+  h2{font-size:9pt;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:16px 0 6px;
+    padding-bottom:3px;border-bottom:1px solid var(--line)}
+  ul{margin:3px 0 0;padding-left:16px}
+  li{margin-bottom:2px}
+  .item{margin-top:8px;break-inside:avoid}
+  .item:first-of-type{margin-top:0}
+  .ih{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+  .ih b{font-size:10.5pt}
+  .ih span{font-size:9.5pt;color:var(--muted);white-space:nowrap}
+  .io{font-size:9.5pt;color:var(--muted)}
+  .tag{font-size:8pt;letter-spacing:.08em;border:1px solid var(--line);padding:0 4px;margin-left:4px;color:var(--accent);white-space:nowrap}
+  .skills div{margin-top:2px}
+  .bar{max-width:820px;margin:0 auto;padding:12px 40px;display:flex;gap:10px;flex-wrap:wrap;font:14px system-ui}
+  .bar a,.bar button{font:inherit;padding:9px 14px;border:1px solid #9A9488;background:#fff;color:#14191D;text-decoration:none;cursor:pointer;border-radius:2px}
+  .bar a:focus-visible,.bar button:focus-visible{outline:2px solid #6E520E;outline-offset:2px}
+  @media (max-width:600px){ body{padding:22px 18px} .bar{padding:12px 18px} .ih{flex-direction:column;gap:0} }
+  @page{size:A4;margin:12mm 13mm}
+  @media print{ html{background:#fff} body{padding:0;max-width:none} .bar{display:none} }
+</style>
+</head>
+<body>
+<nav class="bar" aria-label="CV actions">
+  <a href="./">← Portfolio</a>
+  <a href="media/gaurav-kumar-singh-cv.pdf" download="Gaurav-Kumar-Singh-CV.pdf">Download PDF</a>
+  <button type="button" onclick="window.print()">Print</button>
+</nav>
+<main id="cv"><noscript>This CV is rendered from the portfolio's content file; <a href="media/gaurav-kumar-singh-cv.pdf">download the PDF</a> instead.</noscript></main>
+<script src="content.js"></script>
+<script>
+(function () {
+  "use strict";
+  var C = window.GOS_CONTENT; if (!C) return;
+  var s = C.site_config, ct = s.contact;
+  function esc(x) { return String(x).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function byOrder(a, b) { return a.order - b.order; }
+  /* Experience already carries Evamastu and Live Your Best Life, so the
+     projects block lists the other builds — each with its status label.  */
+  var projects = C.projects.slice().sort(byOrder).filter(function (p) {
+    return p.id !== "evamastu" && p.id !== "live-your-best-life";
+  });
+  var h =
+    '<header><h1>' + esc(s.owner) + '</h1>' +
+    '<div class="role">' + esc(s.role) + '</div>' +
+    '<div class="seek">' + esc(s.opportunity.line) + '</div>' +
+    '<div class="contact"><span>' + esc(s.location) + '</span>' +
+      '<a href="mailto:' + esc(ct.email) + '">' + esc(ct.email) + '</a>' +
+      '<a href="https://' + esc(ct.linkedin) + '">' + esc(ct.linkedin) + '</a>' +
+      '<a href="https://' + esc(ct.github) + '">' + esc(ct.github) + '</a></div></header>' +
+
+    '<h2>Summary</h2><ul>' + s.summary.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join("") + '</ul>' +
+
+    '<h2>Experience</h2>' + C.experience.map(function (e) {
+      return '<div class="item"><div class="ih"><b>' + esc(e.role) + ' — ' + esc(e.org) + '</b><span>' + esc(e.period) + '</span></div>' +
+        '<div class="io">' + esc(e.where) + '</div><ul>' + e.bullets.map(function (b) { return '<li>' + esc(b) + '</li>'; }).join("") + '</ul></div>';
+    }).join("") +
+
+    '<h2>Product projects</h2>' + projects.map(function (p) {
+      return '<div class="item"><div class="ih"><b>' + esc(p.name) + ' — ' + esc(p.subtitle) +
+        '<span class="tag">' + esc(p.status) + '</span></b><span>' + esc(p.period) + '</span></div>' +
+        '<div class="io">' + esc(p.role) + '</div><ul>' + (p.recruiter || []).map(function (b) { return '<li>' + esc(b) + '</li>'; }).join("") + '</ul></div>';
+    }).join("") +
+
+    '<h2>Education</h2>' + C.education.map(function (e) {
+      return '<div class="item"><div class="ih"><b>' + esc(e.what) + ' — ' + esc(e.org) + '</b><span>' + esc(e.period) + '</span></div></div>';
+    }).join("") +
+
+    '<h2>Certifications &amp; learning</h2><div class="skills">' + ["Professional certifications", "Courses & learning paths"].map(function (g) {
+      var rows = C.credentials.filter(function (c) { return c.group === g; });
+      return rows.length ? '<div><b>' + esc(g) + ':</b> ' + rows.map(function (c) { return esc(c.issuer) + " — " + esc(c.items.join(", ")); }).join("; ") + '</div>' : "";
+    }).join("") + '</div>' +
+
+    '<h2>Skills</h2><div class="skills">' + C.skills.map(function (g) {
+      return '<div><b>' + esc(g.group.charAt(0) + g.group.slice(1).toLowerCase()) + ':</b> ' + esc(g.items.join(", ")) + '</div>';
+    }).join("") + '</div>';
+  document.getElementById("cv").innerHTML = h;
+})();
+</script>
+</body>
+</html>

@@ -13,6 +13,7 @@ deployed copy and never deletes what is already there.
 |---|---|---|
 | `gaurav-os-intro.mp4` | The introduction film | `content.js → intro.video` |
 | `gaurav-os-poster.jpg` | Poster frame; reduced-motion still; Open Graph image | `content.js → intro.poster` |
+| `gaurav-kumar-singh-cv.pdf` | The downloadable CV, printed from `cv.html` by `scripts/build_cv.py` | `content.js → site_config.contact.resume.file` |
 
 ## The film
 
