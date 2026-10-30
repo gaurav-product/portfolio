@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://gaurav-os.lovable.app/</loc></url>
+  <url><loc>https://gaurav-os.lovable.app/work/</loc></url>
+  <url><loc>https://gaurav-os.lovable.app/work/evamastu/</loc></url>
+  <url><loc>https://gaurav-os.lovable.app/work/lybl/</loc></url>
+  <url><loc>https://gaurav-os.lovable.app/work/careconnect/</loc></url>
+  <url><loc>https://gaurav-os.lovable.app/lab/</loc></url>
+  <url><loc>https://gaurav-os.lovable.app/about/</loc></url>
+  <url><loc>https://gaurav-os.lovable.app/research/</loc></url>
+  <url><loc>https://gaurav-os.lovable.app/ask/</loc></url>
+  <url><loc>https://gaurav-os.lovable.app/contact/</loc></url>
   <url><loc>https://gaurav-os.lovable.app/cv.html</loc></url>
 </urlset>

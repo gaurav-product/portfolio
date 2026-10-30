@@ -19,18 +19,29 @@ window.GOS_CONTENT = {
     owner: "Gaurav Kumar Singh",
     /* Positioning, not a past job title. The titles actually held are in
        experience[] and projects[] and are never upgraded.                  */
-    role: "AI Product Professional",
+    brand: "GAURAV.OS",
+    brand_sub: "AI PRODUCT SYSTEM",
+    role: "AI Product Manager / Product Builder",
     discipline: "AI · Product · Healthcare",
-    /* The hero's positioning line: what kind of product work, in one line. */
-    headline: "AI product professional building evidence-led, safety-conscious products from discovery to delivery.",
+    /* The hero's positioning line. */
+    headline: "Building safe, measurable AI products from ambiguous healthcare and consumer problems.",
+    /* The proof strip under the hero: four statements, each true as worded. */
+    proof_strip: [
+      "Healthcare and consumer product experience",
+      "Discovery through delivery",
+      "AI product management training with Masai School and IIT Roorkee faculty",
+      "Research, analytics, experimentation and safety-focused product thinking"
+    ],
+    /* The About preview on the homepage, and the opening of /about. */
+    about_summary: "I came to product through behavioural research in healthcare. I spent two years running structured user research for a US wellness company, then owned a digital mindfulness platform from discovery through release. Today I build AI products with hard safety boundaries — and label every one by what has actually been measured.",
     /* The hero's one-paragraph answer to "who is this?". Every clause is a
        documented fact: Evamastu PRD → release, Live Your Best Life research,
        the Masai School programme with IIT Roorkee faculty.                  */
     intro: "I owned a digital mindfulness platform from discovery through release, after two years of structured user research for a US wellness company — and I build AI products with hard safety boundaries, labelled by what is and isn't validated.",
     positioning: "I research behaviour, frame problems, build products, measure outcomes, and use AI where it creates genuine product value.",
     location: "New Delhi, India",
-    version: "v6.0",
-    updated: "29 October 2026",
+    version: "v7.0",
+    updated: "30 October 2026",
     seeking: "AI PM · Healthcare PM · APM · Product Analyst · HealthTech",
     /* Stated positioning, not an inference. Said once in the hero (as the
        role chips), once at Contact and once in Recruiter View.             */
@@ -41,8 +52,7 @@ window.GOS_CONTENT = {
       detail: "I'm strongest where a product has to be researched before it is built, measured after it ships, and kept honest about what AI should and shouldn't do.",
       roles: ["AI Product Manager", "Healthcare Product Manager", "Associate Product Manager", "Product Analyst", "HealthTech Product"],
       cta_label: "LET'S TALK",
-      cta_href: "#contact",
-      cta_href_recruiter: "#rec-contact"
+      cta_href: "contact/"
     },
     /* The three verified proof points the hero leads with. Each names the
        project record it summarises and the evidence label it carries; the
@@ -110,24 +120,14 @@ window.GOS_CONTENT = {
   },
 
   /* ------------------------------------------------------------ navigation */
-  /* The page order. "lab" entries live inside the collapsed Explore the Lab
-     disclosure; following one of these links opens it.                    */
+  /* The five top-level routes, in header order. `route` is relative to the
+     site root; the build writes one page per route.                       */
   navigation: [
-    { id: "home",           label: "Overview",          idx: "01", group: "Portfolio" },
-    { id: "work",           label: "Selected work",     idx: "02", group: "Portfolio" },
-    { id: "product-lab",    label: "AI & Product Lab",  idx: "03", group: "Portfolio" },
-    { id: "ask",            label: "Ask Gaurav",        idx: "04", group: "Portfolio" },
-    { id: "experience",     label: "Experience",        idx: "05", group: "Portfolio" },
-    { id: "education",      label: "Education",         idx: "06", group: "Portfolio" },
-    { id: "certifications", label: "Certifications",    idx: "07", group: "Portfolio" },
-    { id: "contact",        label: "Contact & CV",      idx: "08", group: "Portfolio" },
-    { id: "constellation",  label: "90-day corpus",     idx: "L1", group: "Explore the Lab", lab: true },
-    { id: "atlas",          label: "Product Atlas",     idx: "L2", group: "Explore the Lab", lab: true },
-    { id: "evolution",      label: "Evolution",         idx: "L3", group: "Explore the Lab", lab: true },
-    { id: "thinking",       label: "How I Think",       idx: "L4", group: "Explore the Lab", lab: true },
-    { id: "challenge",      label: "Challenges",        idx: "L5", group: "Explore the Lab", lab: true },
-    { id: "lab",            label: "Lab Notes",         idx: "L6", group: "Explore the Lab", lab: true },
-    { id: "film",           label: "Intro film",        idx: "L7", group: "Explore the Lab", lab: true }
+    { id: "work",     label: "Work",       route: "work/" },
+    { id: "about",    label: "About",      route: "about/" },
+    { id: "research", label: "Research",   route: "research/" },
+    { id: "ask",      label: "Ask Gaurav", route: "ask/" },
+    { id: "contact",  label: "Contact",    route: "contact/", cta: true }
   ],
 
   /* -------------------------------------------------------------- projects */
@@ -144,26 +144,6 @@ window.GOS_CONTENT = {
       org: "Adhyatm Sadhna Kendra, New Delhi",
       period: "Nov 2024 – Apr 2026", status: "SHIPPED", status_tone: "jade",
       evidence: "FROM CV",
-      headline: "Discovery through release — then the analytics that showed where onboarding was losing people.",
-      metrics: [
-        { n: "20–25%", l: "lift in user consistency in six weeks after the onboarding redesign" },
-        { n: "50+", l: "participant cohorts in the cohort analytics system" },
-        { n: "2", l: "funnel drop-offs found, which drove the redesign" },
-        { n: "12+", l: "feature requests scored with RICE and MoSCoW" }
-      ],
-      exec: [
-        { k: "DISCOVERY", t: "As Product Management Intern: parent and facilitator interviews, turned into the problem statements behind the first product brief." },
-        { k: "OWNERSHIP", t: "As Associate Product Manager: discovery through release, and the full PRD." },
-        { k: "SHIPPED", t: "A Parent Dashboard, a Child Wellness Assessment and 4 adaptive cognitive games." },
-        { k: "OUTCOME", t: "Cohort analysis found 2 funnel drop-offs; the onboarding redesign that followed lifted consistency 20–25% in six weeks.", alert: true }
-      ],
-      sections: [
-        { id: "discovery", label: "DISCOVERY", body: "<p>I joined as Product Management Intern (Nov 2024 – Apr 2025) and supported early discovery: I ran <b>parent and facilitator interviews</b> and turned the findings into the problem statements behind the first product brief.</p><p>From there I built the initial backlog and a competitive scan, and wrote user stories and acceptance criteria for the first assessment module.</p>" },
-        { id: "ownership", label: "OWNERSHIP: PRD THROUGH RELEASE", body: "<p>As Associate Product Manager (May 2025 – Apr 2026) I owned Evamastu from discovery through release and wrote the full PRD.</p><ul><li><b>Parent Dashboard</b></li><li><b>Child Wellness Assessment</b></li><li><b>4 adaptive cognitive games</b></li></ul>" },
-        { id: "analytics", label: "COHORT ANALYTICS", body: "<p>I built a cohort analytics system across <b>50+ participant cohorts</b>. Segmenting by cohort rather than averaging is what surfaced <b>2 funnel drop-offs</b> — an average across cohorts hides the one that is struggling.</p><p>Those two drop-offs drove an onboarding redesign, and consistency rose <b>20–25% in six weeks</b> after it.</p>" },
-        { id: "prioritization", label: "PRIORITIZATION & DELIVERY", body: "<p>Ran Agile sprint planning and backlog grooming, and scored <b>12+ feature requests with RICE and MoSCoW</b> to hold roadmap discipline and cut scope creep.</p>" },
-        { id: "evidence", label: "EVIDENCE", tag: "FROM CV", body: "<p class='note'>Every figure here is from my CV. The cohort data, dashboards and PRD are not published on this site, so no figure beyond these is quoted.</p>" }
-      ],
       recruiter: [
         "Owned discovery through release; wrote the full PRD and shipped a Parent Dashboard, Child Wellness Assessment and 4 adaptive cognitive games.",
         "Built a cohort analytics system across 50+ participant cohorts; found 2 funnel drop-offs that drove an onboarding redesign — consistency rose 20–25% in 6 weeks.",
@@ -178,25 +158,6 @@ window.GOS_CONTENT = {
       org: "Live Your Best Life (USA) · Remote",
       period: "Sep 2022 – Jul 2024", status: "RESEARCH ROLE", status_tone: "jade",
       evidence: "FROM CV",
-      headline: "Two years of structured user research, written so a product team could act on it.",
-      metrics: [
-        { n: "30+", l: "structured user interviews" },
-        { n: "3", l: "major feature iterations informed by the research" },
-        { n: "500+", l: "users tracked for engagement" },
-        { n: "Weekly", l: "insight reports shaping sprint prioritization" }
-      ],
-      exec: [
-        { k: "RESEARCH", t: "30+ structured user interviews." },
-        { k: "SYNTHESIS", t: "Behavioural patterns and onboarding drop-offs, turned into recommendations." },
-        { k: "OUTCOME", t: "Recommendations adopted across 3 major feature iterations.", alert: true },
-        { k: "CADENCE", t: "Engagement tracked for 500+ users; weekly insight reports fed sprint prioritization." }
-      ],
-      sections: [
-        { id: "research", label: "WHAT I DID", body: "<p>As Research Expert on the Wellness Team (remote, for a US company) I conducted <b>30+ structured user interviews</b> and synthesized the behavioural patterns and onboarding drop-offs they revealed into product recommendations.</p>" },
-        { id: "impact", label: "WHAT IT CHANGED", body: "<p>The recommendations were <b>adopted across three major feature iterations</b>. Alongside the interviews I tracked engagement metrics for <b>500+ users</b> and delivered <b>weekly insight reports</b> that shaped sprint prioritization directly.</p>" },
-        { id: "carried", label: "WHAT I CARRIED FORWARD", body: "<p>At Evamastu it became a cohort analytics system across 50+ participant cohorts: two funnel drop-offs found, an onboarding redesign shipped, consistency up 20–25% in six weeks. At Aaroh it became 20+ discovery interviews before a roadmap existed. The order never changes — behaviour first, feature second.</p>" },
-        { id: "evidence", label: "EVIDENCE", tag: "FROM CV", body: "<p class='note'>The interview transcripts and synthesis documents are not published here. The numbers above are the ones I can stand behind.</p>" }
-      ],
       recruiter: [
         "Conducted 30+ structured user interviews; synthesized behavioral patterns and onboarding drop-offs into recommendations adopted across 3 major feature iterations.",
         "Tracked engagement metrics for 500+ users and delivered weekly insight reports that shaped sprint prioritization."
@@ -279,30 +240,6 @@ window.GOS_CONTENT = {
       evidence: "MVP · NOT IN PRODUCTION",
       /* "Tested" means automated tests. The validation interviews are owed
          work, and the product has never been deployed to real patients.   */
-      production_note: "CareConnect is not in production. It is a self-directed MVP: \"tested\" means 65 unit and integration tests and 30 end-to-end journeys — the validation interviews in its plan have not been run yet.",
-      headline: "The story here is not the build. It is that I killed my own brief.",
-      metrics: [
-        { n: "65", l: "unit & integration tests" },
-        { n: "30", l: "end-to-end journeys" },
-        { n: "13", l: "conclusions graded in the claim register" },
-        { n: "0", l: "features added in iteration 2" }
-      ],
-      pivot: [
-        { k: "ORIGINAL HYPOTHESIS", t: "Families discover, evaluate, book and manage home caregivers — a caregiver marketplace. I wrote this brief myself." },
-        { k: "DISCOVERY", t: "Research run against my own framing rather than in support of it." },
-        { k: "CONTRADICTION", t: "The evidence did not support the marketplace hypothesis.", tone: "hot" },
-        { k: "DECISION", t: "Reject the brief and document the rejection as a product decision, not a quiet rewrite.", tone: "hot" },
-        { k: "PIVOT", t: "A post-discharge care accountability layer: the care record that stays with the patient, not the agency. Beachhead — the adult child supervising the first 30 days after a parent's discharge.", tone: "hot" },
-        { k: "MVP", t: "React · Express · TypeScript · SQLite" },
-        { k: "VALIDATION", t: "65 unit and integration tests · 30 end-to-end journeys · a claim register grading all 13 conclusions by evidence strength.", tone: "end" }
-      ],
-      sections: [
-        { id: "brief", label: "THE BRIEF I WROTE, AND WHY I LET IT DIE", body: "<p>CareConnect started as a self-directed product build with one rule attached: if the evidence contradicted the brief, the brief was to be rejected — and the rejection documented as a product decision.</p><p>It was. The marketplace concept did not survive discovery, and the pivot is recorded as a decision record rather than presented as the plan all along.</p>" },
-        { id: "claim-register", label: "THE CLAIM REGISTER", body: "<p>The mechanism I am most proud of. Every conclusion the project reached was entered into a register and <b>graded by the strength of the evidence behind it</b> — 13 conclusions in total.</p><p>What it prevents is the ordinary failure of product storytelling: an anecdote hardening into a statistic somewhere between the interview and the deck. If a claim is only an assumption, the register says so, in the artefact itself, where a reader can check it.</p><p>The build also carries a written validation plan with interview guides that have not been run yet — listed as owed work rather than quietly omitted.</p>" },
-        { id: "iteration-2", label: "ITERATION 2: SHIPPING NOTHING ON PURPOSE", body: "<p>The second pass added <b>no features at all</b>. It did this instead:</p><ul><li>Challenged over-strong claims in my own documentation.</li><li>Renamed metrics that overstated what the system could prove — \"verified\" care days became \"documented\" care days, because documentation is what the product can evidence.</li><li>Added append-only corrections to care entries, so the record has a history rather than an edit.</li><li>Graded the 13 conclusions and wrote the validation plan for the research still outstanding.</li></ul><p>A feature-count reading of that iteration says nothing happened. A credibility reading says it was the most valuable pass in the project.</p>" },
-        { id: "beachhead", label: "BEACHHEAD & SCOPE", body: "<p>Narrowed from \"families managing caregiving\" to a specific person in a specific window: <b>the adult child living away from their parent, supervising the first 30 days after a hospital discharge</b>.</p><p>Everything the product refuses to do follows from that choice.</p>" },
-        { id: "differently", label: "WHAT I WOULD DO DIFFERENTLY", body: "<p>Run the interviews the validation plan describes before the second build pass, not after it. The claim register made the gap visible — which is exactly what it is for — but visible is not the same as closed.</p>" }
-      ],
       recruiter: [
         "Repositioned from a caregiver marketplace to a post-discharge care accountability layer after discovery contradicted the original hypothesis; documented the pivot as a decision record.",
         "Built a working MVP (React, Express, TypeScript, SQLite) with 65 unit and integration tests, 30 end-to-end journeys, and a claim register grading every conclusion by evidence strength. Not in production."
@@ -313,7 +250,7 @@ window.GOS_CONTENT = {
       id: "phonepe", slug: "phonepe-smart-spend-coach", order: 7, featured: true, tier: "lab",
       card: "A 40,000-user pilot funnel analysed at 7.14% end to end; the 70% insight-to-action drop-off prioritized, and a 21-day A/B test designed against it — designed, not run.",
       name: "PhonePe Smart Spend Coach", subtitle: "Feature Design & Growth Case",
-      domain: "Fintech / Product Analytics", role: "AI-Enabled PM Program · Masai School with IIT Roorkee faculty",
+      domain: "Fintech / Product Analytics", role: "AI-Enabled PM Program · Masai School and IIT Roorkee faculty",
       period: "Aug 2026", status: "CASE STUDY · A/B DESIGNED, NOT RUN", status_tone: "gold",
       status_note: "A programme case study. The 40,000-user pilot funnel was analysed; the A/B test was designed but not run, so there is no A/B result.",
       headline: "A 7.14% funnel is not a conversion problem. It is a map of where value fails to transfer.",
@@ -379,6 +316,127 @@ window.GOS_CONTENT = {
         "MVP in demo mode; repository public. No adoption or accuracy figures measured yet."
       ]
     }
+  ],
+
+  /* ---------------------------------------------------------- case studies */
+  /* The three featured projects, each as a full case study at
+     /work/<route>/. Ten sections, always in this order. Every statement
+     restates a documented fact; where nothing is documented the section
+     says so. `proposal: true` marks a forward-looking section written from
+     the documented gaps — a plan, not past work — and renders a PROPOSAL tag.
+     `card` is the homepage summary: problem, decision, evidence, status.   */
+  case_studies: [
+    { id: "evamastu", route: "evamastu", title: "Evamastu / Parent Dashboard",
+      status: "Shipped product work", status_tone: "ok",
+      facts: [["Role", "Product Management Intern → Associate Product Manager"], ["Organisation", "Adhyatm Sadhna Kendra, New Delhi"],
+              ["Period", "Nov 2024 – Apr 2026"], ["Status", "Shipped"]],
+      card: {
+        problem: "Turn parent and facilitator interviews into a product — then find where onboarding was losing participants.",
+        decision: "Own discovery through release: a Parent Dashboard, a Child Wellness Assessment and four adaptive cognitive games, then redesign onboarding at the two drop-offs cohort analytics found.",
+        evidence: "Cohort analytics across 50+ participant cohorts; consistency rose 20–25% over six weeks after the onboarding redesign."
+      },
+      sections: [
+        { k: "Context", body: "<p>Evamastu is a digital mindfulness platform built at Adhyatm Sadhna Kendra, New Delhi. I joined as Product Management Intern (Nov 2024 – Apr 2025) and became Associate Product Manager (May 2025 – Apr 2026).</p>" },
+        { k: "User / problem", body: "<p>Discovery started with <b>parent and facilitator interviews</b>; I turned the findings into the problem statements behind the first product brief.</p><p>After release, the problem became retention: a cohort analytics system I built showed <b>two funnel drop-offs</b> in onboarding.</p><p class='note'>The interview findings themselves are not published here, so none is quoted.</p>" },
+        { k: "Constraints", body: "<p>Scope pressure: <b>12+ feature requests</b> were scored with RICE and MoSCoW to hold roadmap discipline and cut scope creep.</p><p class='note'>Team size, budget and deadlines are not documented in my CV.</p>" },
+        { k: "My role", body: "<ul><li>Owned discovery through release, and wrote the full PRD.</li><li>As intern: interviews, problem statements, the initial backlog, a competitive scan, and user stories with acceptance criteria for the first assessment module.</li><li>As APM: Agile sprint planning and backlog grooming.</li></ul>" },
+        { k: "Key product decisions", body: "<ul><li>Ship three surfaces: a <b>Parent Dashboard</b>, a <b>Child Wellness Assessment</b> and <b>4 adaptive cognitive games</b>.</li><li>Analyse by participant cohort rather than averaging — an average across cohorts hides the one that is struggling.</li><li>Redesign onboarding at the two drop-off points the cohort analytics found.</li><li>Score every request with <b>RICE and MoSCoW</b> to hold roadmap discipline.</li></ul>" },
+        { k: "AI / system behaviour", body: "<p>Evamastu is not documented as an AI product. The four cognitive games are adaptive; the adaptation logic is not documented here.</p>" },
+        { k: "Measurement", body: "<p>A cohort analytics system across <b>50+ participant cohorts</b>. It surfaced <b>2 funnel drop-offs</b>; after the onboarding redesign that targeted them, consistency rose <b>20–25% over six weeks</b>.</p>" },
+        { k: "Failure modes & trade-offs", body: "<ul><li><b>Averages hide failure.</b> Segmenting by cohort was the guard against a healthy average masking a cohort that was dropping out.</li><li><b>Scope creep.</b> Every one of 12+ requests had to earn its place through RICE and MoSCoW scoring.</li><li><b>Attribution.</b> The lift followed the redesign; whether a controlled comparison was run is not documented, so it is stated as a lift that followed the change, not a proven effect.</li></ul>" },
+        { k: "Outcome", body: "<p>Shipped: the Parent Dashboard, the Child Wellness Assessment and four adaptive cognitive games. Consistency up <b>20–25% over six weeks</b> after the onboarding redesign.</p>" },
+        { k: "What I would do next", proposal: true, body: "<ul><li>Confirm the consistency lift against a holdout cohort, so the effect of the redesign is measured rather than inferred from timing.</li><li>Publish the definition of “consistency” alongside the number.</li></ul>" }
+      ] },
+
+    { id: "live-your-best-life", route: "lybl", title: "LYBL / Research to Product",
+      status: "Research-led product work", status_tone: "accent",
+      facts: [["Role", "Research Expert, Wellness Team"], ["Organisation", "Live Your Best Life (USA) · Remote"],
+              ["Period", "Sep 2022 – Jul 2024"], ["Status", "Research role · complete"]],
+      card: {
+        problem: "Understand why users of a US wellness product dropped off during onboarding — before deciding what to build.",
+        decision: "Run structured interviews, synthesise behavioural patterns, and tie the findings to sprint priorities through weekly insight reports.",
+        evidence: "30+ structured interviews; engagement tracked for 500+ users; recommendations adopted across three major feature iterations."
+      },
+      sections: [
+        { k: "Context", body: "<p>Live Your Best Life is a US wellness company. I worked remotely as Research Expert on the Wellness Team from Sep 2022 to Jul 2024.</p>" },
+        { k: "User / problem", body: "<p>Users were dropping off during onboarding. The work was to understand the behavioural patterns behind that before the team decided what to change.</p><p class='note'>Who the users were, in detail, is not documented here.</p>" },
+        { k: "Constraints", body: "<p>Research had to keep pace with delivery: findings were packaged as <b>weekly insight reports</b> that fed sprint prioritization.</p><p class='note'>Other constraints are not documented in my CV.</p>" },
+        { k: "My role", body: "<p>Research Expert: I ran the interviews, synthesised the patterns, tracked engagement, and wrote the weekly reports.</p>" },
+        { k: "Key product decisions", body: "<ul><li>Interview before recommending: <b>30+ structured user interviews</b>.</li><li>Synthesise behavioural patterns and onboarding drop-offs into recommendations a team could act on.</li><li>Report weekly, so research shaped sprint priorities directly.</li></ul>" },
+        { k: "AI / system behaviour", body: "<p>Not an AI product. No system behaviour is documented for this work.</p>" },
+        { k: "Measurement", body: "<p>Engagement metrics tracked for <b>500+ users</b>, alongside the interview programme.</p>" },
+        { k: "Failure modes & trade-offs", body: "<ul><li><b>Qualitative evidence has limits.</b> Thirty-plus interviews tell a team what to build next, not what share of users believe something — so no interview finding is presented here as a statistic.</li><li><b>Unpublished synthesis.</b> The transcripts and synthesis documents are not published, so the specific findings are not quoted.</li></ul>" },
+        { k: "Outcome", body: "<p>Recommendations <b>adopted across three major feature iterations</b>; weekly insight reports shaped sprint prioritization.</p>" },
+        { k: "What I would do next", proposal: true, body: "<ul><li>Pair each recommendation with the engagement metric it was expected to move, so adoption can be judged by outcome, not only by being shipped.</li></ul>" }
+      ] },
+
+    { id: "careconnect", route: "careconnect", title: "CareConnect",
+      status: "MVP · NOT IN PRODUCTION", status_tone: "warn",
+      facts: [["Role", "Self-directed product build"], ["Domain", "Healthcare / product discovery"],
+              ["Period", "Sep 2026"], ["Status", "MVP · NOT IN PRODUCTION"]],
+      card: {
+        problem: "A caregiver-marketplace brief I wrote myself — which discovery did not support.",
+        decision: "Reject the brief and reposition as a post-discharge care accountability layer for the adult child supervising a parent's first 30 days home.",
+        evidence: "An MVP with 65 unit/integration tests, 30 end-to-end journeys, and a claim register grading 13 conclusions by evidence strength."
+      },
+      sections: [
+        { k: "Context", body: "<p>A self-directed product build with one rule attached: if the evidence contradicted the brief, the brief was to be rejected — and the rejection documented as a product decision.</p>" },
+        { k: "User / problem", body: "<p>The original hypothesis: families discover, evaluate, book and manage home caregivers — a <b>caregiver marketplace</b>. Discovery, run against my own framing, did not support it.</p><p>The reframed problem: the care record should stay with the patient, not the agency. The user: <b>the adult child living away from their parent, supervising the first 30 days after a hospital discharge</b>.</p>" },
+        { k: "Constraints", body: "<ul><li>A self-directed build: no live patients, and no clinical partner is documented.</li><li>The validation interviews in the plan have <b>not been run yet</b>.</li></ul>" },
+        { k: "My role", body: "<p>I wrote the brief, ran discovery against it, made the decision to reject it, built the MVP and wrote the validation plan.</p>" },
+        { k: "Key product decisions", body: "<ul><li><b>Reject my own brief</b> and record the rejection as a decision, not a quiet rewrite.</li><li>Narrow to one person in one window — the first 30 days after discharge.</li><li>Iteration 2 added <b>no features</b>: it challenged over-strong claims, renamed “verified” care days to “documented” care days, and added append-only corrections so the record has a history rather than an edit.</li></ul>" },
+        { k: "AI / system behaviour", body: "<p>CareConnect is not documented as an AI product. The system behaviour that matters is the record: append-only corrections, and metrics named for what the system can actually evidence.</p><p>Stack: React · Express · TypeScript · SQLite.</p>" },
+        { k: "Measurement", body: "<ul><li><b>65 unit and integration tests</b> and <b>30 end-to-end journeys</b>.</li><li>A <b>claim register</b> grading all <b>13 conclusions</b> by the strength of the evidence behind them.</li></ul><p class='note'>These measure the build and the reasoning — not user outcomes. There are none yet.</p>" },
+        { k: "Failure modes & trade-offs", body: "<ul><li><b>Anecdote hardening into statistic.</b> The claim register exists so a single interview cannot become a “finding” between the notes and the deck.</li><li><b>Over-claiming.</b> “Verified” became “documented” because documentation is what the product can prove.</li><li><b>Trade-off:</b> the original scope and its story were given up; the product is harder to describe in one line.</li></ul>" },
+        { k: "Outcome", body: "<p><b>MVP · NOT IN PRODUCTION.</b> A working MVP with its tests, journeys and claim register; the validation interviews are owed work.</p>" },
+        { k: "What I would do next", body: "<p>Run the interviews the validation plan describes before another build pass. The claim register made the gap visible — but visible is not the same as closed.</p>" }
+      ] }
+  ],
+
+  /* ------------------------------------------------------------- AI lab */
+  /* The AI Product Lab at /lab. `labels` are the honest state of each build;
+     `measured` and `proposed` keep evidence and intention apart.           */
+  lab_entries: [
+    { id: "aaroh", name: "Aaroh", sub: "AI-enabled health product · Founder & Product Manager · May 2026 – Present",
+      labels: [["MVP", "accent"], ["Strategy reset", "warn"], ["Zero live users", "warn"]],
+      summary: "Explains contributing factors and points to a human practitioner — built around a hard rule never to diagnose.",
+      evaluation: "North Star Metric defined; activation, retention and adoption instrumented. With zero live users, they are instrumented but unread.",
+      failure: "The model drifting into diagnosis; a prototype that outran its evidence (frozen at 37 screens and 304 interactive elements).",
+      guardrails: "Never diagnose, never guarantee outcomes. Acceptance criteria written against that rule; commercial features sealed pending legal review.",
+      research: "20+ customer discovery interviews before a roadmap existed; 8 consented practitioners across yoga therapy, counselling psychology, nutrition and Ayurveda.",
+      tradeoffs: "Gives up the most demo-friendly feature in AI health — a diagnosis — and some user demand with it. No revenue signal while commercial features stay sealed.",
+      measured: ["20+ discovery interviews conducted", "8 practitioners consented", "Prototype scope: 37 screens, 304 interactive elements"],
+      proposed: ["Activation, retention and adoption — instrumented, not yet read", "That explanation quality, not diagnosis, builds trust — untested"] },
+    { id: "ghargyaan", name: "GharGyaan", sub: "Self-care & traditional-knowledge product · Self-directed build · Sep 2026",
+      labels: [["Safety-focused prototype", "accent"], ["Not live", "warn"]],
+      summary: "Everyday self-care guidance labelled by evidence strength, behind a safety engine that runs first.",
+      evaluation: "A 214-case evaluation suite behind the safety engine.",
+      failure: "Answering something serious instead of escalating it; presenting folk practice with the same confidence as well-supported guidance.",
+      guardrails: "A safety engine covering 21 emergency categories that routes anything serious toward a human professional; evidence labels on every piece of guidance. Explicitly not an AI doctor.",
+      research: "No user research is documented; there are no users.",
+      tradeoffs: "Safety escalation over answering — a serious question gets a route to a professional, not an answer.",
+      measured: ["21 emergency categories in the safety engine", "214-case evaluation suite (engineering evaluation)"],
+      proposed: ["Real-world outcomes, adoption and effectiveness — not measured; the product is not live"] },
+    { id: "phonepe", name: "PhonePe Smart Spend Coach", sub: "Feature design & growth case · AI-Enabled PM Program · Aug 2026",
+      labels: [["Concept", "accent"], ["A/B not run", "warn"]],
+      summary: "Find where a spend-coaching feature stops changing behaviour — and design the test that would prove a fix.",
+      evaluation: "A 21-day A/B test designed against the insight-to-action step, with guardrail metrics defined up front.",
+      failure: "Optimising the top of the funnel when the loss sits at one step; buying a lift in action with harm elsewhere.",
+      guardrails: "Guardrail metrics defined before the test, so a win could not be bought with damage elsewhere.",
+      research: "A 5-screen Figma prototype tested with 7 users, before any analytics work began.",
+      tradeoffs: "Five candidate features scored with RICE rather than defending one favourite.",
+      measured: ["40,000-user pilot funnel analysed", "7.14% end-to-end conversion", "70% drop between seeing an insight and acting on it", "Prototype tested with 7 users"],
+      proposed: ["21-day A/B test — designed, not run; no result exists"] },
+    { id: "nexus", name: "Nexus", sub: "Personal decision & context engine · Self-directed 0→1 build · Sep 2026",
+      labels: [["MVP", "accent"], ["Demo mode", "warn"], ["Not live", "warn"]],
+      summary: "An evidence-first situation inbox that surfaces conflicts, changes, commitments and missing information. Not a chatbot.",
+      evaluation: "None documented. No adoption, retention or accuracy numbers have been measured.",
+      failure: "Not documented; no accuracy has been measured.",
+      guardrails: "Runs in demo mode with no fabricated users and no fabricated results.",
+      research: "None documented.",
+      tradeoffs: "Deliberately not a chatbot and not a second brain — both put the burden of asking the right question back on the user. A situation inbox does the noticing.",
+      measured: ["MVP running in demo mode; repository public"],
+      proposed: ["Adoption, retention and accuracy — not measured"] }
   ],
 
   /* ------------------------------------------------------------- lab notes */
@@ -492,7 +550,7 @@ window.GOS_CONTENT = {
 
   /* ------------------------------------------------------------- education */
   education: [
-    { id: "ed1", what: "AI-Enabled Product Management Program", org: "Masai School with IIT Roorkee faculty", period: "Dec 2025–Aug 2026", kind: "program" },
+    { id: "ed1", what: "AI-Enabled Product Management Program", org: "Masai School and IIT Roorkee faculty", period: "Dec 2025–Aug 2026", kind: "program" },
     /* Confirmed by Gaurav as the verified entry; replaces an earlier record of
        the institution. Render exactly: MCA — Chaudhary Charan Singh
        University, Meerut (2022–2024).                                        */
@@ -591,11 +649,11 @@ window.GOS_CONTENT = {
       status: "None of these is a live product with users. Aaroh: in progress, strategy reset, zero live users. GharGyaan: concept, not live. Nexus: MVP in demo mode, not live.",
       sources: [["Aaroh", "aaroh"], ["GharGyaan", "ghargyaan"], ["Nexus", "nexus"]] },
 
-    { id: "kb-safety", suggested: true, q: "How does Gaurav approach AI safety?",
-      keys: ["safety", "safe", "diagnose", "diagnosis", "diagnostic", "boundary", "harm", "risk", "responsible", "guardrail", "clinical"],
+    { id: "kb-safety", suggested: true, home: true, q: "What does Gaurav know about AI safety and evaluation?",
+      keys: ["safety", "safe", "evaluation", "evaluate", "eval", "evals", "test", "tests", "failure", "failure modes", "diagnose", "diagnosis", "diagnostic", "boundary", "harm", "risk", "responsible", "guardrail", "clinical"],
       role: "The product owner who sets the boundary — on Aaroh as Founder & PM, on GharGyaan as builder.",
       work: "<p>He decides the boundary before the demand arrives, and makes it testable. Aaroh's invariant is <b>understand → explain → recommend → support — never diagnose, never guarantee outcomes</b>; a user story that would require diagnosis fails review regardless of its user value. GharGyaan puts a safety engine ahead of everything else and routes anything serious to a human professional.</p>",
-      evidence: "Aaroh: acceptance criteria written against the invariant, commercial features sealed pending legal review, and 8 consented practitioners across yoga therapy, counselling psychology, nutrition and Ayurveda. GharGyaan: 21 emergency categories and a 214-case evaluation suite. This copilot itself refuses any question it has no documented answer for.",
+      evidence: "<ul><li><b>Aaroh</b> — acceptance criteria written against the invariant; commercial features sealed pending legal review; 8 consented practitioners across yoga therapy, counselling psychology, nutrition and Ayurveda.</li><li><b>GharGyaan</b> — a safety engine covering 21 emergency categories, evaluated with a 214-case evaluation suite.</li><li><b>CareConnect</b> — 65 unit/integration tests, 30 end-to-end journeys, and a claim register grading 13 conclusions by evidence strength.</li><li><b>PhonePe case</b> — a 21-day A/B test designed with guardrail metrics (designed, not run).</li><li><b>This assistant</b> — refuses any question it has no documented answer for.</li></ul>",
       status: "The boundaries are designed and, for GharGyaan, evaluated against written cases. None is validated with live users: Aaroh has zero live users and GharGyaan is not live.",
       sources: [["Aaroh", "aaroh"], ["GharGyaan", "ghargyaan"]] },
 
@@ -609,10 +667,10 @@ window.GOS_CONTENT = {
 
     { id: "kb-program", suggested: true, q: "Tell me about his IIT Roorkee product-management program.",
       keys: ["iit", "roorkee", "masai", "program", "programme", "course", "certification", "education", "ai-enabled"],
-      role: "Participant in the AI-Enabled Product Management Program — Masai School with IIT Roorkee faculty.",
+      role: "Participant in the AI-Enabled Product Management Program — Masai School and IIT Roorkee faculty.",
       work: "<p>A formal AI product-management programme run alongside his job, Dec 2025–Aug 2026. The PhonePe Smart Spend Coach case study was produced in it.</p>",
       evidence: "Listed under Education. The PhonePe case: 5 candidate features scored with RICE, a 5-screen Figma prototype tested with 7 users, and a 40,000-user pilot funnel converting at 7.14% end to end.",
-      status: "Completed in August 2026. It is a programme taught by Masai School with IIT Roorkee faculty — not an IIT Roorkee degree.",
+      status: "Completed in August 2026. It is a programme taught by Masai School and IIT Roorkee faculty — not an IIT Roorkee degree.",
       sources: [["Education", "education"], ["PhonePe case", "phonepe"]] },
 
     { id: "kb-end-to-end", suggested: true, q: "What can Gaurav own end to end?",
@@ -631,13 +689,21 @@ window.GOS_CONTENT = {
       status: "Only Evamastu shipped. Nothing else here is live or in production.",
       sources: [["Selected work", "work"], ["AI & Product Lab", "product-lab"]] },
 
-    { id: "kb-discovery", q: "How does Gaurav approach product discovery?",
-      keys: ["discovery", "research", "interview", "interviews", "approach", "process", "validate", "user research"],
+    { id: "kb-discovery", suggested: true, home: true, q: "How does Gaurav approach AI product discovery?",
+      keys: ["discovery", "research", "interview", "interviews", "approach", "process", "validate", "user research", "ai product discovery"],
       role: "Researcher first, product owner second.",
       work: "<p>Interviews before roadmaps; findings turned into artefacts a team can argue with (problem statements, a prioritized roadmap); conclusions graded before they are trusted.</p>",
       evidence: "30+ structured interviews at Live Your Best Life; parent and facilitator interviews that became the first Evamastu brief; 20+ discovery interviews on Aaroh before a roadmap existed; 13 conclusions graded in CareConnect's claim register, where discovery overturned his own brief.",
       status: "Documented across his record. Aaroh's interview synthesis is not published, so no finding from it is quoted as a statistic.",
       sources: [["Live Your Best Life", "live-your-best-life"], ["Aaroh", "aaroh"], ["CareConnect", "careconnect"]] },
+
+    { id: "kb-healthcare-case", suggested: true, home: true, q: "Show me a healthcare product case study.",
+      keys: ["healthcare", "health", "case study", "case", "example", "wellness", "patient", "hospital", "discharge", "evamastu", "mindfulness"],
+      role: "Associate Product Manager on Evamastu (shipped); self-directed builder on CareConnect (MVP).",
+      work: "<ul><li><b>Evamastu</b> — a digital mindfulness platform. Owned discovery through release and wrote the full PRD; shipped a Parent Dashboard, a Child Wellness Assessment and 4 adaptive cognitive games; redesigned onboarding at two drop-offs found by cohort analytics.</li><li><b>CareConnect</b> — rejected a caregiver-marketplace brief I wrote myself and reframed it as a post-discharge care accountability layer for the adult child supervising a parent's first 30 days home.</li></ul>",
+      evidence: "Evamastu: cohort analytics across 50+ participant cohorts; consistency up 20–25% over six weeks after the redesign. CareConnect: 65 unit/integration tests, 30 end-to-end journeys, and 13 conclusions graded in a claim register.",
+      status: "Evamastu shipped. CareConnect is MVP · NOT IN PRODUCTION. Both case studies are on the Work page.",
+      sources: [["Evamastu case study", "evamastu"], ["CareConnect case study", "careconnect"]] },
 
     { id: "kb-careconnect", q: "What did Gaurav learn from CareConnect?",
       keys: ["careconnect", "pivot", "caregiver", "marketplace", "claim register", "discharge"],
@@ -677,6 +743,8 @@ window.GOS_CONTENT = {
   copilot_config: {
     subtitle: "Ask about my work. Every answer gives my role, the work, the evidence and the current status — from my CV and product records only.",
     placeholder: "Ask about a project, a role or a decision…",
+    /* the three questions the homepage teaser offers, in order */
+    home_order: ["kb-discovery", "kb-healthcare-case", "kb-safety"],
     trace: ["QUESTION", "MATCH", "EVIDENCE", "ANSWER", "SOURCES"],
     badge: "ANSWERS FROM DOCUMENTED RECORDS · NO LIVE MODEL",
     greeting: "<p>Hi — this answers from a fixed index of my CV and product records, not a live AI model. Pick a question or type your own. If something isn't documented, it will say so rather than guess.</p>",

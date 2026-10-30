@@ -1,11 +1,9 @@
-# Portfolio source — Gaurav Kumar Singh, AI Product Professional
+# Portfolio source — GAURAV.OS // AI PRODUCT SYSTEM
 
-The hero leads with name, positioning, five target roles and three verified proof
-points; then Selected Work, the AI & Product Lab, Ask Gaurav, Experience, Education,
-Certifications and Contact. The 90-day case-study corpus, Atlas, Evolution, How I
-Think, challenges, Lab Notes and the intro film sit in a collapsed **Explore the Lab**.
-The corpus is **read from a repository**, normalized, validated and rendered — nothing
-on the page is typed in by hand twice.
+A multi-page site built from one template. The homepage is short; case studies, the AI
+Product Lab, About, the research archive, Ask Gaurav and Contact each have their own
+route (see the repository README). The 90-day corpus is **read from a repository**,
+normalized, validated and rendered on `/research/` — nothing is typed in twice.
 
 ---
 
@@ -15,14 +13,15 @@ Seven layers, deliberately separated.
 
 | Layer | File | Rule |
 |---|---|---|
-| **UI shell** | `index.html` | Styles, tokens and empty mount points. No content. |
-| **Interaction** | `app.js` | Renders the portfolio: hero, work, record, contact, copilot, challenges, lab notes, recruiter mode. |
+| **Template** | `template.html` | The document every route is built from. No content. |
+| **Styles** | `styles.css` | Design tokens and all component styles. |
+| **Interaction** | `app.js` | Header, footer and one renderer per page, picked by `<body data-page>`. |
 | **CV** | `cv.html` | Printable CV rendered from `content.js`; `scripts/build_cv.py` prints it to the PDF. |
 | **Content** | `content.js` | Every word a visitor reads that is *not* from the corpus. Hand-maintained. |
-| **Corpus (data)** | `corpus.js` | **Generated.** The 90-day case-study corpus. Never hand-edit. |
-| **Corpus (UI)** | `corpus-ui.js` | Constellation, atlas, evolution, operating model, capability graph. |
+| **Corpus (data)** | `corpus.js` | **Generated.** Loaded on `/research/` only. Never hand-edit. |
+| **Corpus (UI)** | `corpus-ui.js` | Constellation, atlas, evolution, operating model. `/research/` only. |
 | **Media** | `media/` | Binary assets, referenced by id from `content.js`. |
-| **Build & validation** | `scripts/` | Ingestion, normalization and the test suite. |
+| **Build & validation** | `scripts/` | Site build, CV, ingestion and the test suite. |
 
 Adding a Lab Note, a project, a credential or a job means editing **`content.js` only**.
 `app.js` is never touched for a content change.
@@ -106,7 +105,7 @@ Append one record to `content.js → lab_notes[]`:
 }
 ```
 
-The homepage latest note, the featured list, the archive, the category filters, the
+The Lab Notes on `/research/`, the featured list, the archive, the category filters, the
 counts and the search index all re-derive from that record. **No UI file is edited.**
 
 ---
@@ -117,29 +116,23 @@ counts and the search index all re-derive from that record. **No UI file is edit
 python3 scripts/verify.py
 ```
 
-Runs headless Chromium at **1440 / 1280 / 1024 / 768 / 390** and asserts: corpus counts match
-the tree, Day 90 present, Day 74 flagged missing, every GitHub link resolves against the
-tree, constellation renders, atlas search and every filter work, day-by-day navigation
-works, the copilot refuses unsupported questions without topic-matching, recruiter mode
-works, intro never autoplays / skip / sound / focus trap, reduced motion, keyboard navigation, no console
-errors and no horizontal overflow at any width — plus the recruiter-first checks: first
-screen, proof wording, CareConnect's not-in-production label, the MCA entry, CV download,
-SEO metadata, WCAG AA contrast and the 10px text floor.
+Builds `docs/`, serves it and checks every route at 360, 768 and 1280 px: routes and
+metadata, overflow, headings, text size, accessible names, links, the homepage contract,
+the system visual and reduced motion, keyboard and mobile menu, case-study structure and
+statuses, the lab, the MCA entry on `/about/`, the research archive and film, Ask Gaurav
+without an API key, the CV, privacy and contrast.
 
 ---
 
-## Deploying to GitHub Pages
-
-`index.html` is an artifact fragment (no `<html>`/`<head>` wrapper — the host supplies it).
-For Pages, build the standalone document:
+## Building for GitHub Pages
 
 ```bash
-python3 scripts/build_site.py      # writes docs/index.html + copies assets
+python3 scripts/build_site.py --out ../docs
 ```
 
-Then serve from Pages: Settings → Pages → deploy from branch → **`/docs`**.
-Pages can only serve a branch root or `/docs`, so `docs/` is a committed build
-output, not a git-ignored one.
+It writes `index.html` for each route from `template.html`, a static `404.html`,
+`robots.txt`, `sitemap.xml`, and copies the runtime files, `cv.html` and media. Serve
+from Pages: Settings → Pages → deploy from branch → **`/docs`**.
 
 ---
 

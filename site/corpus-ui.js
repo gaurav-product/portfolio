@@ -164,7 +164,7 @@
 
     var an = document.getElementById("anomalies");
     var A = X.anomalies;
-    an.innerHTML = '<h4>What the audit found</h4><ul>' +
+    an.innerHTML = '<h3>What the audit found</h3><ul>' +
       '<li><b>' + K.directories + '</b> day directories; <b>' + K.written + '</b> contain a written case study.</li>' +
       A.empty_readme.map(function (e) {
         return '<li>Day ' + e.day + ' (' + esc(e.company) + ') has an empty README — an ASSUMPTIONS file exists, the case study does not. Counted as a directory, never as a study.</li>';
@@ -437,18 +437,18 @@
       '<h2 class="title">The evolution of my<br><em>product thinking</em></h2>' +
       '<p class="dek">Four measures, each counted from the repository across nine ten-day blocks. Two of them show a hard discipline change with a date attached.</p>' +
       '<div class="viz-grid">' +
-        '<div class="viz"><h4>Assumptions discipline</h4><div class="sub">Studies in each block carrying a separate ASSUMPTIONS file. Zero before Day 28; every study from Day 28 to Day 90.</div>' +
+        '<div class="viz"><h3>Assumptions discipline</h3><div class="sub">Studies in each block carrying a separate ASSUMPTIONS file. Zero before Day 28; every study from Day 28 to Day 90.</div>' +
           bars(B.map(function (b) { return { k: b.label, v: b.assumptions }; }), outOf10) + '</div>' +
-        '<div class="viz"><h4>Programmatic verification</h4><div class="sub">Studies documenting executed checks rather than asserted arithmetic. First appears Day 57; unbroken from Day 75.</div>' +
+        '<div class="viz"><h3>Programmatic verification</h3><div class="sub">Studies documenting executed checks rather than asserted arithmetic. First appears Day 57; unbroken from Day 75.</div>' +
           bars(B.map(function (b) { return { k: b.label, v: b.verification }; }), outOf10) + '</div>' +
-        '<div class="viz"><h4>References cited per study</h4><div class="sub">Average per block. Breadth peaks in the middle of the series, then falls as the studies move to primary regulatory and filing sources.</div>' +
+        '<div class="viz"><h3>References cited per study</h3><div class="sub">Average per block. Breadth peaks in the middle of the series, then falls as the studies move to primary regulatory and filing sources.</div>' +
           bars(B.map(function (b) { return { k: b.label, v: b.avg_sources }; }), one) + '</div>' +
-        '<div class="viz"><h4>Length per study</h4><div class="sub">Average words per block. Length is not depth — it peaks at D41–50 and settles once verification arrives.</div>' +
+        '<div class="viz"><h3>Length per study</h3><div class="sub">Average words per block. Length is not depth — it peaks at D41–50 and settles once verification arrives.</div>' +
           bars(B.map(function (b) { return { k: b.label, v: b.avg_words }; }), intN) + '</div>' +
       '</div>' +
 
       '<div class="viz-grid">' +
-        '<div class="viz"><h4>Where the subjects sit</h4><div class="sub">Derived category across all 90 directories.</div>' +
+        '<div class="viz"><h3>Where the subjects sit</h3><div class="sub">Derived category across all 90 directories.</div>' +
           '<div class="dist">' + Object.keys(X.categories).sort(function (a, b) { return X.categories[b] - X.categories[a]; }).map(function (c) {
             var v = X.categories[c], mx = Math.max.apply(null, Object.keys(X.categories).map(function (k) { return X.categories[k]; }));
             var g = groupOf(c);
@@ -456,7 +456,7 @@
               '<span class="dt"><span class="df" style="width:' + (v / mx * 100) + '%;background:var(' + g.varname + ')"></span></span>' +
               '<span class="dv">' + v + '</span></div>';
           }).join("") + '</div></div>' +
-        '<div class="viz"><h4>Evidence level</h4><div class="sub">Scored from the formula below — not a judgement of quality, a count of what each study carries.</div>' +
+        '<div class="viz"><h3>Evidence level</h3><div class="sub">Scored from the formula below — not a judgement of quality, a count of what each study carries.</div>' +
           '<div class="dist">' + ["VERIFIED", "DOCUMENTED", "SOURCED", "NARRATIVE"].map(function (k) {
             var v = X.evidence_levels[k] || 0;
             var mx = Math.max.apply(null, Object.keys(X.evidence_levels).map(function (q) { return X.evidence_levels[q]; }));
@@ -468,14 +468,14 @@
       '</div>' +
 
       '<div class="viz" style="margin-top:var(--s2)">' +
-        '<h4>Programmatic checks stated per study</h4>' +
+        '<h3>Programmatic checks stated per study</h3>' +
         '<div class="sub">Every study that reports executed checks, Day ' + V.earliest_study_stating_checks + ' onward. Read from the study files, not from the repository index.</div>' +
         '<div class="spark" id="checks-spark"></div>' +
         '<div class="sub" style="margin-top:10px"><b style="color:var(--bone)">Independent audit.</b> The repository README claims <b style="color:var(--bone)">' + V.repo_claim.toLocaleString() + '</b> checks across ' + esc(V.window) + ', ' + V.min_per_study + ' to ' + V.max_per_study + ' per study. Recomputing from the files gives <b style="color:var(--bone)">' + V.checks_in_window.toLocaleString() + '</b> across ' + V.studies_in_window + ' studies, ' + V.min_per_study + ' to ' + V.max_per_study + ' — an exact match.</div>' +
       '</div>' +
 
       '<div class="anom" style="margin-top:var(--s3)">' +
-        '<h4>Where the repository contradicts itself</h4>' +
+        '<h3>Where the repository contradicts itself</h3>' +
         '<p class="small" style="margin-top:8px;color:var(--text)">Surfaced, not silently repaired. The tree is treated as canonical.</p>' +
         '<ul>' + X.anomalies.index_contradictions.map(function (c) {
           return '<li><b style="color:var(--bone);font-weight:500">Index says:</b> ' + esc(c.claim) +
