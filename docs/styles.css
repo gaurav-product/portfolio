@@ -1047,3 +1047,116 @@ html{scroll-behavior:smooth;overflow-x:hidden}
 }
 @media print{ .site-head,.site-foot,.skip,.sysviz{display:none!important} body{background:#fff} }
 .page-title em.accent-em{font-family:var(--serif);font-weight:400;font-style:italic;color:var(--accent);letter-spacing:0}
+
+/* ============================================================================
+   v7.1 — visual system refinement. Display type, the background system, the
+   hero visual's glyphs, buttons, cards and focus. Later rules win, so this
+   block only overrides; nothing above it depends on it.
+   ========================================================================== */
+:root{--display:"Space Grotesk","IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;--radius:6px;
+  --shadow-1:0 1px 2px rgba(21,23,28,.05),0 8px 24px -16px rgba(21,23,28,.22);
+  --shadow-2:0 2px 4px rgba(21,23,28,.06),0 22px 48px -24px rgba(21,23,28,.32)}
+
+/* ---------- type ---------- */
+body{font-size:16.5px;line-height:1.66}
+h1,h2,h3,.page-title,.sec-t,h2.title,.card2 h3{font-family:var(--display);font-weight:600}
+.hero h1{font-size:clamp(46px,6.8vw,86px);line-height:.96;letter-spacing:-.04em;margin-top:20px}
+.hero-title{font-family:var(--display);font-size:clamp(19px,2.1vw,25px);letter-spacing:-.01em;text-transform:none;
+  color:var(--fg);font-weight:500;margin-top:16px;display:flex;align-items:center;gap:12px}
+.hero-title::before{content:"";width:28px;height:2px;background:var(--accent);flex:none}
+.hero-pos{font-size:clamp(18px,1.9vw,21px);line-height:1.5;color:var(--fg-muted);max-width:36ch;letter-spacing:0;margin-top:18px}
+.hero-meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:var(--s3);font-family:var(--mono);font-size:11.5px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim)}
+.hero-meta span{display:inline-flex;align-items:center;gap:8px}
+.hero-meta span::before{content:"";width:5px;height:5px;border:1.5px solid var(--accent);transform:rotate(45deg)}
+.sec-t{font-size:clamp(28px,3.4vw,40px);line-height:1.08;letter-spacing:-.03em}
+.page-title{letter-spacing:-.035em}
+.sec-d,.page-dek{line-height:1.6}
+.card2 h3{font-size:22px;letter-spacing:-.02em}
+.card2 dd{font-size:15px;line-height:1.55}
+
+/* ---------- background system ---------- */
+.os-bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;
+  background-image:linear-gradient(rgba(21,23,28,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(21,23,28,.035) 1px,transparent 1px);
+  background-size:24px 24px}
+.os-orbits{position:absolute;width:min(78vw,900px);height:auto;right:-22vw;top:-12vh;opacity:.55}
+.os-orbits ellipse{fill:none;stroke:rgba(59,47,217,.13);stroke-width:1}
+.os-orbits circle{fill:rgba(59,47,217,.22)}
+.os-wm{position:absolute;left:-.04em;bottom:-.18em;font-family:var(--display);font-weight:600;font-size:clamp(96px,19vw,300px);
+  line-height:1;letter-spacing:-.05em;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(21,23,28,.06);user-select:none}
+body{background:var(--bg);isolation:isolate}
+main,.site-foot,.site-head{position:relative}
+/* the hero and page heads carried their own grid; the page-wide one replaces it */
+.hero,.page-head{background-image:none}
+.hero{border-bottom:1px solid var(--rule)}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(60% 70% at 78% 40%,rgba(59,47,217,.07),transparent 70%)}
+.hero-grid{position:relative}
+
+/* ---------- hero visual ---------- */
+.sysviz{border-radius:var(--radius);box-shadow:var(--shadow-2);padding:16px 16px 14px}
+.sv-grid line{stroke:rgba(21,23,28,.05)}
+.sv-neural line{stroke:rgba(59,47,217,.14);stroke-width:1}
+.sv-neural circle{fill:var(--surface);stroke:var(--accent);stroke-width:1.2}
+.sv-orbit.faint{stroke:rgba(59,47,217,.14);stroke-dasharray:1 6}
+.sv-orbit.spin{transform-origin:260px 190px;animation:sv-spin 60s linear infinite}
+@keyframes sv-spin{to{transform:rotate(360deg)}}
+.sv-gate rect{fill:var(--surface);stroke:var(--ok);stroke-width:1.6}
+.sv-glyph{fill:none;stroke:var(--fg-muted);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.sv-glyph circle{fill:var(--fg-muted);stroke:none}
+.sv-glyph circle:not(.f){fill:none;stroke:var(--fg-muted)}
+#svn-discovery .sv-glyph circle{fill:var(--fg-muted);stroke:none}
+.sv-node.on .sv-glyph,.sv-node.on .sv-glyph circle{stroke:var(--accent)}
+#svn-discovery.on .sv-glyph circle,.sv-node.on .sv-glyph circle.f{fill:var(--accent)}
+.sv-hub .halo{fill:none;stroke:var(--accent-line);stroke-dasharray:2 4}
+.sv-legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:6px;font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--fg-dim)}
+.sv-legend span{display:inline-flex;align-items:center;gap:7px}
+.sv-legend i{display:inline-block}
+.lg-path{width:16px;height:2px;background:var(--rule);box-shadow:inset 6px 0 0 var(--accent)}
+.lg-gate{width:7px;height:7px;border:1.5px solid var(--ok);transform:rotate(45deg)}
+.lg-node{width:7px;height:7px;border:1.3px solid var(--accent);border-radius:50%}
+.sv-label{border-radius:4px;transition:border-color .18s,color .18s,background .18s}
+
+/* ---------- buttons ---------- */
+.btn{border-radius:4px;min-height:48px;padding:13px 22px;font-size:12px;letter-spacing:.11em;font-weight:500;
+  transition:transform .18s,background .18s,border-color .18s,color .18s,box-shadow .18s}
+.btn-primary{box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 10px 24px -12px rgba(59,47,217,.65)}
+.btn-primary:hover{background:#2E23C2;transform:translateY(-1px);box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 14px 28px -12px rgba(59,47,217,.7)}
+.btn-secondary{background:var(--surface)}
+.btn-ghost{background:transparent;border-color:var(--rule)}
+.btn:active{transform:translateY(0)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;box-shadow:0 0 0 5px rgba(59,47,217,.14)}
+.proof-strip :focus-visible,.ask-prev :focus-visible,.site-foot :focus-visible{outline-color:var(--on-graphite-accent);box-shadow:none}
+
+/* ---------- sections & cards ---------- */
+.sec{padding-block:clamp(60px,8vw,104px)}
+.sec-head{margin-bottom:var(--s5)}
+.cards,.lab-prev{gap:var(--s3)}
+.card2{border-radius:var(--radius);box-shadow:var(--shadow-1);position:relative;transition:border-color .2s,box-shadow .2s,transform .2s}
+.card2::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--accent);transform:scaleX(0);
+  transform-origin:left;transition:transform .25s}
+.card2:hover,.card2:focus-within{border-color:var(--fg-dim);box-shadow:var(--shadow-2);transform:translateY(-2px)}
+.card2:hover::before,.card2:focus-within::before{transform:scaleX(1)}
+.card2-top{padding:22px 22px 0}
+.card2 dl{padding:0 22px}
+.card2-foot{padding:15px 22px 19px}
+.proof-strip ul{padding:26px 0}
+.proof-strip li{font-size:15px}
+.ask-prev{border-radius:var(--radius)}
+.contact-list a,.contact-list .cl{transition:background .18s}
+.nav a{transition:color .18s,background .18s}
+
+@media (max-width:640px){
+  .os-orbits{width:150vw;right:-70vw;top:-8vh;opacity:.4}
+  .os-wm{font-size:28vw}
+  .hero h1{font-size:clamp(40px,12vw,52px)}
+  .sv-legend{display:none}
+  .card2:hover,.card2:focus-within{transform:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .sv-orbit.spin{animation:none}
+  .card2,.card2::before,.btn{transition:none}
+  .card2:hover,.card2:focus-within,.btn-primary:hover{transform:none}
+}
+@media print{ .os-bg{display:none} }

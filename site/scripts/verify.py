@@ -59,7 +59,8 @@ def check(name, ok, detail=""):
 
 OVERFLOW = """() => { const bad = [];
   document.querySelectorAll('body *').forEach(e => { const r = e.getBoundingClientRect();
-    if (r.width > 0 && r.right > innerWidth + 1 && getComputedStyle(e).position !== 'fixed' && !e.closest('.sr, .skip'))
+    if (r.width > 0 && r.right > innerWidth + 1 && getComputedStyle(e).position !== 'fixed' && !e.closest('.sr, .skip')
+        && !(e.closest('.os-bg') && getComputedStyle(e.closest('.os-bg')).overflow === 'hidden'))  // clipped decorative layer
       bad.push(e.tagName + '.' + String(e.getAttribute('class') || '').split(' ')[0]); });
   return {sw: document.documentElement.scrollWidth, w: innerWidth, bad: [...new Set(bad)].slice(0, 5)}; }"""
 
@@ -196,7 +197,7 @@ async def main():
             return {
               nav: [...document.querySelectorAll('#site-nav a')].map(a => a.textContent.trim()),
               brand: t('.site-head .brand-mark'), mark: t('.hero .os-mark'), h1: t('#hero-name'), title: t('.hero-title'), pos: t('.hero-pos'),
-              cta: [...document.querySelectorAll('.hero .cta-row a')].map(a => [a.textContent.trim(), a.getAttribute('href'), a.className]),
+              cta: [...document.querySelectorAll('.hero .cta-row a')].map(a => [a.textContent.replace('→', '').trim(), a.getAttribute('href'), a.className]),
               proof: [...document.querySelectorAll('.proof-strip li')].map(l => l.textContent.trim()),
               cards: [...document.querySelectorAll('#selected-work .card2')].map(c => ({h: c.querySelector('h3').textContent,
                   badge: c.querySelector('.badge').textContent, dt: [...c.querySelectorAll('dt')].map(d => d.textContent),
@@ -219,9 +220,22 @@ async def main():
               "GAURAV.OS" in H["mark"] and H["h1"] == "Gaurav Kumar Singh" and H["title"] == "AI Product Manager / Product Builder", [H["mark"], H["title"]])
         check("hero positioning line is exact",
               H["pos"] == "Building safe, measurable AI products from ambiguous healthcare and consumer problems.", H["pos"])
-        check("primary CTA 'Explore selected work', secondary 'Ask Gaurav'",
-              [c[0] for c in H["cta"]] == ["Explore selected work", "Ask Gaurav"] and "btn-primary" in H["cta"][0][2]
-              and H["cta"][0][1] == "#selected-work" and H["cta"][1][1] == "ask/", H["cta"])
+        check("hero CTAs: 'Explore selected work' (primary), 'Ask Gaurav', 'Contact'",
+              [c[0] for c in H["cta"]] == ["Explore selected work", "Ask Gaurav", "Contact"] and "btn-primary" in H["cta"][0][2]
+              and [c[1] for c in H["cta"]] == ["#selected-work", "ask/", "contact/"], H["cta"])
+        order = await hp.evaluate("() => [...document.querySelectorAll('main > div > section')].map(s => s.id || s.className.split(' ')[0])")
+        check("homepage order: hero, proof strip, work, lab, ask, about, contact",
+              order == ["hero", "proof-strip", "selected-work", "lab-preview", "ask-preview", "about-preview", "contact"], order)
+        bg = await hp.evaluate("""() => { const b = document.querySelector('.os-bg'), w = b && b.querySelector('.os-wm'), cs = b && getComputedStyle(b);
+            return b && {hidden: b.getAttribute('aria-hidden'), z: cs.zIndex, pe: cs.pointerEvents, pos: cs.position, wm: w.textContent,
+              stroke: getComputedStyle(w).webkitTextStrokeColor, fill: getComputedStyle(w).color}; }""")
+        alpha = lambda c: float(c.split(",")[3].strip(" )")) if c.startswith("rgba") else 1.0
+        check("background: GAURAV.OS watermark behind content, faint, decorative, hidden from assistive tech",
+              bg and bg["hidden"] == "true" and bg["z"] == "-1" and bg["pe"] == "none" and bg["pos"] == "fixed" and bg["wm"] == "GAURAV.OS"
+              and alpha(bg["stroke"]) <= 0.08 and alpha(bg["fill"]) == 0, bg)
+        under = await hp.evaluate("""() => { const r = document.querySelector('.hero-pos').getBoundingClientRect();
+            const e = document.elementFromPoint(r.left + 8, r.top + 8); return !!e.closest('.hero') && !e.closest('.os-bg'); }""")
+        check("text sits above the background layer", under)
         check("proof strip: exactly four truthful statements", H["proof"] == [
             "Healthcare and consumer product experience", "Discovery through delivery",
             "AI product management training with Masai School and IIT Roorkee faculty",
@@ -262,6 +276,11 @@ async def main():
             return {role: svg.getAttribute('role'), title: !!svg.querySelector('title'), desc: !!svg.querySelector('desc'),
                     labels: [...f.querySelectorAll('.sv-label')].map(b => b.textContent.trim()), note: /not live data/i.test(f.textContent),
                     paused: svg.animationsPaused()}; }""")
+        parts = await hp.evaluate("() => ['.sv-neural circle', '.sv-path', '.sv-gate', '.sv-glyph', '.sv-orbit', '.sv-hub', '.sv-state'].map(s => document.querySelectorAll('.sysviz ' + s).length)")
+        check("hero visual: neural nodes, pathways, safety checkpoints, practice glyphs, orbits, decision hub and states",
+              parts[0] >= 8 and parts[1] == 4 and parts[2] == 4 and parts[3] == 4 and parts[4] >= 2 and parts[5] == 1 and parts[6] == 3, parts)
+        check("hero visual shows no numbers that could pass for telemetry",
+              not re.search(r"\d", await hp.evaluate("() => [...document.querySelectorAll('.sysviz svg text, .sysviz-top, .sv-legend')].map(e => e.textContent).join(' ')")))
         check("system visual: labelled image, says 'not live data', Discovery/Evaluation/Safety/Outcomes",
               sv["role"] == "img" and sv["title"] and sv["desc"] and sv["note"] and sv["labels"] == ["Discovery", "Evaluation", "Safety", "Outcomes"], sv)
         check("system visual animates when motion is allowed", sv["paused"] is False)
@@ -271,13 +290,13 @@ async def main():
         check("selecting a node explains and highlights it", st["p"] == "true" and st["cap"].startswith("Safety") and st["on"], st)
         await done(hp)
         rm = await page("", 1280, 900, reduced=True)
-        r1 = await rm.evaluate("""() => ({paused: document.querySelector('.sysviz svg').animationsPaused(),
+        r1 = await rm.evaluate("""() => ({paused: document.querySelector('.sysviz svg').animationsPaused(), spin: getComputedStyle(document.querySelector('.sv-orbit.spin')).animationName,
             on: [...document.querySelectorAll('.sysviz .sv-state.on')].map(s => s.id),
             tr: getComputedStyle(document.querySelector('.btn')).transitionDuration, sb: getComputedStyle(document.documentElement).scrollBehavior})""")
         await rm.wait_for_timeout(2700)
         on2 = await rm.evaluate("() => [...document.querySelectorAll('.sysviz .sv-state.on')].map(s => s.id)")
         check("reduced motion: visual paused, states still, no transitions, no smooth scroll",
-              r1["paused"] and r1["on"] == on2 and r1["sb"] != "smooth" and all(float(x.rstrip("s")) < 0.01 for x in r1["tr"].split(",")), r1)
+              r1["paused"] and r1["spin"] == "none" and r1["on"] == on2 and r1["sb"] != "smooth" and all(float(x.rstrip("s")) < 0.01 for x in r1["tr"].split(",")), r1)
         await done(rm)
         for w, h in ((1280, 800), (768, 1024), (360, 800)):
             fs = await page("", w, h)
@@ -385,6 +404,16 @@ async def main():
         T = await ct.evaluate("() => ({t: document.querySelector('main').textContent, cv: !!document.querySelector('main a[download]')})")
         check("/contact: email, LinkedIn, GitHub, New Delhi, CV download",
               all(x in T["t"] for x in ("gauravkumarsingh773@gmail.com", "LinkedIn", "GitHub", "New Delhi")) and T["cv"])
+        lk2 = await ct.evaluate("() => [...document.querySelectorAll('main a')].map(a => [a.getAttribute('href'), a.target, a.rel])")
+        hrefs = [x[0] for x in lk2]
+        check("/contact: LinkedIn and GitHub point at the right profiles and open safely in a new tab",
+              ["https://linkedin.com/in/gaurav-singh-product", "_blank", "noopener"] in lk2 and ["https://github.com/gaurav-product", "_blank", "noopener"] in lk2, lk2)
+        check("/contact: email link is mailto:gauravkumarsingh773@gmail.com", "mailto:gauravkumarsingh773@gmail.com" in hrefs)
+        async with ct.expect_download() as dl:
+            await ct.click("main a[download]")
+        d = await dl.value
+        dp = await d.path()
+        check("CV download delivers the PDF", d.suggested_filename.endswith(".pdf") and open(dp, "rb").read(5) == b"%PDF-", d.suggested_filename)
         await done(ct)
 
         # ------------------------------------------------------------------

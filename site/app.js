@@ -330,37 +330,80 @@
     var hub = { x: 260, y: 190 };
     var paths = SYS_NODES.map(function (n) {
       var mx = (n.x + hub.x) / 2, my = n.y < hub.y ? n.y + 40 : n.y - 40;
-      return { id: n.id, d: "M" + n.x + " " + n.y + " Q " + mx + " " + my + " " + hub.x + " " + hub.y };
+      return { id: n.id, n: n, mx: mx, my: my, d: "M" + n.x + " " + n.y + " Q " + mx + " " + my + " " + hub.x + " " + hub.y };
     });
+    /* a point on the quadratic path, for the checkpoint gates */
+    function at(p, t) {
+      var a = 1 - t;
+      return { x: a * a * p.n.x + 2 * a * t * p.mx + t * t * hub.x, y: a * a * p.n.y + 2 * a * t * p.my + t * t * hub.y };
+    }
     var grid = "";
     for (var gx = 20; gx < 520; gx += 40) grid += '<line x1="' + gx + '" y1="0" x2="' + gx + '" y2="380"/>';
     for (var gy = 20; gy < 380; gy += 40) grid += '<line x1="0" y1="' + gy + '" x2="520" y2="' + gy + '"/>';
+    /* neural nodes: a fixed ring of small nodes on the outer orbit, linked to their neighbours */
+    var neural = [], links = "";
+    for (var i = 0; i < 12; i++) {
+      var a = (i / 12) * Math.PI * 2 + 0.26;
+      neural.push({ x: +(hub.x + 150 * Math.cos(a)).toFixed(1), y: +(hub.y + 62 * Math.sin(a)).toFixed(1) });
+    }
+    neural.forEach(function (q, i) {
+      if (i % 2) return;
+      var r = neural[(i + 3) % 12];
+      links += '<line x1="' + q.x + '" y1="' + q.y + '" x2="' + r.x + '" y2="' + r.y + '"/>';
+    });
+    /* a small glyph beside each practice: what it stands for, drawn, not measured */
+    var G = {
+      discovery: function (x, y) {   /* scattered findings converging */
+        return [[-34, -6], [-28, 8], [-40, 4], [-22, -2]].map(function (d) {
+          return '<circle cx="' + (x + d[0]) + '" cy="' + (y + d[1]) + '" r="2"/>'; }).join("") +
+          '<path d="M' + (x - 22) + ' ' + (y - 2) + ' L' + (x - 15) + ' ' + y + '"/>';
+      },
+      evaluation: function (x, y) {  /* signal arcs */
+        return [9, 15, 21].map(function (r) {
+          return '<path d="M' + (x + 18) + ' ' + (y - r * .7) + ' A ' + r + ' ' + r + ' 0 0 1 ' + (x + 18) + ' ' + (y + r * .7) + '" transform="translate(' + (r * .3) + ' 0)"/>'; }).join("");
+      },
+      safety: function (x, y) {      /* a shield */
+        var X = x + 30, Y = y - 9;
+        return '<path d="M' + X + ' ' + Y + ' l9 3.5 v6 c0 5 -4 8 -9 10 c-5 -2 -9 -5 -9 -10 v-6 z"/><path d="M' + (X - 4) + ' ' + (Y + 9) + ' l3 3 l5 -6"/>';
+      },
+      outcomes: function (x, y) {    /* a target */
+        var X = x - 32;
+        return '<circle cx="' + X + '" cy="' + y + '" r="9"/><circle cx="' + X + '" cy="' + y + '" r="4.5"/><circle class="f" cx="' + X + '" cy="' + y + '" r="1.6"/>';
+      }
+    };
     var svg = '<svg viewBox="0 0 520 380" role="img" aria-labelledby="sv-title sv-desc" focusable="false">' +
       '<title id="sv-title">Illustration of an AI product system</title>' +
-      '<desc id="sv-desc">Four practices — discovery, evaluation, safety and outcomes — feed a central decision with three states: proceed, iterate or stop. An illustration, not live data.</desc>' +
+      '<desc id="sv-desc">Four practices — discovery, evaluation, safety and outcomes — travel along pathways through safety checkpoints to a central decision with three states: proceed, iterate or stop. A conceptual illustration, not live data.</desc>' +
       '<g class="sv-grid">' + grid + '</g>' +
-      '<ellipse class="sv-orbit" cx="260" cy="190" rx="150" ry="62"/>' +
-      '<ellipse class="sv-orbit" cx="260" cy="190" rx="96" ry="38"/>' +
+      '<g class="sv-neural">' + links + neural.map(function (q) { return '<circle cx="' + q.x + '" cy="' + q.y + '" r="2.4"/>'; }).join("") + '</g>' +
+      '<g class="sv-orbits"><ellipse class="sv-orbit" cx="260" cy="190" rx="150" ry="62"/>' +
+        '<ellipse class="sv-orbit spin" cx="260" cy="190" rx="96" ry="38"/>' +
+        '<ellipse class="sv-orbit faint" cx="260" cy="190" rx="210" ry="150"/></g>' +
       paths.map(function (p) { return '<path class="sv-path" id="svp-' + p.id + '" d="' + p.d + '"/>'; }).join("") +
+      paths.map(function (p) {
+        var c = at(p, .62);
+        return '<g class="sv-gate"><rect x="' + (c.x - 5) + '" y="' + (c.y - 5) + '" width="10" height="10" transform="rotate(45 ' + c.x.toFixed(1) + ' ' + c.y.toFixed(1) + ')"/></g>';
+      }).join("") +
       paths.map(function (p, i) {
         /* all start at once (a delayed start parks the dot at the origin); the
            different durations keep them out of step */
         return '<circle class="sv-pulse" r="3.5"><animateMotion dur="' + (3.0 + i * 0.55) + 's" begin="0s" repeatCount="indefinite"><mpath href="#svp-' + p.id + '"/></animateMotion></circle>';
       }).join("") +
       SYS_NODES.map(function (n) {
-        var lx = n.x, anchor = "middle";   /* centred over the node: never clipped at the edge */
-        return '<g class="sv-node" id="svn-' + n.id + '"><circle class="sv-ring" cx="' + n.x + '" cy="' + n.y + '" r="15"/><circle class="sv-core" cx="' + n.x + '" cy="' + n.y + '" r="4"/>' +
-          '<text class="sv-t" x="' + lx + '" y="' + (n.y + (n.y < 190 ? -26 : 38)) + '" text-anchor="' + anchor + '">' + n.label.toUpperCase() + '</text></g>';
+        return '<g class="sv-node" id="svn-' + n.id + '"><g class="sv-glyph">' + G[n.id](n.x, n.y) + '</g>' +
+          '<circle class="sv-ring" cx="' + n.x + '" cy="' + n.y + '" r="15"/><circle class="sv-core" cx="' + n.x + '" cy="' + n.y + '" r="4"/>' +
+          '<text class="sv-t" x="' + n.x + '" y="' + (n.y + (n.y < 190 ? -26 : 38)) + '" text-anchor="middle">' + n.label.toUpperCase() + '</text></g>';
       }).join("") +
-      '<g class="sv-hub"><circle cx="260" cy="190" r="30"/><text x="260" y="194" text-anchor="middle">DECIDE</text></g>' +
+      '<g class="sv-hub"><circle class="halo" cx="260" cy="190" r="40"/><circle cx="260" cy="190" r="30"/><text x="260" y="194" text-anchor="middle">DECIDE</text></g>' +
       ["PROCEED", "ITERATE", "STOP"].map(function (t, i) {
         var x = 172 + i * 62;
         return '<g class="sv-state" id="svs-' + i + '"><rect x="' + x + '" y="252" width="56" height="20" rx="2"/><text x="' + (x + 28) + '" y="266" text-anchor="middle">' + t + '</text></g>';
       }).join("") +
     '</svg>';
     return '<figure class="sysviz" style="margin:0">' +
-      '<div class="sysviz-top"><span><b>AI PRODUCT SYSTEM</b></span><span>Illustrative · not live data</span></div>' +
+      '<div class="sysviz-top"><span><b>AI PRODUCT SYSTEM</b></span><span>Conceptual · not live data</span></div>' +
       svg +
+      '<p class="sv-legend" aria-hidden="true"><span><i class="lg-path"></i>Pathway</span><span><i class="lg-gate"></i>Safety checkpoint</span><span><i class="lg-node"></i>Neural node</span></p>' +
       '<p class="sv-states">Decision states: <b>Proceed</b> · <b>Iterate</b> · <b>Stop</b></p>' +
       '<div class="sv-labels" role="group" aria-label="Explore the system">' + SYS_NODES.map(function (n) {
         return '<button class="sv-label" type="button" data-node="' + n.id + '" aria-pressed="false">' + n.label + '</button>';
@@ -420,9 +463,11 @@
           '<p class="hero-title">' + esc(s.role) + '</p>' +
           '<p class="hero-pos">' + esc(s.headline) + '</p>' +
           '<div class="cta-row">' +
-            '<a class="btn btn-primary" href="#selected-work">Explore selected work</a>' +
+            '<a class="btn btn-primary" href="#selected-work">Explore selected work <span aria-hidden="true">→</span></a>' +
             '<a class="btn btn-secondary" href="' + esc(u("ask/")) + '">Ask Gaurav</a>' +
+            '<a class="btn btn-ghost" href="' + esc(u("contact/")) + '">Contact</a>' +
           '</div>' +
+          '<p class="hero-meta"><span>' + esc(s.location) + '</span><span>Healthcare · Consumer · AI</span></p>' +
         '</div>' +
         '<div>' + sysViz() + '</div>' +
       '</div></section>' +
