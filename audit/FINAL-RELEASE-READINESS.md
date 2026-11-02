@@ -63,9 +63,15 @@ Started: 2 November 2026 · Branch `claude/beautiful-goldberg-radrlu` · Draft P
 
 ---
 
-## 5. Status: release candidate (P0 = 0, P1 = 0)
+## 5. Status: release candidate, verified on the final build (P0 = 0, P1 = 0)
 
-There are no open P0 or P1 issues. Mobile performance on three routes is below the 90 target (P2, §8). Merge and deployment wait for the owner's approval.
+The final verification ran on a **clean rebuild of `8c3f360`**. That commit contains `1563f3e`; the only change since then is two lines of this report, with no app code. Results:
+- TypeScript: 0 errors.
+- Unit tests: 51/51.
+- Full Playwright suite including the all-route crawler: **56 passed, 0 failed, 0 flaky, 2 skipped by design**.
+- Lighthouse: as in §8.
+
+There are no open P0 or P1 issues. Mobile performance on `/` and `/research/90` remains below the 90 target (P2, §8). Merge and deployment wait for the owner's explicit approval.
 
 ## 6. What changed
 
@@ -79,15 +85,26 @@ There are no open P0 or P1 issues. Mobile performance on three routes is below t
 | 8 · SEO | JSON-LD `Person` + `WebSite` (public facts only, no phone number, no legal name). A new share card is rendered from the world illustration and real text by `scripts/build-og.mjs`. |
 | Tooling | `scripts/serve.mjs` cached gzipped files forever, so a rebuild under a running server served stale pages. The cache is now keyed on file mtime. |
 
-## 7. Tests (final build)
+## 7. Tests — final verification on a clean build of `8c3f360`
 
-| Suite | Result |
-|---|---|
-| TypeScript | 0 errors |
-| Lint | Not configured (see §1) |
-| Vitest | **51 / 51** (baseline 48; added: all eight images, AVIF files, public identity, two Ask Gaurav grounding tests) |
-| Playwright full suite (desktop 1440 + Pixel 7) | **56 passed, 0 failed, 2 skipped by design**: J12 film autoplay is desktop-only, and one journey needs the drawer that exists only below 1440 px. This includes the zero-dead-control crawler on all **309 routes × 2 viewports**. |
-| Re-run on the final build (`1563f3e`) | Unit 51/51; journeys J1–J23 44 passed, 2 skipped by design; crawler 12/12 shards passed (all 309 routes × desktop + mobile, 0 failures) |
+Run: 2 Nov 2026, 19:44 UTC. Build: `rm -rf build && npm run build` → 309 prerendered routes. Counts are from Playwright's JSON reporter (`stats`), not parsed console text.
+
+| Suite | Passed | Failed | Flaky | Skipped |
+|---|---|---|---|---|
+| TypeScript (`tsc`) | 0 errors | — | — | — |
+| Lint | not configured (§1) | — | — | — |
+| Vitest (3 files) | **51** | 0 | — | 0 |
+| Playwright — all specs, desktop 1440 + Pixel 7 | **56** | **0** | **0** | **2** |
+| ↳ all-route crawler (`controls.spec.ts`, 6 shards × 2 viewports, **309 routes each**) | **12** | **0** | 0 | 0 |
+| ↳ journeys J1–J11 (`journeys.spec.ts`) | 22 | 0 | 0 | 0 |
+| ↳ refinements J12–J17 (`refinements.spec.ts`) | 10 | 0 | 0 | 2 |
+| ↳ cinematic J18–J23 (`cinematic.spec.ts`) | 12 | 0 | 0 | 0 |
+
+Skipped tests, both by design (`test.skip` with a stated reason, unchanged from earlier rounds):
+- **J12 intro film on mobile:** the film autoplays on desktop only.
+- **J17 mobile menu on desktop:** the drawer exists only below 1440 px.
+
+Earlier runs on this branch: the full suite on the `b0ec91c` build (56/0/2), and the crawler re-run on the `1563f3e` source (12/12).
 
 Test edits and why:
 - Name assertions moved from "Gaurav Kumar Singh" to "Gaurav Singh". The owner changed the public name; the CV download filename assertion is unchanged.
@@ -95,27 +112,30 @@ Test edits and why:
 
 No test was removed or weakened.
 
-## 8. Lighthouse 12.8.2 (local static server, gzip, simulated slow 4G on mobile)
+## 8. Lighthouse 12.8.2: final run on the same build (19:52 UTC; local static server, gzip, simulated slow 4G on mobile)
 
-| Route | Mobile | Desktop | Mobile LCP |
-|---|---|---|---|
-| `/` | **87** (baseline 84) | 99 | 3.3 s (3.7) |
-| `/recruiter` | 93 | 100 | 2.6 s |
-| `/projects/careconnect` | 93 | 100 | 2.6 s |
-| `/product-thinking/rice` | 93 | 100 | 2.6 s |
-| `/research` | 94 | 100 | 2.5 s |
-| `/research/90` | 88 | 100 | 3.1 s |
-| `/ai-lab` | 89 | 100 | 2.9 s |
-| `/explore` | 94 | **89** | 2.5 s |
-| `/about` | 94 | 100 | 2.5 s |
-| `/districts/ai-safety-lab` | 92 | 100 | 2.7 s |
+| Route | Mobile | Desktop | Mobile LCP | Baseline mobile (`e79c495`) |
+|---|---|---|---|---|
+| `/` | **89** | 99 | 3.3 s | 84 |
+| `/?nointro` (same page) | **87** | 99 | 3.3 s | 85 |
+| `/recruiter` | 93 | 100 | 2.6 s | 93 |
+| `/projects/careconnect` | 93 | 100 | 2.6 s | 95 |
+| `/product-thinking/rice` | 94 | 100 | 2.5 s | 93 |
+| `/research` | 94 | 100 | 2.5 s | 94 |
+| `/research/90` | **88** | 100 | 3.1 s | 87 |
+| `/ai-lab` | 90 | 100 | 2.9 s | 89 |
+| `/explore` | 94 | **89** | 2.5 s | 93 |
+| `/about` | 94 | 100 | 2.5 s | 93 |
+| `/districts/ai-safety-lab` | 93 | 100 | 2.6 s | 91 |
 
-Accessibility, Best Practices and SEO are **100 on all 22 runs**.
+Accessibility, Best Practices and SEO are **100 on all 22 runs**. CLS ≤ 0.027 everywhere.
+
+**Run-to-run variance is about ±2 points.** `/` and `/?nointro` serve identical HTML yet scored 89 and 87 in the same run, and `/ai-lab` scored 89 in the previous run and 90 in this one. Treat single-point differences as noise.
 
 **Targets not met, with root cause:**
-- Mobile `/` 87, `/research/90` 88 and `/ai-lab` 89. Image render delay is now 117 ms. These pages are bound by first paint (2.8–3.1 s): a 450 ms render-blocking stylesheet plus the route's JS module preloads share the simulated 1.6 Mbps link.
-- Desktop `/explore` 89 is the 3D scene's script cost (270 ms TBT). It is loaded only on that route and only on capable desktops.
-- The next lever is inlining critical CSS. It changes the `<head>` React hydrates, which risks hydration errors across 309 pages for about 3 points. It is recommended as a measured follow-up on the real host (HTTP/2 or HTTP/3 CDN), not forced here.
+- **Mobile `/` (87–89) and `/research/90` (88):** these are first-paint bound (2.8–3.1 s). The 450 ms render-blocking stylesheet and the route's JS module preloads share the simulated 1.6 Mbps link. Image render delay is now 117 ms.
+- **Desktop `/explore` (89):** the 3D scene's script cost (270 ms TBT). It loads only on that route and only on capable desktops.
+- **Recommended follow-up:** inline critical CSS, behind a hydration test, measured on the real host.
 
 ## 9. Accessibility and visual QA
 
@@ -152,16 +172,45 @@ No contradictions requiring a decision. The evidence labels already in use (VERI
 
 | # | Severity | Issue | Recommendation |
 |---|---|---|---|
-| 1 | P2 | Mobile Lighthouse 87–89 on `/`, `/research/90`, `/ai-lab` (target 90) | Measure on the real CDN. Then trial critical-CSS inlining behind a hydration test. |
+| 1 | P2 | Mobile Lighthouse below 90 on `/` (87–89) and `/research/90` (88); `/ai-lab` at 89–90 across runs | Measure on the real CDN. Then trial critical-CSS inlining behind a hydration test. |
 | 2 | P2 | Desktop `/explore` 89 (3D) | Acceptable trade-off; the map view scores 94 on mobile |
 | 3 | P2 | Canonical URLs, `og:url` and sitemap need `VITE_SITE_URL` at build | Already set by the deploy workflow (verified with a production-config build: 309-URL sitemap, absolute canonical and OG) |
-| 4 | P3 | 7 of 90 research pages show the byline "Gaurav Kumar Singh" verbatim from the source repository | Owner decision: keep verbatim, or normalise bylines at build |
+| 4 | P3 | 7 of 90 research pages show "Gaurav Kumar Singh" verbatim from the source repository (§13) | **Awaiting owner decision. Not edited.** |
 | 5 | P3 | Image 7 has a misspelt baked tagline ("BUILDNG"); every layout crops or covers it | Regenerate the image if it should ever show uncropped |
 | 6 | P3 | Portrait is provisional artwork | Replace with an original photograph |
 | 7 | P3 | No linter configured | Add ESLint in a separate change if wanted |
 
 ## 12. Git, PR and deployment
 
-- Commits on `claude/beautiful-goldberg-radrlu`: `b0ec91c` (release-readiness work), `1563f3e` (legal name off public pages, reports), plus this results update.
-- PR gaurav-product/portfolio#1 is **open, draft, not merged**.
-- **Nothing deployed.** GitHub Pages still serves `main` → `/docs`. Lovable is untouched.
+- **Branch:** `claude/beautiful-goldberg-radrlu`.
+- **Commits for this release:**
+  - `b0ec91c`: eight illustrations, public name, AVIF, grounded answers.
+  - `1563f3e`: legal name kept off public pages; reports and README.
+  - `8c3f360`: crawler result recorded.
+  - The final commit that records this verification; its SHA is in the PR description.
+- **Verified build:** `8c3f360`. Commits after it change `audit/` documents only.
+- **PR:** gaurav-product/portfolio#1 is **open, draft, not merged**, and its description is updated to this state.
+- **Deployment:** **nothing deployed.** GitHub Pages still serves `main` → `/docs`, and Lovable is untouched. There was no force-push, and no branch or PR was closed or deleted.
+
+## 13. Research pages with the full legal name (preserved, not edited)
+
+These are rendered verbatim from the owner's public `product-management-case-studies` repository at pinned commit `60c3c9b` by `scripts/build-studies.mjs`. The site adds none of these strings. No other public page contains the legal name except `/cv`, where it belongs by design.
+
+| Page | Source file (`Case Studies/…`) | Occurrences (source line) | Kind |
+|---|---|---|---|
+| `/research/1` | `Day 01 - Practo/README.md` | L9 "**Author:** Gaurav Kumar Singh"; L1295 "Hi, I'm **Gaurav Kumar Singh**." | Byline + author self-introduction |
+| `/research/2` | `Day 02 - Spotify/README .md` | L15 author table row; L1743 "— Gaurav Kumar Singh, June 2026" | Byline + dated sign-off |
+| `/research/3` | `Day 03 - WhatsApp/readme.md` | L1840 "— Gaurav Kumar Singh, June 2026" | Dated sign-off |
+| `/research/4` | `Day 04 - Notion/README.md` | L10 title banner "…Case Study by Gaurav Kumar Singh"; L24 "**Author:**"; L1329 "Built by Gaurav Kumar Singh" | Title byline, byline, footer credit |
+| `/research/5` | `Day 05 - Airbnb/README.md` | L4 "…analysis by Gaurav Kumar Singh"; L61 third-person bio ("…is an Associate Product Manager…"); L1425 "**Author:**" | Subtitle byline, author bio, byline |
+| `/research/6` | `Day 06 - Duolingo/README.md` | L11 "**Prepared by:** Gaurav Kumar Singh, Associate Product Manager"; L574 "Hi, I'm **Gaurav Kumar Singh** — an aspiring Product Manager…" | Byline + author self-introduction |
+| `/research/7` | `Day 07 - PhonePe/README.md` | L572 "Hi, I'm **Gaurav Kumar Singh** — an aspiring Product Manager…" | Author self-introduction |
+
+**Assessment:**
+- **These are historical document bylines.** They are authorship attributions inside dated (June 2026) source documents, reproduced word for word. The site presents them under "Full original text… Text and citations are unedited". They are not the site's identity layer, which uses "Gaurav Singh" everywhere.
+- **The grey area.** Four of them (Days 1, 5, 6 and 7) are "about the author" introductions. A reader can take those as public-facing identity statements on a public page.
+- **Options for the owner:**
+  - (a) Keep them verbatim, the current state.
+  - (b) Normalise the name to "Gaurav Singh" at build time with a logged substitution, as was done for the phone-number redaction. The source repository stays unchanged.
+  - (c) Edit the source repository itself.
+- **No change will be made without approval.**

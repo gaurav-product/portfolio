@@ -94,3 +94,17 @@ The routes went from 303 to **309**, adding six district pages; none were remove
 - Every illustration is now AVIF plus a WebP fallback at 1600/1200/960/768/480 px. The mobile home LCP image is 36 KB (was 89 KB), and mobile home Lighthouse moved from 84 to 87.
 - The public name is now "Gaurav Singh". The decision-needed item 2 above is resolved by the owner.
 - Full results, the remaining issues and the acceptance gate are in `audit/FINAL-RELEASE-READINESS.md`.
+
+### Final verification (clean build of `8c3f360`, 2 Nov 2026)
+
+- **TypeScript:** 0 errors.
+- **Vitest:** 51/51.
+- **Playwright:** **56 passed, 0 failed, 0 flaky, 2 skipped by design**. Of these:
+  - Cinematic journeys J18–J23: 12/12 (both viewports).
+  - All-route crawler: 12/12 shards, 309 routes × 2 viewports.
+- **Lighthouse:**
+  - Mobile: 87–94.
+  - Desktop: 99–100, except `/explore` at 89.
+  - Accessibility, best practices and SEO: 100 on all 22 runs.
+  - Run-to-run variance is about ±2.
+- Full evidence: `audit/FINAL-RELEASE-READINESS.md` §7–§8.
