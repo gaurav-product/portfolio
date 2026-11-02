@@ -1,0 +1,1431 @@
+{
+  "generated_by": "brand/tools/generate_assets.py",
+  "tokens": {
+    "bg": "#0B1110",
+    "surface": "#121C19",
+    "raise": "#1B2924",
+    "green": "#4DFF4D",
+    "cyan": "#35D6D0",
+    "text": "#F3F6F4",
+    "muted": "#A1ADA7",
+    "ink": "#0B1110"
+  },
+  "fonts": {
+    "display": "Space Grotesk 500/700 (OFL)",
+    "mono": "IBM Plex Mono 400/500 (OFL)",
+    "body": "Inter (OFL) — web font, not used in assets"
+  },
+  "rules": [
+    "Every asset here is original and code-drawn; none is AI-generated.",
+    "No asset depicts a person, a product screen or a measured value.",
+    "Project covers carry an ILLUSTRATION tag.",
+    "Status is PROPOSED until the owner approves; nothing is wired into the site yet."
+  ],
+  "assets": [
+    {
+      "id": "brand/gauravos-wordmark-on-dark",
+      "file": "brand/assets/brand/gauravos-wordmark-on-dark.svg",
+      "category": "brand",
+      "purpose": "Primary wordmark for dark surfaces.",
+      "used_by": [
+        "Home hero",
+        "Header",
+        "Footer",
+        "OG image"
+      ],
+      "width": 1049,
+      "height": 312,
+      "format": "SVG",
+      "bytes": 8722,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Gaurav.OS — Product × AI × Building",
+      "status": "PROPOSED — awaiting approval",
+      "notes": ""
+    },
+    {
+      "id": "brand/gauravos-wordmark-on-light",
+      "file": "brand/assets/brand/gauravos-wordmark-on-light.svg",
+      "category": "brand",
+      "purpose": "Wordmark for light surfaces (printed CV, Recruiter light theme).",
+      "used_by": [
+        "CV",
+        "Recruiter Mode (light)"
+      ],
+      "width": 1049,
+      "height": 312,
+      "format": "SVG",
+      "bytes": 8708,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Gaurav.OS — Product × AI × Building",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Accent darkened to #138A1E so it holds 4.5:1 on white; #4DFF4D does not."
+    },
+    {
+      "id": "brand/gauravos-wordmark-compact",
+      "file": "brand/assets/brand/gauravos-wordmark-compact.svg",
+      "category": "brand",
+      "purpose": "Compact wordmark for the navigation bar.",
+      "used_by": [
+        "Header",
+        "Mobile nav"
+      ],
+      "width": 648,
+      "height": 151,
+      "format": "SVG",
+      "bytes": 3666,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Gaurav.OS",
+      "status": "PROPOSED — awaiting approval",
+      "notes": ""
+    },
+    {
+      "id": "brand/gauravos-app-icon-512",
+      "file": "brand/assets/brand/gauravos-app-icon-512.svg",
+      "category": "brand",
+      "purpose": "App icon, PWA icon, social avatar fallback.",
+      "used_by": [
+        "manifest.webmanifest",
+        "apple-touch-icon"
+      ],
+      "width": 512,
+      "height": 512,
+      "format": "SVG",
+      "bytes": 851,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "Gaurav.OS icon",
+      "status": "PROPOSED — awaiting approval",
+      "notes": ""
+    },
+    {
+      "id": "brand/gauravos-favicon",
+      "file": "brand/assets/brand/gauravos-favicon.svg",
+      "category": "brand",
+      "purpose": "Browser favicon.",
+      "used_by": [
+        "<head>"
+      ],
+      "width": 32,
+      "height": 32,
+      "format": "SVG",
+      "bytes": 718,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "Gaurav.OS",
+      "status": "PROPOSED — awaiting approval",
+      "notes": ""
+    },
+    {
+      "id": "hero/hero-orbit-field-desktop",
+      "file": "brand/assets/hero/hero-orbit-field-desktop.svg",
+      "category": "hero",
+      "purpose": "Homepage hero background. Ring centre is a slot for the owner-supplied portrait or the wordmark.",
+      "used_by": [
+        "Home / hero (≥1024px)"
+      ],
+      "width": 1920,
+      "height": 1080,
+      "format": "SVG",
+      "bytes": 5866,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative: render with alt=\"\". Portrait slot stays empty until an original photograph is supplied."
+    },
+    {
+      "id": "hero/hero-orbit-field-mobile",
+      "file": "brand/assets/hero/hero-orbit-field-mobile.svg",
+      "category": "hero",
+      "purpose": "Homepage hero background, portrait orientation.",
+      "used_by": [
+        "Home / hero (<1024px)"
+      ],
+      "width": 1080,
+      "height": 1600,
+      "format": "SVG",
+      "bytes": 5532,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative: render with alt=\"\"."
+    },
+    {
+      "id": "og/og-default-1200x630",
+      "file": "brand/assets/og/og-default-1200x630.svg",
+      "category": "og",
+      "purpose": "Open Graph / Twitter card image (rasterised to PNG at build).",
+      "used_by": [
+        "<meta og:image>"
+      ],
+      "width": 1200,
+      "height": 630,
+      "format": "SVG",
+      "bytes": 31291,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Gaurav.OS — Healthcare product, research and analytics.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Positioning line taken from the healthcare CV headline. PNG export in brand/preview/."
+    },
+    {
+      "id": "spatial/ground-grid-tile-1024",
+      "file": "brand/assets/spatial/ground-grid-tile-1024.svg",
+      "category": "spatial",
+      "purpose": "Repeating ground texture for the 3D environment (rasterised to a 1024² KTX2/WebP texture at build).",
+      "used_by": [
+        "Explore Mode / ground plane"
+      ],
+      "width": 1024,
+      "height": 1024,
+      "format": "SVG",
+      "bytes": 1745,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Seamless: major lines fall on tile edges."
+    },
+    {
+      "id": "spatial/skyline-panorama-3840",
+      "file": "brand/assets/spatial/skyline-panorama-3840.svg",
+      "category": "spatial",
+      "purpose": "Distant backdrop / cyclorama for the 3D scene, and the static still under reduced motion.",
+      "used_by": [
+        "Explore Mode / backdrop",
+        "Reduced-motion still"
+      ],
+      "width": 3840,
+      "height": 1080,
+      "format": "SVG",
+      "bytes": 17983,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Six clusters map left-to-right to the six districts. Architecture is abstract — no real buildings."
+    },
+    {
+      "id": "spatial/district-map-2d",
+      "file": "brand/assets/spatial/district-map-2d.svg",
+      "category": "spatial",
+      "purpose": "2D map: mobile / no-WebGL / reduced-motion fallback for Explore Mode, and the Explore Mode legend.",
+      "used_by": [
+        "Explore Mode fallback",
+        "Explore Mode legend"
+      ],
+      "width": 1600,
+      "height": 1000,
+      "format": "SVG",
+      "bytes": 51132,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Map of the six Gaurav.OS districts around the Knowledge and Headquarters core.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Each district label is overlaid by a real link in the DOM; the image itself is never the only route."
+    },
+    {
+      "id": "districts/district-01-product-leadership",
+      "file": "brand/assets/districts/district-01-product-leadership.svg",
+      "category": "districts",
+      "purpose": "Background for the Product Leadership district panel and its 3D billboard. Motif: Roadmap lanes and stacked planes.",
+      "used_by": [
+        "Explore Mode / Product Leadership",
+        "District panel header"
+      ],
+      "width": 1920,
+      "height": 1080,
+      "format": "SVG",
+      "bytes": 3721,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Text-free so the UI overlays real headings. Left 45% kept clear for content."
+    },
+    {
+      "id": "districts/district-02-healthtech-innovation",
+      "file": "brand/assets/districts/district-02-healthtech-innovation.svg",
+      "category": "districts",
+      "purpose": "Background for the HealthTech Innovation district panel and its 3D billboard. Motif: A pulse line through concentric care rings.",
+      "used_by": [
+        "Explore Mode / HealthTech Innovation",
+        "District panel header"
+      ],
+      "width": 1920,
+      "height": 1080,
+      "format": "SVG",
+      "bytes": 2551,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Text-free so the UI overlays real headings. Left 45% kept clear for content."
+    },
+    {
+      "id": "districts/district-03-ai-safety-lab",
+      "file": "brand/assets/districts/district-03-ai-safety-lab.svg",
+      "category": "districts",
+      "purpose": "Background for the AI & Safety Lab district panel and its 3D billboard. Motif: A node lattice enclosed by a dashed guardrail.",
+      "used_by": [
+        "Explore Mode / AI & Safety Lab",
+        "District panel header"
+      ],
+      "width": 1920,
+      "height": 1080,
+      "format": "SVG",
+      "bytes": 4282,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Text-free so the UI overlays real headings. Left 45% kept clear for content."
+    },
+    {
+      "id": "districts/district-04-research-analytics",
+      "file": "brand/assets/districts/district-04-research-analytics.svg",
+      "category": "districts",
+      "purpose": "Background for the Research & Analytics district panel and its 3D billboard. Motif: A 90-point spiral — one point per case-study day, decorative, no axes or values.",
+      "used_by": [
+        "Explore Mode / Research & Analytics",
+        "District panel header"
+      ],
+      "width": 1920,
+      "height": 1080,
+      "format": "SVG",
+      "bytes": 8609,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Text-free so the UI overlays real headings. Left 45% kept clear for content."
+    },
+    {
+      "id": "districts/district-05-professional-experience",
+      "file": "brand/assets/districts/district-05-professional-experience.svg",
+      "category": "districts",
+      "purpose": "Background for the Professional Experience district panel and its 3D billboard. Motif: A timeline with four rising milestones.",
+      "used_by": [
+        "Explore Mode / Professional Experience",
+        "District panel header"
+      ],
+      "width": 1920,
+      "height": 1080,
+      "format": "SVG",
+      "bytes": 7502,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Text-free so the UI overlays real headings. Left 45% kept clear for content."
+    },
+    {
+      "id": "districts/district-06-knowledge-hq",
+      "file": "brand/assets/districts/district-06-knowledge-hq.svg",
+      "category": "districts",
+      "purpose": "Background for the Knowledge & Headquarters district panel and its 3D billboard. Motif: A core ring connected to five domain nodes (the Product Orbit).",
+      "used_by": [
+        "Explore Mode / Knowledge & Headquarters",
+        "District panel header"
+      ],
+      "width": 1920,
+      "height": 1080,
+      "format": "SVG",
+      "bytes": 2993,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Text-free so the UI overlays real headings. Left 45% kept clear for content."
+    },
+    {
+      "id": "covers/cover-aaroh",
+      "file": "brand/assets/covers/cover-aaroh.svg",
+      "category": "covers",
+      "purpose": "Card and case-study header image for Aaroh.",
+      "used_by": [
+        "Projects grid",
+        "Case study / Aaroh",
+        "Explore Mode building"
+      ],
+      "width": 1200,
+      "height": 750,
+      "format": "SVG",
+      "bytes": 20048,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Abstract illustration for Aaroh. Not a product screenshot.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Words drawn on the cover are taken from the project record. The four-step non-diagnostic invariant: understand, explain, recommend, support."
+    },
+    {
+      "id": "covers/cover-careconnect",
+      "file": "brand/assets/covers/cover-careconnect.svg",
+      "category": "covers",
+      "purpose": "Card and case-study header image for CareConnect.",
+      "used_by": [
+        "Projects grid",
+        "Case study / CareConnect",
+        "Explore Mode building"
+      ],
+      "width": 1200,
+      "height": 750,
+      "format": "SVG",
+      "bytes": 27087,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Abstract illustration for CareConnect. Not a product screenshot.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Words drawn on the cover are taken from the project record. The first 30 days after discharge — the product's beachhead window."
+    },
+    {
+      "id": "covers/cover-phonepe-smart-spend-coach",
+      "file": "brand/assets/covers/cover-phonepe-smart-spend-coach.svg",
+      "category": "covers",
+      "purpose": "Card and case-study header image for PhonePe Smart Spend Coach.",
+      "used_by": [
+        "Projects grid",
+        "Case study / PhonePe Smart Spend Coach",
+        "Explore Mode building"
+      ],
+      "width": 1200,
+      "height": 750,
+      "format": "SVG",
+      "bytes": 33052,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Abstract illustration for PhonePe Smart Spend Coach. Not a product screenshot.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Words drawn on the cover are taken from the project record. The insight-to-action gap the case prioritised; labelled as a course case."
+    },
+    {
+      "id": "covers/cover-ghargyaan",
+      "file": "brand/assets/covers/cover-ghargyaan.svg",
+      "category": "covers",
+      "purpose": "Card and case-study header image for GharGyaan.",
+      "used_by": [
+        "Projects grid",
+        "Case study / GharGyaan",
+        "Explore Mode building"
+      ],
+      "width": 1200,
+      "height": 750,
+      "format": "SVG",
+      "bytes": 16966,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Abstract illustration for GharGyaan. Not a product screenshot.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Words drawn on the cover are taken from the project record. Household knowledge inside a safety boundary that is checked first."
+    },
+    {
+      "id": "covers/cover-nexus",
+      "file": "brand/assets/covers/cover-nexus.svg",
+      "category": "covers",
+      "purpose": "Card and case-study header image for Nexus.",
+      "used_by": [
+        "Projects grid",
+        "Case study / Nexus",
+        "Explore Mode building"
+      ],
+      "width": 1200,
+      "height": 750,
+      "format": "SVG",
+      "bytes": 22569,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Abstract illustration for Nexus. Not a product screenshot.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Words drawn on the cover are taken from the project record. The four situation types Nexus surfaces."
+    },
+    {
+      "id": "covers/cover-90-day-corpus",
+      "file": "brand/assets/covers/cover-90-day-corpus.svg",
+      "category": "covers",
+      "purpose": "Card and case-study header image for 90-Day Case Study Corpus.",
+      "used_by": [
+        "Projects grid",
+        "Case study / 90-Day Case Study Corpus",
+        "Explore Mode building"
+      ],
+      "width": 1200,
+      "height": 750,
+      "format": "SVG",
+      "bytes": 25891,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Abstract illustration for 90-Day Case Study Corpus. Not a product screenshot.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Words drawn on the cover are taken from the project record. Ninety uniform points, one per study; no evidence levels are encoded."
+    },
+    {
+      "id": "sections/section-operating-loop",
+      "file": "brand/assets/sections/section-operating-loop.svg",
+      "category": "sections",
+      "purpose": "Header illustration for How I Think.",
+      "used_by": [
+        "How I Think"
+      ],
+      "width": 1600,
+      "height": 900,
+      "format": "SVG",
+      "bytes": 19751,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Eight stages on a loop: observe, frame, research, hypothesize, build, measure, learn, iterate.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Stage names are taken verbatim from content records."
+    },
+    {
+      "id": "sections/section-ask-gaurav-pipeline",
+      "file": "brand/assets/sections/section-ask-gaurav-pipeline.svg",
+      "category": "sections",
+      "purpose": "Explains how Ask Gaurav answers and when it refuses.",
+      "used_by": [
+        "Ask Gaurav"
+      ],
+      "width": 1600,
+      "height": 900,
+      "format": "SVG",
+      "bytes": 24713,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Question to intent to evidence to grounded answer to sources, with a refusal branch when no evidence exists.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Stage names are taken verbatim from content records."
+    },
+    {
+      "id": "sections/section-evidence-levels",
+      "file": "brand/assets/sections/section-evidence-levels.svg",
+      "category": "sections",
+      "purpose": "Header illustration for the research corpus.",
+      "used_by": [
+        "Research & Knowledge",
+        "Product Atlas legend"
+      ],
+      "width": 1600,
+      "height": 900,
+      "format": "SVG",
+      "bytes": 19261,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Four evidence levels as a ladder: verified, documented, sourced, narrative.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Stage names are taken verbatim from content records."
+    },
+    {
+      "id": "sections/section-challenge-branches",
+      "file": "brand/assets/sections/section-challenge-branches.svg",
+      "category": "sections",
+      "purpose": "Header illustration for Challenge Gaurav.",
+      "used_by": [
+        "Challenge"
+      ],
+      "width": 1600,
+      "height": 900,
+      "format": "SVG",
+      "bytes": 13559,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "A decision point branching into four options, one path continuing to the reasoning.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Stage names are taken verbatim from content records."
+    },
+    {
+      "id": "sections/section-lab-notes",
+      "file": "brand/assets/sections/section-lab-notes.svg",
+      "category": "sections",
+      "purpose": "Header illustration for Lab Notes.",
+      "used_by": [
+        "Lab Notes"
+      ],
+      "width": 1600,
+      "height": 900,
+      "format": "SVG",
+      "bytes": 3503,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "A stack of note pages, the top one marked draft.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Stage names are taken verbatim from content records."
+    },
+    {
+      "id": "icons/icon-product-cube",
+      "file": "brand/assets/icons/icon-product-cube.svg",
+      "category": "icons",
+      "purpose": "UI icon (product cube). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 304,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-ai-network",
+      "file": "brand/assets/icons/icon-ai-network.svg",
+      "category": "icons",
+      "purpose": "UI icon (ai network). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 395,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-build-code",
+      "file": "brand/assets/icons/icon-build-code.svg",
+      "category": "icons",
+      "purpose": "UI icon (build code). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 327,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-district-product-leadership",
+      "file": "brand/assets/icons/icon-district-product-leadership.svg",
+      "category": "icons",
+      "purpose": "UI icon (district product leadership). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 334,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-district-healthtech",
+      "file": "brand/assets/icons/icon-district-healthtech.svg",
+      "category": "icons",
+      "purpose": "UI icon (district healthtech). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 261,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-district-ai-safety",
+      "file": "brand/assets/icons/icon-district-ai-safety.svg",
+      "category": "icons",
+      "purpose": "UI icon (district ai safety). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 322,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-district-research",
+      "file": "brand/assets/icons/icon-district-research.svg",
+      "category": "icons",
+      "purpose": "UI icon (district research). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 363,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-district-experience",
+      "file": "brand/assets/icons/icon-district-experience.svg",
+      "category": "icons",
+      "purpose": "UI icon (district experience). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 354,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-district-knowledge-hq",
+      "file": "brand/assets/icons/icon-district-knowledge-hq.svg",
+      "category": "icons",
+      "purpose": "UI icon (district knowledge hq). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 377,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-mode-explore",
+      "file": "brand/assets/icons/icon-mode-explore.svg",
+      "category": "icons",
+      "purpose": "UI icon (mode explore). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 274,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-mode-recruiter",
+      "file": "brand/assets/icons/icon-mode-recruiter.svg",
+      "category": "icons",
+      "purpose": "UI icon (mode recruiter). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 360,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-action-download-cv",
+      "file": "brand/assets/icons/icon-action-download-cv.svg",
+      "category": "icons",
+      "purpose": "UI icon (action download cv). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 290,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-action-search",
+      "file": "brand/assets/icons/icon-action-search.svg",
+      "category": "icons",
+      "purpose": "UI icon (action search). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 266,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-action-ask",
+      "file": "brand/assets/icons/icon-action-ask.svg",
+      "category": "icons",
+      "purpose": "UI icon (action ask). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 319,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-action-skip",
+      "file": "brand/assets/icons/icon-action-skip.svg",
+      "category": "icons",
+      "purpose": "UI icon (action skip). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 241,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-action-close",
+      "file": "brand/assets/icons/icon-action-close.svg",
+      "category": "icons",
+      "purpose": "UI icon (action close). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 241,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-action-arrow",
+      "file": "brand/assets/icons/icon-action-arrow.svg",
+      "category": "icons",
+      "purpose": "UI icon (action arrow). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 242,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "icons/icon-status-evidence",
+      "file": "brand/assets/icons/icon-status-evidence.svg",
+      "category": "icons",
+      "purpose": "UI icon (status evidence). Inherits colour from CSS via currentColor.",
+      "used_by": [
+        "UI"
+      ],
+      "width": 24,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 322,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative by default; pair with a visible text label."
+    },
+    {
+      "id": "ui/divider-orbit",
+      "file": "brand/assets/ui/divider-orbit.svg",
+      "category": "ui",
+      "purpose": "Section divider.",
+      "used_by": [
+        "Between major sections"
+      ],
+      "width": 1200,
+      "height": 24,
+      "format": "SVG",
+      "bytes": 591,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Decorative: alt=\"\"."
+    },
+    {
+      "id": "ui/focus-frame",
+      "file": "brand/assets/ui/focus-frame.svg",
+      "category": "ui",
+      "purpose": "Selection / hover frame for interactive buildings and cards (9-slice).",
+      "used_by": [
+        "Explore Mode hover",
+        "Cards :focus-visible"
+      ],
+      "width": 96,
+      "height": 96,
+      "format": "SVG",
+      "bytes": 316,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": false,
+      "alt": "",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Used as a border-image; the CSS focus ring remains the accessible indicator."
+    }
+  ],
+  "required_not_supplied": [
+    {
+      "id": "photo/portrait-original",
+      "purpose": "Optional portrait inside the hero ring and on About.",
+      "format": "JPEG/PNG, ≥1600×1600, original photograph",
+      "rule": "Must be an unedited or lightly edited original photograph supplied by Gaurav. The composited brand avatar shared in chat is a reference only and cannot be extracted from chat; no portrait will be generated.",
+      "status": "NOT SUPPLIED — hero works without it"
+    },
+    {
+      "id": "video/intro-film",
+      "purpose": "Intro film.",
+      "format": "MP4 H.264/AAC 1920×1080 + poster",
+      "rule": "Existing docs/media/gaurav-os-intro.mp4 (65 s) is reused. Lovable references a -v2 film that is not in any repository; supply it if it should replace v1.",
+      "status": "v1 AVAILABLE · v2 NOT SUPPLIED"
+    },
+    {
+      "id": "video/flow-aerial-reveal",
+      "purpose": "Google Flow cutscene: aerial reveal into Explore Mode.",
+      "format": "MP4 1920×1080 ≤15 s, plus WebM; ≤6 MB",
+      "status": "NOT SUPPLIED — real-time 3D camera move used instead"
+    },
+    {
+      "id": "video/flow-district-transitions",
+      "purpose": "Optional Google Flow transitions between districts (6).",
+      "format": "MP4 1920×1080 ≤4 s each; ≤2 MB each",
+      "status": "NOT SUPPLIED — GSAP camera transitions used instead"
+    },
+    {
+      "id": "screenshot/aaroh",
+      "purpose": "Aaroh prototype screens.",
+      "format": "PNG, from the 37-screen prototype",
+      "rule": "No Aaroh screenshot exists in any repository; the Aaroh case study uses the illustration until real screens are supplied.",
+      "status": "NOT SUPPLIED"
+    },
+    {
+      "id": "screenshot/evamastu",
+      "purpose": "Evamastu Parent Dashboard / assessment screens.",
+      "format": "PNG",
+      "rule": "Employer product; only with employer permission.",
+      "status": "NOT SUPPLIED"
+    },
+    {
+      "id": "artifact/phonepe-prototype",
+      "purpose": "The 5-screen Figma prototype from the capstone.",
+      "format": "PNG exports",
+      "rule": "Must be labelled as a course prototype.",
+      "status": "NOT SUPPLIED"
+    },
+    {
+      "id": "brand/concept-boards",
+      "purpose": "Creative references mentioned by the owner.",
+      "format": "any",
+      "rule": "Only the circular Gaurav.OS avatar was received; any other boards did not arrive.",
+      "status": "PARTIALLY RECEIVED"
+    }
+  ],
+  "screenshot_candidates": [
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/01-sign-in.png",
+      "width": 2560,
+      "height": 1800,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/02-family-dashboard.png",
+      "width": 2560,
+      "height": 2342,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/03-day-record.png",
+      "width": 2560,
+      "height": 4612,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/04-handover-pack.png",
+      "width": 2560,
+      "height": 5896,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/05-attendants.png",
+      "width": 2560,
+      "height": 1800,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/06-insights.png",
+      "width": 2560,
+      "height": 3892,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/07-attendant-shift.png",
+      "width": 1082,
+      "height": 5741,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/08-attendant-report.png",
+      "width": 1082,
+      "height": 2202,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/09-attendant-reason.png",
+      "width": 1082,
+      "height": 2202,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/10-family-dashboard-mobile.png",
+      "width": 1082,
+      "height": 3746,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/11-corrections.png",
+      "width": 2560,
+      "height": 5132,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/12-create-care-case.png",
+      "width": 2560,
+      "height": 2396,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/13-choose-recovery-type.png",
+      "width": 2560,
+      "height": 2078,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/14-care-plan-medicines.png",
+      "width": 2560,
+      "height": 1800,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/15-invite-code.png",
+      "width": 2560,
+      "height": 1800,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/16-attendant-join.png",
+      "width": 1082,
+      "height": 2202,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/17-attendant-before-shift.png",
+      "width": 1082,
+      "height": 2202,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "careconnect",
+      "source": "github.com/gaurav-product/careconnect/blob/main/docs/10-evidence/screenshots/18-family-tablet.png",
+      "width": 1640,
+      "height": 2382,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo episode data seeded by the repo (npm run seed). Fictional patient; no production usage.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "ghargyaan",
+      "source": "github.com/gaurav-product/ghargyaan/blob/main/docs/images/00-landing-desktop.png",
+      "width": 1280,
+      "height": 1500,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode prototype. Not clinically reviewed; no users.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "ghargyaan",
+      "source": "github.com/gaurav-product/ghargyaan/blob/main/docs/images/01-home.png",
+      "width": 390,
+      "height": 1300,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode prototype. Not clinically reviewed; no users.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "ghargyaan",
+      "source": "github.com/gaurav-product/ghargyaan/blob/main/docs/images/02-query-flow.png",
+      "width": 390,
+      "height": 844,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode prototype. Not clinically reviewed; no users.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "ghargyaan",
+      "source": "github.com/gaurav-product/ghargyaan/blob/main/docs/images/03-result.png",
+      "width": 390,
+      "height": 1300,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode prototype. Not clinically reviewed; no users.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "ghargyaan",
+      "source": "github.com/gaurav-product/ghargyaan/blob/main/docs/images/04-dadi-says.png",
+      "width": 390,
+      "height": 1300,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode prototype. Not clinically reviewed; no users.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "ghargyaan",
+      "source": "github.com/gaurav-product/ghargyaan/blob/main/docs/images/05-explore.png",
+      "width": 390,
+      "height": 1300,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode prototype. Not clinically reviewed; no users.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "ghargyaan",
+      "source": "github.com/gaurav-product/ghargyaan/blob/main/docs/images/06-safety-escalation.png",
+      "width": 390,
+      "height": 1300,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode prototype. Not clinically reviewed; no users.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/01-inbox.png",
+      "width": 1440,
+      "height": 1000,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/02-resolve-conflict.png",
+      "width": 1440,
+      "height": 1000,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/03-change.png",
+      "width": 1440,
+      "height": 1681,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/04-commitment.png",
+      "width": 1440,
+      "height": 1000,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/05-missing-document.png",
+      "width": 1440,
+      "height": 1000,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/06-sources-injection-flag.png",
+      "width": 1440,
+      "height": 1000,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/07-dark.png",
+      "width": 1440,
+      "height": 1000,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/08-mobile-inbox.png",
+      "width": 1082,
+      "height": 2202,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/09-mobile-conflict.png",
+      "width": 1082,
+      "height": 4127,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/10-research-first.png",
+      "width": 1440,
+      "height": 1524,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/11-mobile-research-first.png",
+      "width": 1082,
+      "height": 4581,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    },
+    {
+      "project": "nexus",
+      "source": "github.com/gaurav-product/nexus/blob/main/docs/assets/screenshots/12-research-compare.png",
+      "width": 1440,
+      "height": 2256,
+      "format": "PNG",
+      "provenance": "ACTUAL PRODUCT SCREENSHOT — from the owner's public repository",
+      "data_note": "Demo mode with fictional data. No real accounts connected.",
+      "status": "CANDIDATE — needs owner approval; will be cropped and converted to AVIF/WebP, never retouched",
+      "caption_rule": "Caption must state 'Demo data' wherever shown."
+    }
+  ]
+}
