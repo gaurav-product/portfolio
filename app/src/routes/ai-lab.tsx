@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { CinematicImage } from "~/components/CinematicImage";
 import { legacy } from "~/content/data";
 import { projectBySlug } from "~/content/projects";
 import { PageHero, Container, SectionHeader, Pill, Blocks, ButtonLink } from "~/components/ui";
@@ -23,7 +24,7 @@ export default function AiLab() {
   const evals = g.sections.find((s) => s.key === "experimentation")!;
   return (
     <>
-      <PageHero eyebrow="AI Lab" title="Responsible AI, demonstrated in builds" intro="Only what the repositories support. None of these systems is in production with users." />
+      <PageHero backdrop={<CinematicImage id="ai-safety-lab" decorative priority sizes="(min-width: 1024px) 62vw, 100vw" className="h-full" />} eyebrow="AI Lab" title="Responsible AI, demonstrated in builds" intro="Only what the repositories support. None of these systems is in production with users." />
       <Container wide className="grid gap-20 py-12">
         <section aria-labelledby="gg">
           <SectionHeader id="gg" eyebrow="GharGyaan · prototype in demo mode" title="Safety-first architecture" action={<ButtonLink to="/projects/ghargyaan" icon="arrow">Full case study</ButtonLink>} />

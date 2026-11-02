@@ -4,6 +4,8 @@ The rebuilt portfolio: React 19 · TypeScript · Vite 7 · React Router 7 (stati
 Tailwind CSS 4 · three.js + React Three Fiber · GSAP. Every route is prerendered to static
 HTML, so it runs on any static host with no server and no Lovable dependency.
 
+**Cinematic world:** `audit/CINEMATIC-REPORT.md`.
+
 **Status: built and tested on branch `claude/beautiful-goldberg-radrlu`. Not deployed.** Full results: `audit/PHASE-2-9-REPORT.md`.
 
 **Preview without deploying:** PR → Checks → *app-ci* → Artifacts → `site-preview`, or build locally (below).
@@ -25,7 +27,7 @@ npm run build && npm run preview   # production build, served at http://127.0.0.
 ```bash
 npm run typecheck
 npm test               # unit, content-validation and component tests (Vitest)
-npm run test:e2e       # 10 user journeys + zero-dead-control crawler (Playwright; needs a build)
+npm run test:e2e       # 23 user journeys + zero-dead-control crawler (Playwright; needs a build)
 node scripts/inventory-report.mjs   # -> reports/interaction-inventory.md
 npm run lighthouse     # -> reports/lighthouse/summary.md (needs a build)
 ```
@@ -63,6 +65,7 @@ app/
 
 | Task | How |
 |---|---|
+| **Add or replace a cinematic image** | Put the original in `../brand/cinematic/source/`, register it in `../brand/tools/build_cinematic.py`, run `python3 ../brand/tools/build_cinematic.py`, then reference its id (e.g. `image` on a district in `src/content/districts.ts`). Images are atmospheric illustrations — never captioned as screenshots or data. |
 | **Replace the portrait** | Put the photo in `public/media/portrait/`, set `profile.portrait.src` (and `provenance`) in `src/content/profile.ts`. Set `src: null` to show the brand mark. |
 | **Approve a screenshot** | In `brand/screenshot-review/approvals.json` set `"approved": true` (optional `caption`), then `node scripts/screenshot-review.mjs`. Approved screens appear on that project's case study, labelled “Demo data”. Review sheet: `brand/screenshot-review/index.html`. |
 | **Update the research text** | Change the commit in `case-studies.lock.json`, then build. `scripts/build-studies.mjs` renders README + ASSUMPTIONS for all 90 studies, redacts the owner's phone number, and fails if text is lost. |

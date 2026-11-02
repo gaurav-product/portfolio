@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { CinematicImage } from "~/components/CinematicImage";
 import { Link, useSearchParams } from "react-router";
 import { corpus } from "~/content/corpus";
 import { PageHero, Container, Pill, Empty, evidenceTone, cx } from "~/components/ui";
@@ -20,7 +21,7 @@ export default function Research() {
     (!q || norm(`${s.company} ${s.title} ${s.summary}`).includes(norm(q)))), [cat, lvl, q, from, to]);
   return (
     <>
-      <PageHero eyebrow="Research library" title={`${corpus.counts.written} product case studies`}
+      <PageHero backdrop={<CinematicImage id="research-analytics" decorative priority sizes="(min-width: 1024px) 62vw, 100vw" className="h-full" />} eyebrow="Research library" title={`${corpus.counts.written} product case studies`}
         intro={<>Read from <a href={corpus.repo} target="_blank" rel="noopener noreferrer" className="text-green underline underline-offset-4">the public repository</a> by a build step — never retyped. Audited {corpus.audited}. Category is derived by rule; the evidence level counts what a study carries, not its quality.</>} />
       <Container wide className="py-10">
         <div className="mb-6 grid gap-3 md:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1fr_1fr]">

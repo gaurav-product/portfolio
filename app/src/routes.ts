@@ -22,6 +22,7 @@ export default [
   route("contact", "routes/contact.tsx"),
   route("recruiter", "routes/recruiter.tsx"),
   route("explore", "routes/explore.tsx"),
+  route("districts/:id", "routes/district.tsx"),
   route("cv", "routes/cv.tsx"),
   route("search", "routes/search.tsx"),
   route("*", "routes/not-found.tsx"),

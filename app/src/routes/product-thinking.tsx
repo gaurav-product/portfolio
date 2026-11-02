@@ -5,14 +5,13 @@ import { TOOLS } from "~/content/nav";
 import { PageHero, Container, SectionHeader, cx } from "~/components/ui";
 import { Icon } from "~/components/Icon";
 import { ProductOrbit } from "~/components/ProductOrbit";
+import { OperatingLoop } from "~/components/OperatingLoop";
 import { seo, asset } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 
 export const meta = () => seo("Product Thinking", "The operating loop, principles, product challenges with reasoning revealed after you answer, and seven working PM tools.", "/product-thinking");
 
 export default function ProductThinking() {
-  const [stage, setStage] = useState(0);
-  const s = legacy.loop[stage];
   return (
     <>
       <PageHero eyebrow="Product Thinking" title="Discover → define → decide → measure → learn."
@@ -20,28 +19,7 @@ export default function ProductThinking() {
       <Container wide className="grid gap-20 py-14">
         <section aria-labelledby="loop">
           <SectionHeader id="loop" eyebrow="Operating loop" title="Eight stages, each backed by real work" />
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,420px)_1fr]">
-            <div>
-              <img src={asset("/brand/sections/section-operating-loop.svg")} alt="The operating loop: observe, frame, research, hypothesize, build, measure, learn, iterate." width={1600} height={900} className="mb-4 w-full rounded-xl border border-line" loading="lazy" />
-              <div role="tablist" aria-label="Loop stages" className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {legacy.loop.map((l, i) => (
-                  <button key={l.id} role="tab" type="button" id={`tab-${l.id}`} aria-selected={i === stage} aria-controls="loop-panel" onClick={() => setStage(i)}
-                    className={cx("min-h-10 rounded-lg border px-2 font-mono text-xs tracking-wider", i === stage ? "border-green bg-green/10 text-green" : "border-line text-muted hover:text-ink")}>{l.k}</button>
-                ))}
-              </div>
-            </div>
-            <div id="loop-panel" role="tabpanel" aria-labelledby={`tab-${s.id}`} className="card p-6">
-              <p className="label">Stage {stage + 1} of {legacy.loop.length}</p>
-              <h3 className="mt-2 text-3xl font-bold">{s.k}</h3>
-              <p className="mt-3 text-lg text-[#C9D2CD]">{s.d}</p>
-              <h4 className="label mb-3 mt-6">Evidence</h4>
-              <ul className="grid gap-2">{s.e.map(([n, l]) => <li key={l} className="flex gap-3"><span className="min-w-20 font-mono text-green">{n}</span><span className="text-[#C9D2CD]">{l}</span></li>)}</ul>
-              <div className="mt-6 flex gap-2">
-                <button type="button" onClick={() => setStage((stage - 1 + legacy.loop.length) % legacy.loop.length)} className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-line px-3 text-sm"><Icon name="left" size={16} />Previous</button>
-                <button type="button" onClick={() => setStage((stage + 1) % legacy.loop.length)} className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-line px-3 text-sm">Next<Icon name="right" size={16} /></button>
-              </div>
-            </div>
-          </div>
+          <OperatingLoop figure={<img src={asset("/brand/sections/section-operating-loop.svg")} alt="The operating loop: observe, frame, research, hypothesize, build, measure, learn, iterate." width={1600} height={900} className="mb-4 w-full rounded-xl border border-line" loading="lazy" />} />
         </section>
 
         <section aria-labelledby="orbit">

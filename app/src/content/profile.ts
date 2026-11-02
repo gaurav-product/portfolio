@@ -4,6 +4,8 @@ export const profile = {
   name: "Gaurav Kumar Singh",
   brand: "Gaurav.OS",
   brandLine: "Product × AI × Building",
+  tagline: "Building products with evidence, intelligence and execution.",
+  seoDescription: "Gaurav Kumar Singh — Product Management, AI and Digital Product Building.",
   headline: "Product Management · AI Product Development · Healthcare Technology · Research & Analytics",
   cvHeadline: "Healthcare Product, Research and Analytics",
   intro:

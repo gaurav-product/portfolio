@@ -10,10 +10,11 @@ import { ProjectCard } from "~/components/cards";
 import { Icon } from "~/components/Icon";
 import { IntroFilm, useIntro } from "~/components/IntroFilm";
 import { Portrait } from "~/components/Portrait";
+import { CinematicImage } from "~/components/CinematicImage";
 import { seo, asset } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 
-export const meta = () => seo(profile.brand, `${profile.name} — ${profile.headline}. ${profile.intro}`, "/");
+export const meta = () => seo(profile.brand, `${profile.seoDescription} ${profile.tagline}`, "/");
 
 export default function Home() {
   const intro = useIntro();
@@ -24,15 +25,24 @@ export default function Home() {
 
       {/* ------------------------------------------------------------ HERO */}
       <section aria-labelledby="hero-title" className="relative overflow-hidden border-b border-line-soft">
-        <img src={asset("/brand/hero/hero-orbit-field-desktop.svg")} alt="" aria-hidden width={1920} height={1080}
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[70%_50%] opacity-80 max-md:hidden" fetchPriority="high" />
-        <img src={asset("/brand/hero/hero-orbit-field-mobile.svg")} alt="" aria-hidden width={1080} height={1600}
-          className="pointer-events-none absolute inset-x-0 top-0 h-[520px] w-full object-cover opacity-45 md:hidden" />
-        <Container wide className="relative grid gap-10 py-14 sm:py-20 lg:grid-cols-[1.25fr_.75fr] lg:items-center lg:py-24">
+        {/* cinematic backdrop — the Gaurav.OS world (illustration); all text below is real HTML */}
+        <div aria-hidden className="pointer-events-none absolute inset-0 max-lg:hidden">
+          {/* right-anchored so the illustration's baked-in wordmark and labels sit under the solid part of the overlay, never behind the HTML text */}
+          <div className="absolute inset-y-0 right-0 w-[72%]"><CinematicImage id="gaurav-world-hero" decorative priority sizes="72vw" className="h-full" imgClassName="h-full object-cover object-[50%_60%]" /></div>
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_36%,rgb(11_17_16/.93)_48%,rgb(11_17_16/.55)_64%,rgb(11_17_16/.12)_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bg to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-bg via-bg/70 to-transparent" />
+        </div>
+        <div aria-hidden className="relative lg:hidden">
+          <CinematicImage id="gaurav-world-hero" decorative priority sizes="100vw" />
+          <div className="absolute inset-0 bg-gradient-to-b from-bg/70 via-transparent to-bg" />
+        </div>
+        <Container wide className="relative grid gap-10 pb-14 pt-2 sm:pb-20 lg:grid-cols-[1.25fr_.75fr] lg:items-center lg:py-24">
           <div>
-            <Portrait size={132} className="mb-6 !mx-0 lg:hidden" />
-            <p className="eyebrow mb-4">Hello, I’m</p>
+            <Portrait size={112} className="-mt-16 mb-5 !mx-0 lg:hidden" />
+            <p className="eyebrow mb-3">Gaurav.OS · Product × AI × Building</p>
             <h1 id="hero-title" className="text-[44px] font-bold leading-[1.02] sm:text-6xl xl:text-7xl">{profile.name}</h1>
+            <p className="mt-3 font-display text-lg text-green sm:text-xl">{profile.tagline}</p>
             <p className="mt-5 max-w-2xl font-display text-xl font-medium leading-snug text-ink sm:text-2xl">
               Product Management · AI Product Development · <span className="text-green">Healthcare Technology</span> · Research &amp; Analytics
             </p>
@@ -41,8 +51,9 @@ export default function Home() {
               {profile.capabilityTags.map((t) => <li key={t} className="rounded-full border border-line bg-surface/70 px-3 py-1 text-sm text-[#C9D2CD]">{t}</li>)}
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink to="/projects" variant="primary" icon="arrow" onClick={() => track("cta_click", { cta: "explore_work" })}>Explore my work</ButtonLink>
+              <ButtonLink to="/explore" variant="primary" icon="explore" onClick={() => track("explore_mode_opened", { from: "hero" })}>Enter Explore Mode</ButtonLink>
               <ButtonLink to="/recruiter" icon="recruiter" onClick={() => track("recruiter_mode_opened")}>Recruiter Mode</ButtonLink>
+              <ButtonLink to="/projects" icon="arrow" onClick={() => track("cta_click", { cta: "explore_work" })}>Explore my work</ButtonLink>
               <ButtonLink to={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" icon="download" onClick={() => track("cv_downloaded")}>Download CV</ButtonLink>
               <ButtonLink to="/contact" variant="ghost" icon="mail">Contact</ButtonLink>
             </div>
@@ -55,15 +66,15 @@ export default function Home() {
 
           <div className="grid gap-8">
           <Portrait size={230} className="max-lg:hidden" />
-          <aside aria-label="Verified highlights" className="card grid grid-cols-2 gap-px overflow-hidden bg-line p-0">
+          <aside aria-label="Verified highlights" className="card grid grid-cols-2 gap-px overflow-hidden bg-line/80 p-0 backdrop-blur-md">
             {highlights.map((h) => (
-              <div key={h.label} className="bg-surface p-5">
+              <div key={h.label} className="bg-surface/90 p-5">
                 <p className="font-display text-3xl font-bold">{h.value}</p>
                 <p className="mt-1 text-sm font-medium text-ink">{h.label}</p>
                 <p className="mt-2 text-xs leading-relaxed text-dim">{h.definition}</p>
               </div>
             ))}
-            <p className="col-span-2 bg-surface px-5 py-3 text-xs text-dim">Every figure is from the CV or a public repository. <Link to="/about#evidence" className="underline underline-offset-4 hover:text-ink">How evidence is labelled</Link></p>
+            <p className="col-span-2 bg-surface/90 px-5 py-3 text-xs text-dim">Every figure is from the CV or a public repository. <Link to="/about#evidence" className="underline underline-offset-4 hover:text-ink">How evidence is labelled</Link></p>
           </aside>
           </div>
         </Container>
@@ -72,8 +83,8 @@ export default function Home() {
         <Container wide className="relative pb-12">
           <nav aria-label="Explore districts" className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
             {districts.map((d) => (
-              <Link key={d.id} to={`/explore?d=${d.id}`} onClick={() => track("district_opened", { id: d.id, from: "home" })}
-                className="card card-link flex items-center gap-3 px-4 py-3">
+              <Link key={d.id} to={`/districts/${d.id}`} onClick={() => track("district_opened", { id: d.id, from: "home" })}
+                className="card card-link flex items-center gap-3 bg-surface/85 px-4 py-3 backdrop-blur-md">
                 <Icon name={d.icon} className={d.tone === "green" ? "text-green" : "text-cyan"} />
                 <span className="text-sm font-medium leading-tight">{d.name}</span>
               </Link>

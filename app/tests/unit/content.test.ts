@@ -85,7 +85,7 @@ describe("referential integrity", () => {
     expect(new Set(corpus.studies.map((s) => s.day)).size).toBe(90);
   });
   it("prerenders one route per project, role, skill, tool, study and note", () => {
-    expect(paths.size).toBe(17 + projects.length + experience.length + capabilities.length + TOOLS.length + corpus.studies.length + legacy.lab_notes.length);
+    expect(paths.size).toBe(17 + projects.length + experience.length + capabilities.length + TOOLS.length + corpus.studies.length + legacy.lab_notes.length + districts.length);
   });
 });
 
@@ -125,4 +125,20 @@ describe("asset manifest", () => {
     }
   });
   it("no real screenshot is used before approval", () => expect(allSource()).not.toMatch(/docs\/10-evidence\/screenshots|docs\/assets\/screenshots|docs\/images\/0/));
+});
+
+import cinematicManifest from "../../src/data/generated/cinematic.json";
+describe("cinematic images", () => {
+  const pub = path.resolve(__dirname, "../../public");
+  it("every generated size exists on disk and is labelled as an illustration", () => {
+    for (const a of (cinematicManifest as any).assets) {
+      expect(a.provenance).toMatch(/AI-GENERATED ILLUSTRATION/);
+      for (const s of Object.values<any>(a.sizes)) expect(fs.existsSync(path.join(pub, s.file.replace(/^\//, ""))), s.file).toBe(true);
+    }
+  });
+  it("every district image resolves to a manifest entry; missing ones fall back to an SVG", () => {
+    const ids = (cinematicManifest as any).assets.map((a: any) => a.id);
+    for (const d of districts) { if (d.image) expect(ids).toContain(d.image); expect(d.background).toMatch(/\.svg$/); }
+    expect(districts.map((d) => d.name)).toContain("Professional Experience");
+  });
 });

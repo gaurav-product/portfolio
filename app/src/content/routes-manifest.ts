@@ -1,6 +1,7 @@
 import { projects } from "./projects";
 import { capabilities } from "./capabilities";
 import { experience } from "./experience";
+import { districts } from "./districts";
 import corpus from "../data/generated/corpus.json";
 import legacy from "../data/generated/legacy.json";
 
@@ -17,6 +18,7 @@ export function staticPaths(): string[] {
     ...STATIC_PAGES,
     ...projects.map((p) => `/projects/${p.slug}`),
     ...experience.map((r) => `/experience/${r.id}`),
+    ...districts.map((d) => `/districts/${d.id}`),
     ...capabilities.map((c) => `/skills/${c.id}`),
     ...TOOLS.map((t) => `/product-thinking/${t.slug}`),
     ...(corpus as { studies: { day: number }[] }).studies.map((s) => `/research/${s.day}`),

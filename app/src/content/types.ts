@@ -86,4 +86,4 @@ export type ProjectCategory =
 
 export type DistrictId =
   | "product-leadership" | "healthtech-innovation" | "ai-safety-lab"
-  | "research-analytics" | "experience-growth" | "knowledge-hq";
+  | "research-analytics" | "professional-experience" | "knowledge-hq";

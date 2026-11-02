@@ -1,0 +1,223 @@
+{
+  "generated_by": "brand/tools/build_cinematic.py",
+  "assets": [
+    {
+      "id": "ai-safety-lab",
+      "brief_image": 4,
+      "source": "brand/cinematic/source/ai-safety-lab.webp",
+      "source_bytes": 288796,
+      "width": 1672,
+      "height": 941,
+      "aspect": 1.7768,
+      "format": "WebP",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/ai-safety-lab-1600.webp",
+          "bytes": 163638
+        },
+        "960": {
+          "file": "/cinematic/ai-safety-lab-960.webp",
+          "bytes": 84642
+        },
+        "640": {
+          "file": "/cinematic/ai-safety-lab-640.webp",
+          "bytes": 47864
+        }
+      },
+      "purpose": "AI & Safety Lab district and AI Lab page",
+      "used_by": [
+        "/districts/ai-safety-lab",
+        "/ai-lab"
+      ],
+      "alt": "Illustration of a glass laboratory with a shield around a brain, beside panels reading safety screening, evidence labelling, guardrails and evaluation.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "Safety Screening",
+        "Evidence Labelling",
+        "Guardrails",
+        "Evaluation",
+        "AI"
+      ],
+      "caution": "",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "gaurav-world-hero",
+      "brief_image": 1,
+      "source": "brand/cinematic/source/gaurav-world-hero.webp",
+      "source_bytes": 348472,
+      "width": 1670,
+      "height": 941,
+      "aspect": 1.7747,
+      "format": "WebP",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/gaurav-world-hero-1600.webp",
+          "bytes": 186896
+        },
+        "960": {
+          "file": "/cinematic/gaurav-world-hero-960.webp",
+          "bytes": 91844
+        },
+        "640": {
+          "file": "/cinematic/gaurav-world-hero-640.webp",
+          "bytes": 48542
+        }
+      },
+      "purpose": "Homepage hero; Explore Mode interactive map; HealthTech district (campus overview)",
+      "used_by": [
+        "/",
+        "/explore",
+        "/districts/healthtech-innovation"
+      ],
+      "alt": "Illustration of the Gaurav.OS campus: six glowing district platforms linked to a central headquarters in a misty mountain landscape at sunset.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "PRODUCT × AI × BUILDING",
+        "six district labels"
+      ],
+      "caution": "",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "how-i-think",
+      "brief_image": 8,
+      "source": "brand/cinematic/source/how-i-think.webp",
+      "source_bytes": 257780,
+      "width": 1670,
+      "height": 941,
+      "aspect": 1.7747,
+      "format": "WebP",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/how-i-think-1600.webp",
+          "bytes": 141070
+        },
+        "960": {
+          "file": "/cinematic/how-i-think-960.webp",
+          "bytes": 71766
+        },
+        "640": {
+          "file": "/cinematic/how-i-think-640.webp",
+          "bytes": 39334
+        }
+      },
+      "purpose": "About — How I Think; Product Thinking",
+      "used_by": [
+        "/about",
+        "/product-thinking"
+      ],
+      "alt": "Illustration of the operating loop — observe, frame, research, hypothesize, build, measure, learn, iterate — around a glass cube holding a brain.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "Observe",
+        "Frame",
+        "Research",
+        "Hypothesize",
+        "Build",
+        "Measure",
+        "Learn",
+        "Iterate"
+      ],
+      "caution": "",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "professional-experience",
+      "brief_image": 6,
+      "source": "brand/cinematic/source/professional-experience.webp",
+      "source_bytes": 239296,
+      "width": 1671,
+      "height": 941,
+      "aspect": 1.7758,
+      "format": "WebP",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/professional-experience-1600.webp",
+          "bytes": 123740
+        },
+        "960": {
+          "file": "/cinematic/professional-experience-960.webp",
+          "bytes": 63372
+        },
+        "640": {
+          "file": "/cinematic/professional-experience-640.webp",
+          "bytes": 35082
+        }
+      },
+      "purpose": "Professional Experience district and Experience page",
+      "used_by": [
+        "/districts/professional-experience",
+        "/experience"
+      ],
+      "alt": "Illustration of an illuminated stairway climbing a mountain path past four glass markers.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark"
+      ],
+      "caution": "",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "research-analytics",
+      "brief_image": 5,
+      "source": "brand/cinematic/source/research-analytics.webp",
+      "source_bytes": 291854,
+      "width": 1672,
+      "height": 941,
+      "aspect": 1.7768,
+      "format": "WebP",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/research-analytics-1600.webp",
+          "bytes": 164084
+        },
+        "960": {
+          "file": "/cinematic/research-analytics-960.webp",
+          "bytes": 83434
+        },
+        "640": {
+          "file": "/cinematic/research-analytics-640.webp",
+          "bytes": 46094
+        }
+      },
+      "purpose": "Research & Analytics district and Research library",
+      "used_by": [
+        "/districts/research-analytics",
+        "/research"
+      ],
+      "alt": "Illustration of an open glowing book on a plinth under a data globe, with research panels and a telescope.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "90 Case Studies",
+        "Research Insights",
+        "Evidence Framework",
+        "From Findings to Decisions"
+      ],
+      "caution": "Contains decorative charts. Never present as real data — always captioned as an illustration.",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    }
+  ],
+  "missing": [
+    {
+      "n": 2,
+      "id": "product-leadership",
+      "substitute": "/brand/districts/district-01-product-leadership.svg"
+    },
+    {
+      "n": 7,
+      "id": "knowledge-headquarters",
+      "substitute": "/brand/districts/district-06-knowledge-hq.svg"
+    }
+  ],
+  "note": "Kept separate from the original SVG library (brand/asset-manifest.json)."
+}

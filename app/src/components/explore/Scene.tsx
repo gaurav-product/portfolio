@@ -62,7 +62,7 @@ function Rig({ selected, districts, resetKey, labels, reduced }: { selected: str
   useEffect(() => {
     const c = controls.current; if (!c) return;
     const d = districts.find((x) => x.id === selected);
-    const to = d ? { pos: new THREE.Vector3(d.pos[0] * 1.35, 8, d.pos[1] * 1.35 + 9), target: new THREE.Vector3(d.pos[0], 0.5, d.pos[1]) } : HOME;
+    const to = d ? { pos: new THREE.Vector3(d.pos[0] * 1.3, 10.5, d.pos[1] * 1.3 + 12.5), target: new THREE.Vector3(d.pos[0], 0.5, d.pos[1]) } : HOME;
     const dur = reduced ? 0 : 1.4;
     const tl = gsap.timeline({ onUpdate: () => invalidate(), onComplete: () => invalidate() });
     tl.to(camera.position, { x: to.pos.x, y: to.pos.y, z: to.pos.z, duration: dur, ease: "power3.inOut" }, 0)
@@ -96,11 +96,10 @@ export default function Scene({ districts, selected, onSelect, resetKey, labels,
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 18, 8]} intensity={1.1} />
       <gridHelper args={[80, 40, "#1f6b1f", "#16231F"]} position-y={0} />
-      {/* HQ core */}
-      <group>
-        <mesh rotation-x={-Math.PI / 2} position-y={0.03}><ringGeometry args={[2.2, 2.4, 96]} /><meshBasicMaterial color={C.green} /></mesh>
-        <mesh position-y={1.6}><torusGeometry args={[1.3, 0.05, 12, 96]} /><meshBasicMaterial color={C.green} /></mesh>
-        <mesh position-y={1.6} rotation-x={Math.PI / 2.4}><torusGeometry args={[1.9, 0.025, 8, 96]} /><meshBasicMaterial color={C.cyan} transparent opacity={0.7} /></mesh>
+      {/* HQ halo — floats above the Knowledge & Headquarters district at the centre */}
+      <group position-y={5.2}>
+        <mesh><torusGeometry args={[1.3, 0.05, 12, 96]} /><meshBasicMaterial color={C.green} /></mesh>
+        <mesh rotation-x={Math.PI / 2.4}><torusGeometry args={[1.9, 0.025, 8, 96]} /><meshBasicMaterial color={C.cyan} transparent opacity={0.7} /></mesh>
       </group>
       {districts.map((d, i) => <DistrictBlock key={d.id} d={d} seed={i * 97} selected={selected === d.id} onSelect={() => onSelect(d.id)} />)}
       <Rig selected={selected} districts={districts} resetKey={resetKey} labels={labels} reduced={reduced} />

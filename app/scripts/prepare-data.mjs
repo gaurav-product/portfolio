@@ -117,6 +117,8 @@ for (const f of ["gaurav-os-poster.jpg"]) {
   const src = path.join(REPO, "docs/media", f);
   if (fs.existsSync(src) && !fs.existsSync(path.join(media, f))) fs.copyFileSync(src, path.join(media, f));
 }
+// cinematic illustrations: the manifest is read by the app; images live in public/cinematic
+fs.copyFileSync(path.join(REPO, "brand/cinematic/manifest.json"), path.join(OUT, "cinematic.json"));
 // brand library
 const brandSrc = path.join(REPO, "brand/assets");
 const brandOut = path.join(APP, "public/brand");

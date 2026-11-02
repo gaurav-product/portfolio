@@ -4,6 +4,8 @@ import { education, certifications, writing, tools } from "~/content/experience"
 import { legacy } from "~/content/data";
 import { PageHero, Container, SectionHeader, Pill, ButtonLink } from "~/components/ui";
 import { seo, asset } from "~/lib/meta";
+import { OperatingLoop } from "~/components/OperatingLoop";
+import { CinematicImage } from "~/components/CinematicImage";
 
 export const meta = () => seo("About", `About ${profile.name}: background, education, certifications and how evidence is labelled on this site.`, "/about");
 
@@ -30,6 +32,12 @@ export default function About() {
       <Container className="grid gap-16 py-16">
         <section aria-labelledby="question">
           <SectionHeader id="question" eyebrow="The question behind the work" title={legacy.product_question.text} intro={legacy.product_question.note} />
+        </section>
+
+        <section aria-labelledby="how-i-think" id="how-i-think">
+          <SectionHeader id="how-i-think" eyebrow="How I think" title="Observe → frame → research → hypothesize → build → measure → learn → iterate."
+            intro="The loop I run on every problem. Select a stage to see where it shows up in real work on this site." />
+          <OperatingLoop idPrefix="about-loop" figure={<CinematicImage id="how-i-think" tag sizes="(min-width: 1024px) 460px, 100vw" className="mb-4 overflow-hidden rounded-xl border border-line" />} />
         </section>
 
         <section aria-labelledby="roles">
