@@ -11,7 +11,7 @@ export const meta = () => seo("Experience", "Professional experience: Associate 
 export default function Experience() {
   return (
     <>
-      <PageHero backdrop={<CinematicImage id="professional-experience" decorative priority sizes="(min-width: 1024px) 62vw, 100vw" className="h-full" />} eyebrow="Experience" title="Professional experience" intro="Employment only. Independent builds and the academic capstone are in Projects and are never presented as jobs." />
+      <PageHero backdrop={<CinematicImage id="professional-experience" decorative sizes="52vw" className="h-full" />} eyebrow="Experience" title="Professional experience" intro="Employment only. Independent builds and the academic capstone are in Projects and are never presented as jobs." />
       <Container className="py-16">
         <ol className="relative grid gap-6 border-l border-line pl-6 sm:pl-10">
           {experience.map((r) => (

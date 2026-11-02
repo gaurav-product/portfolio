@@ -68,7 +68,8 @@ The routes went from 303 to **309**, adding six district pages; none were remove
 |---|---|
 | TypeScript | 0 errors |
 | Vitest | **48 / 48**. New checks: every cinematic file exists and is labelled as an illustration, each district image resolves or falls back to an SVG, and the route count includes the district pages. |
-| Playwright journeys | J1–J23 at 1440 px desktop and Pixel 7. New: J18 hero, J19 all six district pages, J20 map hotspot alignment and clicks, J21 guided tour, J22 sound off by default and toggle, J23 How I Think loop. *Full-suite figures: see the PR description.* |
+| Playwright, full suite | **56 / 56 pass**, 2 skipped by design (film autoplay is desktop-only; the drawer exists below 1440 px), desktop 1440 + Pixel 7. Includes the zero-dead-control crawler on all 309 routes at both viewports (0 failures) and new journeys J18 hero, J19 all six district pages, J20 map hotspot alignment (±1.5 %) and clicks, J21 guided tour, J22 sound off by default and toggle, J23 How I Think loop. Journeys re-run on the final build: 44 / 44. |
+| Lighthouse 12.8.2 (local, gzip) | A11y, Best Practices, SEO **100 on all 22 runs**. Mobile perf: `/` 85 (was 89 — the hero illustration is now the phone LCP image, 3.6 s), `/recruiter` 93, `/research` 94, `/ai-lab` 89, `/explore` 93, `/about` 93, `/districts/ai-safety-lab` 91, `/research/90` 88. Desktop 99–100, `/explore` 88 (3D). Page-hero backdrops are desktop-only and lazy so they cost phones nothing. |
 | Visual check | Home, Explore (map, panel, 3D, tour), district pages, About and AI Lab at 1440 and 390: no console errors and no horizontal overflow |
 
 ## Incomplete / limitations
@@ -76,7 +77,8 @@ The routes went from 303 to **309**, adding six district pages; none were remove
 1. **Two images were not received.** Brief image 2 (Product Leadership) and image 7 (Knowledge & Headquarters) are missing; five arrived. Those districts use the original vector illustrations, and their pages say so. To add them, drop each file into `brand/cinematic/source/` and register it in `build_cinematic.py`. Then set `image` on the district in `app/src/content/districts.ts`.
 2. All five images contain **baked-in text**, such as the Gaurav.OS wordmark and district labels. Layouts keep that text away from real copy. The research image shows **decorative charts**; its manifest entry says they are not data, and it is never captioned as evidence.
 3. The 3D buildings are abstract. The illustrated buildings cannot be reproduced faithfully in real-time 3D without modelled assets. The map view uses the illustration itself.
-4. Ambient sound was tested for state only (on/off, `aria-pressed`, no file). How it sounds is a matter of taste: listen and decide.
+4. **Home mobile performance 89 → 85** — the price of the illustrated hero on phones. If you prefer speed, the phone image can be dropped (desktop keeps it).
+5. Ambient sound was tested for state only (on/off, `aria-pressed`, no file). How it sounds is a matter of taste: listen and decide.
 
 ## Decisions needed
 

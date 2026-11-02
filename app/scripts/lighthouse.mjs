@@ -6,7 +6,7 @@ import lighthouse from "lighthouse";
 import * as chromeLauncher from "chrome-launcher";
 import { start } from "./serve.mjs";
 
-const ROUTES = ["/", "/?nointro", "/recruiter", "/projects/careconnect", "/product-thinking/rice", "/research", "/research/90", "/ai-lab", "/explore"];
+const ROUTES = ["/", "/?nointro", "/recruiter", "/projects/careconnect", "/product-thinking/rice", "/research", "/research/90", "/ai-lab", "/explore", "/about", "/districts/ai-safety-lab"];
 const server = await start(4410);
 const chrome = await chromeLauncher.launch({ chromePath: process.env.CHROME_PATH || (fs.existsSync("/opt/pw-browsers/chromium") ? "/opt/pw-browsers/chromium" : undefined), chromeFlags: ["--headless=new", "--no-sandbox", "--disable-gpu"] });
 fs.mkdirSync("reports/lighthouse", { recursive: true });

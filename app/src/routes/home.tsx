@@ -27,8 +27,8 @@ export default function Home() {
       <section aria-labelledby="hero-title" className="relative overflow-hidden border-b border-line-soft">
         {/* cinematic backdrop — the Gaurav.OS world (illustration); all text below is real HTML */}
         <div aria-hidden className="pointer-events-none absolute inset-0 max-lg:hidden">
-          {/* right-anchored so the illustration's baked-in wordmark and labels sit under the solid part of the overlay, never behind the HTML text */}
-          <div className="absolute inset-y-0 right-0 w-[72%]"><CinematicImage id="gaurav-world-hero" decorative priority sizes="72vw" className="h-full" imgClassName="h-full object-cover object-[50%_60%]" /></div>
+          {/* lazy: this copy is display:none on phones, so it must not compete with the visible mobile image. Right-anchored so the illustration's baked-in wordmark and labels sit under the solid part of the overlay, never behind the HTML text */}
+          <div className="absolute inset-y-0 right-0 w-[72%]"><CinematicImage id="gaurav-world-hero" decorative sizes="72vw" className="h-full" imgClassName="h-full object-cover object-[50%_60%]" /></div>
           <div className="absolute inset-0 bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_36%,rgb(11_17_16/.93)_48%,rgb(11_17_16/.55)_64%,rgb(11_17_16/.12)_100%)]" />
           <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bg to-transparent" />
           <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-bg via-bg/70 to-transparent" />

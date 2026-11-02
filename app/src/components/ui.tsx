@@ -74,9 +74,9 @@ export function PageHero({ eyebrow, title, intro, children, backdrop }: { eyebro
   return (
     <header className={cx("relative overflow-hidden border-b border-line-soft", !backdrop && "grid-bg")}>
       {backdrop && (
-        <div aria-hidden="true" className="absolute inset-0" data-testid="hero-backdrop">
-          <div className="absolute inset-y-0 right-0 w-full opacity-35 lg:w-[52%] lg:opacity-95 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">{backdrop}</div>
-          <div className="absolute inset-0 bg-bg/40 lg:bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_50%,rgb(11_17_16/.75)_64%,rgb(11_17_16/.1)_100%)]" />
+        <div aria-hidden="true" className="absolute inset-0 max-lg:hidden" data-testid="hero-backdrop">
+          <div className="absolute inset-y-0 right-0 w-[52%] opacity-95 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">{backdrop}</div>
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_50%,rgb(11_17_16/.75)_64%,rgb(11_17_16/.1)_100%)]" />
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />
         </div>
       )}
