@@ -192,6 +192,38 @@ No contradictions requiring a decision. The evidence labels already in use (VERI
 - **PR:** gaurav-product/portfolio#1 is **open, draft, not merged**, and its description is updated to this state.
 - **Deployment:** **nothing deployed.** GitHub Pages still serves `main` → `/docs`, and Lovable is untouched. There was no force-push, and no branch or PR was closed or deleted.
 
+## 12a. GitHub CI on `2acce8d` (workflow `app-ci`, `ubuntu-latest`)
+
+Both checks reached a terminal state, and both **succeeded**.
+
+| Run | Trigger | Check run | Started (UTC) | Completed (UTC) | Conclusion |
+|---|---|---|---|---|---|
+| [41514127130](https://github.com/gaurav-product/portfolio/actions/runs/41514127130) | `push` | `test` 125513177501 | 19:53:36 | 19:58:46 | **success** |
+| [41514135923](https://github.com/gaurav-product/portfolio/actions/runs/41514135923) | `pull_request` | `test` 125513207647 | 19:53:39 | 19:58:14 | **success** |
+
+Every step succeeded:
+1. `npm ci`
+2. `npm run prepare-data`
+3. Playwright Chromium install
+4. `npm run typecheck`
+5. `npm test` (Vitest)
+6. `npm run build`
+7. `npm run test:e2e` (full Playwright suite including the all-route crawler; 3 min 32 s)
+8. Artifact uploads, including `site-preview`
+
+No check was skipped, dismissed or re-run.
+
+Every earlier commit on the branch also passed CI: runs 3–12, covering `0059879`, `efedc90`, `e79c495`, `b0ec91c`, `1563f3e` and `8c3f360`.
+
+After CI, the PR state was:
+- open
+- draft
+- not merged
+- `mergeable_state: clean`
+- head = `2acce8d`, which equals the local branch
+
+This section is added in a documentation-only commit after `2acce8d`. CI for that commit is reported in the PR description.
+
 ## 13. Research pages with the full legal name (preserved, not edited)
 
 These are rendered verbatim from the owner's public `product-management-case-studies` repository at pinned commit `60c3c9b` by `scripts/build-studies.mjs`. The site adds none of these strings. No other public page contains the legal name except `/cv`, where it belongs by design.

@@ -108,3 +108,4 @@ The routes went from 303 to **309**, adding six district pages; none were remove
   - Accessibility, best practices and SEO: 100 on all 22 runs.
   - Run-to-run variance is about ±2.
 - Full evidence: `audit/FINAL-RELEASE-READINESS.md` §7–§8.
+- **GitHub CI on `2acce8d`:** both `app-ci` checks (`push` and `pull_request`) succeeded. Each ran typecheck, unit tests, build and the full Playwright suite. Details: `FINAL-RELEASE-READINESS.md` §12a.
