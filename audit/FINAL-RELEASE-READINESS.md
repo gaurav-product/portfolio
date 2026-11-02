@@ -87,7 +87,7 @@ There are no open P0 or P1 issues. Mobile performance on three routes is below t
 | Lint | Not configured (see §1) |
 | Vitest | **51 / 51** (baseline 48; added: all eight images, AVIF files, public identity, two Ask Gaurav grounding tests) |
 | Playwright full suite (desktop 1440 + Pixel 7) | **56 passed, 0 failed, 2 skipped by design**: J12 film autoplay is desktop-only, and one journey needs the drawer that exists only below 1440 px. This includes the zero-dead-control crawler on all **309 routes × 2 viewports**. |
-| Re-run after the final metadata change | Unit 51/51; journeys J1–J23 44/44 (2 skipped by design); crawler: see §9 |
+| Re-run on the final build (`1563f3e`) | Unit 51/51; journeys J1–J23 44 passed, 2 skipped by design; crawler 12/12 shards passed (all 309 routes × desktop + mobile, 0 failures) |
 
 Test edits and why:
 - Name assertions moved from "Gaurav Kumar Singh" to "Gaurav Singh". The owner changed the public name; the CV download filename assertion is unchanged.
@@ -162,6 +162,6 @@ No contradictions requiring a decision. The evidence labels already in use (VERI
 
 ## 12. Git, PR and deployment
 
-- Commits on `claude/beautiful-goldberg-radrlu`: `b0ec91c` (release-readiness work) and the final commit recorded in the PR description.
+- Commits on `claude/beautiful-goldberg-radrlu`: `b0ec91c` (release-readiness work), `1563f3e` (legal name off public pages, reports), plus this results update.
 - PR gaurav-product/portfolio#1 is **open, draft, not merged**.
 - **Nothing deployed.** GitHub Pages still serves `main` → `/docs`. Lovable is untouched.
