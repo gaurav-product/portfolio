@@ -32,7 +32,7 @@ export function structuredData() {
     "script:ld+json": {
       "@context": "https://schema.org",
       "@graph": [
-        { "@type": "Person", "@id": home ? home + "#person" : "#person", name: profile.name, alternateName: profile.legalName,
+        { "@type": "Person", "@id": home ? home + "#person" : "#person", name: profile.name,
           description: profile.seoDescription, url: home,
           email: `mailto:${profile.contact.email}`, address: { "@type": "PostalAddress", addressLocality: "New Delhi", addressCountry: "IN" },
           sameAs: [profile.contact.linkedin, profile.contact.github], knowsAbout: ["Product Management", "AI Product Development", "Healthcare Technology", "User Research", "Product Analytics"] },

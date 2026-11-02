@@ -85,3 +85,12 @@ The routes went from 303 to **309**, adding six district pages; none were remove
 1. Supply images 2 and 7, or keep the vector stand-ins.
 2. The SEO name: the brief said "Gaurav Singh"; the site uses **"Gaurav Kumar Singh"** to match the CV and every other page. Say if you want the shorter form.
 3. Approve PR #1 for merge and deployment when ready. Nothing deploys automatically.
+
+---
+
+## Addendum: release readiness (2 Nov 2026)
+
+- **All eight brief images are integrated.** Image 2 (Product Leadership, `8.webp`) and image 7 (Knowledge & Headquarters, `7.webp`) replace the SVG stand-ins, and the manifest has `missing: []`. Limitation 1 above is closed.
+- Every illustration is now AVIF plus a WebP fallback at 1600/1200/960/768/480 px. The mobile home LCP image is 36 KB (was 89 KB), and mobile home Lighthouse moved from 84 to 87.
+- The public name is now "Gaurav Singh". The decision-needed item 2 above is resolved by the owner.
+- Full results, the remaining issues and the acceptance gate are in `audit/FINAL-RELEASE-READINESS.md`.

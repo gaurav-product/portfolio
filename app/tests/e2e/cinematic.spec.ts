@@ -17,6 +17,7 @@ test("J18 home hero: cinematic world image, tagline, Explore + Recruiter entry p
   const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
   expect(ld["@graph"][0]).toMatchObject({ "@type": "Person", name: "Gaurav Singh", sameAs: ["https://www.linkedin.com/in/gaurav-singh-product", "https://github.com/gaurav-product"] });
   expect(JSON.stringify(ld)).not.toMatch(/8127|\+91/); // no phone number
+  expect(await page.content()).not.toContain("Gaurav Kumar Singh"); // legal name is for the formal CV only
   expect(await page.locator('meta[property="og:title"]').getAttribute("content")).toMatch(/^Gaurav Singh/);
   expect(await page.locator('meta[name="description"]').getAttribute("content")).toMatch(/Product Management, AI and Digital Product Building/);
   await page.getByRole("link", { name: "Enter Explore Mode" }).click();
