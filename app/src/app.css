@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter/wght.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/* Gaurav.OS design tokens — one source for every surface */
+@theme {
+  --color-bg: #0B1110;
+  --color-surface: #121C19;
+  --color-raise: #1B2924;
+  --color-line: #263832;
+  --color-line-soft: #18241F;
+  --color-green: #4DFF4D;
+  --color-green-ink: #062B06;
+  --color-cyan: #35D6D0;
+  --color-ink: #F3F6F4;
+  --color-muted: #A1ADA7;
+  --color-dim: #84918B;
+  --color-amber: #F2C14E;
+  --color-violet: #BCA6FF;
+  --color-red: #FF7A70;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --radius-card: 14px;
+  --shadow-glow: 0 0 0 1px rgb(77 255 77 / .35), 0 0 24px -6px rgb(77 255 77 / .45);
+}
+
+@layer base {
+  html { color-scheme: dark; background: var(--color-bg); -webkit-text-size-adjust: 100%; scroll-padding-top: 88px; }
+  body { background: var(--color-bg); color: var(--color-ink); font-family: var(--font-sans); font-size: 16px; line-height: 1.6;
+         text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.015em; line-height: 1.12; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  a { color: inherit; }
+  ::selection { background: rgb(77 255 77 / .3); }
+  :focus-visible { outline: 2px solid var(--color-green); outline-offset: 3px; border-radius: 6px; }
+  [hidden] { display: none !important; }
+}
+
+@layer components {
+  .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--color-green); }
+  .label { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--color-dim); }
+  .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--radius-card); }
+  .card-link { transition: border-color .2s, transform .2s, background .2s; }
+  .card-link:hover { border-color: rgb(77 255 77 / .55); background: #142019; }
+  .grid-bg { background-image: linear-gradient(rgb(243 246 244 / .035) 1px, transparent 1px), linear-gradient(90deg, rgb(243 246 244 / .035) 1px, transparent 1px); background-size: 64px 64px; }
+  .prose-os p, .prose-os li { color: #C9D2CD; }
+  .prose-os p + p { margin-top: .85em; }
+  .prose-os ul { list-style: none; padding: 0; display: grid; gap: .5em; }
+  .prose-os ul li { position: relative; padding-left: 1.25em; }
+  .prose-os ul li::before { content: ""; position: absolute; left: 0; top: .72em; width: 6px; height: 6px; border-radius: 2px; background: var(--color-green); }
+  .prose-os ol { counter-reset: s; list-style: none; padding: 0; display: grid; gap: .55em; }
+  .prose-os ol li { counter-increment: s; padding-left: 2.1em; position: relative; }
+  .prose-os ol li::before { content: counter(s, decimal-leading-zero); position: absolute; left: 0; font-family: var(--font-mono); font-size: 12px; color: var(--color-green); top: .25em; }
+  .prose-os h4 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-green); margin-top: 1.6em; }
+  .field { width: 100%; background: var(--color-bg); border: 1px solid var(--color-line); border-radius: 10px; padding: .6rem .75rem; color: var(--color-ink); font-size: 15px; }
+  .field:focus-visible { outline: 2px solid var(--color-green); outline-offset: 1px; border-color: transparent; }
+  .field[aria-invalid="true"] { border-color: var(--color-red); }
+  .skip-link { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--color-green); color: var(--color-green-ink); padding: 10px 14px; border-radius: 8px; font-weight: 600; }
+  .skip-link:focus { top: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+@media print {
+  html, body { background: #fff !important; color: #111 !important; }
+  @page { size: A4; margin: 12mm; }
+}

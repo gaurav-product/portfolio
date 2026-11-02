@@ -11,6 +11,9 @@ reads is typed in twice.
 
 **Live:** https://gaurav-product.github.io/portfolio/
 
+> **Rebuild in progress** on branch `claude/beautiful-goldberg-radrlu`: a new React app in [`app/`](app/README.md),
+> not yet deployed. This README describes the current site in `site/` and `docs/`, which is unchanged.
+
 ---
 
 ## What it contains

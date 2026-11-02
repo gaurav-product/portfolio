@@ -1,0 +1,45 @@
+{
+  "name": "gaurav-os",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare-data": "node scripts/prepare-data.mjs",
+    "dev": "npm run prepare-data && react-router dev",
+    "build": "npm run prepare-data && react-router build && node scripts/postbuild.mjs",
+    "preview": "node scripts/serve.mjs",
+    "typecheck": "react-router typegen && tsc",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "cv": "node scripts/build-cv.mjs",
+    "lighthouse": "node scripts/lighthouse.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.2.6",
+    "@fontsource/ibm-plex-mono": "^5.2.6",
+    "@fontsource/space-grotesk": "^5.2.8",
+    "@react-router/node": "7.18.5",
+    "@react-three/fiber": "9.3.0",
+    "gsap": "3.13.0",
+    "isbot": "5.1.28",
+    "react": "19.2.9",
+    "react-dom": "19.2.9",
+    "react-router": "7.18.5",
+    "three": "0.180.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@react-router/dev": "7.18.5",
+    "@tailwindcss/vite": "4.1.18",
+    "@testing-library/react": "16.3.0",
+    "@types/node": "22.18.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "@types/three": "0.180.0",
+    "jsdom": "26.1.0",
+    "lighthouse": "12.8.2",
+    "tailwindcss": "4.1.18",
+    "typescript": "5.9.3",
+    "vite": "7.3.7",
+    "vitest": "3.2.7"
+  }
+}

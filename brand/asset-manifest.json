@@ -360,6 +360,27 @@
       "notes": "Text-free so the UI overlays real headings. Left 45% kept clear for content."
     },
     {
+      "id": "covers/cover-evamastu",
+      "file": "brand/assets/covers/cover-evamastu.svg",
+      "category": "covers",
+      "purpose": "Card and case-study header image for Evamastu.",
+      "used_by": [
+        "Projects grid",
+        "Case study / Evamastu",
+        "Explore Mode building"
+      ],
+      "width": 1200,
+      "height": 750,
+      "format": "SVG",
+      "bytes": 23762,
+      "provenance": "ORIGINAL — code-drawn vector (brand/tools/generate_assets.py)",
+      "depicts": "Abstract motif only. No person, no product screen, no data.",
+      "contains_text": true,
+      "alt": "Abstract illustration for Evamastu. Not a product screenshot.",
+      "status": "PROPOSED — awaiting approval",
+      "notes": "Words drawn on the cover are taken from the project record. Mindfulness rings above the three shipped surfaces named in the CV."
+    },
+    {
       "id": "covers/cover-aaroh",
       "file": "brand/assets/covers/cover-aaroh.svg",
       "category": "covers",

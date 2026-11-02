@@ -573,7 +573,20 @@ def covers():
         s += label("90 DAYS · 90 CASE STUDIES", 580, 540, 13, MU)
         return s
 
+    def evamastu(W, H):
+        s = ""
+        for k, rr in enumerate((150, 112, 74)):
+            s += ring(820, 330, rr, G, 2.6 if k == 2 else 1.4, (.9, .5, .3)[k], "cg" if k == 2 else None)
+        s += '<circle cx="820" cy="330" r="10" fill="%s"/>' % G
+        items = ["PARENT DASHBOARD", "WELLNESS ASSESSMENT", "4 ADAPTIVE GAMES"]
+        for k, w in enumerate(items):
+            x = 560 + k * 182
+            s += '<rect x="%d" y="520" width="168" height="54" rx="10" fill="%s" stroke="%s" stroke-opacity=".45"/>' % (x, T["surface"], C if k == 2 else G)
+            s += label(w, x + 84, 552, 10.5, TX, "middle")
+        return s
+
     covers_ = [
+        ("evamastu", evamastu, "Evamastu", "Mindfulness rings above the three shipped surfaces named in the CV."),
         ("aaroh", aaroh, "Aaroh", "The four-step non-diagnostic invariant: understand, explain, recommend, support."),
         ("careconnect", careconnect, "CareConnect", "The first 30 days after discharge — the product's beachhead window."),
         ("phonepe-smart-spend-coach", phonepe, "PhonePe Smart Spend Coach", "The insight-to-action gap the case prioritised; labelled as a course case."),
