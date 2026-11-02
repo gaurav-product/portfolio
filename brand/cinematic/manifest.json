@@ -9,19 +9,49 @@
       "width": 1672,
       "height": 941,
       "aspect": 1.7768,
-      "format": "WebP",
+      "format": "AVIF + WebP fallback",
       "sizes": {
         "1600": {
           "file": "/cinematic/ai-safety-lab-1600.webp",
           "bytes": 163638
         },
+        "1200": {
+          "file": "/cinematic/ai-safety-lab-1200.webp",
+          "bytes": 114250
+        },
         "960": {
           "file": "/cinematic/ai-safety-lab-960.webp",
           "bytes": 84642
         },
-        "640": {
-          "file": "/cinematic/ai-safety-lab-640.webp",
-          "bytes": 47864
+        "768": {
+          "file": "/cinematic/ai-safety-lab-768.webp",
+          "bytes": 62338
+        },
+        "480": {
+          "file": "/cinematic/ai-safety-lab-480.webp",
+          "bytes": 30760
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/ai-safety-lab-1600.avif",
+          "bytes": 90615
+        },
+        "1200": {
+          "file": "/cinematic/ai-safety-lab-1200.avif",
+          "bytes": 63360
+        },
+        "960": {
+          "file": "/cinematic/ai-safety-lab-960.avif",
+          "bytes": 46250
+        },
+        "768": {
+          "file": "/cinematic/ai-safety-lab-768.avif",
+          "bytes": 34001
+        },
+        "480": {
+          "file": "/cinematic/ai-safety-lab-480.avif",
+          "bytes": 17101
         }
       },
       "purpose": "AI & Safety Lab district and AI Lab page",
@@ -51,22 +81,52 @@
       "width": 1670,
       "height": 941,
       "aspect": 1.7747,
-      "format": "WebP",
+      "format": "AVIF + WebP fallback",
       "sizes": {
         "1600": {
           "file": "/cinematic/gaurav-world-hero-1600.webp",
           "bytes": 186896
         },
+        "1200": {
+          "file": "/cinematic/gaurav-world-hero-1200.webp",
+          "bytes": 127578
+        },
         "960": {
           "file": "/cinematic/gaurav-world-hero-960.webp",
           "bytes": 91844
         },
-        "640": {
-          "file": "/cinematic/gaurav-world-hero-640.webp",
-          "bytes": 48542
+        "768": {
+          "file": "/cinematic/gaurav-world-hero-768.webp",
+          "bytes": 64348
+        },
+        "480": {
+          "file": "/cinematic/gaurav-world-hero-480.webp",
+          "bytes": 30182
         }
       },
-      "purpose": "Homepage hero; Explore Mode interactive map; HealthTech district (campus overview)",
+      "avif": {
+        "1600": {
+          "file": "/cinematic/gaurav-world-hero-1600.avif",
+          "bytes": 109125
+        },
+        "1200": {
+          "file": "/cinematic/gaurav-world-hero-1200.avif",
+          "bytes": 74578
+        },
+        "960": {
+          "file": "/cinematic/gaurav-world-hero-960.avif",
+          "bytes": 53176
+        },
+        "768": {
+          "file": "/cinematic/gaurav-world-hero-768.avif",
+          "bytes": 37868
+        },
+        "480": {
+          "file": "/cinematic/gaurav-world-hero-480.avif",
+          "bytes": 17788
+        }
+      },
+      "purpose": "Brief images 1 and 3: homepage hero; Explore Mode interactive map; HealthTech district (campus overview)",
       "used_by": [
         "/",
         "/explore",
@@ -91,19 +151,49 @@
       "width": 1670,
       "height": 941,
       "aspect": 1.7747,
-      "format": "WebP",
+      "format": "AVIF + WebP fallback",
       "sizes": {
         "1600": {
           "file": "/cinematic/how-i-think-1600.webp",
           "bytes": 141070
         },
+        "1200": {
+          "file": "/cinematic/how-i-think-1200.webp",
+          "bytes": 98188
+        },
         "960": {
           "file": "/cinematic/how-i-think-960.webp",
           "bytes": 71766
         },
-        "640": {
-          "file": "/cinematic/how-i-think-640.webp",
-          "bytes": 39334
+        "768": {
+          "file": "/cinematic/how-i-think-768.webp",
+          "bytes": 51604
+        },
+        "480": {
+          "file": "/cinematic/how-i-think-480.webp",
+          "bytes": 25716
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/how-i-think-1600.avif",
+          "bytes": 84128
+        },
+        "1200": {
+          "file": "/cinematic/how-i-think-1200.avif",
+          "bytes": 57492
+        },
+        "960": {
+          "file": "/cinematic/how-i-think-960.avif",
+          "bytes": 41736
+        },
+        "768": {
+          "file": "/cinematic/how-i-think-768.avif",
+          "bytes": 30087
+        },
+        "480": {
+          "file": "/cinematic/how-i-think-480.avif",
+          "bytes": 15179
         }
       },
       "purpose": "About — How I Think; Product Thinking",
@@ -129,6 +219,145 @@
       "status": "INTEGRATED"
     },
     {
+      "id": "knowledge-headquarters",
+      "brief_image": 7,
+      "source": "brand/cinematic/source/knowledge-headquarters.webp",
+      "source_bytes": 350688,
+      "width": 1671,
+      "height": 941,
+      "aspect": 1.7758,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/knowledge-headquarters-1600.webp",
+          "bytes": 199224
+        },
+        "1200": {
+          "file": "/cinematic/knowledge-headquarters-1200.webp",
+          "bytes": 135696
+        },
+        "960": {
+          "file": "/cinematic/knowledge-headquarters-960.webp",
+          "bytes": 97456
+        },
+        "768": {
+          "file": "/cinematic/knowledge-headquarters-768.webp",
+          "bytes": 69500
+        },
+        "480": {
+          "file": "/cinematic/knowledge-headquarters-480.webp",
+          "bytes": 32756
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/knowledge-headquarters-1600.avif",
+          "bytes": 107498
+        },
+        "1200": {
+          "file": "/cinematic/knowledge-headquarters-1200.avif",
+          "bytes": 74701
+        },
+        "960": {
+          "file": "/cinematic/knowledge-headquarters-960.avif",
+          "bytes": 54733
+        },
+        "768": {
+          "file": "/cinematic/knowledge-headquarters-768.avif",
+          "bytes": 39148
+        },
+        "480": {
+          "file": "/cinematic/knowledge-headquarters-480.avif",
+          "bytes": 18754
+        }
+      },
+      "purpose": "Knowledge & Headquarters district",
+      "used_by": [
+        "/districts/knowledge-hq",
+        "/explore?d=knowledge-hq"
+      ],
+      "alt": "Illustration of a domed glass library at night, flanked by glowing monoliths with education, certificate, knowledge-layer and people icons.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "PRODUCT × AI × BUILDNG (sic — misspelt in the source image)"
+      ],
+      "caution": "The tagline baked into this image is misspelt (\"BUILDNG\"); layouts must keep that corner covered or cropped.",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "product-leadership",
+      "brief_image": 2,
+      "source": "brand/cinematic/source/product-leadership.webp",
+      "source_bytes": 248408,
+      "width": 1671,
+      "height": 941,
+      "aspect": 1.7758,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/product-leadership-1600.webp",
+          "bytes": 123416
+        },
+        "1200": {
+          "file": "/cinematic/product-leadership-1200.webp",
+          "bytes": 84058
+        },
+        "960": {
+          "file": "/cinematic/product-leadership-960.webp",
+          "bytes": 61776
+        },
+        "768": {
+          "file": "/cinematic/product-leadership-768.webp",
+          "bytes": 43962
+        },
+        "480": {
+          "file": "/cinematic/product-leadership-480.webp",
+          "bytes": 22094
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/product-leadership-1600.avif",
+          "bytes": 77254
+        },
+        "1200": {
+          "file": "/cinematic/product-leadership-1200.avif",
+          "bytes": 52552
+        },
+        "960": {
+          "file": "/cinematic/product-leadership-960.avif",
+          "bytes": 37944
+        },
+        "768": {
+          "file": "/cinematic/product-leadership-768.avif",
+          "bytes": 27384
+        },
+        "480": {
+          "file": "/cinematic/product-leadership-480.avif",
+          "bytes": 13532
+        }
+      },
+      "purpose": "Product Leadership district",
+      "used_by": [
+        "/districts/product-leadership",
+        "/explore?d=product-leadership"
+      ],
+      "alt": "Illustration of three glass panels labelled Product, AI and Building beside a glowing stone path that winds up a misty mountain towards the sunrise.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "PRODUCT × AI × BUILDING",
+        "Product",
+        "AI",
+        "Building"
+      ],
+      "caution": "Panels show decorative layer, network and bar-chart motifs. Not data.",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
       "id": "professional-experience",
       "brief_image": 6,
       "source": "brand/cinematic/source/professional-experience.webp",
@@ -136,19 +365,49 @@
       "width": 1671,
       "height": 941,
       "aspect": 1.7758,
-      "format": "WebP",
+      "format": "AVIF + WebP fallback",
       "sizes": {
         "1600": {
           "file": "/cinematic/professional-experience-1600.webp",
           "bytes": 123740
         },
+        "1200": {
+          "file": "/cinematic/professional-experience-1200.webp",
+          "bytes": 85540
+        },
         "960": {
           "file": "/cinematic/professional-experience-960.webp",
           "bytes": 63372
         },
-        "640": {
-          "file": "/cinematic/professional-experience-640.webp",
-          "bytes": 35082
+        "768": {
+          "file": "/cinematic/professional-experience-768.webp",
+          "bytes": 45268
+        },
+        "480": {
+          "file": "/cinematic/professional-experience-480.webp",
+          "bytes": 22706
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/professional-experience-1600.avif",
+          "bytes": 76996
+        },
+        "1200": {
+          "file": "/cinematic/professional-experience-1200.avif",
+          "bytes": 53430
+        },
+        "960": {
+          "file": "/cinematic/professional-experience-960.avif",
+          "bytes": 39018
+        },
+        "768": {
+          "file": "/cinematic/professional-experience-768.avif",
+          "bytes": 27947
+        },
+        "480": {
+          "file": "/cinematic/professional-experience-480.avif",
+          "bytes": 13751
         }
       },
       "purpose": "Professional Experience district and Experience page",
@@ -173,19 +432,49 @@
       "width": 1672,
       "height": 941,
       "aspect": 1.7768,
-      "format": "WebP",
+      "format": "AVIF + WebP fallback",
       "sizes": {
         "1600": {
           "file": "/cinematic/research-analytics-1600.webp",
           "bytes": 164084
         },
+        "1200": {
+          "file": "/cinematic/research-analytics-1200.webp",
+          "bytes": 114272
+        },
         "960": {
           "file": "/cinematic/research-analytics-960.webp",
           "bytes": 83434
         },
-        "640": {
-          "file": "/cinematic/research-analytics-640.webp",
-          "bytes": 46094
+        "768": {
+          "file": "/cinematic/research-analytics-768.webp",
+          "bytes": 60132
+        },
+        "480": {
+          "file": "/cinematic/research-analytics-480.webp",
+          "bytes": 28896
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/research-analytics-1600.avif",
+          "bytes": 93209
+        },
+        "1200": {
+          "file": "/cinematic/research-analytics-1200.avif",
+          "bytes": 64446
+        },
+        "960": {
+          "file": "/cinematic/research-analytics-960.avif",
+          "bytes": 46835
+        },
+        "768": {
+          "file": "/cinematic/research-analytics-768.avif",
+          "bytes": 33977
+        },
+        "480": {
+          "file": "/cinematic/research-analytics-480.avif",
+          "bytes": 16439
         }
       },
       "purpose": "Research & Analytics district and Research library",
@@ -207,17 +496,6 @@
       "status": "INTEGRATED"
     }
   ],
-  "missing": [
-    {
-      "n": 2,
-      "id": "product-leadership",
-      "substitute": "/brand/districts/district-01-product-leadership.svg"
-    },
-    {
-      "n": 7,
-      "id": "knowledge-headquarters",
-      "substitute": "/brand/districts/district-06-knowledge-hq.svg"
-    }
-  ],
+  "missing": [],
   "note": "Kept separate from the original SVG library (brand/asset-manifest.json)."
 }

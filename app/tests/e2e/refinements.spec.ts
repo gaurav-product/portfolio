@@ -17,7 +17,7 @@ test("J12 intro film — first visit plays the optimised film, sound toggle, ski
   await page.getByRole("button", { name: "Skip intro" }).click();
   await expect(dialog).toHaveCount(0);
   await page.reload();
-  await expect(page.getByRole("heading", { level: 1, name: "Gaurav Kumar Singh" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Gaurav Singh" })).toBeVisible();
   await expect(dialog).toHaveCount(0);
   await page.getByRole("button", { name: /Watch the intro film/ }).click();
   await expect(dialog).toBeVisible();
@@ -68,7 +68,7 @@ test("J15 research reading page — full text, contents, assumptions, next study
 test("J16 portrait and RoboGuide", async ({ page }) => {
   await page.goto("/?nointro");
   const portrait = page.getByTestId("portrait").filter({ visible: true });
-  await expect(portrait.getByRole("img", { name: "Gaurav Kumar Singh" })).toBeVisible();
+  await expect(portrait.getByRole("img", { name: "Gaurav Singh" })).toBeVisible();
   await page.goto("/ask");
   const robo = page.getByTestId("robo-guide");
   await expect(robo).toHaveAttribute("aria-hidden", "true");

@@ -25,7 +25,7 @@ export const districts: District[] = [
   { id: "product-leadership", index: "01", name: "Product Leadership", icon: "product", tone: "green",
     summary: "Product strategy, discovery, prioritization and delivery — owned end to end on Evamastu.",
     represents: ["Product strategy and discovery", "Roadmaps and PRDs", "Prioritization with RICE and MoSCoW", "Product delivery"],
-    image: null, background: "/brand/districts/district-01-product-leadership.svg", pos: [-6, -8], world: [26.3, 31.5],
+    image: "product-leadership", background: "/brand/districts/district-01-product-leadership.svg", pos: [-6, -8], world: [26.3, 31.5],
     destinations: [
       { label: "Evamastu", to: "/projects/evamastu", note: "Shipped · Associate Product Manager" },
       { label: "Product Thinking", to: "/product-thinking", note: "Operating loop, principles, challenges" },
@@ -74,7 +74,7 @@ export const districts: District[] = [
   { id: "knowledge-hq", index: "06", name: "Knowledge & Headquarters", icon: "hq", tone: "green",
     summary: "About Gaurav, education, certifications, skills, the Product Atlas, the CV and contact.",
     represents: ["Education and certifications", "Skills and product management knowledge", "Product Atlas", "CV and contact"],
-    image: null, background: "/brand/districts/district-06-knowledge-hq.svg", pos: [0, 0], world: [51.4, 59.5],
+    image: "knowledge-headquarters", background: "/brand/districts/district-06-knowledge-hq.svg", pos: [0, 0], world: [51.4, 59.5],
     destinations: [
       { label: "About Gaurav", to: "/about", note: "Background, education, certifications" },
       { label: "Skills library", to: "/skills", note: "174 capabilities mapped to evidence" },

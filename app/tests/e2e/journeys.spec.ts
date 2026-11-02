@@ -11,7 +11,7 @@ const openNav = async (page: Page, name: string) => {
 test("J1 home → explore my work → project → case study → home", async ({ page }) => {
   const errs = noErrors(page);
   await page.goto("/?nointro");
-  await expect(page.getByRole("heading", { level: 1, name: "Gaurav Kumar Singh" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Gaurav Singh" })).toBeVisible();
   await page.getByRole("link", { name: "Explore my work" }).click();
   await expect(page).toHaveURL(/\/projects$/);
   await page.getByRole("link", { name: "CareConnect", exact: true }).click();

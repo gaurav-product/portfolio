@@ -134,11 +134,30 @@ describe("cinematic images", () => {
     for (const a of (cinematicManifest as any).assets) {
       expect(a.provenance).toMatch(/AI-GENERATED ILLUSTRATION/);
       for (const s of Object.values<any>(a.sizes)) expect(fs.existsSync(path.join(pub, s.file.replace(/^\//, ""))), s.file).toBe(true);
+      expect(Object.keys(a.avif ?? {}), `${a.id} AVIF widths`).toEqual(Object.keys(a.sizes));
+      for (const s of Object.values<any>(a.avif)) expect(fs.existsSync(path.join(pub, s.file.replace(/^\//, ""))), s.file).toBe(true);
     }
   });
-  it("every district image resolves to a manifest entry; missing ones fall back to an SVG", () => {
-    const ids = (cinematicManifest as any).assets.map((a: any) => a.id);
-    for (const d of districts) { if (d.image) expect(ids).toContain(d.image); expect(d.background).toMatch(/\.svg$/); }
+  it("all eight brief images are integrated; every district has its illustration and keeps its SVG", () => {
+    const m = cinematicManifest as any;
+    const ids = m.assets.map((a: any) => a.id);
+    expect(m.missing).toEqual([]);
+    expect(m.assets.flatMap((a: any) => a.brief_image).sort()).toEqual([1, 2, 4, 5, 6, 7, 8]); // 3 shares the campus image with 1
+    for (const d of districts) { expect(ids, d.id).toContain(d.image); expect(d.background).toMatch(/\.svg$/); }
     expect(districts.map((d) => d.name)).toContain("Professional Experience");
+  });
+});
+
+describe("public identity", () => {
+  it("uses Gaurav Singh publicly and keeps the legal name for the formal CV only", () => {
+    expect(profile.name).toBe("Gaurav Singh");
+    expect(profile.legalName).toBe("Gaurav Kumar Singh");
+    expect(profile.seoDescription.startsWith("Gaurav Singh —")).toBe(true);
+    expect(profile.portrait.alt).toBe("Gaurav Singh");
+    const src = path.resolve(__dirname, "../../src");
+    const offenders = fs.readdirSync(src, { recursive: true }).map(String)
+      .filter((f) => /\.(tsx?|css)$/.test(f) && !f.startsWith("data") && !f.includes("generated"))
+      .filter((f) => fs.readFileSync(path.join(src, f), "utf8").includes("Gaurav Kumar Singh"));
+    expect(offenders).toEqual(["content/profile.ts"]); // legalName lives only there
   });
 });

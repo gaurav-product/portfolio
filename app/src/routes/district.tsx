@@ -33,11 +33,16 @@ export default function DistrictPage() {
   return (
     <article>
       <header className="relative overflow-hidden border-b border-line-soft">
+        {/* Illustration right-anchored on desktop with a solid fade under the text column, and a uniform
+            scrim on phones, so the image's baked-in labels never sit behind real text. */}
         <div aria-hidden className="absolute inset-0">
-          {d.image
-            ? <CinematicImage id={d.image} decorative priority className="h-full" imgClassName="h-full object-cover" />
-            : <img src={asset(d.background)} alt="" className="h-full w-full object-cover" />}
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#0B1110_0%,rgb(11_17_16/.92)_40%,rgb(11_17_16/.45)_100%)]" />
+          <div className="absolute inset-0 lg:left-auto lg:w-[58%]">
+            {d.image
+              ? <CinematicImage id={d.image} decorative priority sizes="(min-width: 1024px) 58vw, 100vw" className="h-full" imgClassName="h-full object-cover" />
+              : <img src={asset(d.background)} alt="" className="h-full w-full object-cover" />}
+          </div>
+          <div className="absolute inset-0 bg-bg/[.86] lg:bg-transparent lg:bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_50%,rgb(11_17_16/.88)_60%,rgb(11_17_16/.42)_80%,rgb(11_17_16/.1)_100%)]" />
+          <div className="absolute inset-x-0 top-0 hidden h-40 bg-gradient-to-b from-bg to-transparent lg:block" />
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />
         </div>
         <Container wide className="relative py-14 sm:py-20">

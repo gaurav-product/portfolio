@@ -43,6 +43,15 @@ describe("Ask Gaurav", () => {
   it("states the correct MCA institution", () => { const r = ask("Where did he do his MCA?"); expect(r.kind).toBe("answer"); expect(JSON.stringify(r)).toContain("Chaudhary Charan Singh University"); });
   it("falls back to related pages, not a guess", () => expect(["related", "none"]).toContain(ask("Tell me about Zypp Electric").kind));
   it("returns nothing for gibberish rather than inventing", () => expect(ask("qwzx vbnm").kind).toBe("none"));
+  it("answers clinical and diagnostic questions with the honest status, not an unrelated entry", () => {
+    for (const q of ["Is Aaroh a diagnostic tool?", "Is GharGyaan clinically validated?", "Is any of it FDA approved?"]) {
+      const r = ask(q); expect(r.kind, q).toBe("answer"); if (r.kind === "answer") expect(r.entry.id, q).toBe("clinical-status");
+    }
+  });
+  it("never implies PhonePe employment", () => {
+    const r = ask("Did he work at PhonePe?"); expect(r.kind).toBe("answer");
+    if (r.kind === "answer") { expect(r.entry.id).toBe("phonepe"); expect(JSON.stringify(r.entry.answer)).toMatch(/not employment/); }
+  });
 });
 
 describe("search", () => {

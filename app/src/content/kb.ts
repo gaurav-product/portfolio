@@ -115,6 +115,33 @@ export const kb: KbEntry[] = [
     links: [{ label: "Healthcare projects", to: "/projects?filter=Healthcare" }],
   },
   {
+    id: "clinical-status", q: "Are any of his health products clinically validated or diagnostic?",
+    keys: ["diagnostic", "diagnose", "diagnoses", "diagnosis", "clinically", "clinical validation", "clinically validated", "validated", "medical advice", "medical device", "doctor", "regulated", "regulatory", "fda", "cdsco", "approved", "certified"],
+    answer: [
+      { p: "No. None of the health products on this site is clinically validated, regulator-approved or diagnostic." },
+      { ul: [
+        "Aaroh — designed as non-diagnostic; pre-launch prototype with 0 live users; clinical and commercial claims await an external legal citation pass.",
+        "GharGyaan — working prototype in demo mode; not deployed, no users, not clinically reviewed. Its safety suites pass, but held-out evaluation found 4 safety misses, disclosed on the case study.",
+        "CareConnect — MVP with no users; no clinical study.",
+        "Evamastu — a wellness and mindfulness platform, not a medical product.",
+      ] },
+      { note: "No clinical qualification or regulatory compliance is claimed anywhere on this site." },
+    ],
+    links: [{ label: "GharGyaan case study", to: "/projects/ghargyaan" }, { label: "Aaroh case study", to: "/projects/aaroh" }, { label: "AI Lab", to: "/ai-lab" }],
+  },
+  {
+    id: "phonepe", q: "Did he work at PhonePe?",
+    keys: ["phonepe", "phone pe", "smart spend", "spend coach", "work at phonepe", "worked at phonepe"],
+    answer: [
+      { p: "No. The PhonePe Smart Spend Coach is an academic capstone (Masai School × IIT Roorkee) — not employment at, or work for, PhonePe." },
+      { ul: [
+        "The 40,000-user pilot funnel (7.14 % end to end) is course-supplied case data, not PhonePe production data.",
+        "The 21-day A/B test with a guardrail metric was designed, not run.",
+      ] },
+    ],
+    links: [{ label: "PhonePe case study", to: "/projects/phonepe-smart-spend-coach" }],
+  },
+  {
     id: "strongest", q: "What are his strongest case studies?",
     keys: ["strongest", "best", "case study", "case studies", "recommend", "start with", "favourite"],
     answer: [

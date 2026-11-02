@@ -11,7 +11,13 @@ test("J18 home hero: cinematic world image, tagline, Explore + Recruiter entry p
   await expect(hero).toHaveCount(1);
   expect(await hero.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);
   expect(await hero.getAttribute("alt")).toBe(""); // atmospheric, decorative — the real text is HTML
-  await expect(page).toHaveTitle(/Gaurav/);
+  await expect(page).toHaveTitle("Gaurav Singh — Product × AI × Building | Gaurav.OS");
+  await expect(page.getByRole("heading", { level: 1, name: "Gaurav Singh" })).toBeVisible();
+  expect(await page.locator('section[aria-labelledby="hero-title"] source[type="image/avif"]').count()).toBeGreaterThan(0);
+  const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
+  expect(ld["@graph"][0]).toMatchObject({ "@type": "Person", name: "Gaurav Singh", sameAs: ["https://www.linkedin.com/in/gaurav-singh-product", "https://github.com/gaurav-product"] });
+  expect(JSON.stringify(ld)).not.toMatch(/8127|\+91/); // no phone number
+  expect(await page.locator('meta[property="og:title"]').getAttribute("content")).toMatch(/^Gaurav Singh/);
   expect(await page.locator('meta[name="description"]').getAttribute("content")).toMatch(/Product Management, AI and Digital Product Building/);
   await page.getByRole("link", { name: "Enter Explore Mode" }).click();
   await expect(page).toHaveURL(/\/explore/);
@@ -26,7 +32,10 @@ test("J19 every district page opens with its destinations and navigates onward",
     await page.goto(`/districts/${d.id}`);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(d.name);
     for (const x of d.destinations) await expect(page.getByRole("link", { name: new RegExp(x.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")) }).first()).toBeVisible();
-    if (!d.image) await expect(page.getByText(/illustration for this district has not been supplied/i)).toBeVisible();
+    const img = page.locator(`header [data-cinematic="${d.image}"] img`).first();
+    await expect(img).toBeVisible();
+    expect(await img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0), `${d.id} image decoded`).toBe(true);
+    await expect(page.getByText(/illustration for this district has not been supplied/i)).toHaveCount(0);
   }
   await page.goto("/districts/ai-safety-lab");
   await page.getByRole("link", { name: /See it in Explore Mode/ }).click();

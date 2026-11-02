@@ -65,7 +65,9 @@ app/
 
 | Task | How |
 |---|---|
-| **Add or replace a cinematic image** | Put the original in `../brand/cinematic/source/`, register it in `../brand/tools/build_cinematic.py`, run `python3 ../brand/tools/build_cinematic.py`, then reference its id (e.g. `image` on a district in `src/content/districts.ts`). Images are atmospheric illustrations — never captioned as screenshots or data. |
+| **Add or replace a cinematic image** | Put the original in `../brand/cinematic/source/`, register it in `../brand/tools/build_cinematic.py`, run `python3 ../brand/tools/build_cinematic.py` (AVIF + WebP at 1600/1200/960/768/480 px), then reference its id (e.g. `image` on a district in `src/content/districts.ts`). Images are atmospheric illustrations — never captioned as screenshots or data. |
+| **Social share image** | `node scripts/build-og.mjs` renders `../brand/preview/og-default-1200x630.png` from the world illustration and the name/tagline in `src/content/profile.ts`; the build copies it to `public/og-default.png`. |
+| **Public name** | `profile.name` ("Gaurav Singh") is used everywhere public; `profile.legalName` only on the formal CV (`/cv` and its PDF). A unit test enforces this. |
 | **Replace the portrait** | Put the photo in `public/media/portrait/`, set `profile.portrait.src` (and `provenance`) in `src/content/profile.ts`. Set `src: null` to show the brand mark. |
 | **Approve a screenshot** | In `brand/screenshot-review/approvals.json` set `"approved": true` (optional `caption`), then `node scripts/screenshot-review.mjs`. Approved screens appear on that project's case study, labelled “Demo data”. Review sheet: `brand/screenshot-review/index.html`. |
 | **Update the research text** | Change the commit in `case-studies.lock.json`, then build. `scripts/build-studies.mjs` renders README + ASSUMPTIONS for all 90 studies, redacts the owner's phone number, and fails if text is lost. |

@@ -11,10 +11,10 @@ import { Icon } from "~/components/Icon";
 import { IntroFilm, useIntro } from "~/components/IntroFilm";
 import { Portrait } from "~/components/Portrait";
 import { CinematicImage } from "~/components/CinematicImage";
-import { seo, asset } from "~/lib/meta";
+import { seo, structuredData, asset } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 
-export const meta = () => seo(profile.brand, `${profile.seoDescription} ${profile.tagline}`, "/");
+export const meta = () => [...seo(profile.brand, `${profile.seoDescription} ${profile.tagline}`, "/"), structuredData()];
 
 export default function Home() {
   const intro = useIntro();

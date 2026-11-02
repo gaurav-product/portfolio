@@ -5,6 +5,7 @@ import manifest from "../data/generated/cinematic.json";
 export interface Cinematic {
   id: string; width: number; height: number; alt: string; caution: string;
   sizes: Record<string, { file: string; bytes: number }>;
+  avif?: Record<string, { file: string; bytes: number }>;
 }
 const list = (manifest as unknown as { assets: Cinematic[] }).assets;
 export const cinematic = (id: string): Cinematic => {

@@ -99,7 +99,7 @@ export default function Explore() {
   const Panel = d && (
     <div ref={panel} tabIndex={-1} role="region" aria-label={`${d.name} district`} className="card relative overflow-hidden outline-none" data-testid="district-panel">
       <div className="relative">
-        {d.image ? <CinematicImage id={d.image} decorative sizes="400px" imgClassName="aspect-[16/7] object-cover" /> : <img src={asset(d.background)} alt="" className="aspect-[16/7] w-full object-cover" />}
+        {d.image ? <CinematicImage id={d.image} decorative sizes="400px" imgClassName="aspect-[16/7] object-cover object-bottom" /> : <img src={asset(d.background)} alt="" className="aspect-[16/7] w-full object-cover" />}
         <div className="absolute inset-0 bg-gradient-to-t from-surface to-transparent" />
       </div>
       <div className="relative -mt-10 p-5">

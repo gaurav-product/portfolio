@@ -1,11 +1,14 @@
 /** Identity and positioning. Facts: Healthcare CV (Nov 2026). Positioning
  *  line: owner's brief. No phone number anywhere in public code. */
 export const profile = {
-  name: "Gaurav Kumar Singh",
+  /** Public-facing name (owner's decision, Nov 2026). */
+  name: "Gaurav Singh",
+  /** Full legal name — used only on the formal CV (/cv and its PDF). */
+  legalName: "Gaurav Kumar Singh",
   brand: "Gaurav.OS",
   brandLine: "Product × AI × Building",
   tagline: "Building products with evidence, intelligence and execution.",
-  seoDescription: "Gaurav Kumar Singh — Product Management, AI and Digital Product Building.",
+  seoDescription: "Gaurav Singh — Product Management, AI and Digital Product Building.",
   headline: "Product Management · AI Product Development · Healthcare Technology · Research & Analytics",
   cvHeadline: "Healthcare Product, Research and Analytics",
   intro:
@@ -35,7 +38,7 @@ export const profile = {
    *  in an original photograph; set src to null to show the brand mark instead. */
   portrait: {
     src: "/media/portrait/gaurav-portrait-provisional.webp" as string | null,
-    alt: "Gaurav Kumar Singh",
+    alt: "Gaurav Singh",
     provenance: "Provisional — cropped from Gaurav.OS artwork supplied by Gaurav; to be replaced with an original photograph.",
     width: 370, height: 370,
   },

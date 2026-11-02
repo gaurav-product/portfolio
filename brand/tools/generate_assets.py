@@ -310,7 +310,7 @@ def heroes():
             orbit(860, 300, 250, 175, 24, C, 1, .4, (300,), 4) + vig +
             '<g transform="translate(56 168)">%s</g>' % wb +
             text(DISPLAY_M, "Healthcare product, research and analytics.", 80, 470, 30, TX) +
-            label("GAURAV KUMAR SINGH · NEW DELHI", 80, 520, 15, MU))
+            label("GAURAV SINGH · PRODUCT × AI × BUILDING", 80, 520, 15, MU))
     emit("og", "og-default-1200x630.svg", w, h,
          svg(w, h, body, "Gaurav.OS", "Gaurav.OS wordmark, positioning line and orbit motif.", defs),
          "Open Graph / Twitter card image (rasterised to PNG at build).", ["<meta og:image>"],

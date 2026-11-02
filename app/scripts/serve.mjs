@@ -31,8 +31,10 @@ export function start(port = PORT) {
     }
     // Compress text like any production static host (GitHub Pages, Cloudflare, Netlify) does.
     if (/text|javascript|json|svg|xml/.test(type) && /gzip/.test(String(req.headers["accept-encoding"]))) {
-      const body = cache.get(file) ?? zlib.gzipSync(fs.readFileSync(file), { level: 9 });
-      cache.set(file, body);
+      // keyed on mtime so a rebuild under a running server is never served stale
+      const key = `${file}:${fs.statSync(file).mtimeMs}`;
+      const body = cache.get(key) ?? zlib.gzipSync(fs.readFileSync(file), { level: 9 });
+      cache.set(key, body);
       res.writeHead(status, { "Content-Type": type, "Content-Encoding": "gzip", "Content-Length": body.length, Vary: "Accept-Encoding" });
       res.end(body); return;
     }

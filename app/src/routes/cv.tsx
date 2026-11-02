@@ -4,7 +4,7 @@ import { projects } from "~/content/projects";
 import { Container, ButtonLink, Button } from "~/components/ui";
 import { seo, asset } from "~/lib/meta";
 
-export const meta = () => seo("CV", `${profile.name} — CV. ${profile.cvHeadline}.`, "/cv");
+export const meta = () => seo("CV", `${profile.name} (${profile.legalName}) — CV. ${profile.cvHeadline}.`, "/cv");
 
 /** The public CV, rendered from the same content as every other page.
  *  No phone number. scripts/build-cv.mjs prints this page to the PDF. */
@@ -20,7 +20,7 @@ export default function CV() {
       </div>
       <article id="cv" className="cv mx-auto max-w-[860px] rounded-2xl bg-white p-8 text-[#111] sm:p-12 print:rounded-none print:p-0">
         <header className="border-b-2 border-[#0B3D0B] pb-3 text-center">
-          <h1 className="font-display text-3xl font-bold text-[#0B3D0B]">{profile.name}</h1>
+          <h1 className="font-display text-3xl font-bold text-[#0B3D0B]">{profile.legalName}</h1>
           <p className="mt-1 font-semibold">{profile.cvHeadline} | Product Analyst · APM · Research Associate · Health-Tech Operations</p>
           <p className="mt-1 text-sm">{profile.location} | {profile.contact.email} | {profile.contact.linkedinLabel} | {profile.contact.githubLabel}</p>
           <p className="text-sm">{profile.availability}</p>
