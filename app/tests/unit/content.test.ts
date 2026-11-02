@@ -89,6 +89,32 @@ describe("referential integrity", () => {
   });
 });
 
+describe("media and screenshots", () => {
+  it("ships only the optimised film encodes, each under 5 MB", () => {
+    for (const f of ["gaurav-os-intro-av1-1080p.mp4", "gaurav-os-intro-h264-720p.mp4"]) {
+      const p = path.join(ROOT, "public/media", f);
+      expect(fs.existsSync(p), f).toBe(true);
+      expect(fs.statSync(p).size).toBeLessThan(5 * 1024 * 1024);
+    }
+    expect(fs.existsSync(path.join(ROOT, "public/media/gaurav-os-intro.mp4"))).toBe(false);
+  });
+  it("the portrait is replaceable and present", () => {
+    expect(profile.portrait.src).toBeTruthy();
+    expect(fs.existsSync(path.join(ROOT, "public", profile.portrait.src!))).toBe(true);
+    expect(profile.portrait.provenance).toMatch(/Provisional/);
+  });
+  it("publishes only screenshots approved in the review file", () => {
+    const approvals = JSON.parse(fs.readFileSync(path.join(ROOT, "../brand/screenshot-review/approvals.json"), "utf8"));
+    const published = JSON.parse(fs.readFileSync(path.join(ROOT, "src/data/screenshots.json"), "utf8"));
+    expect(Object.keys(approvals)).toHaveLength(37);
+    for (const s of published) { expect(approvals[s.id]?.approved, s.id).toBe(true); expect(s.data_note).toBeTruthy(); }
+  });
+  it("study text never contains the owner's phone number", () => {
+    const dir = path.join(SRC, "data/generated/studies");
+    for (const f of fs.readdirSync(dir)) expect(fs.readFileSync(path.join(dir, f), "utf8"), f).not.toMatch(/8127\s?5\s?1\s?2340/);
+  });
+});
+
 describe("asset manifest", () => {
   const m = JSON.parse(fs.readFileSync(path.join(ROOT, "../brand/asset-manifest.json"), "utf8"));
   it("every manifest entry exists with its declared provenance and status", () => {

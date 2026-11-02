@@ -5,7 +5,7 @@ import { start } from "./serve.mjs";
 const out = process.argv[2];
 const server = await start(4300);
 const b = await chromium.launch(process.env.CHROME_PATH ? { executablePath: process.env.CHROME_PATH } : {});
-const pages = ["/?nointro", "/recruiter", "/projects", "/projects/ghargyaan", "/product-thinking/rice", "/explore", "/atlas", "/ask", "/skills", "/research"];
+const pages = ["/?nointro", "/recruiter", "/projects/careconnect", "/projects/phonepe-smart-spend-coach", "/product-thinking", "/product-thinking/rice", "/product-thinking/funnel", "/research", "/research/90", "/ai-lab", "/ask", "/explore"];
 for (const [w, h, tag] of [[1440, 900, "d"], [390, 844, "m"]]) {
   const ctx = await b.newContext({ viewport: { width: w, height: h } });
   const p = await ctx.newPage();

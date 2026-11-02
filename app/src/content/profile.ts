@@ -29,6 +29,14 @@ export const profile = {
     githubLabel: "github.com/gaurav-product",
   },
   cvFile: "/media/gaurav-kumar-singh-cv.pdf",
+  /** Replaceable portrait. Set src to a new file (and update provenance) to swap
+   *  in an original photograph; set src to null to show the brand mark instead. */
+  portrait: {
+    src: "/media/portrait/gaurav-portrait-provisional.webp" as string | null,
+    alt: "Gaurav Kumar Singh",
+    provenance: "Provisional — cropped from Gaurav.OS artwork supplied by Gaurav; to be replaced with an original photograph.",
+    width: 370, height: 370,
+  },
 } as const;
 
 /** Homepage highlights. Each figure is defined precisely and sourced. */

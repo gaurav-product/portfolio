@@ -3,6 +3,7 @@ import { legacy } from "~/content/data";
 import { projectBySlug } from "~/content/projects";
 import { PageHero, Container, SectionHeader, Pill, Blocks, ButtonLink } from "~/components/ui";
 import { AskGaurav } from "~/components/AskGaurav";
+import { RoboGuide } from "~/components/RoboGuide";
 import { seo } from "~/lib/meta";
 
 export const meta = () => seo("AI Lab", "Responsible AI product work: GharGyaan's safety-first architecture and evaluation, Aaroh's non-diagnostic boundary, Nexus's grounding, and live experiments.", "/ai-lab");
@@ -62,7 +63,7 @@ export default function AiLab() {
 
         <section aria-labelledby="try">
           <SectionHeader id="try" eyebrow="Experiment 001 · running" title="Try Ask Gaurav" intro="A local, deterministic index — the interface of a retrieval pipeline without a model behind it." />
-          <AskGaurav compact />
+          <div className="grid items-start gap-6 lg:grid-cols-[1fr_200px]"><AskGaurav compact /><RoboGuide className="max-lg:hidden" /></div>
         </section>
       </Container>
     </>

@@ -23,3 +23,6 @@ jobs:
       - if: always()
         uses: actions/upload-artifact@v4
         with: { name: reports, path: app/reports }
+      # Preview without deploying: download "site-preview", unzip, run `npx serve` (or app/scripts/serve.mjs) in it.
+      - uses: actions/upload-artifact@v4
+        with: { name: site-preview, path: app/build/client, retention-days: 14 }

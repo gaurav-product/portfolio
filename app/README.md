@@ -4,7 +4,9 @@ The rebuilt portfolio: React 19 · TypeScript · Vite 7 · React Router 7 (stati
 Tailwind CSS 4 · three.js + React Three Fiber · GSAP. Every route is prerendered to static
 HTML, so it runs on any static host with no server and no Lovable dependency.
 
-**Status: built and tested on branch `claude/beautiful-goldberg-radrlu`. Not deployed.**
+**Status: built and tested on branch `claude/beautiful-goldberg-radrlu`. Not deployed.** Full results: `audit/PHASE-2-9-REPORT.md`.
+
+**Preview without deploying:** PR → Checks → *app-ci* → Artifacts → `site-preview`, or build locally (below).
 
 ## Run it
 
@@ -56,6 +58,16 @@ app/
   `npm run cv` after a build. It refuses to write a file containing a phone number.
 - **3D** is in its own chunk, loaded only by `/explore` on capable desktops. Recruiter Mode and
   every content page ship zero WebGL.
+
+## Content workflows
+
+| Task | How |
+|---|---|
+| **Replace the portrait** | Put the photo in `public/media/portrait/`, set `profile.portrait.src` (and `provenance`) in `src/content/profile.ts`. Set `src: null` to show the brand mark. |
+| **Approve a screenshot** | In `brand/screenshot-review/approvals.json` set `"approved": true` (optional `caption`), then `node scripts/screenshot-review.mjs`. Approved screens appear on that project's case study, labelled “Demo data”. Review sheet: `brand/screenshot-review/index.html`. |
+| **Update the research text** | Change the commit in `case-studies.lock.json`, then build. `scripts/build-studies.mjs` renders README + ASSUMPTIONS for all 90 studies, redacts the owner's phone number, and fails if text is lost. |
+| **Re-encode the intro film** | From the original `docs/media/gaurav-os-intro.mp4`: AV1 `ffmpeg -i in.mp4 -c:v libsvtav1 -preset 8 -b:v 420k -g 240 -pix_fmt yuv420p -svtav1-params tune=0:rc=1 -c:a aac -b:a 48k -ac 1 -movflags +faststart gaurav-os-intro-av1-1080p.mp4`; H.264 two-pass at `-vf scale=1280:-2 -profile:v high -level:v 3.1 -b:v 400k`. |
+| **Measure** | `npm run lighthouse`, `node scripts/film-cost.mjs`, `node scripts/mermaid-audit.mjs` (each after a build). |
 
 ## Environment variables
 

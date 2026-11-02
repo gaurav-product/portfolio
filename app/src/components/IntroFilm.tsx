@@ -1,5 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { legacy } from "~/content/data";
+
+/** Optimised encodes of the original 65 s film (docs/media/gaurav-os-intro.mp4, 11.4 MB).
+ *  The browser takes the first it can play. Encoding: see app/README.md. */
+export const FILM = {
+  sources: [
+    { src: "/media/gaurav-os-intro-av1-1080p.mp4", type: 'video/mp4; codecs="av01.0.08M.08, mp4a.40.2"', label: "AV1 1080p · 3.9 MB" },
+    { src: "/media/gaurav-os-intro-h264-720p.mp4", type: 'video/mp4; codecs="avc1.64001f, mp4a.40.2"', label: "H.264 720p · 3.8 MB" },
+  ],
+  poster: "/media/gaurav-os-poster.webp",
+};
 import { asset } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 import { Icon } from "./Icon";
@@ -63,11 +73,16 @@ export function IntroFilm({ onClose }: { onClose: (how: "skip" | "end") => void 
   return (
     <div ref={box} role="dialog" aria-modal="true" aria-label="Gaurav.OS introduction film" onKeyDown={onKey} className="fixed inset-0 z-[70] bg-black">
       {reduce || failed ? (
-        <img src={asset(legacy.intro.poster)} alt="Final frame of the Gaurav.OS introduction film" className="h-full w-full object-contain" />
+        <img src={asset(FILM.poster)} alt="Final frame of the Gaurav.OS introduction film" className="h-full w-full object-contain" />
       ) : (
-        <video ref={video} className="h-full w-full object-cover max-lg:object-contain" src={asset(legacy.intro.video)} poster={asset(legacy.intro.poster)}
+        <video ref={video} className="h-full w-full object-cover max-lg:object-contain" poster={asset(FILM.poster)} data-testid="intro-video"
           playsInline muted preload="auto" onEnded={() => close("end")} onError={() => setFailed(true)}
-          onTimeUpdate={(e) => setProgress(e.currentTarget.currentTime / (e.currentTarget.duration || legacy.intro.duration))} />
+          onTimeUpdate={(e) => setProgress(e.currentTarget.currentTime / (e.currentTarget.duration || legacy.intro.duration))}>
+          {FILM.sources.map((s, i) => (
+            // with <source> children, a failure is reported on the last source, not on <video>
+            <source key={s.src} src={asset(s.src)} type={s.type} onError={i === FILM.sources.length - 1 ? () => setFailed(true) : undefined} />
+          ))}
+        </video>
       )}
       <div className="absolute bottom-0 left-0 h-0.5 bg-green" style={{ width: `${progress * 100}%` }} aria-hidden />
       <div className="absolute right-4 top-4 flex gap-2 sm:right-6 sm:top-6">

@@ -5,6 +5,7 @@ import { capabilityById } from "~/content/capabilities";
 import { districtById } from "~/content/districts";
 import { Container, Pill, statusTone, Blocks, SourceLinks, ClaimList, ButtonLink, cx } from "~/components/ui";
 import { Icon } from "~/components/Icon";
+import { Screenshots } from "~/components/Screenshots";
 import { seo, asset } from "~/lib/meta";
 import type { Route } from "./+types/project-detail";
 
@@ -56,7 +57,9 @@ export default function ProjectDetail() {
             <ol className="grid gap-1 px-2 pb-3">{p.sections.map((s) => <li key={s.key}><a href={`#${s.key}`} className="block rounded-lg px-2 py-2 text-sm text-muted hover:bg-raise hover:text-ink">{s.title}</a></li>)}</ol>
           </details>
           <ol className="hidden gap-0.5 border-l border-line lg:grid">
-            {p.sections.map((s) => (
+            <Screenshots project={p.slug} />
+
+          {p.sections.map((s) => (
               <li key={s.key}><a href={`#${s.key}`} aria-current={active === s.key ? "location" : undefined}
                 className={cx("-ml-px block border-l-2 py-1.5 pl-4 text-sm", active === s.key ? "border-green text-ink" : "border-transparent text-dim hover:text-ink")}>{s.title}</a></li>
             ))}

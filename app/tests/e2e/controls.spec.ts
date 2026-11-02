@@ -17,7 +17,7 @@ const SHARDS = 6;
 fs.mkdirSync("reports", { recursive: true });
 
 for (let shard = 0; shard < SHARDS; shard++) {
-  test(`every control works — shard ${shard + 1}/${SHARDS}`, async ({ page, request }) => {
+  test(`every control works — shard ${shard + 1}/${SHARDS}`, async ({ page, request }, info) => {
     test.setTimeout(240_000);
     const mine = routes.filter((_, i) => i % SHARDS === shard);
     const records: unknown[] = [];
@@ -49,7 +49,8 @@ for (let shard = 0; shard < SHARDS; shard++) {
           out.push({ kind: "field", name: (el.labels?.[0]?.innerText || el.getAttribute("aria-label") || el.placeholder || "").trim().slice(0, 60), type: el.type || f.tagName.toLowerCase(), labelled, region: region(f) });
         });
         const ids = Array.from(document.querySelectorAll("[id]")).map((e) => e.id);
-        return { out, ids, overflow: document.documentElement.scrollWidth - innerWidth };
+        // mobile emulation widens the layout viewport to fit overflowing content, so compare with the device width
+        return { out, ids, overflow: document.documentElement.scrollWidth - Math.min(innerWidth, screen.width) };
       });
       if (items.overflow > 1) failures.push(`${route}: horizontal overflow ${items.overflow}px`);
       for (const it of items.out as Record<string, string & boolean>[]) {
@@ -79,12 +80,12 @@ for (let shard = 0; shard < SHARDS; shard++) {
           expected = `input (${it.type})`;
           if (!it.labelled) result = "FAIL: unlabelled field";
         }
-        records.push({ page: route, region: it.region, kind: it.kind, name: it.name, expected, result });
+        records.push({ viewport: info.project.name, page: route, region: it.region, kind: it.kind, name: it.name, expected, result });
         if (result.startsWith("FAIL")) failures.push(`${route} [${it.kind}] "${it.name}": ${result}`);
       }
       if (errs.length) failures.push(`${route}: page errors ${errs.join(" | ")}`);
     }
-    fs.writeFileSync(`reports/inventory-shard-${shard + 1}.json`, JSON.stringify(records));
+    fs.writeFileSync(`reports/inventory-${info.project.name}-shard-${shard + 1}.json`, JSON.stringify(records));
     expect(failures, failures.slice(0, 40).join("\n")).toEqual([]);
   });
 }

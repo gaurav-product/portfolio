@@ -40,6 +40,12 @@
   [hidden] { display: none !important; }
 }
 
+@layer base {
+  /* Grid items default to min-width:auto, so one wide table or code block can widen a whole
+     column on phones. Let grid children shrink; wide content scrolls inside its own box. */
+  .grid > * { min-width: 0; }
+}
+
 @layer components {
   .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--color-green); }
   .label { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--color-dim); }
@@ -71,3 +77,44 @@
   html, body { background: #fff !important; color: #111 !important; }
   @page { size: A4; margin: 12mm; }
 }
+
+/* Gaurav.OS guide (RoboGuide) — transforms driven by custom properties from a rAF loop. */
+.robo { --iris-x: 0; --iris-y: 0; --lean: 0deg; --shift: 0; --rise: 0; }
+.robo-head, .robo-iris { transform-box: view-box; }
+.robo-head { transform-origin: 60px 88px; transform: translate(calc(var(--shift) * 1px), calc(var(--rise) * 1px)) rotate(var(--lean)); transition: transform 140ms linear; }
+.robo-iris { transform: translate(calc(var(--iris-x) * 1px), calc(var(--iris-y) * 1px)); transition: transform 140ms linear; }
+.robo-glow { filter: drop-shadow(0 0 3px currentColor); }
+.robo[data-attending="true"] .robo-glow { filter: drop-shadow(0 0 8px currentColor); }
+.robo-scan { transform-box: view-box; animation: robo-scan 4.6s ease-in-out infinite; }
+@keyframes robo-scan { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(19px); } }
+.robo[data-mode="static"] .robo-scan { animation: none; opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .robo-scan { animation: none; opacity: 0; } .robo-head, .robo-iris { transition: none; } }
+
+/* Rendered study text (research reading pages) — long-form reading typography */
+.md { color: #D3DBD7; font-size: 17px; line-height: 1.75; overflow-wrap: anywhere; }
+.md > * + * { margin-top: 1em; }
+.md h1 { font-size: 2rem; font-weight: 700; color: var(--color-ink); margin-top: 0; }
+.md h2 { font-size: 1.55rem; font-weight: 700; color: var(--color-ink); margin-top: 2.4em; padding-top: .6em; border-top: 1px solid var(--color-line-soft); scroll-margin-top: 90px; }
+.md h3 { font-size: 1.2rem; font-weight: 600; color: var(--color-ink); margin-top: 1.8em; scroll-margin-top: 90px; }
+.md h4, .md h5, .md h6 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-green); margin-top: 1.6em; }
+.md a { color: var(--color-green); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(77 255 77 / .4); }
+.md strong { color: var(--color-ink); }
+.md ul { list-style: disc; padding-left: 1.4em; } .md ol { list-style: decimal; padding-left: 1.6em; }
+.md li + li { margin-top: .35em; } .md li > ul, .md li > ol { margin-top: .35em; }
+.md blockquote { border-left: 2px solid var(--color-green); padding: .2em 0 .2em 1em; color: #E6ECE9; }
+.md hr { border: 0; border-top: 1px solid var(--color-line); margin: 2.2em 0; }
+.md code { font-family: var(--font-mono); font-size: .86em; background: var(--color-raise); padding: .1em .35em; border-radius: 5px; }
+.md pre { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 12px; padding: 1em 1.1em; overflow-x: auto; font-size: 14px; line-height: 1.55; }
+.md pre code { background: none; padding: 0; font-size: inherit; }
+.md table { display: block; width: max-content; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 14.5px; line-height: 1.5; }
+.md th, .md td { border: 1px solid var(--color-line); padding: .5em .75em; vertical-align: top; text-align: left; }
+.md th { background: var(--color-raise); color: var(--color-ink); font-weight: 600; }
+.md img { max-width: 100%; height: auto; border-radius: 8px; }
+.md details { border: 1px solid var(--color-line); border-radius: 12px; padding: .6em 1em; }
+.md summary { cursor: pointer; color: var(--color-ink); }
+.md .md-badge { display: inline-block; margin: 0 .3em .3em 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--color-line); border-radius: 999px; padding: .15em .7em; color: var(--color-muted); }
+.md .mermaid-block { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 12px; padding: 1em; overflow-x: auto; }
+.md .mermaid-block svg { max-width: 100%; height: auto; margin: 0 auto; display: block; }
+.md .mermaid-block pre { border: 0; padding: 0; margin: 0; }
+.md .mermaid-source { margin-top: .8em; font-size: 14px; }
+.md .md-missing { display: inline-block; font-family: var(--font-mono); font-size: 12px; color: var(--color-dim); border: 1px dashed var(--color-line); border-radius: 8px; padding: .35em .7em; }

@@ -112,7 +112,8 @@ fs.writeFileSync(path.join(OUT, "corpus-summary.json"), JSON.stringify(summary))
 // media: the film and poster live once, in docs/media
 const media = path.join(APP, "public/media");
 fs.mkdirSync(media, { recursive: true });
-for (const f of ["gaurav-os-intro.mp4", "gaurav-os-poster.jpg"]) {
+// The 11.4 MB original film is no longer shipped: the app uses the AV1/H.264 encodes committed in public/media.
+for (const f of ["gaurav-os-poster.jpg"]) {
   const src = path.join(REPO, "docs/media", f);
   if (fs.existsSync(src) && !fs.existsSync(path.join(media, f))) fs.copyFileSync(src, path.join(media, f));
 }

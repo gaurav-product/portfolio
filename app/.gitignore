@@ -10,8 +10,9 @@ reports/lighthouse/*.html
 public/brand/
 public/og-default.png
 public/favicon.svg
-reports/inventory-shard-*.json
+reports/inventory-*-shard-*.json
 reports/interaction-inventory.json
 reports/e2e-results.json
 reports/lighthouse/*.html
 reports/lighthouse/summary.json
+.cache/

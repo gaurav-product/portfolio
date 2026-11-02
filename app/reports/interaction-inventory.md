@@ -1,76 +1,303 @@
 # Interaction inventory
 
-Generated 2026-11-02T15:31:28.351Z by `tests/e2e/controls.spec.ts`.
+Generated 2026-11-02T17:01:50.736Z by `tests/e2e/controls.spec.ts`.
 
 | Metric | Value |
 |---|---|
-| Prerendered routes crawled | 303 |
-| Control instances checked | 13714 |
-| Unique controls (header/footer counted once) | 3729 |
-| Links / buttons / fields | 3475 / 169 / 85 |
+| Prerendered routes crawled | 303 (each at desktop 1440px and mobile Pixel 7) |
+| Control instances — desktop / mobile | 25544 / 22216 |
+| Control instances checked | 47760 |
+| Unique controls (header/footer counted once) | 30936 |
+| Links / buttons / fields | 30170 / 596 / 170 |
 | Failures | **0** |
 
 Each control is checked for: a real destination (internal routes and anchors resolve, downloads return 200, external links open safely), an accessible name, a real handler (React onClick or form submit), and labelled form fields. Behaviour of the stateful controls (calculators, boards, exports, search, Ask, Explore) is covered by the journeys in `tests/e2e/journeys.spec.ts`.
 
 ## Global controls (header and footer)
 
-| Region | Kind | Name | Expected action | Instances | Result |
-|---|---|---|---|---|---|
-| header | link | Gaurav.OS — home | navigate → / | 303 | PASS |
-| header | link | Home | navigate → / | 303 | PASS |
-| header | link | About | navigate → /about | 303 | PASS |
-| header | link | Experience | navigate → /experience | 304 | PASS |
-| header | link | Projects | navigate → /projects | 303 | PASS |
-| header | link | Case Studies | navigate → /case-studies | 303 | PASS |
-| header | link | Product Thinking | navigate → /product-thinking | 303 | PASS |
-| header | link | Research | navigate → /research | 303 | PASS |
-| header | link | Product Atlas | navigate → /atlas | 303 | PASS |
-| header | link | AI Lab | navigate → /ai-lab | 303 | PASS |
-| header | link | Contact | navigate → /contact | 304 | PASS |
-| header | link | Explore Mode | navigate → /explore | 303 | PASS |
-| header | link | Recruiter Mode | navigate → /recruiter | 303 | PASS |
-| header | link | CV | download /media/gaurav-kumar-singh-cv.pdf | 303 | PASS |
-| footer | link | Home | navigate → / | 303 | PASS |
-| footer | link | About | navigate → /about | 303 | PASS |
-| footer | link | Experience | navigate → /experience | 303 | PASS |
-| footer | link | Projects | navigate → /projects | 303 | PASS |
-| footer | link | Case Studies | navigate → /case-studies | 303 | PASS |
-| footer | link | Product Thinking | navigate → /product-thinking | 303 | PASS |
-| footer | link | Research | navigate → /research | 303 | PASS |
-| footer | link | Product Atlas | navigate → /atlas | 303 | PASS |
-| footer | link | AI Lab | navigate → /ai-lab | 303 | PASS |
-| footer | link | Contact | navigate → /contact | 303 | PASS |
-| footer | link | Skills | navigate → /skills | 303 | PASS |
-| footer | link | Lab Notes | navigate → /lab-notes | 303 | PASS |
-| footer | link | Recruiter Mode | navigate → /recruiter | 303 | PASS |
-| footer | link | Explore Mode | navigate → /explore | 303 | PASS |
-| footer | link | gauravkumarsingh773@gmail.com | navigate → mailto:gauravkumarsingh773@gmail.com | 303 | PASS |
-| footer | link | LinkedIn | navigate → https://www.linkedin.com/in/gaurav-singh-product | 303 | PASS |
-| footer | link | GitHub | navigate → https://github.com/gaurav-product | 303 | PASS |
-| footer | link | Download CV (PDF) | download /media/gaurav-kumar-singh-cv.pdf | 303 | PASS |
-| header | button | Search the portfolio | run handler | 303 | PASS |
-| header | button | Export Markdown | run handler | 4 | PASS, PASS (disabled, explained) |
-| header | button | Reset | run handler | 6 | PASS |
-| header | button | Start blank | run handler | 1 | PASS |
-| header | link | All projects | navigate → /projects | 7 | PASS |
-| header | link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | 1 | PASS |
-| header | link | the public repository | navigate → https://github.com/gaurav-product/product-management-case-studies | 1 | PASS |
-| header | link | Download CV | download /media/gaurav-kumar-singh-cv.pdf | 2 | PASS |
-| header | field | Search query | input (search) | 1 | PASS |
-| header | button | Add decision | run handler | 1 | PASS |
-| header | button | Export CSV | run handler | 3 | PASS |
-| header | button | Add feature | run handler | 1 | PASS |
-| header | link | github.com/gaurav-product/ghargyaan | navigate → https://github.com/gaurav-product/ghargyaan | 1 | PASS |
-| header | link | github.com/gaurav-product/nexus | navigate → https://github.com/gaurav-product/nexus | 1 | PASS |
-| header | button | Add step | run handler | 1 | PASS |
-| header | link | product-management-case-studies | navigate → https://github.com/gaurav-product/product-management-case-studies | 1 | PASS |
-| header | link | phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | 1 | PASS |
-| header | button | Reset board | run handler | 1 | PASS |
-| header | link | github.com/gaurav-product/aaroh | navigate → https://github.com/gaurav-product/aaroh | 1 | PASS |
-| header | link | Email | navigate → mailto:gauravkumarsingh773@gmail.com | 1 | PASS |
-| header | link | LinkedIn | navigate → https://www.linkedin.com/in/gaurav-singh-product | 1 | PASS |
+| Viewport | Region | Kind | Name | Expected action | Instances | Result |
+|---|---|---|---|---|---|---|
+| desktop | header | link | Gaurav.OS — home | navigate → / | 303 | PASS |
+| desktop | header | link | Home | navigate → / | 303 | PASS |
+| desktop | header | link | About | navigate → /about | 303 | PASS |
+| desktop | header | link | Experience | navigate → /experience | 304 | PASS |
+| desktop | header | link | Projects | navigate → /projects | 303 | PASS |
+| desktop | header | link | Case Studies | navigate → /case-studies | 303 | PASS |
+| desktop | header | link | Product Thinking | navigate → /product-thinking | 303 | PASS |
+| desktop | header | link | Research | navigate → /research | 303 | PASS |
+| desktop | header | link | Product Atlas | navigate → /atlas | 303 | PASS |
+| desktop | header | link | AI Lab | navigate → /ai-lab | 303 | PASS |
+| desktop | header | link | Contact | navigate → /contact | 304 | PASS |
+| desktop | header | link | Explore Mode | navigate → /explore | 303 | PASS |
+| desktop | header | link | Recruiter Mode | navigate → /recruiter | 303 | PASS |
+| desktop | header | link | CV | download /media/gaurav-kumar-singh-cv.pdf | 303 | PASS |
+| desktop | footer | link | Home | navigate → / | 303 | PASS |
+| desktop | footer | link | About | navigate → /about | 303 | PASS |
+| desktop | footer | link | Experience | navigate → /experience | 303 | PASS |
+| desktop | footer | link | Projects | navigate → /projects | 303 | PASS |
+| desktop | footer | link | Case Studies | navigate → /case-studies | 303 | PASS |
+| desktop | footer | link | Product Thinking | navigate → /product-thinking | 303 | PASS |
+| desktop | footer | link | Research | navigate → /research | 303 | PASS |
+| desktop | footer | link | Product Atlas | navigate → /atlas | 303 | PASS |
+| desktop | footer | link | AI Lab | navigate → /ai-lab | 303 | PASS |
+| desktop | footer | link | Contact | navigate → /contact | 303 | PASS |
+| desktop | footer | link | Skills | navigate → /skills | 303 | PASS |
+| desktop | footer | link | Lab Notes | navigate → /lab-notes | 303 | PASS |
+| desktop | footer | link | Recruiter Mode | navigate → /recruiter | 303 | PASS |
+| desktop | footer | link | Explore Mode | navigate → /explore | 303 | PASS |
+| desktop | footer | link | gauravkumarsingh773@gmail.com | navigate → mailto:gauravkumarsingh773@gmail.com | 303 | PASS |
+| desktop | footer | link | LinkedIn | navigate → https://www.linkedin.com/in/gaurav-singh-product | 303 | PASS |
+| desktop | footer | link | GitHub | navigate → https://github.com/gaurav-product | 303 | PASS |
+| desktop | footer | link | Download CV (PDF) | download /media/gaurav-kumar-singh-cv.pdf | 303 | PASS |
+| desktop | header | button | Search the portfolio | run handler | 303 | PASS |
+| desktop | header | button | Export Markdown | run handler | 4 | PASS, PASS (disabled, explained) |
+| desktop | header | button | Reset | run handler | 6 | PASS |
+| desktop | header | button | Start blank | run handler | 1 | PASS |
+| desktop | header | link | All projects | navigate → /projects | 7 | PASS |
+| desktop | header | link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | 1 | PASS |
+| desktop | header | link | the public repository | navigate → https://github.com/gaurav-product/product-management-case-studies | 1 | PASS |
+| desktop | header | link | Research library | navigate → /research | 90 | PASS |
+| desktop | header | link | Case Studies/Day-14-Canva/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-14-Canva/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day 02 - Spotify/README .md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2002%20-%20Spotify/README%20.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-25-Urban-Company/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-25-Urban-Company/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-30-Meta-Ads/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-30-Meta-Ads/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-36-Paytm/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-36-Paytm/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-41-InMobi/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-41-InMobi/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-47-HealthifyMe/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-47-HealthifyMe/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-52-Lenskart/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-52-Lenskart/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-58-Delhivery/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-58-Delhivery/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-63-BookMyShow/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-63-BookMyShow/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-69-MedPlus/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-69-MedPlus/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-74-Cipla/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-74-Cipla/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-08-Blinkit/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-08-Blinkit/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-85-Eka-Care/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-85-Eka-Care/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-90-Health-in-ChatGPT/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-90-Health-in-ChatGPT/README.md | 1 | PASS |
+| desktop | header | link | Download CV | download /media/gaurav-kumar-singh-cv.pdf | 2 | PASS |
+| desktop | header | link | Case Studies/Day 01 - Practo/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2001%20-%20Practo/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-15-Perplexity/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-15-Perplexity/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-20-Cult.fit/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-20-Cult.fit/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-26-Emergent/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-26-Emergent/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-31-ChatGPT/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-31-ChatGPT/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-37-Amaha/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-37-Amaha/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-42-Groww/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-42-Groww/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-48-Snitch/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-48-Snitch/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-53-PhysicsWallah/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-53-PhysicsWallah/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-59-ixigo/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-59-ixigo/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-64-Zypp-Electric/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-64-Zypp-Electric/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day 07 - PhonePe/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2007%20-%20PhonePe/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-75-Medi-Assist/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-75-Medi-Assist/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-80-Hims-and-Hers/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-80-Hims-and-Hers/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-86-Hippocratic-AI/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-86-Hippocratic-AI/README.md | 1 | PASS |
+| desktop | header | field | Search query | input (search) | 1 | PASS |
+| desktop | header | button | Add decision | run handler | 1 | PASS |
+| desktop | header | button | Export CSV | run handler | 3 | PASS |
+| desktop | header | button | Add feature | run handler | 1 | PASS |
+| desktop | header | link | github.com/gaurav-product/ghargyaan | navigate → https://github.com/gaurav-product/ghargyaan | 1 | PASS |
+| desktop | header | link | Case Studies/Day-10-LinkedIn/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-10-LinkedIn/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-16-Cursor/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-16-Cursor/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-21-CRED/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-21-CRED/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-27-Slack/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-27-Slack/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-32-Sarvam-AI/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-32-Sarvam-AI/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-38-Razorpay/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-38-Razorpay/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-43-Stripe/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-43-Stripe/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-49-River-Mobility/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-49-River-Mobility/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-54-Dream11/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-54-Dream11/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day 06 - Duolingo/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2006%20-%20Duolingo/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-65-Vodafone-Idea/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-65-Vodafone-Idea/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-70-Poly-Medicure/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-70-Poly-Medicure/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-76-Dr-Agarwals-Healthcare/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-76-Dr-Agarwals-Healthcare/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-81-Hinge-Health/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-81-Hinge-Health/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-87-Tempus-AI/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-87-Tempus-AI/README.md | 1 | PASS |
+| desktop | header | link | github.com/gaurav-product/nexus | navigate → https://github.com/gaurav-product/nexus | 1 | PASS |
+| desktop | header | link | Case Studies/Day-11-Google-Maps/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-11-Google-Maps/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-17-Figma/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-17-Figma/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-22-Zerodha/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-22-Zerodha/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-28-Apollo-24-7/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-28-Apollo-24-7/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-33-PharmEasy/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-33-PharmEasy/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-39-Myntra/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-39-Myntra/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-44-Nykaa/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-44-Nykaa/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day 05 - Airbnb/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2005%20-%20Airbnb/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-55-Mamaearth/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-55-Mamaearth/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-60-IndiGo/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-60-IndiGo/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-66-Star-Health/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-66-Star-Health/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-71-Akums/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-71-Akums/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-77-NephroPlus/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-77-NephroPlus/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-82-Doximity/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-82-Doximity/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-88-Qure-ai/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-88-Qure-ai/README.md | 1 | PASS |
+| desktop | header | button | Add step | run handler | 1 | PASS |
+| desktop | header | link | product-management-case-studies | navigate → https://github.com/gaurav-product/product-management-case-studies | 1 | PASS |
+| desktop | header | link | phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | 1 | PASS |
+| desktop | header | link | Case Studies/Day-12-Netflix/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-12-Netflix/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-18-Linear/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-18-Linear/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-23-Rapido/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-23-Rapido/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-29-Google-Ads/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-29-Google-Ads/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-34-Zoho/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-34-Zoho/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day 04 - Notion/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2004%20-%20Notion/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-45-Eternal/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-45-Eternal/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-50-Zepto/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-50-Zepto/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-56-MediBuddy/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-56-MediBuddy/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-61-Atomberg/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-61-Atomberg/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-67-Max-Healthcare/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-67-Max-Healthcare/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-72-Entero-Healthcare/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-72-Entero-Healthcare/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-78-Oura/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-78-Oura/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-83-OpenEvidence/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-83-OpenEvidence/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-89-Gaudium-IVF/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-89-Gaudium-IVF/README.md | 1 | PASS |
+| desktop | header | button | Reset board | run handler | 1 | PASS |
+| desktop | header | link | github.com/gaurav-product/aaroh | navigate → https://github.com/gaurav-product/aaroh | 1 | PASS |
+| desktop | header | link | Email | navigate → mailto:gauravkumarsingh773@gmail.com | 1 | PASS |
+| desktop | header | link | LinkedIn | navigate → https://www.linkedin.com/in/gaurav-singh-product | 1 | PASS |
+| desktop | header | link | Case Studies/Day-13-Amazon/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-13-Amazon/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-19-Lovable/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-19-Lovable/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-24-Meesho/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-24-Meesho/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day 03 - WhatsApp/readme.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2003%20-%20WhatsApp/readme.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-35-AppsFlyer/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-35-AppsFlyer/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-40-Freshworks/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-40-Freshworks/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-46-ALLEN-Digital/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-46-ALLEN-Digital/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-51-Ola/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-51-Ola/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-57-Policybazaar/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-57-Policybazaar/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-62-CtrlS/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-62-CtrlS/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-68-Dr-Lal-PathLabs/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-68-Dr-Lal-PathLabs/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-73-Rainbow-Children's-Medicare/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-73-Rainbow-Children's-Medicare/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-79-Ultrahuman/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-79-Ultrahuman/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-84-Abridge/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-84-Abridge/README.md | 1 | PASS |
+| desktop | header | link | Case Studies/Day-09-Swiggy/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-09-Swiggy/README.md | 1 | PASS |
+| mobile | header | link | Gaurav.OS — home | navigate → / | 303 | PASS |
+| mobile | header | link | Recruiter Mode | navigate → /recruiter | 303 | PASS |
+| mobile | footer | link | Home | navigate → / | 303 | PASS |
+| mobile | footer | link | About | navigate → /about | 303 | PASS |
+| mobile | footer | link | Experience | navigate → /experience | 303 | PASS |
+| mobile | footer | link | Projects | navigate → /projects | 303 | PASS |
+| mobile | footer | link | Case Studies | navigate → /case-studies | 303 | PASS |
+| mobile | footer | link | Product Thinking | navigate → /product-thinking | 303 | PASS |
+| mobile | footer | link | Research | navigate → /research | 303 | PASS |
+| mobile | footer | link | Product Atlas | navigate → /atlas | 303 | PASS |
+| mobile | footer | link | AI Lab | navigate → /ai-lab | 303 | PASS |
+| mobile | footer | link | Contact | navigate → /contact | 303 | PASS |
+| mobile | footer | link | Skills | navigate → /skills | 303 | PASS |
+| mobile | footer | link | Lab Notes | navigate → /lab-notes | 303 | PASS |
+| mobile | footer | link | Recruiter Mode | navigate → /recruiter | 303 | PASS |
+| mobile | footer | link | Explore Mode | navigate → /explore | 303 | PASS |
+| mobile | footer | link | gauravkumarsingh773@gmail.com | navigate → mailto:gauravkumarsingh773@gmail.com | 303 | PASS |
+| mobile | footer | link | LinkedIn | navigate → https://www.linkedin.com/in/gaurav-singh-product | 303 | PASS |
+| mobile | footer | link | GitHub | navigate → https://github.com/gaurav-product | 303 | PASS |
+| mobile | footer | link | Download CV (PDF) | download /media/gaurav-kumar-singh-cv.pdf | 303 | PASS |
+| mobile | header | button | Search the portfolio | run handler | 303 | PASS |
+| mobile | header | button | Open menu | run handler | 303 | PASS |
+| mobile | header | button | Export Markdown | run handler | 4 | PASS, PASS (disabled, explained) |
+| mobile | header | button | Reset | run handler | 6 | PASS |
+| mobile | header | button | Start blank | run handler | 1 | PASS |
+| mobile | header | link | All projects | navigate → /projects | 7 | PASS |
+| mobile | header | link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | 1 | PASS |
+| mobile | header | link | the public repository | navigate → https://github.com/gaurav-product/product-management-case-studies | 1 | PASS |
+| mobile | header | link | Research library | navigate → /research | 90 | PASS |
+| mobile | header | link | Case Studies/Day-14-Canva/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-14-Canva/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day 02 - Spotify/README .md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2002%20-%20Spotify/README%20.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-25-Urban-Company/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-25-Urban-Company/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-30-Meta-Ads/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-30-Meta-Ads/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-36-Paytm/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-36-Paytm/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-41-InMobi/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-41-InMobi/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-47-HealthifyMe/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-47-HealthifyMe/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-52-Lenskart/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-52-Lenskart/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-58-Delhivery/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-58-Delhivery/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-63-BookMyShow/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-63-BookMyShow/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-69-MedPlus/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-69-MedPlus/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-74-Cipla/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-74-Cipla/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-08-Blinkit/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-08-Blinkit/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-85-Eka-Care/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-85-Eka-Care/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-90-Health-in-ChatGPT/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-90-Health-in-ChatGPT/README.md | 1 | PASS |
+| mobile | header | link | Experience | navigate → /experience | 1 | PASS |
+| mobile | header | link | Download CV | download /media/gaurav-kumar-singh-cv.pdf | 2 | PASS |
+| mobile | header | link | Contact | navigate → /contact | 1 | PASS |
+| mobile | header | link | Case Studies/Day 01 - Practo/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2001%20-%20Practo/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-15-Perplexity/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-15-Perplexity/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-20-Cult.fit/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-20-Cult.fit/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-26-Emergent/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-26-Emergent/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-31-ChatGPT/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-31-ChatGPT/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-37-Amaha/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-37-Amaha/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-42-Groww/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-42-Groww/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-48-Snitch/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-48-Snitch/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-53-PhysicsWallah/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-53-PhysicsWallah/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-59-ixigo/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-59-ixigo/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-64-Zypp-Electric/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-64-Zypp-Electric/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day 07 - PhonePe/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2007%20-%20PhonePe/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-75-Medi-Assist/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-75-Medi-Assist/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-80-Hims-and-Hers/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-80-Hims-and-Hers/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-86-Hippocratic-AI/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-86-Hippocratic-AI/README.md | 1 | PASS |
+| mobile | header | field | Search query | input (search) | 1 | PASS |
+| mobile | header | button | Add decision | run handler | 1 | PASS |
+| mobile | header | button | Export CSV | run handler | 3 | PASS |
+| mobile | header | button | Add feature | run handler | 1 | PASS |
+| mobile | header | link | github.com/gaurav-product/ghargyaan | navigate → https://github.com/gaurav-product/ghargyaan | 1 | PASS |
+| mobile | header | link | Case Studies/Day-10-LinkedIn/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-10-LinkedIn/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-16-Cursor/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-16-Cursor/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-21-CRED/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-21-CRED/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-27-Slack/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-27-Slack/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-32-Sarvam-AI/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-32-Sarvam-AI/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-38-Razorpay/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-38-Razorpay/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-43-Stripe/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-43-Stripe/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-49-River-Mobility/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-49-River-Mobility/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-54-Dream11/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-54-Dream11/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day 06 - Duolingo/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2006%20-%20Duolingo/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-65-Vodafone-Idea/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-65-Vodafone-Idea/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-70-Poly-Medicure/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-70-Poly-Medicure/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-76-Dr-Agarwals-Healthcare/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-76-Dr-Agarwals-Healthcare/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-81-Hinge-Health/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-81-Hinge-Health/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-87-Tempus-AI/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-87-Tempus-AI/README.md | 1 | PASS |
+| mobile | header | link | github.com/gaurav-product/nexus | navigate → https://github.com/gaurav-product/nexus | 1 | PASS |
+| mobile | header | link | Case Studies/Day-11-Google-Maps/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-11-Google-Maps/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-17-Figma/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-17-Figma/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-22-Zerodha/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-22-Zerodha/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-28-Apollo-24-7/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-28-Apollo-24-7/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-33-PharmEasy/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-33-PharmEasy/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-39-Myntra/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-39-Myntra/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-44-Nykaa/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-44-Nykaa/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day 05 - Airbnb/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2005%20-%20Airbnb/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-55-Mamaearth/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-55-Mamaearth/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-60-IndiGo/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-60-IndiGo/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-66-Star-Health/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-66-Star-Health/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-71-Akums/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-71-Akums/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-77-NephroPlus/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-77-NephroPlus/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-82-Doximity/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-82-Doximity/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-88-Qure-ai/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-88-Qure-ai/README.md | 1 | PASS |
+| mobile | header | button | Add step | run handler | 1 | PASS |
+| mobile | header | link | product-management-case-studies | navigate → https://github.com/gaurav-product/product-management-case-studies | 1 | PASS |
+| mobile | header | link | phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | 1 | PASS |
+| mobile | header | link | Case Studies/Day-12-Netflix/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-12-Netflix/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-18-Linear/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-18-Linear/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-23-Rapido/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-23-Rapido/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-29-Google-Ads/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-29-Google-Ads/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-34-Zoho/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-34-Zoho/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day 04 - Notion/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2004%20-%20Notion/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-45-Eternal/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-45-Eternal/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-50-Zepto/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-50-Zepto/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-56-MediBuddy/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-56-MediBuddy/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-61-Atomberg/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-61-Atomberg/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-67-Max-Healthcare/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-67-Max-Healthcare/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-72-Entero-Healthcare/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-72-Entero-Healthcare/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-78-Oura/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-78-Oura/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-83-OpenEvidence/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-83-OpenEvidence/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-89-Gaudium-IVF/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-89-Gaudium-IVF/README.md | 1 | PASS |
+| mobile | header | button | Reset board | run handler | 1 | PASS |
+| mobile | header | link | github.com/gaurav-product/aaroh | navigate → https://github.com/gaurav-product/aaroh | 1 | PASS |
+| mobile | header | link | Email | navigate → mailto:gauravkumarsingh773@gmail.com | 1 | PASS |
+| mobile | header | link | LinkedIn | navigate → https://www.linkedin.com/in/gaurav-singh-product | 1 | PASS |
+| mobile | header | link | Case Studies/Day-13-Amazon/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-13-Amazon/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-19-Lovable/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-19-Lovable/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-24-Meesho/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-24-Meesho/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day 03 - WhatsApp/readme.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day%2003%20-%20WhatsApp/readme.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-35-AppsFlyer/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-35-AppsFlyer/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-40-Freshworks/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-40-Freshworks/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-46-ALLEN-Digital/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-46-ALLEN-Digital/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-51-Ola/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-51-Ola/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-57-Policybazaar/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-57-Policybazaar/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-62-CtrlS/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-62-CtrlS/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-68-Dr-Lal-PathLabs/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-68-Dr-Lal-PathLabs/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-73-Rainbow-Children's-Medicare/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-73-Rainbow-Children's-Medicare/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-79-Ultrahuman/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-79-Ultrahuman/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-84-Abridge/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-84-Abridge/README.md | 1 | PASS |
+| mobile | header | link | Case Studies/Day-09-Swiggy/README.md | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/60c3c9b98265a1c36ffa11e4984c9efc4d83ca7c/Case%20Studies/Day-09-Swiggy/README.md | 1 | PASS |
 
-## Page controls
+## Page controls (desktop; the mobile crawl checks the same pages and is summarised above)
 
 ### `/`
 
@@ -285,6 +512,7 @@ Each control is checked for: a real destination (internal routes and anchors res
 | link | Read the case study | navigate → /projects/evamastu | PASS |
 | link | Executive summary | navigate → /projects/evamastu#summary | PASS |
 | link | Metadata | navigate → /projects/evamastu#metadata | PASS |
+| link | Problem | navigate → /projects/evamastu#problem | PASS |
 | link | Research methodology | navigate → /projects/evamastu#methodology | PASS |
 | link | Prioritization | navigate → /projects/evamastu#prioritization | PASS |
 | link | PRD | navigate → /projects/evamastu#prd | PASS |
@@ -302,10 +530,12 @@ Each control is checked for: a real destination (internal routes and anchors res
 | link | Insights | navigate → /projects/aaroh#insights | PASS |
 | link | Vision | navigate → /projects/aaroh#vision | PASS |
 | link | Strategy | navigate → /projects/aaroh#strategy | PASS |
+| link | Prioritization | navigate → /projects/aaroh#prioritization | PASS |
 | link | Prototype | navigate → /projects/aaroh#prototype | PASS |
 | link | PRD | navigate → /projects/aaroh#prd | PASS |
 | link | Analytics | navigate → /projects/aaroh#analytics | PASS |
 | link | Risks | navigate → /projects/aaroh#risks | PASS |
+| link | Learnings | navigate → /projects/aaroh#learnings | PASS |
 | link | Next steps | navigate → /projects/aaroh#next | PASS |
 | link | Evidence | navigate → /projects/aaroh#evidence | PASS |
 | link | CareConnect | navigate → /projects/careconnect | PASS |
@@ -314,29 +544,44 @@ Each control is checked for: a real destination (internal routes and anchors res
 | link | Metadata | navigate → /projects/careconnect#metadata | PASS |
 | link | Problem | navigate → /projects/careconnect#problem | PASS |
 | link | User segments | navigate → /projects/careconnect#segments | PASS |
-| link | Insights | navigate → /projects/careconnect#insights | PASS |
-| link | Product flows | navigate → /projects/careconnect#flows | PASS |
+| link | Research methodology | navigate → /projects/careconnect#methodology | PASS |
+| link | Competition | navigate → /projects/careconnect#competition | PASS |
+| link | Strategy | navigate → /projects/careconnect#strategy | PASS |
+| link | MVP scope | navigate → /projects/careconnect#mvp | PASS |
+| link | User journey | navigate → /projects/careconnect#journey | PASS |
 | link | Execution | navigate → /projects/careconnect#execution | PASS |
 | link | Analytics | navigate → /projects/careconnect#analytics | PASS |
+| link | Results | navigate → /projects/careconnect#results | PASS |
 | link | Trade-offs | navigate → /projects/careconnect#tradeoffs | PASS |
 | link | Risks | navigate → /projects/careconnect#risks | PASS |
+| link | Learnings | navigate → /projects/careconnect#learnings | PASS |
 | link | Next steps | navigate → /projects/careconnect#next | PASS |
 | link | Evidence | navigate → /projects/careconnect#evidence | PASS |
 | link | GharGyaan | navigate → /projects/ghargyaan | PASS |
 | link | Read the case study | navigate → /projects/ghargyaan | PASS |
 | link | Executive summary | navigate → /projects/ghargyaan#summary | PASS |
 | link | Problem | navigate → /projects/ghargyaan#problem | PASS |
+| link | User segments | navigate → /projects/ghargyaan#segments | PASS |
+| link | Research methodology | navigate → /projects/ghargyaan#methodology | PASS |
+| link | Strategy | navigate → /projects/ghargyaan#strategy | PASS |
 | link | Product flows | navigate → /projects/ghargyaan#flows | PASS |
+| link | PRD | navigate → /projects/ghargyaan#prd | PASS |
 | link | Experimentation | navigate → /projects/ghargyaan#experimentation | PASS |
+| link | Analytics | navigate → /projects/ghargyaan#analytics | PASS |
 | link | Risks | navigate → /projects/ghargyaan#risks | PASS |
+| link | Learnings | navigate → /projects/ghargyaan#learnings | PASS |
 | link | Evidence | navigate → /projects/ghargyaan#evidence | PASS |
 | link | PhonePe Smart Spend Coach | navigate → /projects/phonepe-smart-spend-coach | PASS |
 | link | Read the case study | navigate → /projects/phonepe-smart-spend-coach | PASS |
 | link | Executive summary | navigate → /projects/phonepe-smart-spend-coach#summary | PASS |
 | link | Metadata | navigate → /projects/phonepe-smart-spend-coach#metadata | PASS |
+| link | User segments | navigate → /projects/phonepe-smart-spend-coach#segments | PASS |
 | link | Prioritization | navigate → /projects/phonepe-smart-spend-coach#prioritization | PASS |
+| link | Prototype | navigate → /projects/phonepe-smart-spend-coach#prototype | PASS |
+| link | PRD | navigate → /projects/phonepe-smart-spend-coach#prd | PASS |
 | link | Experimentation | navigate → /projects/phonepe-smart-spend-coach#experimentation | PASS |
 | link | Analytics | navigate → /projects/phonepe-smart-spend-coach#analytics | PASS |
+| link | Trade-offs | navigate → /projects/phonepe-smart-spend-coach#tradeoffs | PASS |
 | link | Learnings | navigate → /projects/phonepe-smart-spend-coach#learnings | PASS |
 | link | Evidence | navigate → /projects/phonepe-smart-spend-coach#evidence | PASS |
 | link | Nexus | navigate → /projects/nexus | PASS |
@@ -777,30 +1022,38 @@ Revisited | input (select-one) | PASS |
 | link | Skip to content | navigate → #main | PASS |
 | link | Executive summary | navigate → #summary | PASS |
 | link | Project metadata | navigate → #metadata | PASS |
-| link | Problem statement | navigate → #problem | PASS |
-| link | Research methodology | navigate → #methodology | PASS |
-| link | User insights | navigate → #insights | PASS |
+| link | Problem framing | navigate → #problem | PASS |
+| link | Discovery | navigate → #methodology | PASS |
+| link | Insight | navigate → #insights | PASS |
 | link | Product vision | navigate → #vision | PASS |
-| link | Product strategy and decisions | navigate → #strategy | PASS |
+| link | Strategy and decisions | navigate → #strategy | PASS |
+| link | Prioritization and roadmap | navigate → #prioritization | PASS |
 | link | PRD and requirements | navigate → #prd | PASS |
 | link | Prototype | navigate → #prototype | PASS |
-| link | Analytics framework | navigate → #analytics | PASS |
+| link | Metrics | navigate → #analytics | PASS |
 | link | Risks and limitations | navigate → #risks | PASS |
+| link | Learnings | navigate → #learnings | PASS |
 | link | Next steps | navigate → #next | PASS |
 | link | Evidence and references | navigate → #evidence | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
 | link | github.com/gaurav-product/aaroh | navigate → https://github.com/gaurav-product/aaroh | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
-| link | github.com/gaurav-product/aaroh | navigate → https://github.com/gaurav-product/aaroh | PASS |
+| link | Aaroh — ROADMAP.md | navigate → https://github.com/gaurav-product/aaroh/blob/main/ROADMAP.md | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
 | link | github.com/gaurav-product/aaroh | navigate → https://github.com/gaurav-product/aaroh | PASS |
+| link | Aaroh — ROADMAP.md | navigate → https://github.com/gaurav-product/aaroh/blob/main/ROADMAP.md | PASS |
+| link | Aaroh — ROADMAP.md | navigate → https://github.com/gaurav-product/aaroh/blob/main/ROADMAP.md | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
+| link | Healthcare CV (November 2026) | navigate → /cv | PASS |
+| link | Healthcare CV (November 2026) | navigate → /cv | PASS |
+| link | Aaroh — ROADMAP.md | navigate → https://github.com/gaurav-product/aaroh/blob/main/ROADMAP.md | PASS |
+| link | Aaroh — docs/product/metrics/north-star-metric.md | navigate → https://github.com/gaurav-product/aaroh/blob/main/docs/product/metrics/north-star-metric.md | PASS |
+| link | Healthcare CV (November 2026) | navigate → /cv | PASS |
+| link | Aaroh — ROADMAP.md | navigate → https://github.com/gaurav-product/aaroh/blob/main/ROADMAP.md | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
 | link | github.com/gaurav-product/aaroh | navigate → https://github.com/gaurav-product/aaroh | PASS |
-| link | Healthcare CV (November 2026) | navigate → /cv | PASS |
-| link | github.com/gaurav-product/aaroh | navigate → https://github.com/gaurav-product/aaroh | PASS |
-| link | Healthcare CV (November 2026) | navigate → /cv | PASS |
-| link | github.com/gaurav-product/aaroh | navigate → https://github.com/gaurav-product/aaroh | PASS |
+| link | Aaroh — ROADMAP.md | navigate → https://github.com/gaurav-product/aaroh/blob/main/ROADMAP.md | PASS |
+| link | Aaroh — docs/product/metrics/north-star-metric.md | navigate → https://github.com/gaurav-product/aaroh/blob/main/docs/product/metrics/north-star-metric.md | PASS |
 | link | Customer interviews | navigate → /skills/discovery-interviews | PASS |
 | link | Product Requirement Document | navigate → /skills/prd | PASS |
 | link | AI product strategy | navigate → /skills/ai-product-strategy | PASS |
@@ -822,30 +1075,44 @@ Revisited | input (select-one) | PASS |
 | link | Skip to content | navigate → #main | PASS |
 | link | Executive summary | navigate → #summary | PASS |
 | link | Project metadata | navigate → #metadata | PASS |
-| link | Problem statement | navigate → #problem | PASS |
-| link | Research insight | navigate → #insights | PASS |
-| link | User segments | navigate → #segments | PASS |
-| link | Core workflow | navigate → #flows | PASS |
+| link | Discovery | navigate → #methodology | PASS |
+| link | Problem framing | navigate → #problem | PASS |
+| link | Target user | navigate → #segments | PASS |
+| link | Competitive landscape | navigate → #competition | PASS |
+| link | Strategy | navigate → #strategy | PASS |
+| link | MVP scope | navigate → #mvp | PASS |
+| link | UX decisions | navigate → #journey | PASS |
 | link | Key decisions and trade-offs | navigate → #tradeoffs | PASS |
-| link | Analytics framework | navigate → #analytics | PASS |
-| link | Execution and testing | navigate → #execution | PASS |
-| link | Risks and limitations | navigate → #risks | PASS |
+| link | Build and QA | navigate → #execution | PASS |
+| link | Metrics | navigate → #analytics | PASS |
+| link | Validation status | navigate → #results | PASS |
+| link | Limitations | navigate → #risks | PASS |
+| link | Learnings | navigate → #learnings | PASS |
 | link | Next steps | navigate → #next | PASS |
 | link | Evidence and references | navigate → #evidence | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
 | link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/05-decisions/decision-log.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/05-decisions/decision-log.md | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
-| link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/06-metrics/metrics.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/06-metrics/metrics.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
+| link | CareConnect — docs/09-portfolio/case-study.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/09-portfolio/case-study.md | PASS |
+| link | CareConnect — docs/05-decisions/decision-log.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/05-decisions/decision-log.md | PASS |
+| link | CareConnect — docs/06-metrics/metrics.md | navigate → https://github.com/gaurav-product/careconnect/blob/main/docs/06-metrics/metrics.md | PASS |
 | link | github.com/gaurav-product/careconnect | navigate → https://github.com/gaurav-product/careconnect | PASS |
 | link | Problem framing | navigate → /skills/problem-framing | PASS |
 | link | Hypothesis generation | navigate → /skills/hypothesis | PASS |
@@ -867,14 +1134,16 @@ Revisited | input (select-one) | PASS |
 | link | Skip to content | navigate → #main | PASS |
 | link | Executive summary | navigate → #summary | PASS |
 | link | Project metadata | navigate → #metadata | PASS |
-| link | Research methodology | navigate → #methodology | PASS |
+| link | Discovery | navigate → #methodology | PASS |
+| link | Problem framing | navigate → #problem | PASS |
 | link | PRD and requirements | navigate → #prd | PASS |
 | link | Prioritization | navigate → #prioritization | PASS |
-| link | Analytics framework | navigate → #analytics | PASS |
-| link | Results | navigate → #results | PASS |
 | link | Execution | navigate → #execution | PASS |
+| link | Metrics and analysis | navigate → #analytics | PASS |
+| link | Results | navigate → #results | PASS |
 | link | Learnings | navigate → #learnings | PASS |
-| link | Evidence and limitations | navigate → #evidence | PASS |
+| link | Evidence and what is not documented | navigate → #evidence | PASS |
+| link | Healthcare CV (November 2026) | navigate → /cv | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
@@ -903,18 +1172,31 @@ Revisited | input (select-one) | PASS |
 |---|---|---|---|
 | link | Skip to content | navigate → #main | PASS |
 | link | Executive summary | navigate → #summary | PASS |
-| link | Problem statement | navigate → #problem | PASS |
+| link | Problem framing | navigate → #problem | PASS |
+| link | Discovery | navigate → #methodology | PASS |
+| link | Users and jobs | navigate → #segments | PASS |
+| link | Strategy | navigate → #strategy | PASS |
+| link | PRD scope | navigate → #prd | PASS |
 | link | Safety-first architecture | navigate → #flows | PASS |
 | link | Evaluation | navigate → #experimentation | PASS |
-| link | Risks and limitations | navigate → #risks | PASS |
+| link | Metrics | navigate → #analytics | PASS |
+| link | Learnings | navigate → #learnings | PASS |
+| link | Limitations | navigate → #risks | PASS |
 | link | Evidence and references | navigate → #evidence | PASS |
 | link | github.com/gaurav-product/ghargyaan | navigate → https://github.com/gaurav-product/ghargyaan | PASS |
-| link | github.com/gaurav-product/ghargyaan | navigate → https://github.com/gaurav-product/ghargyaan | PASS |
+| link | GharGyaan — docs/01–16 (problem, research, personas, JTBD, strategy, PRD, metric | navigate → https://github.com/gaurav-product/ghargyaan/tree/main/docs | PASS |
+| link | GharGyaan — docs/01–16 (problem, research, personas, JTBD, strategy, PRD, metric | navigate → https://github.com/gaurav-product/ghargyaan/tree/main/docs | PASS |
+| link | GharGyaan — docs/01–16 (problem, research, personas, JTBD, strategy, PRD, metric | navigate → https://github.com/gaurav-product/ghargyaan/tree/main/docs | PASS |
+| link | GharGyaan — docs/01–16 (problem, research, personas, JTBD, strategy, PRD, metric | navigate → https://github.com/gaurav-product/ghargyaan/tree/main/docs | PASS |
+| link | GharGyaan — docs/01–16 (problem, research, personas, JTBD, strategy, PRD, metric | navigate → https://github.com/gaurav-product/ghargyaan/tree/main/docs | PASS |
 | link | github.com/gaurav-product/ghargyaan | navigate → https://github.com/gaurav-product/ghargyaan | PASS |
 | link | github.com/gaurav-product/ghargyaan | navigate → https://github.com/gaurav-product/ghargyaan | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
+| link | GharGyaan — docs/01–16 (problem, research, personas, JTBD, strategy, PRD, metric | navigate → https://github.com/gaurav-product/ghargyaan/tree/main/docs | PASS |
+| link | GharGyaan — docs/01–16 (problem, research, personas, JTBD, strategy, PRD, metric | navigate → https://github.com/gaurav-product/ghargyaan/tree/main/docs | PASS |
 | link | github.com/gaurav-product/ghargyaan | navigate → https://github.com/gaurav-product/ghargyaan | PASS |
 | link | github.com/gaurav-product/ghargyaan | navigate → https://github.com/gaurav-product/ghargyaan | PASS |
+| link | GharGyaan — docs/01–16 (problem, research, personas, JTBD, strategy, PRD, metric | navigate → https://github.com/gaurav-product/ghargyaan/tree/main/docs | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
 | link | Guardrails | navigate → /skills/guardrails | PASS |
 | link | Crisis routing | navigate → /skills/crisis-routing | PASS |
@@ -961,19 +1243,28 @@ Revisited | input (select-one) | PASS |
 | link | Skip to content | navigate → #main | PASS |
 | link | Executive summary | navigate → #summary | PASS |
 | link | Project metadata | navigate → #metadata | PASS |
+| link | Segmentation and persona | navigate → #segments | PASS |
 | link | Prioritization | navigate → #prioritization | PASS |
+| link | PRD: detection and the one-tap action | navigate → #prd | PASS |
+| link | Prototype and usability | navigate → #prototype | PASS |
 | link | Pilot funnel analysis | navigate → #analytics | PASS |
 | link | Experiment design | navigate → #experimentation | PASS |
+| link | Trade-offs and corrections | navigate → #tradeoffs | PASS |
 | link | Learnings | navigate → #learnings | PASS |
 | link | Evidence and references | navigate → #evidence | PASS |
 | link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
 | link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
-| link | Healthcare CV (November 2026) | navigate → /cv | PASS |
+| link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
+| link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
+| link | PhonePe capstone — part-a/task-5-prd-lite.md | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone/blob/main/capstone/part-a/task-5-prd-lite.md | PASS |
+| link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
+| link | PhonePe capstone — part-c/part-c-full.md | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone/blob/main/capstone/part-c/part-c-full.md | PASS |
+| link | PhonePe capstone — part-c/part-c-full.md | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone/blob/main/capstone/part-c/part-c-full.md | PASS |
 | link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
 | link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
 | link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
-| link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
-| link | github.com/gaurav-product/phonepe-smart-spend-coach-capstone | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone | PASS |
+| link | PhonePe capstone — part-a/task-5-prd-lite.md | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone/blob/main/capstone/part-a/task-5-prd-lite.md | PASS |
+| link | PhonePe capstone — part-c/part-c-full.md | navigate → https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone/blob/main/capstone/part-c/part-c-full.md | PASS |
 | link | Healthcare CV (November 2026) | navigate → /cv | PASS |
 | link | Funnel analysis | navigate → /skills/funnel-analysis | PASS |
 | link | A/B testing | navigate → /skills/ab-testing | PASS |
@@ -1081,1162 +1372,363 @@ Days 61–90 | input (select-one) | PASS |
 
 ### `/research/1`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day%2001%20-%20Practo/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day%2001%20-%20Practo | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 2 · Spotify | navigate → /research/2 | PASS |
+Study page: 107 controls (107 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/10`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-10-LinkedIn/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-10-LinkedIn | PASS |
-| link | Day 9 · Swiggy | navigate → /research/9 | PASS |
-| link | Day 11 · Google Maps | navigate → /research/11 | PASS |
+Study page: 300 controls (300 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/11`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-11-Google-Maps/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-11-Google-Maps | PASS |
-| link | Day 10 · LinkedIn | navigate → /research/10 | PASS |
-| link | Day 12 · Netflix | navigate → /research/12 | PASS |
+Study page: 159 controls (159 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/12`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-12-Netflix/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-12-Netflix | PASS |
-| link | Day 11 · Google Maps | navigate → /research/11 | PASS |
-| link | Day 13 · Amazon | navigate → /research/13 | PASS |
+Study page: 141 controls (141 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/13`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-13-Amazon/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-13-Amazon | PASS |
-| link | Day 12 · Netflix | navigate → /research/12 | PASS |
-| link | Day 14 · Canva | navigate → /research/14 | PASS |
+Study page: 87 controls (87 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/14`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-14-Canva/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-14-Canva | PASS |
-| link | Day 13 · Amazon | navigate → /research/13 | PASS |
-| link | Day 15 · Perplexity | navigate → /research/15 | PASS |
+Study page: 88 controls (88 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/15`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-15-Perplexity/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-15-Perplexity | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 14 · Canva | navigate → /research/14 | PASS |
-| link | Day 16 · Cursor | navigate → /research/16 | PASS |
+Study page: 143 controls (143 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/16`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-16-Cursor/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-16-Cursor | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 15 · Perplexity | navigate → /research/15 | PASS |
-| link | Day 17 · Figma | navigate → /research/17 | PASS |
+Study page: 146 controls (146 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/17`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-17-Figma/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-17-Figma | PASS |
-| link | Day 16 · Cursor | navigate → /research/16 | PASS |
-| link | Day 18 · Linear | navigate → /research/18 | PASS |
+Study page: 90 controls (90 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/18`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-18-Linear/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-18-Linear | PASS |
-| link | Day 17 · Figma | navigate → /research/17 | PASS |
-| link | Day 19 · Lovable | navigate → /research/19 | PASS |
+Study page: 81 controls (81 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/19`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-19-Lovable/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-19-Lovable | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 18 · Linear | navigate → /research/18 | PASS |
-| link | Day 20 · Cult.fit | navigate → /research/20 | PASS |
+Study page: 174 controls (174 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/2`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day%2002%20-%20Spotify/README%20.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day%2002%20-%20Spotify | PASS |
-| link | Day 1 · Practo | navigate → /research/1 | PASS |
-| link | Day 3 · WhatsApp | navigate → /research/3 | PASS |
+Study page: 215 controls (215 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/20`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-20-Cult.fit/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-20-Cult.fit | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 19 · Lovable | navigate → /research/19 | PASS |
-| link | Day 21 · CRED | navigate → /research/21 | PASS |
+Study page: 93 controls (93 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/21`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-21-CRED/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-21-CRED | PASS |
-| link | Day 20 · Cult.fit | navigate → /research/20 | PASS |
-| link | Day 22 · Zerodha | navigate → /research/22 | PASS |
+Study page: 168 controls (168 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/22`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-22-Zerodha/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-22-Zerodha | PASS |
-| link | Day 21 · CRED | navigate → /research/21 | PASS |
-| link | Day 23 · Rapido | navigate → /research/23 | PASS |
+Study page: 135 controls (135 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/23`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-23-Rapido/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-23-Rapido | PASS |
-| link | Day 22 · Zerodha | navigate → /research/22 | PASS |
-| link | Day 24 · Meesho | navigate → /research/24 | PASS |
+Study page: 134 controls (134 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/24`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-24-Meesho/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-24-Meesho | PASS |
-| link | Day 23 · Rapido | navigate → /research/23 | PASS |
-| link | Day 25 · Urban Company | navigate → /research/25 | PASS |
+Study page: 45 controls (45 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/25`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-25-Urban-Company/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-25-Urban-Company | PASS |
-| link | Day 24 · Meesho | navigate → /research/24 | PASS |
-| link | Day 26 · Emergent | navigate → /research/26 | PASS |
+Study page: 55 controls (55 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/26`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-26-Emergent/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-26-Emergent | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 25 · Urban Company | navigate → /research/25 | PASS |
-| link | Day 27 · Slack | navigate → /research/27 | PASS |
+Study page: 134 controls (134 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/27`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-27-Slack/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-27-Slack | PASS |
-| link | Day 26 · Emergent | navigate → /research/26 | PASS |
-| link | Day 28 · Apollo 24 7 | navigate → /research/28 | PASS |
+Study page: 159 controls (159 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/28`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-28-Apollo-24-7/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-28-Apollo-24-7/assumptions.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-28-Apollo-24-7 | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 27 · Slack | navigate → /research/27 | PASS |
-| link | Day 29 · Google Ads | navigate → /research/29 | PASS |
+Study page: 79 controls (77 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/29`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-29-Google-Ads/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-29-Google-Ads/assumptions.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-29-Google-Ads | PASS |
-| link | Day 28 · Apollo 24 7 | navigate → /research/28 | PASS |
-| link | Day 30 · Meta Ads | navigate → /research/30 | PASS |
+Study page: 76 controls (74 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/3`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day%2003%20-%20WhatsApp/readme.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day%2003%20-%20WhatsApp | PASS |
-| link | Day 2 · Spotify | navigate → /research/2 | PASS |
-| link | Day 4 · Notion | navigate → /research/4 | PASS |
+Study page: 206 controls (206 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/30`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-30-Meta-Ads/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-30-Meta-Ads/assumptions.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-30-Meta-Ads | PASS |
-| link | Day 29 · Google Ads | navigate → /research/29 | PASS |
-| link | Day 31 · ChatGPT | navigate → /research/31 | PASS |
+Study page: 156 controls (154 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/31`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-31-ChatGPT/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-31-ChatGPT/assumptions.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-31-ChatGPT | PASS |
-| link | Day 30 · Meta Ads | navigate → /research/30 | PASS |
-| link | Day 32 · Sarvam AI | navigate → /research/32 | PASS |
+Study page: 112 controls (110 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/32`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-32-Sarvam-AI/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-32-Sarvam-AI/assumptions.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-32-Sarvam-AI | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 31 · ChatGPT | navigate → /research/31 | PASS |
-| link | Day 33 · PharmEasy | navigate → /research/33 | PASS |
+Study page: 75 controls (73 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/33`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-33-PharmEasy/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-33-PharmEasy/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-33-PharmEasy | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 32 · Sarvam AI | navigate → /research/32 | PASS |
-| link | Day 34 · Zoho | navigate → /research/34 | PASS |
+Study page: 349 controls (347 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/34`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-34-Zoho/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-34-Zoho/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-34-Zoho | PASS |
-| link | Day 33 · PharmEasy | navigate → /research/33 | PASS |
-| link | Day 35 · AppsFlyer | navigate → /research/35 | PASS |
+Study page: 262 controls (260 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/35`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-35-AppsFlyer/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-35-AppsFlyer/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-35-AppsFlyer | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | PhonePe Smart Spend Coach | navigate → /projects/phonepe-smart-spend-coach | PASS |
-| link | 90-Day Product Case Studies | navigate → /projects/90-day-case-studies | PASS |
-| link | Day 34 · Zoho | navigate → /research/34 | PASS |
-| link | Day 36 · Paytm | navigate → /research/36 | PASS |
+Study page: 284 controls (282 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/36`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-36-Paytm/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-36-Paytm/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-36-Paytm | PASS |
-| link | Day 35 · AppsFlyer | navigate → /research/35 | PASS |
-| link | Day 37 · Amaha | navigate → /research/37 | PASS |
+Study page: 183 controls (181 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/37`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-37-Amaha/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-37-Amaha/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-37-Amaha | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 36 · Paytm | navigate → /research/36 | PASS |
-| link | Day 38 · Razorpay | navigate → /research/38 | PASS |
+Study page: 78 controls (76 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/38`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-38-Razorpay/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-38-Razorpay/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-38-Razorpay | PASS |
-| link | Day 37 · Amaha | navigate → /research/37 | PASS |
-| link | Day 39 · Myntra | navigate → /research/39 | PASS |
+Study page: 59 controls (57 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/39`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-39-Myntra/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-39-Myntra/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-39-Myntra | PASS |
-| link | Day 38 · Razorpay | navigate → /research/38 | PASS |
-| link | Day 40 · Freshworks | navigate → /research/40 | PASS |
+Study page: 60 controls (58 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/4`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day%2004%20-%20Notion/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day%2004%20-%20Notion | PASS |
-| link | Day 3 · WhatsApp | navigate → /research/3 | PASS |
-| link | Day 5 · Airbnb | navigate → /research/5 | PASS |
+Study page: 166 controls (166 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/40`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-40-Freshworks/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-40-Freshworks/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-40-Freshworks | PASS |
-| link | Day 39 · Myntra | navigate → /research/39 | PASS |
-| link | Day 41 · InMobi | navigate → /research/41 | PASS |
+Study page: 281 controls (279 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/41`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-41-InMobi/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-41-InMobi/ASSUMP~1.MD | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-41-InMobi | PASS |
-| link | Day 40 · Freshworks | navigate → /research/40 | PASS |
-| link | Day 42 · Groww | navigate → /research/42 | PASS |
+Study page: 149 controls (147 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/42`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-42-Groww/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-42-Groww/ASSUMP~1.MD | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-42-Groww | PASS |
-| link | Day 41 · InMobi | navigate → /research/41 | PASS |
-| link | Day 43 · Stripe | navigate → /research/43 | PASS |
+Study page: 276 controls (274 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/43`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-43-Stripe/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-43-Stripe/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-43-Stripe | PASS |
-| link | Day 42 · Groww | navigate → /research/42 | PASS |
-| link | Day 44 · Nykaa | navigate → /research/44 | PASS |
+Study page: 328 controls (326 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/44`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-44-Nykaa/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-44-Nykaa/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-44-Nykaa | PASS |
-| link | Day 43 · Stripe | navigate → /research/43 | PASS |
-| link | Day 45 · Eternal | navigate → /research/45 | PASS |
+Study page: 367 controls (365 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/45`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-45-Eternal/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-45-Eternal/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-45-Eternal | PASS |
-| link | Day 44 · Nykaa | navigate → /research/44 | PASS |
-| link | Day 46 · ALLEN Digital | navigate → /research/46 | PASS |
+Study page: 303 controls (301 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/46`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-46-ALLEN-Digital/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-46-ALLEN-Digital/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-46-ALLEN-Digital | PASS |
-| link | Day 45 · Eternal | navigate → /research/45 | PASS |
-| link | Day 47 · HealthifyMe | navigate → /research/47 | PASS |
+Study page: 298 controls (296 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/47`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-47-HealthifyMe/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-47-HealthifyMe/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-47-HealthifyMe | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 46 · ALLEN Digital | navigate → /research/46 | PASS |
-| link | Day 48 · Snitch | navigate → /research/48 | PASS |
+Study page: 235 controls (233 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/48`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-48-Snitch/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-48-Snitch/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-48-Snitch | PASS |
-| link | Day 47 · HealthifyMe | navigate → /research/47 | PASS |
-| link | Day 49 · River Mobility | navigate → /research/49 | PASS |
+Study page: 272 controls (270 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/49`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-49-River-Mobility/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-49-River-Mobility/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-49-River-Mobility | PASS |
-| link | Day 48 · Snitch | navigate → /research/48 | PASS |
-| link | Day 50 · Zepto | navigate → /research/50 | PASS |
+Study page: 252 controls (250 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/5`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day%2005%20-%20Airbnb/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day%2005%20-%20Airbnb | PASS |
-| link | Day 4 · Notion | navigate → /research/4 | PASS |
-| link | Day 6 · Duolingo | navigate → /research/6 | PASS |
+Study page: 151 controls (151 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/50`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-50-Zepto/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-50-Zepto/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-50-Zepto | PASS |
-| link | Day 49 · River Mobility | navigate → /research/49 | PASS |
-| link | Day 51 · Ola | navigate → /research/51 | PASS |
+Study page: 93 controls (91 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/51`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-51-Ola/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-51-Ola/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-51-Ola | PASS |
-| link | Day 50 · Zepto | navigate → /research/50 | PASS |
-| link | Day 52 · Lenskart | navigate → /research/52 | PASS |
+Study page: 91 controls (89 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/52`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-52-Lenskart/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-52-Lenskart/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-52-Lenskart | PASS |
-| link | Day 51 · Ola | navigate → /research/51 | PASS |
-| link | Day 53 · PhysicsWallah | navigate → /research/53 | PASS |
+Study page: 90 controls (88 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/53`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-53-PhysicsWallah/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-53-PhysicsWallah/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-53-PhysicsWallah | PASS |
-| link | Day 52 · Lenskart | navigate → /research/52 | PASS |
-| link | Day 54 · Dream11 | navigate → /research/54 | PASS |
+Study page: 89 controls (87 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/54`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-54-Dream11/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-54-Dream11/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-54-Dream11 | PASS |
-| link | Day 53 · PhysicsWallah | navigate → /research/53 | PASS |
-| link | Day 55 · Mamaearth | navigate → /research/55 | PASS |
+Study page: 89 controls (87 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/55`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-55-Mamaearth/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-55-Mamaearth/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-55-Mamaearth | PASS |
-| link | Day 54 · Dream11 | navigate → /research/54 | PASS |
-| link | Day 56 · MediBuddy | navigate → /research/56 | PASS |
+Study page: 89 controls (87 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/56`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-56-MediBuddy/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-56-MediBuddy/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-56-MediBuddy | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 55 · Mamaearth | navigate → /research/55 | PASS |
-| link | Day 57 · Policybazaar | navigate → /research/57 | PASS |
+Study page: 92 controls (90 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/57`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-57-Policybazaar/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-57-Policybazaar/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-57-Policybazaar | PASS |
-| link | Day 56 · MediBuddy | navigate → /research/56 | PASS |
-| link | Day 58 · Delhivery | navigate → /research/58 | PASS |
+Study page: 73 controls (71 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/58`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-58-Delhivery/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-58-Delhivery/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-58-Delhivery | PASS |
-| link | Day 57 · Policybazaar | navigate → /research/57 | PASS |
-| link | Day 59 · ixigo | navigate → /research/59 | PASS |
+Study page: 73 controls (71 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/59`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-59-ixigo/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-59-ixigo/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-59-ixigo | PASS |
-| link | Day 58 · Delhivery | navigate → /research/58 | PASS |
-| link | Day 60 · IndiGo | navigate → /research/60 | PASS |
+Study page: 73 controls (71 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/6`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day%2006%20-%20Duolingo/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day%2006%20-%20Duolingo | PASS |
-| link | Day 5 · Airbnb | navigate → /research/5 | PASS |
-| link | Day 7 · PhonePe | navigate → /research/7 | PASS |
+Study page: 91 controls (91 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/60`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-60-IndiGo/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-60-IndiGo/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-60-IndiGo | PASS |
-| link | Day 59 · ixigo | navigate → /research/59 | PASS |
-| link | Day 61 · Atomberg | navigate → /research/61 | PASS |
+Study page: 100 controls (98 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/61`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-61-Atomberg/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-61-Atomberg/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-61-Atomberg | PASS |
-| link | Day 60 · IndiGo | navigate → /research/60 | PASS |
-| link | Day 62 · CtrlS | navigate → /research/62 | PASS |
+Study page: 90 controls (88 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/62`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-62-CtrlS/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-62-CtrlS/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-62-CtrlS | PASS |
-| link | Day 61 · Atomberg | navigate → /research/61 | PASS |
-| link | Day 63 · BookMyShow | navigate → /research/63 | PASS |
+Study page: 91 controls (89 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/63`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-63-BookMyShow/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-63-BookMyShow/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-63-BookMyShow | PASS |
-| link | Day 62 · CtrlS | navigate → /research/62 | PASS |
-| link | Day 64 · Zypp Electric | navigate → /research/64 | PASS |
+Study page: 77 controls (75 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/64`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-64-Zypp-Electric/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-64-Zypp-Electric/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-64-Zypp-Electric | PASS |
-| link | Day 63 · BookMyShow | navigate → /research/63 | PASS |
-| link | Day 65 · Vodafone Idea | navigate → /research/65 | PASS |
+Study page: 78 controls (76 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/65`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-65-Vodafone-Idea/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-65-Vodafone-Idea/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-65-Vodafone-Idea | PASS |
-| link | Day 64 · Zypp Electric | navigate → /research/64 | PASS |
-| link | Day 66 · Star Health | navigate → /research/66 | PASS |
+Study page: 79 controls (77 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/66`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-66-Star-Health/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-66-Star-Health/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-66-Star-Health | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 65 · Vodafone Idea | navigate → /research/65 | PASS |
-| link | Day 67 · Max Healthcare | navigate → /research/67 | PASS |
+Study page: 148 controls (146 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/67`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-67-Max-Healthcare/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-67-Max-Healthcare/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-67-Max-Healthcare | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 66 · Star Health | navigate → /research/66 | PASS |
-| link | Day 68 · Dr Lal PathLabs | navigate → /research/68 | PASS |
+Study page: 83 controls (81 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/68`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-68-Dr-Lal-PathLabs/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-68-Dr-Lal-PathLabs/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-68-Dr-Lal-PathLabs | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 67 · Max Healthcare | navigate → /research/67 | PASS |
-| link | Day 69 · MedPlus | navigate → /research/69 | PASS |
+Study page: 83 controls (81 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/69`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-69-MedPlus/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-69-MedPlus/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-69-MedPlus | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 68 · Dr Lal PathLabs | navigate → /research/68 | PASS |
-| link | Day 70 · Poly Medicure | navigate → /research/70 | PASS |
+Study page: 83 controls (81 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/7`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day%2007%20-%20PhonePe/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day%2007%20-%20PhonePe | PASS |
-| link | Day 6 · Duolingo | navigate → /research/6 | PASS |
-| link | Day 8 · Blinkit | navigate → /research/8 | PASS |
+Study page: 120 controls (120 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/70`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-70-Poly-Medicure/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-70-Poly-Medicure/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-70-Poly-Medicure | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 69 · MedPlus | navigate → /research/69 | PASS |
-| link | Day 71 · Akums | navigate → /research/71 | PASS |
+Study page: 83 controls (81 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/71`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-71-Akums/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-71-Akums/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-71-Akums | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 70 · Poly Medicure | navigate → /research/70 | PASS |
-| link | Day 72 · Entero Healthcare | navigate → /research/72 | PASS |
+Study page: 83 controls (81 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/72`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-72-Entero-Healthcare/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-72-Entero-Healthcare/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-72-Entero-Healthcare | PASS |
-| link | Day 71 · Akums | navigate → /research/71 | PASS |
-| link | Day 73 · Rainbow Children's Medicare | navigate → /research/73 | PASS |
+Study page: 80 controls (78 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/73`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-73-Rainbow-Children's-Medicare/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-73-Rainbow-Children's-Medicare/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-73-Rainbow-Children's-Medicare | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 72 · Entero Healthcare | navigate → /research/72 | PASS |
-| link | Day 74 · Cipla | navigate → /research/74 | PASS |
+Study page: 83 controls (81 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/74`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-74-Cipla/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-74-Cipla/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-74-Cipla | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 73 · Rainbow Children's Medicare | navigate → /research/73 | PASS |
-| link | Day 75 · Medi Assist | navigate → /research/75 | PASS |
+Study page: 155 controls (153 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/75`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-75-Medi-Assist/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-75-Medi-Assist/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-75-Medi-Assist | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 74 · Cipla | navigate → /research/74 | PASS |
-| link | Day 76 · Dr Agarwals Healthcare | navigate → /research/76 | PASS |
+Study page: 82 controls (80 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/76`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-76-Dr-Agarwals-Healthcare/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-76-Dr-Agarwals-Healthcare/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-76-Dr-Agarwals-Healthcare | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 75 · Medi Assist | navigate → /research/75 | PASS |
-| link | Day 77 · NephroPlus | navigate → /research/77 | PASS |
+Study page: 147 controls (145 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/77`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-77-NephroPlus/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-77-NephroPlus/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-77-NephroPlus | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 76 · Dr Agarwals Healthcare | navigate → /research/76 | PASS |
-| link | Day 78 · Oura | navigate → /research/78 | PASS |
+Study page: 147 controls (145 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/78`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-78-Oura/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-78-Oura/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-78-Oura | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 77 · NephroPlus | navigate → /research/77 | PASS |
-| link | Day 79 · Ultrahuman | navigate → /research/79 | PASS |
+Study page: 145 controls (143 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/79`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-79-Ultrahuman/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-79-Ultrahuman/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-79-Ultrahuman | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 78 · Oura | navigate → /research/78 | PASS |
-| link | Day 80 · Hims and Hers | navigate → /research/80 | PASS |
+Study page: 145 controls (143 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/8`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-08-Blinkit/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-08-Blinkit | PASS |
-| link | Day 7 · PhonePe | navigate → /research/7 | PASS |
-| link | Day 9 · Swiggy | navigate → /research/9 | PASS |
+Study page: 79 controls (79 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/80`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-80-Hims-and-Hers/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-80-Hims-and-Hers/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-80-Hims-and-Hers | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 79 · Ultrahuman | navigate → /research/79 | PASS |
-| link | Day 81 · Hinge Health | navigate → /research/81 | PASS |
+Study page: 145 controls (143 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/81`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-81-Hinge-Health/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-81-Hinge-Health/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-81-Hinge-Health | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 80 · Hims and Hers | navigate → /research/80 | PASS |
-| link | Day 82 · Doximity | navigate → /research/82 | PASS |
+Study page: 148 controls (146 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/82`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-82-Doximity/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-82-Doximity/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-82-Doximity | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 81 · Hinge Health | navigate → /research/81 | PASS |
-| link | Day 83 · OpenEvidence | navigate → /research/83 | PASS |
+Study page: 133 controls (131 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/83`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-83-OpenEvidence/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-83-OpenEvidence/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-83-OpenEvidence | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 82 · Doximity | navigate → /research/82 | PASS |
-| link | Day 84 · Abridge | navigate → /research/84 | PASS |
+Study page: 137 controls (135 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/84`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-84-Abridge/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-84-Abridge/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-84-Abridge | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 83 · OpenEvidence | navigate → /research/83 | PASS |
-| link | Day 85 · Eka Care | navigate → /research/85 | PASS |
+Study page: 131 controls (129 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/85`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-85-Eka-Care/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-85-Eka-Care/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-85-Eka-Care | PASS |
-| link | Day 84 · Abridge | navigate → /research/84 | PASS |
-| link | Day 86 · Hippocratic AI | navigate → /research/86 | PASS |
+Study page: 121 controls (119 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/86`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-86-Hippocratic-AI/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-86-Hippocratic-AI/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-86-Hippocratic-AI | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 85 · Eka Care | navigate → /research/85 | PASS |
-| link | Day 87 · Tempus AI | navigate → /research/87 | PASS |
+Study page: 126 controls (124 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/87`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-87-Tempus-AI/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-87-Tempus-AI/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-87-Tempus-AI | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 86 · Hippocratic AI | navigate → /research/86 | PASS |
-| link | Day 88 · Qure ai | navigate → /research/88 | PASS |
+Study page: 75 controls (73 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/88`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-88-Qure-ai/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-88-Qure-ai/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-88-Qure-ai | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 87 · Tempus AI | navigate → /research/87 | PASS |
-| link | Day 89 · Gaudium IVF | navigate → /research/89 | PASS |
+Study page: 85 controls (83 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/89`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-89-Gaudium-IVF/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-89-Gaudium-IVF/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-89-Gaudium-IVF | PASS |
-| link | Evamastu | navigate → /projects/evamastu | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | CareConnect | navigate → /projects/careconnect | PASS |
-| link | Day 88 · Qure ai | navigate → /research/88 | PASS |
-| link | Day 90 · Health in ChatGPT | navigate → /research/90 | PASS |
+Study page: 87 controls (85 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/research/9`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-09-Swiggy/README.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-09-Swiggy | PASS |
-| link | Day 8 · Blinkit | navigate → /research/8 | PASS |
-| link | Day 10 · LinkedIn | navigate → /research/10 | PASS |
+Study page: 106 controls (106 links incl. the study's own contents and citations, 0 buttons, 0 fields) — 0 failures.
 
 ### `/research/90`
 
-| Kind | Name | Expected action | Result |
-|---|---|---|---|
-| link | Skip to content | navigate → #main | PASS |
-| link | Research library | navigate → /research | PASS |
-| link | Read the full study on GitHub | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-90-Health-in-ChatGPT/README.md | PASS |
-| link | ASSUMPTIONS file | navigate → https://github.com/gaurav-product/product-management-case-studies/blob/main/Case%20Studies/Day-90-Health-in-ChatGPT/ASSUMPTIONS.md | PASS |
-| link | Directory | navigate → https://github.com/gaurav-product/product-management-case-studies/tree/main/Case%20Studies/Day-90-Health-in-ChatGPT | PASS |
-| link | Aaroh | navigate → /projects/aaroh | PASS |
-| link | GharGyaan | navigate → /projects/ghargyaan | PASS |
-| link | Nexus | navigate → /projects/nexus | PASS |
-| link | Day 89 · Gaudium IVF | navigate → /research/89 | PASS |
+Study page: 86 controls (84 links incl. the study's own contents and citations, 2 buttons, 0 fields) — 0 failures.
 
 ### `/search`
 

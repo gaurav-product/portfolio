@@ -9,6 +9,7 @@ import { Container, ButtonLink, SectionHeader, Pill, Button } from "~/components
 import { ProjectCard } from "~/components/cards";
 import { Icon } from "~/components/Icon";
 import { IntroFilm, useIntro } from "~/components/IntroFilm";
+import { Portrait } from "~/components/Portrait";
 import { seo, asset } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 
@@ -29,6 +30,7 @@ export default function Home() {
           className="pointer-events-none absolute inset-x-0 top-0 h-[520px] w-full object-cover opacity-45 md:hidden" />
         <Container wide className="relative grid gap-10 py-14 sm:py-20 lg:grid-cols-[1.25fr_.75fr] lg:items-center lg:py-24">
           <div>
+            <Portrait size={132} className="mb-6 !mx-0 lg:hidden" />
             <p className="eyebrow mb-4">Hello, I’m</p>
             <h1 id="hero-title" className="text-[44px] font-bold leading-[1.02] sm:text-6xl xl:text-7xl">{profile.name}</h1>
             <p className="mt-5 max-w-2xl font-display text-xl font-medium leading-snug text-ink sm:text-2xl">
@@ -51,6 +53,8 @@ export default function Home() {
             </div>
           </div>
 
+          <div className="grid gap-8">
+          <Portrait size={230} className="max-lg:hidden" />
           <aside aria-label="Verified highlights" className="card grid grid-cols-2 gap-px overflow-hidden bg-line p-0">
             {highlights.map((h) => (
               <div key={h.label} className="bg-surface p-5">
@@ -61,6 +65,7 @@ export default function Home() {
             ))}
             <p className="col-span-2 bg-surface px-5 py-3 text-xs text-dim">Every figure is from the CV or a public repository. <Link to="/about#evidence" className="underline underline-offset-4 hover:text-ink">How evidence is labelled</Link></p>
           </aside>
+          </div>
         </Container>
 
         {/* district strip */}

@@ -12,6 +12,6 @@ export default defineConfig({
   webServer: { command: "node scripts/serve.mjs", url: "http://127.0.0.1:4173/", reuseExistingServer: true, timeout: 30_000 },
   projects: [
     { name: "desktop", use: { viewport: { width: 1440, height: 900 } } },
-    { name: "mobile", use: { ...devices["Pixel 7"], launchOptions: { executablePath: exe } }, testMatch: /journeys|mobile/ },
+    { name: "mobile", use: { ...devices["Pixel 7"], launchOptions: { executablePath: exe } }, testMatch: /journeys|refinements|controls/ },
   ],
 });

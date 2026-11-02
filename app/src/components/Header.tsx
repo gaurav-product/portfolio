@@ -64,6 +64,7 @@ export function Header() {
         <div className="fixed inset-0 z-50 min-[1440px]:hidden">
           <button type="button" aria-label="Close menu" tabIndex={-1} className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
           <div ref={drawerRef} id="nav-drawer" role="dialog" aria-modal="true" aria-label="Site menu"
+            onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setOpen(false); /* also closes on the current page's link */ }}
             className="absolute right-0 top-0 flex h-dvh w-[min(360px,88vw)] flex-col overflow-y-auto border-l border-line bg-surface p-5">
             <div className="mb-4 flex items-center justify-between">
               <Wordmark />

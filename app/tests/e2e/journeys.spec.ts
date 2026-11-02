@@ -125,7 +125,8 @@ test("J7 research → filter → article → back to library", async ({ page }) 
   await page.getByLabel("Evidence level").selectOption("VERIFIED");
   await expect(page).toHaveURL(/category=Healthcare.*evidence=VERIFIED|evidence=VERIFIED.*category=Healthcare/);
   await page.locator('a[href^="/research/"]').first().click();
-  await expect(page.getByRole("link", { name: "Read the full study on GitHub" })).toHaveAttribute("href", /^https:\/\/github\.com\/gaurav-product\//);
+  await expect(page.getByTestId("study-text")).not.toBeEmpty();
+  await expect(page.getByRole("link", { name: "View source on GitHub" })).toHaveAttribute("href", /^https:\/\/github\.com\/gaurav-product\/product-management-case-studies\/blob\/[0-9a-f]{40}\//);
   await page.getByRole("link", { name: "Research library" }).click();
   await expect(page).toHaveURL(/\/research$/);
 });

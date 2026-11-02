@@ -1,0 +1,150 @@
+{
+  "careconnect/01-sign-in": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/02-family-dashboard": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/03-day-record": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/04-handover-pack": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/05-attendants": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/06-insights": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/07-attendant-shift": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/08-attendant-report": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/09-attendant-reason": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/10-family-dashboard-mobile": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/11-corrections": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/12-create-care-case": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/13-choose-recovery-type": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/14-care-plan-medicines": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/15-invite-code": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/16-attendant-join": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/17-attendant-before-shift": {
+    "approved": false,
+    "caption": ""
+  },
+  "careconnect/18-family-tablet": {
+    "approved": false,
+    "caption": ""
+  },
+  "ghargyaan/00-landing-desktop": {
+    "approved": false,
+    "caption": ""
+  },
+  "ghargyaan/01-home": {
+    "approved": false,
+    "caption": ""
+  },
+  "ghargyaan/02-query-flow": {
+    "approved": false,
+    "caption": ""
+  },
+  "ghargyaan/03-result": {
+    "approved": false,
+    "caption": ""
+  },
+  "ghargyaan/04-dadi-says": {
+    "approved": false,
+    "caption": ""
+  },
+  "ghargyaan/05-explore": {
+    "approved": false,
+    "caption": ""
+  },
+  "ghargyaan/06-safety-escalation": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/01-inbox": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/02-resolve-conflict": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/03-change": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/04-commitment": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/05-missing-document": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/06-sources-injection-flag": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/07-dark": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/08-mobile-inbox": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/09-mobile-conflict": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/10-research-first": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/11-mobile-research-first": {
+    "approved": false,
+    "caption": ""
+  },
+  "nexus/12-research-compare": {
+    "approved": false,
+    "caption": ""
+  }
+}
