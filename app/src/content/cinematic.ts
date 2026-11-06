@@ -14,3 +14,6 @@ export const cinematic = (id: string): Cinematic => {
   return c;
 };
 export const cinematicIds = list.map((x) => x.id);
+export const hasCinematic = (id: string) => list.some((x) => x.id === id);
+/** The original 3D render for a project, when one exists. */
+export const projectArt = (slug: string) => (hasCinematic(`render-project-${slug}`) ? `render-project-${slug}` : null);

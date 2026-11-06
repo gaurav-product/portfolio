@@ -2,6 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import gsap from "gsap";
 import type { District } from "~/content/districts";
 
@@ -14,6 +18,8 @@ import type { District } from "~/content/districts";
  *  Professional Experience — a working skyline
  *  Knowledge & Headquarters — a tiered rotunda under the halo */
 const HOME = { pos: new THREE.Vector3(0, 21, 27), target: new THREE.Vector3(0, 0, 1.5) };
+/** Opening shot: high above and far back, so the intro descends onto the city. */
+const INTRO = new THREE.Vector3(0, 52, 78);
 const C = { green: new THREE.Color("#6BE39A"), cyan: new THREE.Color("#35D6D0"), body: new THREE.Color("#16231F"), ground: new THREE.Color("#0B1110"), road: new THREE.Color("#121D19") };
 const PLAZA = 2.9;
 
@@ -155,7 +161,79 @@ function Roads({ districts }: { districts: District[] }) {
   ))}</>;
 }
 
-function Rig({ selected, districts, resetKey, labels, reduced }: { selected: string | null; districts: District[]; resetKey: number; labels: React.MutableRefObject<Record<string, HTMLElement | null>>; reduced: boolean }) {
+/** Bloom on capable GPUs only: the glow is what makes the city read as light rather than wireframe. */
+function Bloom() {
+  const { gl, scene, camera, size } = useThree();
+  const composer = useMemo(() => {
+    const c = new EffectComposer(gl);
+    c.addPass(new RenderPass(scene, camera));
+    c.addPass(new UnrealBloomPass(new THREE.Vector2(size.width, size.height), 0.6, 0.55, 0.6));
+    c.addPass(new OutputPass());
+    return c;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gl, scene, camera]);
+  useEffect(() => { composer.setPixelRatio(gl.getPixelRatio()); composer.setSize(size.width, size.height); }, [composer, gl, size]);
+  useEffect(() => () => composer.dispose(), [composer]);
+  useFrame(() => composer.render(), 1); // priority 1 takes over rendering from the default pass
+  return null;
+}
+
+function radialTexture(color: THREE.Color) {
+  const cv = document.createElement("canvas"); cv.width = cv.height = 128;
+  const g = cv.getContext("2d")!; const grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  const rgb = `${Math.round(color.r * 255)},${Math.round(color.g * 255)},${Math.round(color.b * 255)}`;
+  grad.addColorStop(0, `rgba(${rgb},1)`); grad.addColorStop(1, `rgba(${rgb},0)`); g.fillStyle = grad; g.fillRect(0, 0, 128, 128);
+  return new THREE.CanvasTexture(cv);
+}
+
+/** Sky, drifting light and pools of glow under each district. */
+function Atmosphere({ districts, live }: { districts: District[]; live: boolean }) {
+  const stars = useMemo(() => {
+    const r = rng(42), pts: number[] = [];
+    for (let i = 0; i < 700; i++) { const th = r() * Math.PI * 2, ph = r() * Math.PI * 0.42; pts.push(Math.cos(th) * Math.sin(ph) * 95, Math.cos(ph) * 95 - 8, Math.sin(th) * Math.sin(ph) * 95); }
+    const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3)); return g;
+  }, []);
+  const dust = useMemo(() => {
+    const r = rng(7), pts: number[] = [];
+    for (let i = 0; i < 420; i++) pts.push((r() - 0.5) * 56, 0.5 + r() * 12, (r() - 0.5) * 56);
+    const g = new THREE.BufferGeometry(); g.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3)); return g;
+  }, []);
+  const pools = useMemo(() => ({ green: radialTexture(C.green), cyan: radialTexture(C.cyan) }), []);
+  const dustRef = useRef<THREE.Points>(null);
+  useFrame((state, dt) => {
+    if (!live || !dustRef.current) return;
+    dustRef.current.rotation.y += Math.min(dt, 0.05) * 0.015; dustRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.2) * 0.4;
+  });
+  return (
+    <>
+      <points geometry={stars}><pointsMaterial color="#cfe9dc" size={1.6} sizeAttenuation={false} transparent opacity={0.7} fog={false} depthWrite={false} /></points>
+      <points ref={dustRef} geometry={dust}><pointsMaterial color={C.green} size={0.09} transparent opacity={0.55} depthWrite={false} blending={THREE.AdditiveBlending} /></points>
+      {districts.map((d) => (
+        <mesh key={d.id} rotation-x={-Math.PI / 2} position={[d.pos[0], 0.008, d.pos[1]]}>
+          <planeGeometry args={[11, 11]} />
+          <meshBasicMaterial map={d.tone === "green" ? pools.green : pools.cyan} transparent opacity={0.16} depthWrite={false} blending={THREE.AdditiveBlending} />
+        </mesh>
+      ))}
+    </>
+  );
+}
+
+/** Keeps the city alive (halo turning, light drifting) on capable GPUs, only while the scene is on screen. */
+function Pulse({ live }: { live: boolean }) {
+  const halo = useRef<THREE.Group>(null);
+  useFrame((state, dt) => {
+    if (!halo.current) return;
+    if (live) { halo.current.rotation.y += Math.min(dt, 0.05) * 0.3; state.invalidate(); }
+  });
+  return (
+    <group ref={halo} position-y={5.4}>
+      <mesh><torusGeometry args={[1.3, 0.05, 12, 96]} /><meshBasicMaterial color={C.green} /></mesh>
+      <mesh rotation-x={Math.PI / 2.4}><torusGeometry args={[1.9, 0.025, 8, 96]} /><meshBasicMaterial color={C.cyan} transparent opacity={0.7} /></mesh>
+    </group>
+  );
+}
+
+function Rig({ selected, districts, resetKey, labels, reduced, intro, onIntroDone }: { selected: string | null; districts: District[]; resetKey: number; labels: React.MutableRefObject<Record<string, HTMLElement | null>>; reduced: boolean; intro: React.MutableRefObject<boolean>; onIntroDone: () => void }) {
   const { camera, gl, size, invalidate } = useThree();
   const controls = useRef<OrbitControls | null>(null);
   useEffect(() => {
@@ -174,12 +252,16 @@ function Rig({ selected, districts, resetKey, labels, reduced }: { selected: str
     const to = d ? { pos: new THREE.Vector3(d.pos[0] * 1.25 + shift, 11.5, d.pos[1] * 1.25 + 15), target: new THREE.Vector3(d.pos[0] + shift, 1, d.pos[1]) } : HOME;
     // glide along an arc that rises over the city between stops, rather than a straight cut
     const from = camera.position.clone(), fromT = c.target.clone();
-    const lift = Math.min(8, from.distanceTo(to.pos) * 0.35);
+    const opening = intro.current; intro.current = false;
+    const dist = from.distanceTo(to.pos);
+    if (dist < 0.01 && fromT.distanceTo(to.target) < 0.01) { if (opening) onIntroDone(); return; } // nothing to move
+    const lift = opening ? 0 : Math.min(8, dist * 0.35);
     const ctrl = from.clone().lerp(to.pos, 0.5).add(new THREE.Vector3(0, lift, 0));
     const path = new THREE.QuadraticBezierCurve3(from, ctrl, to.pos);
     const s = { t: 0 };
     const step = () => { path.getPoint(s.t, camera.position); c.target.lerpVectors(fromT, to.target, s.t); invalidate(); };
-    const tween = gsap.to(s, { t: 1, duration: reduced ? 0 : 1.9, ease: "power2.inOut", onUpdate: step, onComplete: step });
+    const tween = gsap.to(s, { t: 1, duration: reduced ? 0 : opening ? 3.6 : 1.9, ease: opening ? "power3.inOut" : "power2.inOut", onUpdate: step,
+      onComplete: () => { step(); if (opening) onIntroDone(); } });
     invalidate();
     return () => { tween.kill(); };
   // eslint-disable-next-line react-hooks/exhaustive-deps -- re-framing on every resize would fight the user's orbit
@@ -200,8 +282,21 @@ function Rig({ selected, districts, resetKey, labels, reduced }: { selected: str
   return null;
 }
 
-export default function Scene({ districts, selected, onSelect, resetKey, labels, reduced }:
-  { districts: District[]; selected: string | null; onSelect: (id: string | null) => void; resetKey: number; labels: React.MutableRefObject<Record<string, HTMLElement | null>>; reduced: boolean }) {
+export type Tier = "full" | "lite";
+export default function Scene({ districts, selected, onSelect, resetKey, labels, reduced, intro = false, onIntroDone = () => {}, onTier = () => {}, forceTier }:
+  { districts: District[]; selected: string | null; onSelect: (id: string | null) => void; resetKey: number; labels: React.MutableRefObject<Record<string, HTMLElement | null>>; reduced: boolean;
+    intro?: boolean; onIntroDone?: () => void; onTier?: (t: Tier) => void; forceTier?: Tier }) {
+  // Device tier: a software renderer (no GPU) gets the same city without bloom, ambient motion or the fly-in.
+  const [tier, setTier] = useState<Tier | null>(null);
+  const introRef = useRef(intro);
+  const [visible, setVisible] = useState(true);
+  const host = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = host.current; if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting)); io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  const live = tier === "full" && !reduced && visible;
   // The city assembles one district at a time — headquarters first, then outward. Besides the
   // effect, this splits the first render's GPU upload into small tasks instead of one long block.
   const order = useMemo(() => [...districts].sort((a, b) => Math.hypot(...a.pos) - Math.hypot(...b.pos)), [districts]);
@@ -213,24 +308,32 @@ export default function Scene({ districts, selected, onSelect, resetKey, labels,
   }, [built, order.length, reduced]);
   const shown = new Set(order.slice(0, built).map((d) => d.id));
   return (
-    <Canvas frameloop="demand" camera={{ position: HOME.pos.toArray(), fov: 45, near: 0.1, far: 200 }} dpr={[1, 1.75]} gl={{ antialias: true, powerPreference: "high-performance" }}
+    <div ref={host} className="h-full w-full">
+    <Canvas frameloop="demand" camera={{ position: (intro ? INTRO : HOME.pos).toArray(), fov: 45, near: 0.1, far: 220 }} dpr={[1, 1.75]} gl={{ antialias: true, powerPreference: "high-performance" }}
       onPointerMissed={() => onSelect(null)} aria-hidden
       // production build: skip the synchronous shader-status check, which blocks the main thread while programs compile
-      onCreated={({ gl }) => { if (!import.meta.env.DEV) gl.debug.checkShaderErrors = false; }}>
+      onCreated={({ gl, camera }) => {
+        if (!import.meta.env.DEV) gl.debug.checkShaderErrors = false;
+        const ctx = gl.getContext(); const ext = ctx.getExtension("WEBGL_debug_renderer_info");
+        const name = String(ext ? ctx.getParameter(ext.UNMASKED_RENDERER_WEBGL) : ctx.getParameter(ctx.RENDERER));
+        const t: Tier = forceTier ?? (/swiftshader|llvmpipe|software|basic render/i.test(name) ? "lite" : "full"); // ?tier= overrides, for QA
+        if (t === "lite" && introRef.current) { introRef.current = false; camera.position.copy(HOME.pos); camera.lookAt(HOME.target); onIntroDone(); }
+        setTier(t); onTier(t);
+      }}>
       <color attach="background" args={[C.ground]} />
-      <fog attach="fog" args={[C.ground, 32, 72]} />
+      <fog attach="fog" args={[C.ground, 34, 84]} />
       <hemisphereLight args={["#cfe9dc", "#0B1110", 0.45]} />
       <directionalLight position={[10, 18, 8]} intensity={1.0} />
       <directionalLight position={[-12, 8, -10]} intensity={0.25} color="#35D6D0" />
       <gridHelper args={[80, 40, "#1B3A2D", "#13201C"]} position-y={0} />
       {/* HQ halo — floats above the Knowledge & Headquarters district at the centre */}
-      <group position-y={5.4}>
-        <mesh><torusGeometry args={[1.3, 0.05, 12, 96]} /><meshBasicMaterial color={C.green} /></mesh>
-        <mesh rotation-x={Math.PI / 2.4}><torusGeometry args={[1.9, 0.025, 8, 96]} /><meshBasicMaterial color={C.cyan} transparent opacity={0.7} /></mesh>
-      </group>
+      <Pulse live={live} />
+      <Atmosphere districts={districts} live={live} />
+      {tier === "full" && <Bloom />}
       {built >= order.length && <Roads districts={districts} />}
       {districts.map((d, i) => shown.has(d.id) && <DistrictBlock key={d.id} d={d} seed={i * 97} selected={selected === d.id} onSelect={() => onSelect(d.id)} />)}
-      <Rig selected={selected} districts={districts} resetKey={resetKey} labels={labels} reduced={reduced} />
+      {tier && <Rig selected={selected} districts={districts} resetKey={resetKey} labels={labels} reduced={reduced} intro={introRef} onIntroDone={onIntroDone} />}
     </Canvas>
+    </div>
   );
 }

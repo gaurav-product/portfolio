@@ -70,6 +70,31 @@
   .skip-link:focus { top: 12px; }
 }
 
+/* Project chapters: the art opens like a lens and the story rises as each chapter scrolls in.
+   Transform and clip only (never opacity), so text is always readable mid-animation. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .chapter-art { animation: chapter-art linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+    .chapter-copy { animation: chapter-copy linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+  }
+}
+@keyframes chapter-art { from { clip-path: inset(9% 7% round 24px); transform: scale(.97); } to { clip-path: inset(0 round 24px); transform: none; } }
+@keyframes chapter-copy { from { transform: translateY(56px); } to { transform: none; } }
+
+/* Explore Mode cinema */
+.intro-card { animation: intro-card 3.4s ease both; }
+@keyframes intro-card { 0% { opacity: 0; transform: scale(.98); } 18%, 70% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.title-card { animation: title-card .9s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes title-card { from { opacity: 0; transform: translateY(18px); letter-spacing: .02em; } to { opacity: 1; transform: none; } }
+.tour-progress { animation: tour-progress linear both; }
+@keyframes tour-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: no-preference) {
+  .kenburns { animation: kenburns 2.6s cubic-bezier(.2,.7,.2,1) both; transform-origin: 55% 55%; }
+  .hotspot::after { content: ""; position: absolute; inset: -6px; border-radius: 14px; border: 1px solid rgb(107 227 154 / .45); animation: hotspot 2.8s ease-out infinite; }
+}
+@keyframes kenburns { from { transform: scale(1.08); filter: brightness(.7); } to { transform: none; filter: none; } }
+@keyframes hotspot { from { opacity: .9; transform: scale(.92); } to { opacity: 0; transform: scale(1.12); } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
 }

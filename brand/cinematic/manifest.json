@@ -944,6 +944,461 @@
       "status": "INTEGRATED"
     },
     {
+      "id": "render-project-90-day-case-studies",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-90-day-case-studies.webp",
+      "source_bytes": 104898,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-90-day-case-studies-1600.webp",
+          "bytes": 28786
+        },
+        "1200": {
+          "file": "/cinematic/render-project-90-day-case-studies-1200.webp",
+          "bytes": 20066
+        },
+        "960": {
+          "file": "/cinematic/render-project-90-day-case-studies-960.webp",
+          "bytes": 14526
+        },
+        "768": {
+          "file": "/cinematic/render-project-90-day-case-studies-768.webp",
+          "bytes": 10664
+        },
+        "480": {
+          "file": "/cinematic/render-project-90-day-case-studies-480.webp",
+          "bytes": 5650
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-90-day-case-studies-1600.avif",
+          "bytes": 24342
+        },
+        "1200": {
+          "file": "/cinematic/render-project-90-day-case-studies-1200.avif",
+          "bytes": 16071
+        },
+        "960": {
+          "file": "/cinematic/render-project-90-day-case-studies-960.avif",
+          "bytes": 11541
+        },
+        "768": {
+          "file": "/cinematic/render-project-90-day-case-studies-768.avif",
+          "bytes": 8825
+        },
+        "480": {
+          "file": "/cinematic/render-project-90-day-case-studies-480.avif",
+          "bytes": 4550
+        }
+      },
+      "purpose": "90 case studies project art",
+      "used_by": [
+        "/projects",
+        "/projects/90-day-case-studies"
+      ],
+      "alt": "3D render: a curved wall of ninety tiles, some lit, facing a single point of light.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-aaroh",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-aaroh.webp",
+      "source_bytes": 93092,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-aaroh-1600.webp",
+          "bytes": 22434
+        },
+        "1200": {
+          "file": "/cinematic/render-project-aaroh-1200.webp",
+          "bytes": 15470
+        },
+        "960": {
+          "file": "/cinematic/render-project-aaroh-960.webp",
+          "bytes": 11626
+        },
+        "768": {
+          "file": "/cinematic/render-project-aaroh-768.webp",
+          "bytes": 8866
+        },
+        "480": {
+          "file": "/cinematic/render-project-aaroh-480.webp",
+          "bytes": 4926
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-aaroh-1600.avif",
+          "bytes": 14141
+        },
+        "1200": {
+          "file": "/cinematic/render-project-aaroh-1200.avif",
+          "bytes": 9922
+        },
+        "960": {
+          "file": "/cinematic/render-project-aaroh-960.avif",
+          "bytes": 7537
+        },
+        "768": {
+          "file": "/cinematic/render-project-aaroh-768.avif",
+          "bytes": 5895
+        },
+        "480": {
+          "file": "/cinematic/render-project-aaroh-480.avif",
+          "bytes": 3527
+        }
+      },
+      "purpose": "Aaroh project art",
+      "used_by": [
+        "/projects",
+        "/projects/aaroh"
+      ],
+      "alt": "3D render: a glowing stem rises above a glass surface while a branching root system spreads beneath it.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-careconnect",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-careconnect.webp",
+      "source_bytes": 87032,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-careconnect-1600.webp",
+          "bytes": 19294
+        },
+        "1200": {
+          "file": "/cinematic/render-project-careconnect-1200.webp",
+          "bytes": 12274
+        },
+        "960": {
+          "file": "/cinematic/render-project-careconnect-960.webp",
+          "bytes": 8702
+        },
+        "768": {
+          "file": "/cinematic/render-project-careconnect-768.webp",
+          "bytes": 6348
+        },
+        "480": {
+          "file": "/cinematic/render-project-careconnect-480.webp",
+          "bytes": 3228
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-careconnect-1600.avif",
+          "bytes": 15201
+        },
+        "1200": {
+          "file": "/cinematic/render-project-careconnect-1200.avif",
+          "bytes": 9789
+        },
+        "960": {
+          "file": "/cinematic/render-project-careconnect-960.avif",
+          "bytes": 7018
+        },
+        "768": {
+          "file": "/cinematic/render-project-careconnect-768.avif",
+          "bytes": 5244
+        },
+        "480": {
+          "file": "/cinematic/render-project-careconnect-480.avif",
+          "bytes": 2790
+        }
+      },
+      "purpose": "CareConnect project art",
+      "used_by": [
+        "/projects",
+        "/projects/careconnect"
+      ],
+      "alt": "3D render: a path of thirty tiles from a building marked with a cross to a small house, with a glass card part-way along.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-evamastu",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-evamastu.webp",
+      "source_bytes": 210606,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-evamastu-1600.webp",
+          "bytes": 56696
+        },
+        "1200": {
+          "file": "/cinematic/render-project-evamastu-1200.webp",
+          "bytes": 37440
+        },
+        "960": {
+          "file": "/cinematic/render-project-evamastu-960.webp",
+          "bytes": 27794
+        },
+        "768": {
+          "file": "/cinematic/render-project-evamastu-768.webp",
+          "bytes": 19960
+        },
+        "480": {
+          "file": "/cinematic/render-project-evamastu-480.webp",
+          "bytes": 10622
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-evamastu-1600.avif",
+          "bytes": 34178
+        },
+        "1200": {
+          "file": "/cinematic/render-project-evamastu-1200.avif",
+          "bytes": 22021
+        },
+        "960": {
+          "file": "/cinematic/render-project-evamastu-960.avif",
+          "bytes": 15987
+        },
+        "768": {
+          "file": "/cinematic/render-project-evamastu-768.avif",
+          "bytes": 11908
+        },
+        "480": {
+          "file": "/cinematic/render-project-evamastu-480.avif",
+          "bytes": 6503
+        }
+      },
+      "purpose": "Evamastu project art",
+      "used_by": [
+        "/projects",
+        "/projects/evamastu"
+      ],
+      "alt": "3D render: calm concentric ripples on dark water beneath a glass lotus, with points of light rising steadily.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-ghargyaan",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-ghargyaan.webp",
+      "source_bytes": 82800,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-ghargyaan-1600.webp",
+          "bytes": 19612
+        },
+        "1200": {
+          "file": "/cinematic/render-project-ghargyaan-1200.webp",
+          "bytes": 13458
+        },
+        "960": {
+          "file": "/cinematic/render-project-ghargyaan-960.webp",
+          "bytes": 10290
+        },
+        "768": {
+          "file": "/cinematic/render-project-ghargyaan-768.webp",
+          "bytes": 7588
+        },
+        "480": {
+          "file": "/cinematic/render-project-ghargyaan-480.webp",
+          "bytes": 4372
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-ghargyaan-1600.avif",
+          "bytes": 13670
+        },
+        "1200": {
+          "file": "/cinematic/render-project-ghargyaan-1200.avif",
+          "bytes": 10091
+        },
+        "960": {
+          "file": "/cinematic/render-project-ghargyaan-960.avif",
+          "bytes": 7351
+        },
+        "768": {
+          "file": "/cinematic/render-project-ghargyaan-768.avif",
+          "bytes": 5747
+        },
+        "480": {
+          "file": "/cinematic/render-project-ghargyaan-480.avif",
+          "bytes": 3488
+        }
+      },
+      "purpose": "GharGyaan project art",
+      "used_by": [
+        "/projects",
+        "/projects/ghargyaan"
+      ],
+      "alt": "3D render: points of light approach a glowing arch; a few amber points stop at it while green points continue to a faceted core.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-nexus",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-nexus.webp",
+      "source_bytes": 94582,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-nexus-1600.webp",
+          "bytes": 22940
+        },
+        "1200": {
+          "file": "/cinematic/render-project-nexus-1200.webp",
+          "bytes": 15722
+        },
+        "960": {
+          "file": "/cinematic/render-project-nexus-960.webp",
+          "bytes": 11362
+        },
+        "768": {
+          "file": "/cinematic/render-project-nexus-768.webp",
+          "bytes": 8408
+        },
+        "480": {
+          "file": "/cinematic/render-project-nexus-480.webp",
+          "bytes": 4500
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-nexus-1600.avif",
+          "bytes": 15166
+        },
+        "1200": {
+          "file": "/cinematic/render-project-nexus-1200.avif",
+          "bytes": 10593
+        },
+        "960": {
+          "file": "/cinematic/render-project-nexus-960.avif",
+          "bytes": 7963
+        },
+        "768": {
+          "file": "/cinematic/render-project-nexus-768.avif",
+          "bytes": 6114
+        },
+        "480": {
+          "file": "/cinematic/render-project-nexus-480.avif",
+          "bytes": 3515
+        }
+      },
+      "purpose": "Nexus project art",
+      "used_by": [
+        "/projects",
+        "/projects/nexus"
+      ],
+      "alt": "3D render: three streams of light converge on a glass cube; small amber markers sit on two of the streams.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-phonepe-smart-spend-coach",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-phonepe-smart-spend-coach.webp",
+      "source_bytes": 124502,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-1600.webp",
+          "bytes": 29104
+        },
+        "1200": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-1200.webp",
+          "bytes": 18656
+        },
+        "960": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-960.webp",
+          "bytes": 13642
+        },
+        "768": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-768.webp",
+          "bytes": 9956
+        },
+        "480": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-480.webp",
+          "bytes": 5332
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-1600.avif",
+          "bytes": 17947
+        },
+        "1200": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-1200.avif",
+          "bytes": 11907
+        },
+        "960": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-960.avif",
+          "bytes": 8429
+        },
+        "768": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-768.avif",
+          "bytes": 6277
+        },
+        "480": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-480.avif",
+          "bytes": 3456
+        }
+      },
+      "purpose": "PhonePe Smart Spend Coach project art (academic case)",
+      "used_by": [
+        "/projects",
+        "/projects/phonepe-smart-spend-coach"
+      ],
+      "alt": "3D render: stacks of coin-like discs on a plinth under a glowing guardrail, with a small light connected to one stack.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
       "id": "render-projects",
       "brief_image": null,
       "source": "brand/renders/source/render-projects.webp",

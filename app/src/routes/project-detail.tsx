@@ -1,3 +1,5 @@
+import { CinematicImage } from "~/components/CinematicImage";
+import { projectArt } from "~/content/cinematic";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { projects } from "~/content/projects";
@@ -35,10 +37,18 @@ export default function ProjectDetail() {
       <header className="hero-glow relative overflow-hidden border-b border-line-soft">
         {/* cover diagram sits right of the text column on desktop only, so its lettering never runs behind the copy */}
         <div aria-hidden className="absolute inset-y-0 right-0 w-[46%] max-lg:hidden">
-          <img src={asset(p.cover)} alt="" width={1200} height={750} className="h-full w-full object-cover opacity-70" />
+          {projectArt(p.slug)
+            ? <CinematicImage id={projectArt(p.slug)!} decorative sizes="46vw" className="h-full" imgClassName="h-full object-cover" />
+            : <img src={asset(p.cover)} alt="" width={1200} height={750} className="h-full w-full object-cover opacity-70" />}
           <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/50 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />
         </div>
+        {projectArt(p.slug) && (
+          <div aria-hidden="true" className="relative h-48 overflow-hidden sm:h-60 lg:hidden">
+            <CinematicImage id={projectArt(p.slug)!} decorative sizes="100vw" className="h-full" imgClassName="h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-b from-bg/30 via-transparent to-bg" />
+          </div>
+        )}
         <Container wide className="relative py-16 sm:py-20">
           <Link to="/projects" className="inline-flex min-h-8 items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All projects</Link>
           <div className="mt-6 flex flex-wrap items-center gap-2"><Pill tone={statusTone(p.status)}>{p.status}</Pill><Pill>{p.kindLabel}</Pill></div>

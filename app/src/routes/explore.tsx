@@ -11,6 +11,7 @@ import { Ambient } from "~/lib/ambient";
 export const meta = () => seo("Explore Mode", "Explore the Gaurav.OS world: six districts, from Product Leadership to AI & Safety, each opening real portfolio content.", "/explore");
 
 const Scene = lazy(() => import("~/components/explore/Scene"));
+const AUTO_MS = 6500;
 
 function webglOk() {
   try { const c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); } catch { return false; }
@@ -31,6 +32,9 @@ export default function Explore() {
   const [reduced, setReduced] = useState(false);
   const [resetKey, setResetKey] = useState(0);
   const [tour, setTour] = useState<number | null>(null);
+  const [auto, setAuto] = useState(false);
+  const [intro, setIntro] = useState(false); // cinematic opening (3D, full-tier GPUs, motion allowed)
+  const [tier, setTier] = useState<"full" | "lite" | null>(null);
   const [sound, setSound] = useState(false);
   const [soundError, setSoundError] = useState("");
   const ambient = useRef<Ambient | null>(null);
@@ -45,6 +49,7 @@ export default function Explore() {
     if (!webglOk()) { setMode("2d"); setWhy2d("3D needs WebGL, which this browser does not provide, so the map is shown."); return; }
     if (forced !== "3d" && (innerWidth < 1024 || rm)) { setMode("2d"); setWhy2d(rm ? "Reduced motion is on, so the map is shown instead of the 3D scene." : "On smaller screens the lightweight map is shown by default."); return; }
     setMode("3d");
+    if (!params.get("d")) setIntro(true);
     track("explore_mode_opened", { view: "3d" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -69,10 +74,18 @@ export default function Explore() {
 
   const goTour = (i: number | null) => {
     setTour(i);
-    if (i === null) { select(null); return; }
+    if (i === null) { setAuto(false); select(null); return; }
     select(districts[i].id);
     if (i === 0) track("tool_used", { tool: "guided_tour" });
   };
+  // Autoplay: each stop holds for a few seconds, then the camera flies on; it stops at the last stop.
+  useEffect(() => {
+    if (!auto || tour === null) return;
+    if (tour >= districts.length - 1) { const t = setTimeout(() => setAuto(false), AUTO_MS); return () => clearTimeout(t); }
+    const t = setTimeout(() => goTour(tour + 1), AUTO_MS);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auto, tour]);
   const toggleSound = async () => {
     setSoundError("");
     try {
@@ -84,15 +97,17 @@ export default function Explore() {
 
   const d = selected ? districtById(selected)! : null;
   const tourBar = tour !== null && (
-    <div role="group" aria-label="Guided tour" className="card flex flex-wrap items-center justify-between gap-3 border-green/40 p-3" data-testid="tour-bar">
+    <div role="group" aria-label="Guided tour" className="card relative flex flex-wrap items-center justify-between gap-3 overflow-hidden border-green/40 p-3" data-testid="tour-bar">
       <p aria-live="polite" className="text-sm"><span className="label mr-2 !text-green">Guided tour</span>Stop {tour + 1} of {districts.length} · <b>{districts[tour].name}</b></p>
       <div className="flex gap-2">
         <Button icon="left" disabled={tour === 0} onClick={() => goTour(tour - 1)} aria-label="Previous stop">Previous</Button>
         {tour < districts.length - 1
           ? <Button variant="primary" onClick={() => goTour(tour + 1)} aria-label="Next stop">Next <Icon name="right" /></Button>
           : <ButtonLinkLike to="/recruiter" />}
+        <Button icon={auto ? "mute" : "play"} aria-pressed={auto} onClick={() => setAuto((a) => !a)}>Autoplay</Button>
         <Button variant="ghost" icon="close" onClick={() => goTour(null)}>End tour</Button>
       </div>
+      {auto && <span aria-hidden key={tour} className="tour-progress absolute inset-x-0 bottom-0 h-0.5 origin-left bg-green" style={{ animationDuration: `${AUTO_MS}ms` }} />}
     </div>
   );
 
@@ -149,7 +164,9 @@ export default function Explore() {
           <div className="relative h-[min(74vh,760px)] min-h-[460px] overflow-hidden rounded-3xl border border-line-soft" data-testid="scene">
             <SceneBoundary onFail={() => { setMode("2d"); setWhy2d("The 3D scene failed to start, so the map is shown instead."); }}>
               <Suspense fallback={<p role="status" className="grid h-full place-items-center text-muted">Loading the 3D scene…</p>}>
-                <Scene districts={districts} selected={selected} onSelect={(id) => { setTour(null); select(id); }} resetKey={resetKey} labels={labels} reduced={reduced} />
+                <Scene districts={districts} selected={selected} onSelect={(id) => { setTour(null); setAuto(false); select(id); }} resetKey={resetKey} labels={labels} reduced={reduced}
+                  intro={intro} onIntroDone={() => setIntro(false)} onTier={setTier}
+                  forceTier={params.get("tier") === "full" ? "full" : params.get("tier") === "lite" ? "lite" : undefined} />
               </Suspense>
             </SceneBoundary>
             <nav aria-label="Districts" className="pointer-events-none absolute inset-0">
@@ -167,6 +184,26 @@ export default function Explore() {
                 ))}
               </ul>
             </nav>
+            {/* cinematic opening: letterbox bars and a title card while the camera descends */}
+            <div aria-hidden className={cx("letterbox pointer-events-none absolute inset-x-0 top-0 bg-black transition-[height] duration-700", intro && tier === "full" ? "h-[11%]" : "h-0")} />
+            <div aria-hidden className={cx("letterbox pointer-events-none absolute inset-x-0 bottom-0 bg-black transition-[height] duration-700", intro && tier === "full" ? "h-[11%]" : "h-0")} />
+            {intro && tier === "full" && (
+              <div className="intro-card pointer-events-none absolute inset-0 grid place-items-center text-center" aria-hidden>
+                <div>
+                  <p className="eyebrow">Gaurav.OS</p>
+                  <p className="mt-3 font-display text-4xl font-bold text-ink sm:text-6xl">Six districts. One portfolio.</p>
+                  <p className="mt-3 text-muted">Product · Health · AI safety · Research · Experience · Knowledge</p>
+                </div>
+              </div>
+            )}
+            {intro && tier === "full" && <Button onClick={() => { setIntro(false); setResetKey((k) => k + 1); }} className="!absolute right-4 top-4 z-10 !bg-bg/70 backdrop-blur" icon="skip">Skip intro</Button>}
+            {/* district title card — the film's chapter title, lower left (the panel holds the detail) */}
+            {d && !intro && (
+              <div key={d.id} aria-hidden className="title-card pointer-events-none absolute bottom-12 left-6 hidden max-w-[44%] lg:block">
+                <p className="eyebrow">District {d.index}</p>
+                <p className="mt-2 font-display text-5xl font-bold leading-none text-ink [text-shadow:0_2px_24px_rgb(0_0_0/.8)]">{d.name}</p>
+              </div>
+            )}
             <p className="pointer-events-none absolute bottom-3 left-4 right-4 text-xs text-dim">Drag to orbit · scroll to zoom · Tab through districts · Esc to close · abstract architecture, not real facilities</p>
             {d && <div className="absolute right-3 top-3 max-h-[calc(100%-24px)] w-[min(400px,calc(100%-24px))] overflow-y-auto rounded-[var(--radius-card)]">{Panel}</div>}
           </div>
@@ -179,14 +216,14 @@ export default function Explore() {
           <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
             <figure className="card relative self-start overflow-hidden" data-testid="world-map">
               {/* the hotspot layer is exactly the image box, so percentages map onto the illustration */}
-              <div className="relative">
+              <div className="kenburns relative">
               <CinematicImage id="gaurav-world-hero" decorative sizes="(min-width: 1280px) 60vw, 100vw" />
               <nav aria-label="Districts" className="absolute inset-0">
                 <ul>
                   {districts.map((x) => (
                     <li key={x.id}><button type="button" onClick={() => { setTour(null); select(x.id); }} aria-pressed={selected === x.id} aria-label={x.name}
                       style={{ left: `${x.world[0]}%`, top: `${x.world[1]}%` }}
-                      className={cx("absolute h-[11%] w-[17%] min-h-8 -translate-x-1/2 -translate-y-1/2 rounded-xl border-2 transition-colors",
+                      className={cx("hotspot absolute h-[11%] w-[17%] min-h-8 -translate-x-1/2 -translate-y-1/2 rounded-xl border-2 transition-colors",
                         selected === x.id ? "border-green bg-green/15 shadow-[0_0_24px_rgb(107_227_154/.45)]" : "border-transparent hover:border-green/70 focus-visible:border-green")} /></li>
                   ))}
                 </ul>

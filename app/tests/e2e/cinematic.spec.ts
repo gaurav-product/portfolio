@@ -52,6 +52,8 @@ test("J20 world map: every hotspot sits on the illustration and opens its distri
   const map = page.getByTestId("world-map");
   const img = map.locator("img");
   await expect(img).toBeVisible();
+  // the map opens with a short settle-in zoom; measure alignment once it has come to rest
+  await map.locator(".kenburns").evaluate((el) => Promise.all(el.getAnimations().map((a) => a.finished)));
   const box = (await img.boundingBox())!;
   for (const d of districts) {
     const b = map.getByRole("button", { name: d.name, exact: true });
@@ -108,4 +110,41 @@ test("J23 About → How I Think: illustration and interactive loop", async ({ pa
   await expect(panel).toContainText("Stage 8 of 8");
   await sec.getByRole("tab", { name: "ITERATE" }).press("ArrowRight");
   await expect(panel).toContainText("Stage 1 of 8");
+});
+
+test("J24 Explore my work — every project is a chapter with its own 3D art, status and case-study link", async ({ page }) => {
+  const errs = noErrors(page);
+  await page.goto("/projects");
+  await expect(page.getByRole("heading", { level: 1, name: "Explore my work" })).toBeVisible();
+  const chapters = page.getByRole("list", { name: "Projects" }).locator(":scope > li");
+  await expect(chapters).toHaveCount(7);
+  for (const li of await chapters.all()) {
+    await li.scrollIntoViewIfNeeded();
+    const img = li.locator("[data-cinematic^='render-project-'] img");
+    await expect(img).toHaveCount(1);
+    await expect.poll(() => img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);
+    await expect(li.getByRole("link", { name: /^Read the case study: / })).toBeVisible();
+  }
+  // filters still narrow the chapters, and clearing restores them
+  await page.getByRole("group", { name: "Filter projects" }).getByRole("button", { name: "Academic" }).click();
+  await expect(chapters).toHaveCount(1);
+  await expect(chapters.first()).toContainText("PhonePe Smart Spend Coach");
+  await page.getByRole("group", { name: "Filter projects" }).getByRole("button", { name: "All" }).click();
+  await expect(chapters).toHaveCount(7);
+  expect(errs).toEqual([]);
+});
+
+test("J25 guided tour autoplay advances on its own and can be paused", async ({ page }) => {
+  await page.goto("/explore?view=2d");
+  await page.getByRole("button", { name: "Guided tour" }).click();
+  const bar = page.getByTestId("tour-bar");
+  await expect(bar).toContainText("Stop 1 of 6");
+  const auto = bar.getByRole("button", { name: "Autoplay" });
+  await auto.click();
+  await expect(auto).toHaveAttribute("aria-pressed", "true");
+  await expect(bar).toContainText("Stop 2 of 6", { timeout: 10_000 });
+  await auto.click();
+  await expect(auto).toHaveAttribute("aria-pressed", "false");
+  await page.waitForTimeout(7000);
+  await expect(bar).toContainText("Stop 2 of 6");
 });

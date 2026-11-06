@@ -255,6 +255,136 @@ const SCENES = {
     s.scene.add(dust(120, 22, 8, C.cyan, 0.04));
     return s;
   },
+
+  // ---------------------------------------------------------- projects (one metaphor each)
+  /** Evamastu (mindfulness platform) — calm ripples on still water; cohorts rising steadily */
+  "project-evamastu"() {
+    const s = stage({ cam: [0, 5.6, 15], look: [0, 2.2, 0] });
+    for (let i = 0; i < 9; i++) { const rg = ring(0.9 + i * 0.75, 0.016 + (i === 0 ? 0.02 : 0), i % 3 === 0 ? C.green : C.cyan, 0.85 - i * 0.07); rg.rotation.x = Math.PI / 2; rg.position.y = 0.04; s.scene.add(rg); }
+    const lotus = new THREE.Group(); lotus.position.y = 1.8; lotus.scale.setScalar(2.1);
+    for (let layer = 0; layer < 3; layer++) for (let k = 0; k < 8; k++) {
+      const petal = glass(new THREE.SphereGeometry(0.9 - layer * 0.2, 16, 8, 0, 0.7, 0, Math.PI / 2), layer === 2 ? C.green : C.cyan);
+      petal.rotation.set(-0.5 - layer * 0.25, (k / 8) * Math.PI * 2 + layer * 0.2, 0); petal.position.y = layer * 0.12; lotus.add(petal);
+    }
+    const heart = orb(0.22); heart.position.y = 0.45; lotus.add(heart); s.scene.add(lotus);
+    for (let i = 0; i < 24; i++) { const a = rnd() * Math.PI * 2, r = 2 + rnd() * 3; const p = orb(0.05 + rnd() * 0.04, rnd() > 0.5 ? C.green : C.cyan); p.position.set(Math.cos(a) * r, 1 + (i / 24) * 5.5, Math.sin(a) * r * 0.6); s.scene.add(p); }
+    s.scene.add(pool(5, C.cyan, 0.18));
+    s.scene.add(dust(160, 22, 9, C.cyan, 0.04));
+    return s;
+  },
+  /** Aaroh (root-cause health platform) — what shows above ground grows from roots below it */
+  "project-aaroh"() {
+    const s = stage({ cam: [0, 3.8, 13], look: [0, 2.6, 0], fog: [20, 55] });
+    const G = 3.4; // the surface: what shows above it grows from the roots below
+    const floor = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 4.2, 0.08, 96), new THREE.MeshPhysicalMaterial({ color: 0x1d3530, transparent: true, opacity: 0.35, roughness: 0.1, depthWrite: false })); floor.position.y = G; s.scene.add(floor);
+    const lip = ring(4.2, 0.02, C.green, 0.9); lip.rotation.x = Math.PI / 2; lip.position.y = G + 0.04; s.scene.add(lip);
+    const trunk = beam(new THREE.Vector3(0, G, 0), new THREE.Vector3(0, G + 2.4, 0), C.green, 0.06, 1); s.scene.add(trunk);
+    const crown = orb(0.45); crown.position.y = G + 2.6; s.scene.add(crown);
+    const halo = ring(0.9, 0.015, C.green, 0.8); halo.position.y = G + 2.6; halo.rotation.x = 1.3; s.scene.add(halo);
+    const root = (p, dir, depth) => {
+      if (depth === 0) { const tip = orb(0.06, C.cyan); tip.position.copy(p); s.scene.add(tip); return; }
+      for (let k = 0; k < 2; k++) {
+        const d = dir.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), (k ? 1 : -1) * (0.5 + rnd() * 0.6)).add(new THREE.Vector3(0, -0.22, 0)).normalize();
+        const q = p.clone().addScaledVector(d, 0.45 + depth * 0.22);
+        s.scene.add(beam(p, q, depth > 2 ? C.green : C.cyan, 0.012 + depth * 0.006, 0.95)); root(q, d, depth - 1);
+      }
+    };
+    for (const d of [[1, -0.7, 0.2], [-1, -0.7, 0.3], [0.2, -0.7, 1], [-0.3, -0.7, -1]]) root(new THREE.Vector3(0, G, 0), new THREE.Vector3(...d).normalize(), 4);
+    s.scene.add(dust(160, 22, 9));
+    return s;
+  },
+  /** CareConnect — one record travels the first 30 days, from discharge to home */
+  "project-careconnect"() {
+    const s = stage({ cam: [0, 5.6, 12.5], look: [0, 1.2, 0] });
+    const start = new THREE.Vector3(-4.6, 0, -1.2), end = new THREE.Vector3(4.6, 0, 1.2);
+    const hospital = solid(new THREE.BoxGeometry(2, 3.2, 2), { tone: C.cyan, edge: 0.9 }); hospital.position.set(start.x - 0.6, 1.6, start.z); s.scene.add(hospital);
+    const plus = new THREE.Group(); plus.add(new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.18, 0.05), glowMat(C.green))); plus.add(new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.7, 0.05), glowMat(C.green)));
+    plus.position.set(start.x - 0.6, 2.6, start.z + 1.03); s.scene.add(plus);
+    const home = new THREE.Group(); home.add(solid(new THREE.BoxGeometry(1.8, 1.3, 1.6), { edge: 0.9 })); home.children[0].position.y = 0.65;
+    const roof = solid(new THREE.ConeGeometry(1.45, 1, 4), { edge: 0.9 }); roof.rotation.y = Math.PI / 4; roof.position.y = 1.8; home.add(roof);
+    home.position.set(end.x + 0.6, 0, end.z); s.scene.add(home);
+    for (let d = 0; d < 30; d++) {
+      const t = d / 29; const p = start.clone().lerp(end, t); p.y = 0.08 + Math.sin(t * Math.PI) * 0.6;
+      const tile = solid(new THREE.BoxGeometry(0.24, 0.05, 0.7), { tone: d < 18 ? C.green : C.cyan, edge: 1, emissive: d < 18 ? 0.6 : 0.05, color: d < 18 ? 0x1f4a3a : C.body });
+      tile.position.copy(p); tile.rotation.y = Math.atan2(end.x - start.x, end.z - start.z) + Math.PI / 2; s.scene.add(tile);
+    }
+    const t = 17 / 29; const rp = start.clone().lerp(end, t); rp.y = 0.9 + Math.sin(t * Math.PI) * 0.6;
+    const card = glass(new THREE.BoxGeometry(1.1, 0.75, 0.05)); const cardCore = orb(0.09); cardCore.position.copy(rp); s.scene.add(cardCore); card.position.copy(rp); card.rotation.y = -0.3; s.scene.add(card);
+    s.scene.add(pool(4, C.green, 0.2));
+    s.scene.add(dust(160, 24, 8));
+    return s;
+  },
+  /** GharGyaan — the safety engine runs before any AI: a gate that lets safe input through */
+  "project-ghargyaan"() {
+    const s = stage({ cam: [0, 4.5, 15], look: [0, 2.4, 0] });
+    const arch = new THREE.Group(); arch.position.y = 0;
+    const shieldGeo = new THREE.TorusGeometry(2.6, 0.08, 12, 96, Math.PI);
+    const shield = new THREE.Mesh(shieldGeo, glowMat(C.green)); shield.rotation.y = Math.PI / 2; arch.add(shield);
+    for (const [r, o] of [[3.1, 0.55], [3.6, 0.3]]) { const a2 = new THREE.Mesh(new THREE.TorusGeometry(r, 0.025, 8, 96, Math.PI), glowMat(C.cyan, o)); a2.rotation.y = Math.PI / 2; arch.add(a2); }
+    const veil = new THREE.Mesh(new THREE.CircleGeometry(2.55, 96, 0, Math.PI), new THREE.MeshPhysicalMaterial({ color: 0x24443a, transparent: true, opacity: 0.22, roughness: 0.05, side: THREE.DoubleSide, depthWrite: false })); veil.rotation.y = Math.PI / 2; arch.add(veil);
+    for (const z of [-2.6, 2.6]) { const post = solid(new THREE.CylinderGeometry(0.16, 0.2, 0.5, 16)); post.position.set(0, 0.25, z); arch.add(post); }
+    s.scene.add(arch);
+    for (let i = 0; i < 70; i++) {
+      const before = i < 40; const y = 0.4 + rnd() * 2.2, z = (rnd() - 0.5) * 4.2;
+      const blocked = before && rnd() < 0.18;
+      const x = before ? -0.4 - rnd() * 6 : 0.5 + rnd() * 6;
+      const p = orb(0.07, blocked ? C.amber : before ? 0x6fa894 : C.green); p.position.set(blocked ? -0.25 : x, y, z); s.scene.add(p);
+    }
+    const core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.7, 1), new THREE.MeshStandardMaterial({ color: 0x163029, emissive: C.green, emissiveIntensity: 0.3, flatShading: true }));
+    core.position.set(5.2, 2.2, 0); s.scene.add(core);
+    s.scene.add(pool(4, C.green, 0.2));
+    s.scene.add(dust(120, 24, 8, C.cyan, 0.04));
+    s.camera.position.set(-3, 4.8, 14); s.camera.lookAt(0.8, 1.8, 0);
+    return s;
+  },
+  /** PhonePe Smart Spend Coach (academic case) — spending stacks held under a guardrail */
+  "project-phonepe-smart-spend-coach"() {
+    const s = stage({ cam: [3.5, 4.2, 10], look: [0, 1.4, 0] });
+    s.scene.add(plinth(3.8));
+    const heights = [3, 5, 4, 6, 7, 5, 4];
+    heights.forEach((n, i) => {
+      for (let k = 0; k < n; k++) {
+        const over = k >= 5; const coin = solid(new THREE.CylinderGeometry(0.4, 0.4, 0.13, 32), { tone: over ? C.amber : i % 2 ? C.cyan : C.green, edge: 1, emissive: over ? 0.05 : 0.3 });
+        coin.position.set(-2.7 + i * 0.9, 0.48 + k * 0.15, 0); s.scene.add(coin);
+      }
+    });
+    const guard = new THREE.Mesh(new THREE.BoxGeometry(7, 0.04, 0.04), glowMat(C.green)); guard.position.set(0, 0.42 + 5 * 0.15, 0.45); s.scene.add(guard);
+    for (const x of [-3.5, 3.5]) { const g = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.3, 0.04), glowMat(C.green, 0.8)); g.position.set(x, 0.75, 0.45); s.scene.add(g); }
+    const coach = orb(0.3); coach.position.set(3.6, 3.6, 0.6); s.scene.add(coach);
+    s.scene.add(beam(new THREE.Vector3(3.6, 3.6, 0.6), new THREE.Vector3(2.7, 1.3, 0.3), C.green, 0.015, 0.7));
+    s.scene.add(dust(150, 22, 8));
+    return s;
+  },
+  /** Nexus — streams from mail, calendar and documents converge; conflicts are flagged, not acted on */
+  "project-nexus"() {
+    const s = stage({ cam: [0, 6, 15], look: [0, 2.2, 0] });
+    s.scene.add(plinth(2.2));
+    const hub = glass(new THREE.BoxGeometry(1.6, 1.6, 1.6)); hub.position.y = 2.2; hub.rotation.set(0.4, 0.7, 0); s.scene.add(hub);
+    const inner = orb(0.35); inner.position.y = 2.2; s.scene.add(inner);
+    const sources = [new THREE.Vector3(-6.5, 4.2, -3), new THREE.Vector3(6.5, 4.6, -2.5), new THREE.Vector3(-1.5, 6.6, -5)];
+    sources.forEach((src, i) => {
+      const curve = new THREE.CubicBezierCurve3(src, src.clone().lerp(new THREE.Vector3(0, 2.2, 0), 0.3).add(new THREE.Vector3(0, 1.5, 0)), new THREE.Vector3(0, 3.4, 0).lerp(src, 0.2), new THREE.Vector3(0, 2.2, 0));
+      s.scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 80, 0.03, 8), glowMat(i === 1 ? C.cyan : C.green, 0.9)));
+      for (let k = 1; k < 9; k++) { const p = curve.getPoint(k / 9); const flag = k === 5 && i !== 2; const n = flag ? solid(new THREE.OctahedronGeometry(0.16), { tone: C.amber, edge: 1, emissive: 0.4 }) : orb(0.07, i === 1 ? C.cyan : C.green); n.position.copy(p); s.scene.add(n); }
+      const box = solid(new THREE.BoxGeometry(0.9, 0.6, 0.6), { tone: i === 1 ? C.cyan : C.green }); box.position.copy(src); s.scene.add(box);
+    });
+    s.scene.add(dust(150, 22, 9, C.cyan, 0.04));
+    return s;
+  },
+  /** 90 case studies — a library of ninety tiles in an arc */
+  "project-90-day-case-studies"() {
+    const s = stage({ cam: [0, 4.2, 14.5], look: [0, 2.6, 0] });
+    for (let i = 0; i < 90; i++) {
+      const col = i % 15, row = Math.floor(i / 15); const a = (col - 7) * 0.13;
+      const lit = (i * 37) % 7 < 2;
+      const tile = solid(new THREE.BoxGeometry(0.62, 0.78, 0.06), { tone: lit ? C.green : 0x356d5a, edge: lit ? 1 : 0.6, emissive: lit ? 0.25 : 0.02 });
+      tile.position.set(Math.sin(a) * 7.5, 0.6 + row * 0.92, -Math.cos(a) * 7.5 + 4.5); tile.rotation.y = -a; s.scene.add(tile);
+    }
+    const reader = orb(0.22); reader.position.set(0, 1.2, 2.2); s.scene.add(reader);
+    s.scene.add(pool(5, C.green, 0.16));
+    s.scene.add(dust(160, 22, 9));
+    return s;
+  },
 };
 
 export async function render(id) {

@@ -53,6 +53,13 @@ RENDER_META = {
   "render-contact": dict(purpose="Contact page header", used_by=["/contact"], alt="3D render: a beacon on a mast sending rings of signal outward."),
   "render-lab-notes": dict(purpose="Lab Notes header", used_by=["/lab-notes"], alt="3D render: translucent ruled pages floating above a lit plinth."),
   "render-ask": dict(purpose="Ask Gaurav header", used_by=["/ask"], alt="3D render: a faceted core with a ring of index cards in orbit; a beam links the core to one card."),
+  "render-project-evamastu": dict(purpose="Evamastu project art", used_by=["/projects", "/projects/evamastu"], alt="3D render: calm concentric ripples on dark water beneath a glass lotus, with points of light rising steadily."),
+  "render-project-aaroh": dict(purpose="Aaroh project art", used_by=["/projects", "/projects/aaroh"], alt="3D render: a glowing stem rises above a glass surface while a branching root system spreads beneath it."),
+  "render-project-careconnect": dict(purpose="CareConnect project art", used_by=["/projects", "/projects/careconnect"], alt="3D render: a path of thirty tiles from a building marked with a cross to a small house, with a glass card part-way along."),
+  "render-project-ghargyaan": dict(purpose="GharGyaan project art", used_by=["/projects", "/projects/ghargyaan"], alt="3D render: points of light approach a glowing arch; a few amber points stop at it while green points continue to a faceted core."),
+  "render-project-phonepe-smart-spend-coach": dict(purpose="PhonePe Smart Spend Coach project art (academic case)", used_by=["/projects", "/projects/phonepe-smart-spend-coach"], alt="3D render: stacks of coin-like discs on a plinth under a glowing guardrail, with a small light connected to one stack."),
+  "render-project-nexus": dict(purpose="Nexus project art", used_by=["/projects", "/projects/nexus"], alt="3D render: three streams of light converge on a glass cube; small amber markers sit on two of the streams."),
+  "render-project-90-day-case-studies": dict(purpose="90 case studies project art", used_by=["/projects", "/projects/90-day-case-studies"], alt="3D render: a curved wall of ninety tiles, some lit, facing a single point of light."),
   "render-search": dict(purpose="Search page header", used_by=["/search"], alt="3D render: a glowing lens over a field of points, the points under it brighter."),
 }
 (RENDERS / "source").mkdir(parents=True, exist_ok=True)

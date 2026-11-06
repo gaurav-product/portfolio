@@ -101,7 +101,8 @@ describe("media and screenshots", () => {
   it("the portrait is replaceable and present", () => {
     expect(profile.portrait.src).toBeTruthy();
     expect(fs.existsSync(path.join(ROOT, "public", profile.portrait.src!))).toBe(true);
-    expect(profile.portrait.provenance).toMatch(/Provisional/);
+    expect(profile.portrait.provenance).toMatch(/supplied by Gaurav/); // provenance is always stated
+    expect(profile.portrait.width).toBe(profile.portrait.height);
   });
   it("publishes only screenshots approved in the review file", () => {
     const approvals = JSON.parse(fs.readFileSync(path.join(ROOT, "../brand/screenshot-review/approvals.json"), "utf8"));

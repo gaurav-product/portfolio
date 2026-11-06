@@ -37,10 +37,10 @@ export const profile = {
   /** Replaceable portrait. Set src to a new file (and update provenance) to swap
    *  in an original photograph; set src to null to show the brand mark instead. */
   portrait: {
-    src: "/media/portrait/gaurav-portrait-provisional.webp" as string | null,
+    src: "/media/portrait/gaurav-portrait.webp" as string | null,
     alt: "Gaurav Singh",
-    provenance: "Provisional — cropped from Gaurav.OS artwork supplied by Gaurav; to be replaced with an original photograph.",
-    width: 370, height: 370,
+    provenance: "Gaurav.OS avatar artwork supplied by Gaurav (November 2026), cropped to the head and shoulders. Source: brand/portrait/gaurav-os-avatar-source.webp.",
+    width: 512, height: 512,
   },
 } as const;
 
