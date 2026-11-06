@@ -30,6 +30,7 @@ export type ProjectStatus =
   | "PRE-LAUNCH · PROTOTYPE"
   | "MVP · NO USERS"
   | "PROTOTYPE · DEMO MODE"
+  | "PROTOTYPE · NOT DEPLOYED"
   | "ACADEMIC CASE"
   | "PUBLISHED";
 

@@ -218,6 +218,67 @@ export const projects: Project[] = [
     ],
   },
 
+  /* --------------------------------------------------------- RUPEERADAR */
+  {
+    slug: "rupee-radar",
+    name: "RupeeRadar",
+    subtitle: "AI-assisted bank-statement analysis",
+    kind: "independent",
+    kindLabel: "Independent build · AI engineering challenge",
+    role: "Solo build to a challenge brief",
+    period: "Jun 2026",
+    status: "PROTOTYPE · NOT DEPLOYED",
+    statusTone: "cyan",
+    oneLine: "Upload a CSV or Excel bank statement and see where the money goes: cleaned merchant names, categories, recurring payments, a dashboard and a printable report.",
+    categories: ["AI", "Analytics", "Independent Builds"],
+    skills: ["ai-product-strategy", "dashboards", "privacy", "guardrails"],
+    district: "research-analytics",
+    cover: "/brand/covers/cover-rupee-radar.webp",
+    repo: { label: "github.com/gaurav-product/rupee-radar", href: "https://github.com/gaurav-product/rupee-radar" },
+    featured: false,
+    highlights: [
+      { text: "Working prototype: FastAPI and pandas pipeline behind a React 19 dashboard (CSV and Excel upload)", status: "VERIFIED", sources: ["repo-rupee-radar"] },
+      { text: "Hybrid categorisation: rules and a merchant dictionary first, Groq-hosted Llama 3.1 only as a fallback", status: "VERIFIED", sources: ["repo-rupee-radar"] },
+      { text: "4 automated pipeline tests: description cleaning, date parsing, rule categorisation, recurring detection", status: "VERIFIED", sources: ["repo-rupee-radar"] },
+    ],
+    limits: [
+      "Not deployed: the production API address in the repository is still a placeholder.",
+      "Built to an AI engineering challenge brief; no users and no outcome data.",
+      "The README's screenshot sections are placeholders, so no screenshots are shown here.",
+      "PDF export uses the browser's print dialog.",
+    ],
+    sections: [
+      { key: "summary", title: "Executive summary", sources: ["repo-rupee-radar"], blocks: [
+        { p: "RupeeRadar turns a messy bank statement into a readable picture of spending. A user uploads a CSV or Excel file; the pipeline cleans each transaction description into a merchant name, assigns one of ten categories, finds recurring payments such as subscriptions, EMIs, rent and SIPs, and calculates income, spend, savings and the largest transactions for a dashboard and a printable report." },
+      ]},
+      { key: "problem", title: "Problem framing", sources: ["repo-rupee-radar"], blocks: [
+        { p: "The challenge brief: working professionals make hundreds of transactions a month, but statements are hard to read because descriptions are inconsistent strings of UPI IDs, reference numbers and merchant codes. The questions to answer were the user's own: what are my biggest spending categories, how much did I spend this month, which payments recur, and what was my biggest transaction." },
+        { kv: [["Input", "UPI/DR/9876543210/ZOMATO-DELHI"], ["Cleaned", "Zomato"]] },
+      ]},
+      { key: "flows", title: "How it works", sources: ["repo-rupee-radar"], blocks: [
+        { flow: ["Upload CSV / Excel", "Parse", "Clean and normalise", "Categorise", "Detect recurring", "Metrics", "Dashboard and report"] },
+        { p: "Categories: Food, Shopping, Travel, Bills, Salary, Investments, EMI, Rent, Subscriptions and Others. Recurring payments are detected from how often a payment repeats and how similar the amounts are." },
+      ]},
+      { key: "tradeoffs", title: "Key decisions and trade-offs", sources: ["repo-rupee-radar"], blocks: [
+        { quote: "This approach minimizes AI calls while maintaining accurate categorization.", cite: "RupeeRadar README, on the hybrid pipeline" },
+        { ul: [
+          "Rules and a merchant dictionary run before any model, so most transactions never reach the AI step.",
+          "The model is a fallback with structured JSON output, and is skipped entirely when no API key is set.",
+          "Privacy by design in the README: session-based processing, no permanent storage of uploaded statements, minimal data sent to AI services and session deletion.",
+        ] },
+      ]},
+      { key: "risks", title: "Limitations", sources: ["repo-rupee-radar"], blocks: [
+        { ul: ["Not deployed; no live URL", "No users or outcome data", "Accuracy of categorisation is not measured in the repository", "Four unit tests cover the pipeline; the API and interface have no automated tests"] },
+      ]},
+      { key: "next", title: "Next steps (from the README roadmap)", sources: ["repo-rupee-radar"], blocks: [
+        { ul: ["PDF statement parsing and OCR", "Budget planner and spending forecasting", "Mobile application and more languages"] },
+      ]},
+      { key: "evidence", title: "Evidence and references", sources: ["repo-rupee-radar"], blocks: [
+        { note: "Every statement on this page comes from the public repository (README, problem statement, pipeline code and tests)." },
+      ]},
+    ],
+  },
+
   /* ------------------------------------------------------ 90-DAY CORPUS */
   {
     slug: "90-day-case-studies",

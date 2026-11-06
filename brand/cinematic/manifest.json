@@ -1399,6 +1399,70 @@
       "status": "INTEGRATED"
     },
     {
+      "id": "render-project-rupee-radar",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-rupee-radar.webp",
+      "source_bytes": 142900,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-rupee-radar-1600.webp",
+          "bytes": 37590
+        },
+        "1200": {
+          "file": "/cinematic/render-project-rupee-radar-1200.webp",
+          "bytes": 25010
+        },
+        "960": {
+          "file": "/cinematic/render-project-rupee-radar-960.webp",
+          "bytes": 18732
+        },
+        "768": {
+          "file": "/cinematic/render-project-rupee-radar-768.webp",
+          "bytes": 13838
+        },
+        "480": {
+          "file": "/cinematic/render-project-rupee-radar-480.webp",
+          "bytes": 7472
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-rupee-radar-1600.avif",
+          "bytes": 25317
+        },
+        "1200": {
+          "file": "/cinematic/render-project-rupee-radar-1200.avif",
+          "bytes": 16654
+        },
+        "960": {
+          "file": "/cinematic/render-project-rupee-radar-960.avif",
+          "bytes": 12177
+        },
+        "768": {
+          "file": "/cinematic/render-project-rupee-radar-768.avif",
+          "bytes": 9258
+        },
+        "480": {
+          "file": "/cinematic/render-project-rupee-radar-480.avif",
+          "bytes": 4991
+        }
+      },
+      "purpose": "RupeeRadar page header art",
+      "used_by": [
+        "/projects/rupee-radar"
+      ],
+      "alt": "3D render: a radar sweep over a field of glowing bars, with a ring of amber points around the centre.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
       "id": "render-projects",
       "brief_image": null,
       "source": "brand/renders/source/render-projects.webp",
@@ -1727,6 +1791,283 @@
       "status": "INTEGRATED"
     },
     {
+      "id": "brand-aaroh",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-aaroh.webp",
+      "source_bytes": 39848,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-aaroh-1600.webp",
+          "bytes": 24864
+        },
+        "1200": {
+          "file": "/cinematic/brand-aaroh-1200.webp",
+          "bytes": 17958
+        },
+        "960": {
+          "file": "/cinematic/brand-aaroh-960.webp",
+          "bytes": 14146
+        },
+        "768": {
+          "file": "/cinematic/brand-aaroh-768.webp",
+          "bytes": 11188
+        },
+        "480": {
+          "file": "/cinematic/brand-aaroh-480.webp",
+          "bytes": 6824
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-aaroh-1600.avif",
+          "bytes": 16279
+        },
+        "1200": {
+          "file": "/cinematic/brand-aaroh-1200.avif",
+          "bytes": 11493
+        },
+        "960": {
+          "file": "/cinematic/brand-aaroh-960.avif",
+          "bytes": 9164
+        },
+        "768": {
+          "file": "/cinematic/brand-aaroh-768.avif",
+          "bytes": 6985
+        },
+        "480": {
+          "file": "/cinematic/brand-aaroh-480.avif",
+          "bytes": 4591
+        }
+      },
+      "purpose": "Aaroh project logo",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Aaroh logo: a peak sheltering a rising figure whose roots spread below, above the word AAROH and the line Understand, Heal, Grow.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "AAROH",
+        "UNDERSTAND · HEAL · GROW"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-careconnect",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-careconnect.webp",
+      "source_bytes": 49874,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-careconnect-1600.webp",
+          "bytes": 31330
+        },
+        "1200": {
+          "file": "/cinematic/brand-careconnect-1200.webp",
+          "bytes": 22872
+        },
+        "960": {
+          "file": "/cinematic/brand-careconnect-960.webp",
+          "bytes": 17308
+        },
+        "768": {
+          "file": "/cinematic/brand-careconnect-768.webp",
+          "bytes": 13380
+        },
+        "480": {
+          "file": "/cinematic/brand-careconnect-480.webp",
+          "bytes": 7908
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-careconnect-1600.avif",
+          "bytes": 20526
+        },
+        "1200": {
+          "file": "/cinematic/brand-careconnect-1200.avif",
+          "bytes": 14777
+        },
+        "960": {
+          "file": "/cinematic/brand-careconnect-960.avif",
+          "bytes": 10745
+        },
+        "768": {
+          "file": "/cinematic/brand-careconnect-768.avif",
+          "bytes": 8674
+        },
+        "480": {
+          "file": "/cinematic/brand-careconnect-480.avif",
+          "bytes": 5001
+        }
+      },
+      "purpose": "CareConnect project banner",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Banner: the CareConnect logo, two figures forming a heart, above the word CareConnect and the line People, Care, Support.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "CareConnect",
+        "People · Care · Support"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-gaurav-os-logo",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-gaurav-os-logo.webp",
+      "source_bytes": 43046,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-gaurav-os-logo-1600.webp",
+          "bytes": 29008
+        },
+        "1200": {
+          "file": "/cinematic/brand-gaurav-os-logo-1200.webp",
+          "bytes": 20442
+        },
+        "960": {
+          "file": "/cinematic/brand-gaurav-os-logo-960.webp",
+          "bytes": 15800
+        },
+        "768": {
+          "file": "/cinematic/brand-gaurav-os-logo-768.webp",
+          "bytes": 12062
+        },
+        "480": {
+          "file": "/cinematic/brand-gaurav-os-logo-480.webp",
+          "bytes": 7126
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-gaurav-os-logo-1600.avif",
+          "bytes": 17010
+        },
+        "1200": {
+          "file": "/cinematic/brand-gaurav-os-logo-1200.avif",
+          "bytes": 11603
+        },
+        "960": {
+          "file": "/cinematic/brand-gaurav-os-logo-960.avif",
+          "bytes": 8904
+        },
+        "768": {
+          "file": "/cinematic/brand-gaurav-os-logo-768.avif",
+          "bytes": 6952
+        },
+        "480": {
+          "file": "/cinematic/brand-gaurav-os-logo-480.avif",
+          "bytes": 4480
+        }
+      },
+      "purpose": "Gaurav.OS logo: share card and footer",
+      "used_by": [
+        "(share card)",
+        "(footer)"
+      ],
+      "alt": "Gaurav.OS logo: the wordmark Gaurav.OS with an orbit and a star, above the line Product × AI × Building.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "Gaurav.OS",
+        "Product × AI × Building"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-ghargyaan",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-ghargyaan.webp",
+      "source_bytes": 81432,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-ghargyaan-1600.webp",
+          "bytes": 51384
+        },
+        "1200": {
+          "file": "/cinematic/brand-ghargyaan-1200.webp",
+          "bytes": 37702
+        },
+        "960": {
+          "file": "/cinematic/brand-ghargyaan-960.webp",
+          "bytes": 29136
+        },
+        "768": {
+          "file": "/cinematic/brand-ghargyaan-768.webp",
+          "bytes": 22270
+        },
+        "480": {
+          "file": "/cinematic/brand-ghargyaan-480.webp",
+          "bytes": 13000
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-ghargyaan-1600.avif",
+          "bytes": 31218
+        },
+        "1200": {
+          "file": "/cinematic/brand-ghargyaan-1200.avif",
+          "bytes": 23034
+        },
+        "960": {
+          "file": "/cinematic/brand-ghargyaan-960.avif",
+          "bytes": 17509
+        },
+        "768": {
+          "file": "/cinematic/brand-ghargyaan-768.avif",
+          "bytes": 13892
+        },
+        "480": {
+          "file": "/cinematic/brand-ghargyaan-480.avif",
+          "bytes": 8044
+        }
+      },
+      "purpose": "GharGyaan project banner",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Banner: the GharGyaan logo, a house holding the letter ज्ञ over an open book, with the line Everyday Self-Care for Indian Homes and tiles for health basics, home remedies, safety and prevention, family care and trusted gyaan.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "GharGyaan",
+        "Everyday Self-Care for Indian Homes",
+        "Health Basics",
+        "Home Remedies",
+        "Safety & Prevention",
+        "Family Care",
+        "Trusted Gyaan"
+      ],
+      "caution": "Tiles name intended content areas of a demo-mode prototype; not clinically reviewed.",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
       "id": "brand-nexus",
       "brief_image": null,
       "source": "brand/owner-art/source/brand-nexus.webp",
@@ -1921,8 +2262,10 @@
           "bytes": 5523
         }
       },
-      "purpose": "RupeeRadar logo (not yet used: not a listed project)",
-      "used_by": [],
+      "purpose": "RupeeRadar project logo",
+      "used_by": [
+        "/projects"
+      ],
       "alt": "RupeeRadar logo: a radar sweep around a rupee sign with a rising bar chart, and the line See where your money goes.",
       "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
       "baked_text": [

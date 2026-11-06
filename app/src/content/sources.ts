@@ -5,6 +5,7 @@ export const SOURCES: Record<string, Source> = {
   cv: { id: "cv", label: "Healthcare CV (November 2026)", kind: "cv", href: "/cv" },
   "repo-careconnect": { id: "repo-careconnect", label: "github.com/gaurav-product/careconnect", kind: "repo", href: "https://github.com/gaurav-product/careconnect" },
   "repo-ghargyaan": { id: "repo-ghargyaan", label: "github.com/gaurav-product/ghargyaan", kind: "repo", href: "https://github.com/gaurav-product/ghargyaan" },
+  "repo-rupee-radar": { id: "repo-rupee-radar", label: "github.com/gaurav-product/rupee-radar", kind: "repo", href: "https://github.com/gaurav-product/rupee-radar" },
   "repo-nexus": { id: "repo-nexus", label: "github.com/gaurav-product/nexus", kind: "repo", href: "https://github.com/gaurav-product/nexus" },
   "repo-aaroh": { id: "repo-aaroh", label: "github.com/gaurav-product/aaroh", kind: "repo", href: "https://github.com/gaurav-product/aaroh" },
   "repo-phonepe": { id: "repo-phonepe", label: "github.com/gaurav-product/phonepe-smart-spend-coach-capstone", kind: "course", href: "https://github.com/gaurav-product/phonepe-smart-spend-coach-capstone" },

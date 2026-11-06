@@ -3,7 +3,6 @@ import { NAV } from "~/content/nav";
 import { profile } from "~/content/profile";
 import { newsletter } from "~/content/newsletter";
 import { Container } from "./ui";
-import { Wordmark } from "./Header";
 import { Icon } from "./Icon";
 import { asset } from "~/lib/meta";
 
@@ -12,8 +11,15 @@ export function Footer() {
     <footer className="mt-28 border-t border-line-soft print:hidden">
       <Container wide className="grid gap-12 py-16 md:grid-cols-[1.3fr_1fr_1fr]">
         <div>
-          <Wordmark />
-          <p className="label mt-3">{profile.brandLine}</p>
+          <span className="block w-[260px] max-w-full overflow-hidden rounded-2xl border border-line-soft">
+            {/* plain picture (not CinematicImage) so the footer never pulls the image manifest into every page */}
+            <picture>
+              <source type="image/avif" srcSet={`${asset("/cinematic/brand-gaurav-os-logo-480.avif")} 480w, ${asset("/cinematic/brand-gaurav-os-logo-768.avif")} 768w`} sizes="260px" />
+              <img src={asset("/cinematic/brand-gaurav-os-logo-480.webp")} srcSet={`${asset("/cinematic/brand-gaurav-os-logo-480.webp")} 480w, ${asset("/cinematic/brand-gaurav-os-logo-768.webp")} 768w`} sizes="260px"
+                alt="" aria-hidden="true" width={1536} height={1024} loading="lazy" decoding="async" className="block aspect-[16/9] w-full object-cover" />
+            </picture>
+          </span>
+          <p className="sr-only">{profile.brand}: {profile.brandLine}</p>
           <p className="mt-4 max-w-sm text-sm text-muted">Every figure on this site is traced to the CV or a public repository, and labelled with its evidence status. Where evidence is missing, the page says so.</p>
         </div>
         <nav aria-label="Footer">
@@ -39,7 +45,7 @@ export function Footer() {
       </Container>
       <Container wide className="flex flex-wrap justify-between gap-2 border-t border-line-soft py-5 text-xs text-dim">
         <span>© {new Date().getFullYear()} {profile.name}. Content © the author; code MIT.</span>
-        <span>Illustrations are original vector artwork, not product screenshots.</span>
+        <span>Images are labelled illustrations, 3D renders or project artwork, not product screenshots.</span>
       </Container>
     </footer>
   );

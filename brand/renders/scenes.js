@@ -387,6 +387,25 @@ const SCENES = {
   },
 };
 
+/** RupeeRadar — a radar sweep over a field of spending blips; recurring ones ring the centre */
+SCENES["project-rupee-radar"] = function () {
+  const s = stage({ cam: [0, 7.5, 12.5], look: [0, 0.8, 0] });
+  for (let i = 1; i <= 5; i++) { const rg = ring(i * 0.95, i === 5 ? 0.035 : 0.014, i === 5 ? C.green : C.cyan, 0.85 - i * 0.08); rg.rotation.x = Math.PI / 2; rg.position.y = 0.05; s.scene.add(rg); }
+  for (const a of [0, Math.PI / 2]) { const ln = new THREE.Mesh(new THREE.BoxGeometry(10, 0.01, 0.02), glowMat(C.cyan, 0.35)); ln.rotation.y = a; ln.position.y = 0.05; s.scene.add(ln); }
+  const sweep = new THREE.Mesh(new THREE.CircleGeometry(4.75, 64, 0.2, 0.75), new THREE.MeshBasicMaterial({ color: C.green, transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }));
+  sweep.rotation.x = -Math.PI / 2; sweep.position.y = 0.07; s.scene.add(sweep);
+  s.scene.add(beam(new THREE.Vector3(0, 0.08, 0), new THREE.Vector3(Math.cos(0.95) * 4.75, 0.08, -Math.sin(0.95) * 4.75), C.green, 0.03, 1));
+  for (let i = 0; i < 46; i++) {
+    const a = rnd() * Math.PI * 2, r = 0.6 + rnd() * 4, h = 0.15 + rnd() * 1.2; const lit = a > 0.2 && a < 1.0;
+    const bar = solid(new THREE.BoxGeometry(0.16, h, 0.16), { tone: lit ? C.green : 0x3f7a66, edge: lit ? 1 : 0.6, emissive: lit ? 0.35 : 0.03 });
+    bar.position.set(Math.cos(a) * r, h / 2 + 0.05, -Math.sin(a) * r); s.scene.add(bar);
+  }
+  for (let k = 0; k < 8; k++) { const a = (k / 8) * Math.PI * 2; const p = orb(0.1, C.amber); p.position.set(Math.cos(a) * 1.9, 0.12, -Math.sin(a) * 1.9); s.scene.add(p); }
+  const core = orb(0.22); core.position.y = 0.2; s.scene.add(core);
+  s.scene.add(dust(140, 22, 7, C.cyan, 0.04));
+  return s;
+};
+
 // The Teardown (newsletter) — an exploded view: a device taken apart layer by layer
 SCENES.teardown = function () {
   const s = stage({ cam: [7.5, 5.5, 12], look: [0, 2.6, 0] });

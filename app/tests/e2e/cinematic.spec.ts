@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { districts } from "../../src/content/districts";
+import { projects } from "../../src/content/projects";
 
 const noErrors = (page: Page) => { const errs: string[] = []; page.on("pageerror", (e) => errs.push(e.message)); page.on("console", (m) => m.type() === "error" && errs.push(m.text())); return errs; };
 
@@ -117,7 +118,7 @@ test("J24 Explore my work — every project is a chapter with its own art (brand
   await page.goto("/projects");
   await expect(page.getByRole("heading", { level: 1, name: "Explore my work" })).toBeVisible();
   const chapters = page.getByRole("list", { name: "Projects" }).locator(":scope > li");
-  await expect(chapters).toHaveCount(7);
+  await expect(chapters).toHaveCount(projects.length);
   for (const li of await chapters.all()) {
     await li.scrollIntoViewIfNeeded();
     const img = li.locator("[data-cinematic^='render-project-'] img, [data-cinematic^='brand-'] img");
@@ -130,7 +131,7 @@ test("J24 Explore my work — every project is a chapter with its own art (brand
   await expect(chapters).toHaveCount(1);
   await expect(chapters.first()).toContainText("PhonePe Smart Spend Coach");
   await page.getByRole("group", { name: "Filter projects" }).getByRole("button", { name: "All" }).click();
-  await expect(chapters).toHaveCount(7);
+  await expect(chapters).toHaveCount(projects.length);
   expect(errs).toEqual([]);
 });
 

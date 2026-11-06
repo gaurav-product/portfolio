@@ -10,7 +10,7 @@ import { norm } from "~/lib/text";
 import { track } from "~/lib/analytics";
 import type { Project } from "~/content/types";
 
-export const meta = () => seo("Explore my work", "Seven projects with their real status: Evamastu, Aaroh, CareConnect, GharGyaan, PhonePe Smart Spend Coach (academic), Nexus and 90 product case studies.", "/projects");
+export const meta = () => seo("Explore my work", "Eight projects with their real status: Evamastu, Aaroh, CareConnect, GharGyaan, PhonePe Smart Spend Coach (academic), Nexus, RupeeRadar and 90 case studies.", "/projects");
 
 export default function Projects() {
   const [params, setParams] = useSearchParams();
