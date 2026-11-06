@@ -69,7 +69,7 @@ export default function Contact() {
               {errors.message && <p id="c-message-err" className="mt-1 text-sm text-red">{errors.message}</p>}
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <button type="submit" className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-green px-5 font-semibold text-green-ink hover:bg-[#7dff7d]"><Icon name="mail" />Open in my email app</button>
+              <button type="submit" className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-green px-5 font-semibold text-green-ink hover:bg-[#8cebb2]"><Icon name="mail" />Open in my email app</button>
               <button type="button" onClick={() => { setForm({ name: "", org: "", message: "" }); setErrors({}); setSent(false); }} className="min-h-11 rounded-xl px-4 text-muted hover:text-ink">Clear</button>
             </div>
             {sent && <p role="status" className="text-sm text-green">Your email app should now be open with the message. If nothing happened, email {profile.contact.email} directly.</p>}

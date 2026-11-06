@@ -7,16 +7,16 @@ import { Icon, type IconName } from "./Icon";
 export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
 
 export function Container({ children, className = "", wide = false }: { children: ReactNode; className?: string; wide?: boolean }) {
-  return <div className={cx("mx-auto w-full px-4 sm:px-6 lg:px-8", wide ? "max-w-[1440px]" : "max-w-6xl", className)}>{children}</div>;
+  return <div className={cx("mx-auto w-full px-4 sm:px-6 lg:px-10", wide ? "max-w-[1440px]" : "max-w-6xl", className)}>{children}</div>;
 }
 
 type Variant = "primary" | "secondary" | "ghost";
 const BTN: Record<Variant, string> = {
-  primary: "bg-green text-green-ink hover:bg-[#7dff7d] font-semibold",
-  secondary: "border border-line bg-surface/70 text-ink hover:border-green/60 hover:bg-raise",
+  primary: "bg-green text-green-ink hover:bg-[#8cebb2] font-semibold",
+  secondary: "border border-line bg-surface/60 text-ink hover:border-ink/30 hover:bg-raise",
   ghost: "text-muted hover:text-ink hover:bg-raise",
 };
-const base = "inline-flex items-center justify-center gap-2 rounded-xl px-4 min-h-11 text-[15px] transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed";
+const base = "inline-flex items-center justify-center gap-2 rounded-full px-5 min-h-11 text-[15px] font-medium transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed";
 
 export function ButtonLink({ to, children, variant = "secondary", icon, className = "", external, download, onClick, ...rest }:
   { to: string; children: ReactNode; variant?: Variant; icon?: IconName; className?: string; external?: boolean; download?: string | boolean; onClick?: () => void; "aria-label"?: string }) {
@@ -49,7 +49,7 @@ const TONES = {
 } as const;
 export type Tone = keyof typeof TONES;
 export function Pill({ children, tone = "dim", className = "" }: { children: ReactNode; tone?: Tone; className?: string }) {
-  return <span className={cx("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 font-mono text-[11px] uppercase tracking-[.1em]", TONES[tone], className)}>{children}</span>;
+  return <span className={cx("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[.08em]", TONES[tone], className)}>{children}</span>;
 }
 
 export const statusTone = (s: ProjectStatus): Tone =>

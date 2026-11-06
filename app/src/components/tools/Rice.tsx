@@ -39,7 +39,7 @@ export function RiceTool() {
         {isSample && <div className="mt-3"><SampleBadge /></div>}
       </div>
       <div className="mb-3 flex items-center gap-3">
-        <label className="inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={sorted} onChange={(e) => setSorted(e.target.checked)} className="size-4 accent-[#4DFF4D]" />Sort by score</label>
+        <label className="inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={sorted} onChange={(e) => setSorted(e.target.checked)} className="size-4 accent-[#6BE39A]" />Sort by score</label>
         <span role="status" className="label">{rows.length} feature{rows.length === 1 ? "" : "s"}</span>
       </div>
       <div className="overflow-x-auto rounded-xl border border-line">

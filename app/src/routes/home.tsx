@@ -24,77 +24,87 @@ export default function Home() {
       {intro.open && <IntroFilm onClose={intro.close} />}
 
       {/* ------------------------------------------------------------ HERO */}
-      <section aria-labelledby="hero-title" className="relative overflow-hidden border-b border-line-soft">
+      <section aria-labelledby="hero-title" className="relative overflow-hidden">
         {/* cinematic backdrop — the Gaurav.OS world (illustration); all text below is real HTML */}
         <div aria-hidden className="pointer-events-none absolute inset-0 max-lg:hidden">
-          {/* lazy: this copy is display:none on phones, so it must not compete with the visible mobile image. Right-anchored so the illustration's baked-in wordmark and labels sit under the solid part of the overlay, never behind the HTML text */}
-          <div className="absolute inset-y-0 right-0 w-[72%]"><CinematicImage id="gaurav-world-hero" decorative sizes="72vw" className="h-full" imgClassName="h-full object-cover object-[50%_60%]" /></div>
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_36%,rgb(11_17_16/.93)_48%,rgb(11_17_16/.55)_64%,rgb(11_17_16/.12)_100%)]" />
-          <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-bg to-transparent" />
-          <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-bg via-bg/70 to-transparent" />
+          {/* lazy: this copy is display:none on phones, so it must not compete with the visible mobile image. Right-anchored and framed from its right edge so the illustration's baked-in wordmark and labels sit under the solid part of the overlay or fully in view — never cut off, never behind the HTML text */}
+          <div className="absolute inset-y-0 right-0 w-[70%]"><CinematicImage id="gaurav-world-hero" decorative sizes="70vw" className="h-full" imgClassName="h-full object-cover object-[100%_58%]" /></div>
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_40%,rgb(11_17_16/.92)_50%,rgb(11_17_16/.4)_66%,rgb(11_17_16/0)_86%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-bg via-bg/80 to-transparent" />
         </div>
         <div aria-hidden className="relative lg:hidden">
           <CinematicImage id="gaurav-world-hero" decorative priority sizes="100vw" />
-          <div className="absolute inset-0 bg-gradient-to-b from-bg/70 via-transparent to-bg" />
+          <div className="absolute inset-0 bg-gradient-to-b from-bg/60 via-transparent to-bg" />
         </div>
-        <Container wide className="relative grid gap-10 pb-14 pt-2 sm:pb-20 lg:grid-cols-[1.25fr_.75fr] lg:items-center lg:py-24">
-          <div>
-            <Portrait size={112} className="-mt-16 mb-5 !mx-0 lg:hidden" />
-            <p className="eyebrow mb-3">Gaurav.OS · Product × AI × Building</p>
-            <h1 id="hero-title" className="text-[44px] font-bold leading-[1.02] sm:text-6xl xl:text-7xl">{profile.name}</h1>
-            <p className="mt-3 font-display text-lg text-green sm:text-xl">{profile.tagline}</p>
-            <p className="mt-5 max-w-2xl font-display text-xl font-medium leading-snug text-ink sm:text-2xl">
-              Product Management · AI Product Development · <span className="text-green">Healthcare Technology</span> · Research &amp; Analytics
-            </p>
-            <p className="mt-5 max-w-2xl text-lg text-muted">{profile.intro}</p>
-            <ul className="mt-6 flex flex-wrap gap-2" aria-label="Capabilities">
-              {profile.capabilityTags.map((t) => <li key={t} className="rounded-full border border-line bg-surface/70 px-3 py-1 text-sm text-[#C9D2CD]">{t}</li>)}
-            </ul>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <ButtonLink to="/explore" variant="primary" icon="explore" onClick={() => track("explore_mode_opened", { from: "hero" })}>Enter Explore Mode</ButtonLink>
-              <ButtonLink to="/recruiter" icon="recruiter" onClick={() => track("recruiter_mode_opened")}>Recruiter Mode</ButtonLink>
-              <ButtonLink to="/projects" icon="arrow" onClick={() => track("cta_click", { cta: "explore_work" })}>Explore my work</ButtonLink>
+        <Container wide className="relative pb-16 lg:pb-28 lg:pt-32">
+          <div className="max-w-[640px]">
+            <Portrait size={84} className="-mt-12 mb-6 !mx-0 lg:hidden" />
+            <p className="eyebrow mb-5">Product × AI × Building</p>
+            <h1 id="hero-title" className="text-[52px] font-bold leading-[.98] sm:text-7xl xl:text-[88px]">{profile.name}</h1>
+            <p className="mt-6 font-display text-[22px] font-medium leading-snug text-ink sm:text-[26px]">{profile.tagline}</p>
+            <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-muted">{profile.intro}</p>
+            <div className="mt-10 flex flex-wrap items-center gap-3">
+              <ButtonLink to="/projects" variant="primary" icon="arrow" onClick={() => track("cta_click", { cta: "explore_work" })}>Explore my work</ButtonLink>
               <ButtonLink to={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" icon="download" onClick={() => track("cv_downloaded")}>Download CV</ButtonLink>
-              <ButtonLink to="/contact" variant="ghost" icon="mail">Contact</ButtonLink>
             </div>
-            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-dim">
-              <span className="inline-flex items-center gap-2"><span className="size-2 rounded-full bg-green" aria-hidden />{profile.availability}</span>
-              <span>{profile.location}</span>
-              <button type="button" onClick={intro.play} className="inline-flex items-center gap-1.5 underline decoration-line underline-offset-4 hover:text-ink"><Icon name="play" size={14} />Watch the intro film (1:05)</button>
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-[14px] text-muted">
+              <Link to="/explore" onClick={() => track("explore_mode_opened", { from: "hero" })} className="group inline-flex items-center gap-2 hover:text-ink"><Icon name="explore" size={16} className="text-green" />Enter Explore Mode<Icon name="arrow" size={14} className="transition-transform group-hover:translate-x-0.5" /></Link>
+              <Link to="/recruiter" onClick={() => track("recruiter_mode_opened")} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="recruiter" size={16} />Recruiter Mode</Link>
+              <button type="button" onClick={intro.play} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="play" size={16} />Watch the intro film (1:05)</button>
             </div>
-          </div>
-
-          <div className="grid gap-8">
-          <Portrait size={230} className="max-lg:hidden" />
-          <aside aria-label="Verified highlights" className="card grid grid-cols-2 gap-px overflow-hidden bg-line/80 p-0 backdrop-blur-md">
-            {highlights.map((h) => (
-              <div key={h.label} className="bg-surface/90 p-5">
-                <p className="font-display text-3xl font-bold">{h.value}</p>
-                <p className="mt-1 text-sm font-medium text-ink">{h.label}</p>
-                <p className="mt-2 text-xs leading-relaxed text-dim">{h.definition}</p>
-              </div>
-            ))}
-            <p className="col-span-2 bg-surface/90 px-5 py-3 text-xs text-dim">Every figure is from the CV or a public repository. <Link to="/about#evidence" className="underline underline-offset-4 hover:text-ink">How evidence is labelled</Link></p>
-          </aside>
           </div>
         </Container>
+      </section>
 
-        {/* district strip */}
-        <Container wide className="relative pb-12">
-          <nav aria-label="Explore districts" className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-            {districts.map((d) => (
-              <Link key={d.id} to={`/districts/${d.id}`} onClick={() => track("district_opened", { id: d.id, from: "home" })}
-                className="card card-link flex items-center gap-3 bg-surface/85 px-4 py-3 backdrop-blur-md">
-                <Icon name={d.icon} className={d.tone === "green" ? "text-green" : "text-cyan"} />
-                <span className="text-sm font-medium leading-tight">{d.name}</span>
-              </Link>
-            ))}
+      {/* ---------------------------------------------- PROFILE + EVIDENCE */}
+      <section aria-label="At a glance" className="relative">
+        <Container wide>
+          <div className="grid gap-10 border-y border-line-soft py-12 lg:grid-cols-[320px_1fr] lg:items-start lg:gap-12">
+            <div className="flex items-center gap-5 pt-1 max-lg:hidden">
+              <Portrait size={96} className="!mx-0" />
+              <div className="text-sm">
+                <p className="font-medium text-ink">{profile.location}</p>
+                <p className="mt-1 flex items-center gap-2 text-muted"><span className="size-1.5 rounded-full bg-green" aria-hidden />{profile.availability}</p>
+                <Link to="/contact" className="mt-2 inline-flex items-center gap-1.5 text-muted underline decoration-line underline-offset-4 hover:text-ink"><Icon name="mail" size={14} />Contact</Link>
+              </div>
+            </div>
+            <p className="inline-flex items-center gap-2 text-sm text-muted lg:hidden"><span className="size-1.5 rounded-full bg-green" aria-hidden />{profile.availability} · {profile.location}</p>
+            <aside aria-label="Verified highlights">
+              <ul className="grid grid-cols-2 gap-x-8 gap-y-8 lg:grid-cols-4">
+                {highlights.map((h) => (
+                  <li key={h.label} className="border-l border-line pl-5">
+                    <p className="font-display text-[34px] font-bold leading-none tracking-tight">{h.value}</p>
+                    <p className="mt-2 text-sm font-medium text-ink">{h.label}</p>
+                    <p className="mt-1.5 text-xs leading-relaxed text-dim">{h.definition}</p>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-xs text-dim">Every figure is from the CV or a public repository. <Link to="/about#evidence" className="underline decoration-line underline-offset-4 hover:text-ink">How evidence is labelled</Link></p>
+            </aside>
+          </div>
+
+          {/* districts — the six areas of the Gaurav.OS world */}
+          <nav aria-label="Explore districts" className="py-10">
+            <p className="label mb-5">The Gaurav.OS world · six districts</p>
+            <ul className="grid grid-cols-2 gap-x-6 sm:grid-cols-3 lg:grid-cols-6">
+              {districts.map((d) => (
+                <li key={d.id}>
+                  <Link to={`/districts/${d.id}`} onClick={() => track("district_opened", { id: d.id, from: "home" })}
+                    className="group flex items-center gap-3 border-t border-line-soft py-4 text-[15px] text-muted transition-colors hover:text-ink">
+                    <span className="font-mono text-xs text-dim">{d.index}</span>
+                    <span className="leading-tight">{d.name}</span>
+                    <Icon name="arrow" size={14} className="ml-auto opacity-0 transition-opacity group-hover:opacity-100" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </nav>
         </Container>
       </section>
 
       {/* -------------------------------------------------------- FEATURED */}
-      <section aria-labelledby="featured" className="py-20">
+      <section aria-labelledby="featured" className="py-24">
         <Container wide>
           <SectionHeader id="featured" eyebrow="Featured work" title="Products built, shipped and researched"
             intro="Each card carries its real status. Employment, independent builds and academic work are labelled differently."

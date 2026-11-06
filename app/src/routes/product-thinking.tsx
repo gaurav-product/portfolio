@@ -68,7 +68,7 @@ function Challenge({ c }: { c: (typeof legacy.challenges)[number] }) {
         <div className="grid gap-2 md:grid-cols-2">
           {c.options.map((o, i) => (
             <label key={o} className={cx("flex cursor-pointer items-start gap-3 rounded-xl border p-3", pick === i ? "border-green bg-green/5" : "border-line hover:border-green/50")}>
-              <input type="radio" name={c.id} checked={pick === i} onChange={() => { setPick(i); track("tool_used", { tool: "challenge", id: c.id }); }} className="mt-1 accent-[#4DFF4D]" />
+              <input type="radio" name={c.id} checked={pick === i} onChange={() => { setPick(i); track("tool_used", { tool: "challenge", id: c.id }); }} className="mt-1 accent-[#6BE39A]" />
               <span><span className="font-mono text-xs text-dim">{"ABCD"[i]}</span> {o}</span>
             </label>
           ))}

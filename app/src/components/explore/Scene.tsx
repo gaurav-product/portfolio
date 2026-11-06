@@ -7,7 +7,7 @@ import type { District } from "~/content/districts";
 
 /** Procedural, abstract architecture — not a depiction of real facilities. */
 const HOME = { pos: new THREE.Vector3(0, 19, 24), target: new THREE.Vector3(0, 0, 0) };
-const C = { green: new THREE.Color("#4DFF4D"), cyan: new THREE.Color("#35D6D0"), body: new THREE.Color("#16231F"), ground: new THREE.Color("#0B1110") };
+const C = { green: new THREE.Color("#6BE39A"), cyan: new THREE.Color("#35D6D0"), body: new THREE.Color("#16231F"), ground: new THREE.Color("#0B1110") };
 
 function rng(seed: number) { let s = seed; return () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646; }
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
-import { NAV } from "~/content/nav";
+import { NAV, PRIMARY_NAV } from "~/content/nav";
 import { profile } from "~/content/profile";
 import { Icon } from "./Icon";
 import { cx } from "./ui";
@@ -39,29 +39,27 @@ export function Header() {
   }, [open]);
 
   const navCls = ({ isActive }: { isActive: boolean }) =>
-    cx("relative whitespace-nowrap px-2 min-[1600px]:px-2.5 py-2 text-[14px] rounded-lg transition-colors", isActive ? "text-ink after:absolute after:inset-x-2 after:-bottom-[13px] after:h-0.5 after:bg-green" : "text-muted hover:text-ink");
+    cx("relative whitespace-nowrap px-3 py-2 text-[14px] transition-colors", isActive ? "text-ink after:absolute after:inset-x-3 after:-bottom-[21px] after:h-px after:bg-green" : "text-muted hover:text-ink");
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line-soft bg-bg/85 backdrop-blur-md print:hidden">
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center gap-3 px-4 sm:px-6 lg:px-8">
-        <Link to="/" aria-label={`${profile.brand} — home`} className="mr-2 shrink-0"><Wordmark /></Link>
-        <nav aria-label="Primary" className="hidden min-[1440px]:flex items-center gap-0.5">
-          {NAV.map((n) => <NavLink key={n.to} to={n.to} end={n.to === "/"} className={navCls}>{n.label}</NavLink>)}
+    <header className="sticky top-0 z-40 border-b border-line-soft/80 bg-bg/80 backdrop-blur-xl print:hidden">
+      <div className="mx-auto flex h-[72px] max-w-[1440px] items-center gap-4 px-4 sm:px-6 lg:px-10">
+        <Link to="/" aria-label={`${profile.brand} — home`} className="shrink-0"><Wordmark /></Link>
+        <nav aria-label="Primary" className="ml-6 hidden lg:flex items-center">
+          {PRIMARY_NAV.map((n) => <NavLink key={n.to} to={n.to} className={navCls}>{n.label}</NavLink>)}
         </nav>
-        <div className="ml-auto flex items-center gap-2">
-          <button type="button" onClick={openSearch} aria-label="Search the portfolio" aria-keyshortcuts="Control+K /"
-            className="inline-flex h-10 items-center gap-2 rounded-lg border border-line px-3 text-muted hover:text-ink hover:border-green/60">
-            <Icon name="search" /><span className="hidden lg:inline min-[1440px]:hidden min-[1600px]:inline text-sm">Search</span><kbd className="hidden lg:inline min-[1440px]:hidden min-[1600px]:inline font-mono text-[11px] text-dim">⌘K</kbd>
-          </button>
-          <Link to="/explore" onClick={() => track("explore_mode_opened")} aria-label="Explore Mode" className="hidden sm:inline-flex h-10 items-center gap-2 rounded-lg border border-line px-3 text-sm text-muted hover:text-ink hover:border-green/60"><Icon name="explore" /><span className="min-[1440px]:hidden min-[1600px]:inline">Explore</span></Link>
-          <Link to="/recruiter" onClick={() => track("recruiter_mode_opened")} className="inline-flex h-10 items-center gap-2 rounded-lg border border-line px-3 text-sm text-ink hover:border-green/60" aria-label="Recruiter Mode"><Icon name="recruiter" /><span className="hidden md:inline min-[1440px]:hidden min-[1600px]:inline whitespace-nowrap">Recruiter Mode</span></Link>
-          <a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" onClick={() => track("cv_downloaded")} className="hidden md:inline-flex h-10 items-center gap-2 rounded-lg bg-green px-3 text-sm font-semibold text-green-ink hover:bg-[#7dff7d]"><Icon name="download" />CV</a>
-          <button ref={menuBtn} type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="nav-drawer" aria-label="Open menu"
-            className="min-[1440px]:hidden inline-flex size-10 items-center justify-center rounded-lg border border-line text-ink"><Icon name="menu" /></button>
+        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+          <button type="button" onClick={openSearch} aria-label="Search the portfolio" aria-keyshortcuts="Control+K /" title="Search (Ctrl K)"
+            className="inline-flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-raise hover:text-ink"><Icon name="search" /></button>
+          <Link to="/recruiter" onClick={() => track("recruiter_mode_opened")} aria-label="Recruiter Mode" title="Recruiter Mode"
+            className="inline-flex h-10 items-center gap-2 rounded-full px-3 text-sm text-muted transition-colors hover:bg-raise hover:text-ink"><Icon name="recruiter" /><span className="hidden xl:inline whitespace-nowrap">Recruiter Mode</span></Link>
+          <a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" onClick={() => track("cv_downloaded")} className="hidden md:inline-flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-sm font-semibold text-bg transition-colors hover:bg-white"><Icon name="download" size={16} />CV</a>
+          <button ref={menuBtn} type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="nav-drawer" aria-label="Open menu" title="Menu"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:bg-raise"><Icon name="menu" /></button>
         </div>
       </div>
       {open && (
-        <div className="fixed inset-0 z-50 min-[1440px]:hidden">
+        <div className="fixed inset-0 z-50">
           <button type="button" aria-label="Close menu" tabIndex={-1} className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
           <div ref={drawerRef} id="nav-drawer" role="dialog" aria-modal="true" aria-label="Site menu"
             onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setOpen(false); /* also closes on the current page's link */ }}
@@ -82,7 +80,7 @@ export function Header() {
               <Link to="/recruiter" className="flex min-h-12 items-center gap-3 rounded-lg px-3 hover:bg-raise"><Icon name="recruiter" />Recruiter Mode</Link>
               <Link to="/skills" className="flex min-h-12 items-center gap-3 rounded-lg px-3 hover:bg-raise"><Icon name="product" />Skills library</Link>
               <Link to="/ask" className="flex min-h-12 items-center gap-3 rounded-lg px-3 hover:bg-raise"><Icon name="ask" />Ask Gaurav</Link>
-              <a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" className="mt-2 flex min-h-12 items-center justify-center gap-2 rounded-xl bg-green font-semibold text-green-ink"><Icon name="download" />Download CV</a>
+              <a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" className="mt-2 flex min-h-12 items-center justify-center gap-2 rounded-full bg-green font-semibold text-green-ink"><Icon name="download" />Download CV</a>
             </div>
           </div>
         </div>

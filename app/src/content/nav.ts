@@ -14,6 +14,9 @@ export const NAV = [
   { to: "/contact", label: "Contact" },
 ] as const;
 
+/** The short desktop menu. Everything in NAV stays one click away in the menu drawer. */
+export const PRIMARY_NAV = NAV.filter((n) => ["/about", "/experience", "/projects", "/product-thinking", "/research", "/contact"].includes(n.to));
+
 export const TOOLS = [
   { slug: "rice", name: "RICE calculator", blurb: "Score features by Reach × Impact × Confidence ÷ Effort, sort and export CSV." },
   { slug: "moscow", name: "MoSCoW board", blurb: "Sort scope into Must, Should, Could and Won't; move, reorder and reset." },

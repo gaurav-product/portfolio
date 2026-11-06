@@ -7,7 +7,7 @@ import { seo } from "~/lib/meta";
 
 export const meta = () => seo("Product Atlas", "The 90-day corpus as a constellation, an evolution view and an operating model — all drawn from the generated data.", "/atlas");
 
-const CAT_COLOR: Record<string, string> = { Healthcare: "#4DFF4D", AI: "#35D6D0", Consumer: "#F2C14E", Fintech: "#BCA6FF", Marketplace: "#FF9F6E", SaaS: "#7FB2FF", B2B: "#E58BD8", Analytics: "#F3F6F4" };
+const CAT_COLOR: Record<string, string> = { Healthcare: "#6BE39A", AI: "#35D6D0", Consumer: "#F2C14E", Fintech: "#BCA6FF", Marketplace: "#FF9F6E", SaaS: "#7FB2FF", B2B: "#E58BD8", Analytics: "#F3F6F4" };
 const LEVEL_R: Record<string, number> = { VERIFIED: 9, DOCUMENTED: 7, SOURCED: 5.5, NARRATIVE: 4 };
 
 export default function Atlas() {

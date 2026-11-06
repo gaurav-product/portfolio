@@ -12,9 +12,9 @@ export function ProductOrbit() {
     <div className="grid items-center gap-8 lg:grid-cols-[400px_1fr]">
       <div className="relative mx-auto aspect-square w-full max-w-[380px]">
         <svg viewBox="0 0 380 380" className="absolute inset-0 h-full w-full" aria-hidden>
-          <circle cx={C} cy={C} r={R} fill="none" stroke="#4DFF4D" strokeOpacity=".35" strokeWidth="1.5" />
+          <circle cx={C} cy={C} r={R} fill="none" stroke="#6BE39A" strokeOpacity=".35" strokeWidth="1.5" />
           <ellipse cx={C} cy={C} rx={R + 26} ry={46} fill="none" stroke="#35D6D0" strokeOpacity=".3" transform={`rotate(-12 ${C} ${C})`} />
-          <circle cx={C} cy={C} r="54" fill="#121C19" stroke="#4DFF4D" strokeWidth="2" />
+          <circle cx={C} cy={C} r="54" fill="#121C19" stroke="#6BE39A" strokeWidth="2" />
         </svg>
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
           <p className="font-display text-sm font-bold">Gaurav<span className="text-green">.OS</span></p>

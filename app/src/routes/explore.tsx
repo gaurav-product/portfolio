@@ -184,7 +184,7 @@ export default function Explore() {
                     <li key={x.id}><button type="button" onClick={() => { setTour(null); select(x.id); }} aria-pressed={selected === x.id} aria-label={x.name}
                       style={{ left: `${x.world[0]}%`, top: `${x.world[1]}%` }}
                       className={cx("absolute h-[11%] w-[17%] min-h-8 -translate-x-1/2 -translate-y-1/2 rounded-xl border-2 transition-colors",
-                        selected === x.id ? "border-green bg-green/15 shadow-[0_0_24px_rgb(77_255_77/.45)]" : "border-transparent hover:border-green/70 focus-visible:border-green")} /></li>
+                        selected === x.id ? "border-green bg-green/15 shadow-[0_0_24px_rgb(107_227_154/.45)]" : "border-transparent hover:border-green/70 focus-visible:border-green")} /></li>
                   ))}
                 </ul>
               </nav>
