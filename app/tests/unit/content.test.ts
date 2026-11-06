@@ -163,3 +163,16 @@ describe("public identity", () => {
     expect(offenders).toEqual(["content/profile.ts"]); // legalName lives only there
   });
 });
+
+import { newsletter, writing as writingList } from "../../src/content/experience";
+describe("The Teardown newsletter", () => {
+  it("states only the owner-supplied facts, consistently everywhere", () => {
+    expect(newsletter).toMatchObject({ name: "The Teardown", platform: "LinkedIn", cadence: "Weekly", subscribers: "674" });
+    const entry = writingList.find((w) => w.title === newsletter.name)!;
+    expect(entry.status).toBe("SELF-REPORTED");
+    expect(entry.detail).toContain(`${newsletter.subscribers} subscribers`);
+    expect(entry.detail).toContain(newsletter.subscribersNote);
+    expect(newsletter.url).toBe("https://www.linkedin.com/build-relation/newsletter-follow?entityUrn=7488215816266584064");
+    expect(entry.href).toBe(newsletter.url);
+  });
+});

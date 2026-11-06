@@ -1,3 +1,4 @@
+import { newsletter } from "~/content/newsletter";
 import { heroArt } from "~/components/CinematicImage";
 import { useState } from "react";
 import { profile } from "~/content/profile";
@@ -44,6 +45,7 @@ export default function Contact() {
           </div>
           <a href={profile.contact.linkedin} target="_blank" rel="noopener noreferrer" className="card card-link flex items-center gap-3 p-5"><Icon name="linkedin" />{profile.contact.linkedinLabel}<Icon name="external" size={14} className="ml-auto text-dim" /></a>
           <a href={profile.contact.github} target="_blank" rel="noopener noreferrer" className="card card-link flex items-center gap-3 p-5"><Icon name="github" />{profile.contact.githubLabel}<Icon name="external" size={14} className="ml-auto text-dim" /></a>
+          {newsletter.url && <a href={newsletter.url} target="_blank" rel="noopener noreferrer" className="card card-link flex items-center gap-3 p-5"><Icon name="mail" /><span>Subscribe to {newsletter.name} <span className="text-dim">· {newsletter.cadence.toLowerCase()} on {newsletter.platform}</span></span><Icon name="external" size={14} className="ml-auto text-dim" /></a>}
           <div className="mt-3 flex flex-wrap gap-3">
             <ButtonLink to={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" variant="primary" icon="download" onClick={() => track("cv_downloaded", { from: "contact" })}>Download CV (PDF)</ButtonLink>
             <ButtonLink to="/cv" icon="arrow">View CV online</ButtonLink>

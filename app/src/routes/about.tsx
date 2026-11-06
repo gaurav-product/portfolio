@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { profile } from "~/content/profile";
 import { education, certifications, writing, tools } from "~/content/experience";
+import { NewsletterFeature } from "~/components/Newsletter";
 import { legacy } from "~/content/data";
 import { PageHero, Container, SectionHeader, Pill, ButtonLink } from "~/components/ui";
 import { seo, asset } from "~/lib/meta";
@@ -68,6 +69,7 @@ export default function About() {
 
         <section aria-labelledby="writing-h">
           <SectionHeader id="writing-h" eyebrow="Writing" title="Writing and research" />
+          <div className="mb-6"><NewsletterFeature headingLevel={3} /></div>
           <ul className="grid gap-3 md:grid-cols-2">
             {writing.map((w) => (
               <li key={w.title} className="card p-5">

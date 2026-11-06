@@ -1,7 +1,8 @@
 import { Link } from "react-router";
 import { profile, highlights } from "~/content/profile";
 import { featuredProjects } from "~/content/projects";
-import { experience, writing } from "~/content/experience";
+import { experience, writing, newsletter } from "~/content/experience";
+import { NewsletterFeature } from "~/components/Newsletter";
 import { capabilities, CAPABILITY_CATEGORIES } from "~/content/capabilities";
 import { districts } from "~/content/districts";
 import { legacy, corpusSummary } from "~/content/data";
@@ -181,7 +182,7 @@ export default function Home() {
             </div>
           </div>
           <ul className="grid gap-3">
-            {writing.map((w) => (
+            {writing.filter((w) => w.title !== newsletter.name).map((w) => (
               <li key={w.title} className="card p-5">
                 <div className="flex flex-wrap items-center justify-between gap-2"><span className="font-medium">{w.title}</span><Pill tone={w.status === "VERIFIED" ? "green" : "amber"}>{w.status}</Pill></div>
                 <p className="mt-1 text-sm text-muted">{w.detail}</p>
@@ -192,6 +193,11 @@ export default function Home() {
             ))}
           </ul>
         </Container>
+      </section>
+
+      {/* ------------------------------------------------------ NEWSLETTER */}
+      <section aria-label={`${newsletter.name} newsletter`} className="pb-16">
+        <Container wide><NewsletterFeature /></Container>
       </section>
 
       {/* ------------------------------------------------------------- CTA */}

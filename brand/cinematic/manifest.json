@@ -1589,6 +1589,71 @@
       "caution": "",
       "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
       "status": "INTEGRATED"
+    },
+    {
+      "id": "render-teardown",
+      "brief_image": null,
+      "source": "brand/renders/source/render-teardown.webp",
+      "source_bytes": 115392,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-teardown-1600.webp",
+          "bytes": 25636
+        },
+        "1200": {
+          "file": "/cinematic/render-teardown-1200.webp",
+          "bytes": 16078
+        },
+        "960": {
+          "file": "/cinematic/render-teardown-960.webp",
+          "bytes": 11334
+        },
+        "768": {
+          "file": "/cinematic/render-teardown-768.webp",
+          "bytes": 7994
+        },
+        "480": {
+          "file": "/cinematic/render-teardown-480.webp",
+          "bytes": 4064
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-teardown-1600.avif",
+          "bytes": 18172
+        },
+        "1200": {
+          "file": "/cinematic/render-teardown-1200.avif",
+          "bytes": 11663
+        },
+        "960": {
+          "file": "/cinematic/render-teardown-960.avif",
+          "bytes": 8265
+        },
+        "768": {
+          "file": "/cinematic/render-teardown-768.avif",
+          "bytes": 5652
+        },
+        "480": {
+          "file": "/cinematic/render-teardown-480.avif",
+          "bytes": 2894
+        }
+      },
+      "purpose": "The Teardown newsletter feature",
+      "used_by": [
+        "/",
+        "/about"
+      ],
+      "alt": "3D render: an exploded view of a slim device, its layers separated above a lit plinth with dotted assembly guides.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
     }
   ],
   "missing": [],

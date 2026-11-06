@@ -60,6 +60,7 @@ RENDER_META = {
   "render-project-phonepe-smart-spend-coach": dict(purpose="PhonePe Smart Spend Coach project art (academic case)", used_by=["/projects", "/projects/phonepe-smart-spend-coach"], alt="3D render: stacks of coin-like discs on a plinth under a glowing guardrail, with a small light connected to one stack."),
   "render-project-nexus": dict(purpose="Nexus project art", used_by=["/projects", "/projects/nexus"], alt="3D render: three streams of light converge on a glass cube; small amber markers sit on two of the streams."),
   "render-project-90-day-case-studies": dict(purpose="90 case studies project art", used_by=["/projects", "/projects/90-day-case-studies"], alt="3D render: a curved wall of ninety tiles, some lit, facing a single point of light."),
+  "render-teardown": dict(purpose="The Teardown newsletter feature", used_by=["/", "/about"], alt="3D render: an exploded view of a slim device, its layers separated above a lit plinth with dotted assembly guides."),
   "render-search": dict(purpose="Search page header", used_by=["/search"], alt="3D render: a glowing lens over a field of points, the points under it brighter."),
 }
 (RENDERS / "source").mkdir(parents=True, exist_ok=True)

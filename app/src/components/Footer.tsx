@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { NAV } from "~/content/nav";
 import { profile } from "~/content/profile";
+import { newsletter } from "~/content/newsletter";
 import { Container } from "./ui";
 import { Wordmark } from "./Header";
 import { Icon } from "./Icon";
@@ -31,6 +32,7 @@ export function Footer() {
             <li><a href={`mailto:${profile.contact.email}`} className="inline-flex min-h-7 items-center gap-2 text-muted hover:text-ink"><Icon name="mail" />{profile.contact.email}</a></li>
             <li><a href={profile.contact.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-7 items-center gap-2 text-muted hover:text-ink"><Icon name="linkedin" />LinkedIn</a></li>
             <li><a href={profile.contact.github} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-7 items-center gap-2 text-muted hover:text-ink"><Icon name="github" />GitHub</a></li>
+            {newsletter.url && <li><a href={newsletter.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-7 items-center gap-2 text-muted hover:text-ink"><Icon name="mail" />{newsletter.name} newsletter</a></li>}
             <li><a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" className="inline-flex min-h-7 items-center gap-2 text-muted hover:text-ink"><Icon name="download" />Download CV (PDF)</a></li>
           </ul>
         </div>

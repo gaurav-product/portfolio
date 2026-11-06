@@ -97,9 +97,11 @@ export const certifications = [
   { issuer: "Product and AI", items: ["AI in Product Management and Product Strategy (Product School)", "Product Analytics (Pendo)", "Qualcomm AI Upskilling", "Generative AI Mastermind"] },
 ] as const;
 
+export { newsletter } from "./newsletter";
+
 export const writing = [
   { title: "90 daily product case studies", detail: "Jul – Sep 2026 · public repository", href: "/research", status: "VERIFIED" },
-  { title: "The Teardown", detail: "Weekly LinkedIn newsletter · 674 subscribers (self-reported, Nov 2026)", href: "https://www.linkedin.com/in/gaurav-singh-product", status: "SELF-REPORTED" },
+  { title: "The Teardown", detail: "Weekly LinkedIn newsletter · 674 subscribers (self-reported, Nov 2026)", href: "https://www.linkedin.com/build-relation/newsletter-follow?entityUrn=7488215816266584064", status: "SELF-REPORTED" }, // mirrors `newsletter`
 ] as const;
 
 export const tools = {

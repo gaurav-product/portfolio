@@ -387,6 +387,32 @@ const SCENES = {
   },
 };
 
+// The Teardown (newsletter) — an exploded view: a device taken apart layer by layer
+SCENES.teardown = function () {
+  const s = stage({ cam: [7.5, 5.5, 12], look: [0, 2.6, 0] });
+  s.scene.add(plinth(2.6));
+  const layers = [
+    { geo: new THREE.BoxGeometry(2.2, 0.12, 4.2), tone: C.cyan, y: 0.7 },   // back shell
+    { geo: new THREE.BoxGeometry(1.9, 0.18, 2.0), tone: C.green, y: 1.6 },  // battery
+    { geo: new THREE.BoxGeometry(2.0, 0.06, 3.9), tone: C.cyan, y: 2.5 },   // board
+    { geo: new THREE.BoxGeometry(2.1, 0.08, 4.1), tone: C.green, y: 3.4 },  // display
+    { geo: new THREE.BoxGeometry(2.2, 0.04, 4.2), tone: C.cyan, y: 4.3, glass: true }, // cover glass
+  ];
+  const tilt = new THREE.Group(); tilt.rotation.set(0, -0.6, 0.12); s.scene.add(tilt);
+  for (const L of layers) {
+    const m = L.glass ? glass(L.geo, L.tone) : solid(L.geo, { tone: L.tone, edge: 1, emissive: 0.06 }); m.position.y = L.y; tilt.add(m);
+  }
+  // components on the board: shapes only
+  for (let i = 0; i < 7; i++) { const c = solid(new THREE.BoxGeometry(0.3 + rnd() * 0.4, 0.12, 0.3 + rnd() * 0.5), { tone: i === 0 ? C.green : C.cyan, edge: 1, emissive: 0.2 }); c.position.set(-0.6 + (i % 3) * 0.6, 2.6, -1.5 + Math.floor(i / 3) * 1.2); tilt.add(c); }
+  const screen = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 3.8), glowMat(C.green, 0.18)); screen.rotation.x = -Math.PI / 2; screen.position.y = 3.45; tilt.add(screen);
+  // assembly guides: dotted lines through the corners
+  for (const [x, z] of [[-1.05, -2.05], [1.05, -2.05], [-1.05, 2.05], [1.05, 2.05]]) {
+    for (let y = 0.8; y < 4.3; y += 0.22) { const d = orb(0.022, C.green); d.position.set(x, y, z); tilt.add(d); }
+  }
+  s.scene.add(dust(160, 22, 9, C.cyan, 0.04));
+  return s;
+};
+
 export async function render(id) {
   seed = 7; const s = SCENES[id]();
   const composer = new EffectComposer(s.renderer);
