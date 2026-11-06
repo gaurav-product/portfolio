@@ -1,3 +1,4 @@
+import { heroArt } from "~/components/CinematicImage";
 import { useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { projects, PROJECT_FILTERS } from "~/content/projects";
@@ -19,7 +20,7 @@ export default function Projects() {
 
   return (
     <>
-      <PageHero eyebrow="Projects" title="Project library" intro="Professional work, independent builds, an academic capstone and published research — each with its real status." />
+      <PageHero {...heroArt("render-projects")} eyebrow="Projects" title="Project library" intro="Professional work, independent builds, an academic capstone and published research — each with its real status." />
       <Container wide className="py-12">
         <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div role="group" aria-label="Filter projects" className="flex flex-wrap gap-2">

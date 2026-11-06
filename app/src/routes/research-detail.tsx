@@ -50,7 +50,7 @@ export default function Study() {
     <article>
       <header className="border-b border-line-soft">
         <Container wide className="py-10">
-          <Link to="/research" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />Research library</Link>
+          <Link to="/research" className="inline-flex min-h-8 items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />Research library</Link>
           <div className="mt-5 flex flex-wrap items-center gap-2">
             <span className="font-mono text-green">DAY {String(s.day).padStart(2, "0")}</span>
             <Pill tone={evidenceTone(s.evidence_level)}>{s.evidence_level}</Pill>
@@ -112,13 +112,24 @@ function useMermaid(ref: React.RefObject<HTMLDivElement | null>, key: string) {
     let cancelled = false;
     (async () => {
       const { default: mermaid } = await import("mermaid");
-      mermaid.initialize({ startOnLoad: false, theme: "dark", securityLevel: "strict", fontFamily: "Inter Variable, sans-serif" });
+      mermaid.initialize({ startOnLoad: false, theme: "dark", securityLevel: "strict", fontFamily: "Inter Variable, sans-serif",
+        // readable labels on the site background (WCAG AA): light text on a solid label background
+        themeVariables: { background: "#121C19", primaryTextColor: "#F3F6F4", textColor: "#E6ECE9", lineColor: "#A1ADA7", edgeLabelBackground: "#1B2924", tertiaryTextColor: "#E6ECE9", secondaryTextColor: "#E6ECE9" } });
       for (const [n, fig] of blocks.entries()) {
         if (cancelled) return;
         const src = fig.querySelector("code")?.textContent ?? "";
         try {
-          const { svg } = await mermaid.render(`mmd-${key.replace(/\W/g, "")}-${n}`, src);
+          const id = `mmd-${key.replace(/\W/g, "")}-${n}`;
+          const { svg: raw } = await mermaid.render(id, src);
+          // Mermaid reuses internal ids (arrowheads, edges) across diagrams; namespace them per diagram
+          const inner = [...new Set([...raw.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]))].filter((x) => x !== id);
+          let svg = raw;
+          for (const x of inner) svg = svg.split(`id="${x}"`).join(`id="${id}-${x}"`).split(`#${x})`).join(`#${id}-${x})`).split(`#${x}"`).join(`#${id}-${x}"`);
+          // Mermaid can also repeat an id inside one diagram ("node-undefined"); suffix the repeats
+          const seen = new Map<string, number>();
+          svg = svg.replace(/\sid="([^"]+)"/g, (all, x) => { const k = seen.get(x) ?? 0; seen.set(x, k + 1); return k ? ` id="${x}-${k}"` : all; });
           fig.dataset.done = "1";
+          fig.tabIndex = 0; // wide diagrams scroll sideways
           fig.innerHTML = `${svg}<details class="mermaid-source"><summary>Diagram source</summary><pre><code></code></pre></details>`;
           fig.querySelector("details code")!.textContent = src;
         } catch { fig.dataset.done = "failed"; }

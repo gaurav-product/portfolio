@@ -40,7 +40,7 @@ export default function ProjectDetail() {
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />
         </div>
         <Container wide className="relative py-16 sm:py-20">
-          <Link to="/projects" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All projects</Link>
+          <Link to="/projects" className="inline-flex min-h-8 items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All projects</Link>
           <div className="mt-6 flex flex-wrap items-center gap-2"><Pill tone={statusTone(p.status)}>{p.status}</Pill><Pill>{p.kindLabel}</Pill></div>
           <h1 className="mt-4 text-4xl font-bold sm:text-6xl">{p.name}</h1>
           <p className="mt-2 text-xl text-muted">{p.subtitle}</p>

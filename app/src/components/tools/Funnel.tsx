@@ -43,10 +43,10 @@ export function FunnelTool() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.1fr_1fr]">
-        <div className="overflow-x-auto rounded-xl border border-line">
+        <div className="relative overflow-x-auto rounded-xl border border-line">
           <table className="w-full min-w-[640px] text-left text-sm">
             <caption className="sr-only">Funnel steps, editable</caption>
-            <thead className="bg-raise"><tr>{["Step", "Users", "Step conv.", "Drop-off", "Overall", ""].map((h) => <th key={h} scope="col" className="px-3 py-2.5 font-mono text-[11px] uppercase tracking-wider text-muted">{h}</th>)}</tr></thead>
+            <thead className="bg-raise"><tr>{["Step", "Users", "Step conv.", "Drop-off", "Overall", ""].map((h) => <th key={h} scope="col" className="px-3 py-2.5 text-[11px] font-semibold uppercase tracking-[.08em] text-muted">{h || <span className="sr-only">Actions</span>}</th>)}</tr></thead>
             <tbody>
               {rows.map((r, i) => (
                 <tr key={r.id} className="border-t border-line-soft">

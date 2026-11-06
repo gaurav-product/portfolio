@@ -23,3 +23,11 @@ export function CinematicImage({ id, className = "", decorative = false, tag = f
     </span>
   );
 }
+
+/** Header art for a page: the 3D render beside the title on desktop, a slim banner on phones. */
+export function heroArt(id: string) {
+  return {
+    backdrop: <CinematicImage id={id} decorative sizes="52vw" className="h-full" imgClassName="!object-center" />,
+    mobileArt: <CinematicImage id={id} decorative sizes="100vw" className="h-full" imgClassName="h-full object-cover" />,
+  };
+}

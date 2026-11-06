@@ -1,3 +1,4 @@
+import { heroArt } from "~/components/CinematicImage";
 import { useState } from "react";
 import { profile } from "~/content/profile";
 import { PageHero, Container, ButtonLink, Button } from "~/components/ui";
@@ -33,7 +34,7 @@ export default function Contact() {
 
   return (
     <>
-      <PageHero eyebrow="Contact" title="Let’s build something useful." intro={`${profile.availability}. Email is the fastest route.`} />
+      <PageHero {...heroArt("render-contact")} eyebrow="Contact" title="Let’s build something useful." intro={`${profile.availability}. Email is the fastest route.`} />
       <Container className="grid gap-10 py-14 lg:grid-cols-[1fr_1.1fr]">
         <section aria-labelledby="direct" className="grid content-start gap-3">
           <h2 id="direct" className="label mb-1">Direct</h2>

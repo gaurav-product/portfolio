@@ -16,3 +16,4 @@ reports/e2e-results.json
 reports/lighthouse/*.html
 reports/lighthouse/summary.json
 .cache/
+reports/a11y-*.json

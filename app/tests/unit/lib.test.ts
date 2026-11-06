@@ -64,3 +64,17 @@ describe("search", () => {
   it("requires every term to match", () => expect(search("evamastu zzzz")).toHaveLength(0));
   it("highlights matches", () => expect(highlight("Post-discharge care", "discharge").some((p) => p.m && p.t.toLowerCase() === "discharge")).toBe(true));
 });
+
+import { fitDescription } from "../../src/lib/meta";
+describe("search snippets", () => {
+  it("keeps every description between 50 and 160 characters without inventing content", () => {
+    const short = fitDescription("Research Expert at LYBL.");
+    expect(short.length).toBeGreaterThanOrEqual(50);
+    expect(short.startsWith("Research Expert at LYBL")).toBe(true);
+    const long = fitDescription("word ".repeat(80));
+    expect(long.length).toBeLessThanOrEqual(160);
+    expect(long.endsWith("…")).toBe(true);
+    const ok = "A description that is already a comfortable length for a search result snippet.";
+    expect(fitDescription(ok)).toBe(ok);
+  });
+});

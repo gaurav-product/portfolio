@@ -8,7 +8,7 @@ import { seo, asset } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 import { Ambient } from "~/lib/ambient";
 
-export const meta = () => seo("Explore Mode", "The Gaurav.OS world: six districts — Product Leadership, HealthTech Innovation, AI & Safety Lab, Research & Analytics, Professional Experience, Knowledge & Headquarters — each opening real portfolio content.", "/explore");
+export const meta = () => seo("Explore Mode", "Explore the Gaurav.OS world: six districts, from Product Leadership to AI & Safety, each opening real portfolio content.", "/explore");
 
 const Scene = lazy(() => import("~/components/explore/Scene"));
 
@@ -133,7 +133,8 @@ export default function Explore() {
           {mode === "3d" && <Button icon="reset" onClick={() => { setTour(null); select(null); setResetKey((k) => k + 1); }}>Reset camera</Button>}
           {mode === "3d" && <Button onClick={() => switchTo("2d")}>Map view</Button>}
           {mode === "2d" && webglOkSafe() && <Button onClick={() => switchTo("3d")} icon="explore">3D view</Button>}
-          <Button icon={sound ? "sound" : "mute"} onClick={toggleSound} aria-pressed={sound} aria-label={sound ? "Turn ambient sound off" : "Turn ambient sound on"}>{sound ? "Sound on" : "Sound off"}</Button>
+          {/* a toggle keeps one stable name; its state is announced through aria-pressed (WCAG 2.5.3 label in name) */}
+          <Button icon={sound ? "sound" : "mute"} onClick={toggleSound} aria-pressed={sound}>Ambient sound</Button>
           <Link to="/recruiter" onClick={() => track("recruiter_mode_opened", { from: "explore" })} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] font-medium transition-colors hover:border-ink/30 hover:bg-raise"><Icon name="recruiter" />Exit to Recruiter Mode</Link>
         </div>
         {soundError && <p role="alert" className="w-full text-sm text-amber">{soundError}</p>}

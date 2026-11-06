@@ -30,7 +30,7 @@ export default function SkillDetail() {
   const usedBy = projects.filter((p) => p.skills.includes(c.id));
   return (
     <Container className="py-12">
-      <Link to="/skills" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />Skills library</Link>
+      <Link to="/skills" className="inline-flex min-h-8 items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />Skills library</Link>
       <header className="mt-6"><p className="label">{c.category}</p><h1 className="mt-2 text-4xl font-bold sm:text-5xl">{c.name}</h1><div className="mt-4"><Pill tone={statusPillTone(c.status)}>{c.status}</Pill></div></header>
       <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_300px]">
         <div className="grid content-start gap-8">

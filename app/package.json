@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "cv": "node scripts/build-cv.mjs",
-    "lighthouse": "node scripts/lighthouse.mjs"
+    "lighthouse": "node scripts/lighthouse.mjs",
+    "audit": "node scripts/a11y-audit.cjs reports/a11y-desktop.json desktop 6 && node scripts/a11y-audit.cjs reports/a11y-mobile.json mobile 6"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.6",

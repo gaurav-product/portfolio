@@ -10,7 +10,7 @@ export function ToolShell({ slug, children, actions }: { slug: string; children:
   const next = TOOLS[(i + 1) % TOOLS.length];
   return (
     <Container wide className="py-10">
-      <Link to="/product-thinking" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />Product Thinking</Link>
+      <Link to="/product-thinking" className="inline-flex min-h-8 items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />Product Thinking</Link>
       <header className="mt-5 flex flex-col gap-4 border-b border-line pb-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="eyebrow mb-2">Tool {i + 1} of {TOOLS.length}</p>

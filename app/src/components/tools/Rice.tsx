@@ -42,10 +42,10 @@ export function RiceTool() {
         <label className="inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={sorted} onChange={(e) => setSorted(e.target.checked)} className="size-4 accent-[#6BE39A]" />Sort by score</label>
         <span role="status" className="label">{rows.length} feature{rows.length === 1 ? "" : "s"}</span>
       </div>
-      <div className="overflow-x-auto rounded-xl border border-line">
+      <div className="relative overflow-x-auto rounded-xl border border-line">
         <table className="w-full min-w-[820px] text-left text-sm">
           <caption className="sr-only">RICE scores, editable</caption>
-          <thead className="bg-raise"><tr>{["#", "Feature", "Reach", "Impact", "Confidence %", "Effort", "Score", ""].map((h) => <th key={h} scope="col" className="px-3 py-2.5 font-mono text-[11px] uppercase tracking-wider text-muted">{h}</th>)}</tr></thead>
+          <thead className="bg-raise"><tr>{["#", "Feature", "Reach", "Impact", "Confidence %", "Effort", "Score", ""].map((h) => <th key={h} scope="col" className="px-3 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-muted">{h || <span className="sr-only">Actions</span>}</th>)}</tr></thead>
           <tbody>
             {view.map((r, i) => (
               <tr key={r.id} className="border-t border-line-soft">

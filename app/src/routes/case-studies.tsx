@@ -1,3 +1,4 @@
+import { heroArt } from "~/components/CinematicImage";
 import { Link } from "react-router";
 import { projects } from "~/content/projects";
 import type { CaseSectionKey } from "~/content/types";
@@ -19,7 +20,7 @@ export default function CaseStudies() {
   const list = projects.filter((p) => p.sections.length >= 5);
   return (
     <>
-      <PageHero eyebrow="Case studies" title="One template. Only the evidence-backed parts."
+      <PageHero {...heroArt("render-case-studies")} eyebrow="Case studies" title="One template. Only the evidence-backed parts."
         intro="Every case study follows the same 28-part structure. The grid below shows which parts each one actually has — gaps are left as gaps rather than filled with narrative." />
       <Container wide className="grid gap-6 py-12">
         {list.map((p) => {

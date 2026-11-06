@@ -11,9 +11,16 @@ import { Icon } from "~/components/Icon";
 import { IntroFilm, useIntro } from "~/components/IntroFilm";
 import { Portrait } from "~/components/Portrait";
 import { CinematicImage } from "~/components/CinematicImage";
+import { cinematic } from "~/content/cinematic";
 import { seo, structuredData, asset } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 
+// Phones: the campus illustration is the largest paint, so fetch it with the document instead of
+// after layout. AVIF only (browsers without AVIF ignore the hint) and only below the desktop breakpoint.
+export const links = () => {
+  const c = cinematic("gaurav-world-hero");
+  return c.avif ? [{ rel: "preload", as: "image", type: "image/avif", media: "(max-width: 1023px)", imageSrcSet: Object.entries(c.avif).map(([w, f]) => `${asset(f.file)} ${w}w`).join(", "), imageSizes: "100vw", fetchPriority: "high" }] : [];
+};
 export const meta = () => [...seo(profile.brand, `${profile.seoDescription} ${profile.tagline}`, "/"), structuredData()];
 
 export default function Home() {
@@ -39,7 +46,7 @@ export default function Home() {
         </div>
         <Container wide className="relative pb-16 lg:pb-28 lg:pt-32">
           <div className="max-w-[640px]">
-            <Portrait size={84} className="-mt-12 mb-6 !mx-0 lg:hidden" />
+            <Portrait size={84} lazy className="-mt-12 mb-6 !mx-0 lg:hidden" />
             <p className="eyebrow mb-5">Product × AI × Building</p>
             <h1 id="hero-title" className="text-[52px] font-bold leading-[.98] sm:text-7xl xl:text-[88px]">{profile.name}</h1>
             <p className="mt-6 font-display text-[22px] font-medium leading-snug text-ink sm:text-[26px]">{profile.tagline}</p>
@@ -62,7 +69,7 @@ export default function Home() {
         <Container wide>
           <div className="grid gap-10 border-y border-line-soft py-12 lg:grid-cols-[320px_1fr] lg:items-start lg:gap-12">
             <div className="flex items-center gap-5 pt-1 max-lg:hidden">
-              <Portrait size={96} className="!mx-0" />
+              <Portrait size={96} lazy className="!mx-0" />
               <div className="text-sm">
                 <p className="font-medium text-ink">{profile.location}</p>
                 <p className="mt-1 flex items-center gap-2 text-muted"><span className="size-1.5 rounded-full bg-green" aria-hidden />{profile.availability}</p>

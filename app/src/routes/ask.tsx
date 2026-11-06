@@ -1,3 +1,4 @@
+import { heroArt } from "~/components/CinematicImage";
 import { PageHero, Container } from "~/components/ui";
 import { AskGaurav } from "~/components/AskGaurav";
 import { RoboGuide } from "~/components/RoboGuide";
@@ -6,7 +7,7 @@ export const meta = () => seo("Ask Gaurav", "A transparent, local Q&A over verif
 export default function Ask() {
   return (
     <>
-      <PageHero eyebrow="Ask Gaurav" title="Questions, answered only from evidence" intro="No language model is connected. Your question is checked for unsupported asks, then matched to a pre-written answer built from the CV and project repositories. If nothing matches, it says so." />
+      <PageHero {...heroArt("render-ask")} eyebrow="Ask Gaurav" title="Questions, answered only from evidence" intro="No language model is connected. Your question is checked for unsupported asks, then matched to a pre-written answer built from the CV and project repositories. If nothing matches, it says so." />
       <Container className="grid gap-8 py-12 lg:grid-cols-[1.4fr_1fr]">
         <AskGaurav />
         <div className="grid content-start gap-6"><RoboGuide className="max-w-[170px]" /><figure className="card self-start p-4">

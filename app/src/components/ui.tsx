@@ -72,9 +72,17 @@ export function SectionHeader({ eyebrow, title, intro, id, as: H = "h2", action 
   );
 }
 
-export function PageHero({ eyebrow, title, intro, children, backdrop }: { eyebrow: string; title: string; intro?: ReactNode; children?: ReactNode; backdrop?: ReactNode }) {
+/** Section header. `backdrop` is desktop-only art beside the title; `mobileArt` is a slim banner
+ *  above it on phones (pass both via heroArt() for the 3D renders). */
+export function PageHero({ eyebrow, title, intro, children, backdrop, mobileArt }: { eyebrow: string; title: string; intro?: ReactNode; children?: ReactNode; backdrop?: ReactNode; mobileArt?: ReactNode }) {
   return (
     <header className={cx("relative overflow-hidden border-b border-line-soft", !backdrop && "hero-glow")}>
+      {mobileArt && (
+        <div aria-hidden="true" className="relative h-44 overflow-hidden sm:h-56 lg:hidden" data-testid="hero-mobile-art">
+          {mobileArt}
+          <div className="absolute inset-0 bg-gradient-to-b from-bg/40 via-transparent to-bg" />
+        </div>
+      )}
       {backdrop && (
         <div aria-hidden="true" className="absolute inset-0 max-lg:hidden" data-testid="hero-backdrop">
           <div className="absolute inset-y-0 right-0 w-[52%] opacity-95 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[60%_80%]">{backdrop}</div>
@@ -110,10 +118,10 @@ export function Blocks({ blocks }: { blocks: Block[] }) {
             {b.kv.map(([k, v]) => <div key={k} className="contents"><dt className="label pt-1">{k}</dt><dd className="text-[#C9D2CD]">{v}</dd></div>)}
           </dl>);
         if ("table" in b) return (
-          <div key={i} className="overflow-x-auto rounded-xl border border-line">
+          <div key={i} tabIndex={0} role="region" aria-label={b.table.caption ?? `Table ${i + 1}: ${b.table.head.filter(Boolean).slice(0, 2).join(", ")}`} className="relative overflow-x-auto rounded-xl border border-line">
             <table className="w-full min-w-[520px] text-left text-[15px]">
               {b.table.caption && <caption className="caption-bottom px-4 py-2 text-left text-sm text-dim">{b.table.caption}</caption>}
-              <thead className="bg-raise"><tr>{b.table.head.map((h) => <th key={h} scope="col" className="px-4 py-3 text-[11.5px] font-semibold uppercase tracking-[.08em] text-muted">{h}</th>)}</tr></thead>
+              <thead className="bg-raise"><tr>{b.table.head.map((h, hi) => <th key={hi} scope="col" className="px-4 py-3 text-[11.5px] font-semibold uppercase tracking-[.08em] text-muted">{h || <span className="sr-only">Unlabelled column</span>}</th>)}</tr></thead>
               <tbody>{b.table.rows.map((r, ri) => <tr key={ri} className="border-t border-line-soft">{r.map((c, ci) => <td key={ci} className="px-4 py-2.5 align-top text-[#C9D2CD]">{c}</td>)}</tr>)}</tbody>
             </table>
           </div>);
@@ -135,8 +143,8 @@ export function SourceLinks({ ids, className = "" }: { ids: string[]; className?
         if (!s.href) return <span key={id}>{s.label}</span>;
         const ext = s.href.startsWith("http");
         return ext
-          ? <a key={id} href={s.href} target="_blank" rel="noopener noreferrer" className="underline decoration-line underline-offset-4 hover:text-ink">{s.label}</a>
-          : <Link key={id} to={s.href} className="underline decoration-line underline-offset-4 hover:text-ink">{s.label}</Link>;
+          ? <a key={id} href={s.href} target="_blank" rel="noopener noreferrer" className="inline-block py-1 underline decoration-line underline-offset-4 hover:text-ink">{s.label}</a>
+          : <Link key={id} to={s.href} className="inline-block py-1 underline decoration-line underline-offset-4 hover:text-ink">{s.label}</Link>;
       })}
     </p>
   );

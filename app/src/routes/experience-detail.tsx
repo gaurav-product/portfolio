@@ -20,7 +20,7 @@ export default function RoleDetail() {
   const prev = experience[i - 1], next = experience[i + 1];
   return (
     <Container className="py-12">
-      <Link to="/experience" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All experience</Link>
+      <Link to="/experience" className="inline-flex min-h-8 items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All experience</Link>
       <header className="mt-6">
         <div className="flex flex-wrap items-center gap-2"><span className="label">{r.period}</span><Pill tone="green">{r.type}</Pill><Pill>Employment</Pill></div>
         <h1 className="mt-3 text-4xl font-bold sm:text-5xl">{r.role}</h1>

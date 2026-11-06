@@ -1,3 +1,4 @@
+import { heroArt } from "~/components/CinematicImage";
 import { useState } from "react";
 import { Link } from "react-router";
 import { legacy } from "~/content/data";
@@ -10,7 +11,7 @@ export default function LabNotes() {
   const list = legacy.lab_notes.filter((n) => cat === "All" || n.category === cat);
   return (
     <>
-      <PageHero eyebrow="Lab Notes" title="What I'm learning, building and questioning" intro={legacy.lab_config.publishing_note} />
+      <PageHero {...heroArt("render-lab-notes")} eyebrow="Lab Notes" title="What I'm learning, building and questioning" intro={legacy.lab_config.publishing_note} />
       <Container className="py-10">
         <div role="group" aria-label="Filter by category" className="mb-6 flex flex-wrap gap-2">
           {cats.map((c) => <button key={c} type="button" aria-pressed={cat === c} onClick={() => setCat(c)} className={cx("min-h-10 rounded-full border px-3.5 text-sm", cat === c ? "border-green bg-green font-semibold text-green-ink" : "border-line text-muted hover:text-ink")}>{c}</button>)}

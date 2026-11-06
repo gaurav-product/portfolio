@@ -85,14 +85,14 @@ test("J21 guided tour visits all six districts in order, then ends", async ({ pa
 
 test("J22 ambient sound is off by default and toggles only on request", async ({ page }) => {
   await page.goto("/explore?view=2d");
-  const on = page.getByRole("button", { name: "Turn ambient sound on" });
-  await expect(on).toHaveAttribute("aria-pressed", "false");
+  // one stable name ("Ambient sound"); the on/off state is aria-pressed
+  const toggle = page.getByRole("button", { name: "Ambient sound", exact: true });
+  await expect(toggle).toHaveAttribute("aria-pressed", "false");
   expect(await page.evaluate(() => document.querySelectorAll("audio").length)).toBe(0);
-  await on.click();
-  const off = page.getByRole("button", { name: "Turn ambient sound off" });
-  await expect(off).toHaveAttribute("aria-pressed", "true");
-  await off.click();
-  await expect(page.getByRole("button", { name: "Turn ambient sound on" })).toHaveAttribute("aria-pressed", "false");
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-pressed", "true");
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-pressed", "false");
 });
 
 test("J23 About → How I Think: illustration and interactive loop", async ({ page }) => {

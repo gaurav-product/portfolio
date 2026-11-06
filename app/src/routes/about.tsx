@@ -5,7 +5,7 @@ import { legacy } from "~/content/data";
 import { PageHero, Container, SectionHeader, Pill, ButtonLink } from "~/components/ui";
 import { seo, asset } from "~/lib/meta";
 import { OperatingLoop } from "~/components/OperatingLoop";
-import { CinematicImage } from "~/components/CinematicImage";
+import { CinematicImage, heroArt } from "~/components/CinematicImage";
 
 export const meta = () => seo("About", `About ${profile.name}: background, education, certifications and how evidence is labelled on this site.`, "/about");
 
@@ -21,7 +21,7 @@ const LEVELS: [string, string, string][] = [
 export default function About() {
   return (
     <>
-      <PageHero eyebrow="About" title="Behavioural research first. Product second. AI where it earns its place."
+      <PageHero {...heroArt("render-about")} eyebrow="About" title="Behavioural research first. Product second. AI where it earns its place."
         intro={profile.summary}>
         <div className="flex flex-wrap gap-3">
           <ButtonLink to="/experience" variant="primary" icon="experience">Experience</ButtonLink>
@@ -34,8 +34,8 @@ export default function About() {
           <SectionHeader id="question" eyebrow="The question behind the work" title={legacy.product_question.text} intro={legacy.product_question.note} />
         </section>
 
-        <section aria-labelledby="how-i-think" id="how-i-think">
-          <SectionHeader id="how-i-think" eyebrow="How I think" title="Observe → frame → research → hypothesize → build → measure → learn → iterate."
+        <section aria-labelledby="how-i-think-h" id="how-i-think">
+          <SectionHeader id="how-i-think-h" eyebrow="How I think" title="Observe → frame → research → hypothesize → build → measure → learn → iterate."
             intro="The loop I run on every problem. Select a stage to see where it shows up in real work on this site." />
           <OperatingLoop idPrefix="about-loop" figure={<CinematicImage id="how-i-think" tag sizes="(min-width: 1024px) 460px, 100vw" className="mb-4 overflow-hidden rounded-xl border border-line" />} />
         </section>

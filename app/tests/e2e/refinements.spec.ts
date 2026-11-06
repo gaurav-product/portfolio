@@ -49,7 +49,9 @@ test("J14 recruiter mode loads no film, 3D or diagram code", async ({ page }) =>
 test("J15 research reading page — full text, contents, assumptions, next study", async ({ page }) => {
   await page.goto("/research/90");
   const text = page.getByTestId("study-text");
-  await expect(text.locator("h1")).toContainText("Health in ChatGPT");
+  // the study's own title renders one level down (the page owns the single h1); the text is unchanged
+  await expect(text.locator('[data-l="1"]').first()).toContainText("Health in ChatGPT");
+  await expect(page.locator("h1")).toHaveCount(1);
   const words = await text.evaluate((el) => el.textContent!.split(/\s+/).length);
   expect(words).toBeGreaterThan(5000);
   await expect(page.getByText(/at commit 60c3c9b/)).toBeVisible();

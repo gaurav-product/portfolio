@@ -1,3 +1,4 @@
+import { heroArt } from "~/components/CinematicImage";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { type Study } from "~/content/data";
@@ -29,7 +30,7 @@ export default function Atlas() {
 
   return (
     <>
-      <PageHero eyebrow="Product Atlas" title="The 90-day corpus, mapped"
+      <PageHero {...heroArt("render-atlas")} eyebrow="Product Atlas" title="The 90-day corpus, mapped"
         intro={`${corpus.counts.written} studies · ${corpus.counts.sources.toLocaleString("en-IN")} references · ${corpus.counts.assumption_files} ASSUMPTIONS files · ${corpus.counts.verified} studies with programmatic checks. Audited ${corpus.audited}.`} />
       <Container wide className="grid gap-20 py-12">
         <section aria-labelledby="const">

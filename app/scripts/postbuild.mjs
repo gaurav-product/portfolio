@@ -28,6 +28,21 @@ const pages = [];
 })(OUT);
 const routes = pages.map((p) => (p === "/" ? "/" : p.replace(/\/$/, ""))).sort();
 
+// The stylesheet is the only render-blocking request, but React emits ~15 modulepreload hints
+// ahead of it in <head>, so on slow links it queues behind the scripts. A preload hint at the very
+// top of <head> starts it first. React 19 skips unknown tags in <head> during hydration.
+let hinted = 0;
+for (const p of pages) {
+  const file = path.join(OUT, p, "index.html");
+  const html = fs.readFileSync(file, "utf8");
+  if (html.includes('data-css-hint')) continue;
+  const css = [...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map((m) => m[1]);
+  if (!css.length) continue;
+  const hint = css.map((h) => `<link rel="preload" as="style" href="${h}" data-css-hint=""/>`).join("");
+  fs.writeFileSync(file, html.replace(/<head>/, `<head>${hint}`)); hinted++;
+}
+console.log(`postbuild: stylesheet preload hint added to ${hinted} pages`);
+
 fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\n${SITE ? `Sitemap: ${SITE}/sitemap.xml\n` : ""}`);
 if (SITE) {
   fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes.map((r) => `  <url><loc>${SITE}${r === "/" ? "/" : r}</loc></url>`).join("\n")}\n</urlset>\n`);

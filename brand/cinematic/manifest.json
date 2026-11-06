@@ -494,6 +494,646 @@
       "caution": "Contains decorative charts. Never present as real data — always captioned as an illustration.",
       "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
       "status": "INTEGRATED"
+    },
+    {
+      "id": "render-about",
+      "brief_image": null,
+      "source": "brand/renders/source/render-about.webp",
+      "source_bytes": 98986,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-about-1600.webp",
+          "bytes": 26150
+        },
+        "1200": {
+          "file": "/cinematic/render-about-1200.webp",
+          "bytes": 17766
+        },
+        "960": {
+          "file": "/cinematic/render-about-960.webp",
+          "bytes": 13776
+        },
+        "768": {
+          "file": "/cinematic/render-about-768.webp",
+          "bytes": 9886
+        },
+        "480": {
+          "file": "/cinematic/render-about-480.webp",
+          "bytes": 5090
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-about-1600.avif",
+          "bytes": 17334
+        },
+        "1200": {
+          "file": "/cinematic/render-about-1200.avif",
+          "bytes": 11833
+        },
+        "960": {
+          "file": "/cinematic/render-about-960.avif",
+          "bytes": 8658
+        },
+        "768": {
+          "file": "/cinematic/render-about-768.avif",
+          "bytes": 6605
+        },
+        "480": {
+          "file": "/cinematic/render-about-480.avif",
+          "bytes": 3781
+        }
+      },
+      "purpose": "About page header",
+      "used_by": [
+        "/about"
+      ],
+      "alt": "3D render: eight glowing nodes orbit a glass cube above a lit plinth — the operating loop.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-ask",
+      "brief_image": null,
+      "source": "brand/renders/source/render-ask.webp",
+      "source_bytes": 99472,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-ask-1600.webp",
+          "bytes": 26046
+        },
+        "1200": {
+          "file": "/cinematic/render-ask-1200.webp",
+          "bytes": 16880
+        },
+        "960": {
+          "file": "/cinematic/render-ask-960.webp",
+          "bytes": 12126
+        },
+        "768": {
+          "file": "/cinematic/render-ask-768.webp",
+          "bytes": 8550
+        },
+        "480": {
+          "file": "/cinematic/render-ask-480.webp",
+          "bytes": 4188
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-ask-1600.avif",
+          "bytes": 17785
+        },
+        "1200": {
+          "file": "/cinematic/render-ask-1200.avif",
+          "bytes": 11463
+        },
+        "960": {
+          "file": "/cinematic/render-ask-960.avif",
+          "bytes": 8716
+        },
+        "768": {
+          "file": "/cinematic/render-ask-768.avif",
+          "bytes": 6417
+        },
+        "480": {
+          "file": "/cinematic/render-ask-480.avif",
+          "bytes": 3385
+        }
+      },
+      "purpose": "Ask Gaurav header",
+      "used_by": [
+        "/ask"
+      ],
+      "alt": "3D render: a faceted core with a ring of index cards in orbit; a beam links the core to one card.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-atlas",
+      "brief_image": null,
+      "source": "brand/renders/source/render-atlas.webp",
+      "source_bytes": 116090,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-atlas-1600.webp",
+          "bytes": 31960
+        },
+        "1200": {
+          "file": "/cinematic/render-atlas-1200.webp",
+          "bytes": 22110
+        },
+        "960": {
+          "file": "/cinematic/render-atlas-960.webp",
+          "bytes": 16882
+        },
+        "768": {
+          "file": "/cinematic/render-atlas-768.webp",
+          "bytes": 12988
+        },
+        "480": {
+          "file": "/cinematic/render-atlas-480.webp",
+          "bytes": 6892
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-atlas-1600.avif",
+          "bytes": 23678
+        },
+        "1200": {
+          "file": "/cinematic/render-atlas-1200.avif",
+          "bytes": 16841
+        },
+        "960": {
+          "file": "/cinematic/render-atlas-960.avif",
+          "bytes": 12378
+        },
+        "768": {
+          "file": "/cinematic/render-atlas-768.avif",
+          "bytes": 9232
+        },
+        "480": {
+          "file": "/cinematic/render-atlas-480.avif",
+          "bytes": 5086
+        }
+      },
+      "purpose": "Product Atlas header",
+      "used_by": [
+        "/atlas"
+      ],
+      "alt": "3D render: a globe made of points with glowing arcs between them.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-case-studies",
+      "brief_image": null,
+      "source": "brand/renders/source/render-case-studies.webp",
+      "source_bytes": 95220,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-case-studies-1600.webp",
+          "bytes": 25420
+        },
+        "1200": {
+          "file": "/cinematic/render-case-studies-1200.webp",
+          "bytes": 17386
+        },
+        "960": {
+          "file": "/cinematic/render-case-studies-960.webp",
+          "bytes": 13038
+        },
+        "768": {
+          "file": "/cinematic/render-case-studies-768.webp",
+          "bytes": 9894
+        },
+        "480": {
+          "file": "/cinematic/render-case-studies-480.webp",
+          "bytes": 5570
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-case-studies-1600.avif",
+          "bytes": 16208
+        },
+        "1200": {
+          "file": "/cinematic/render-case-studies-1200.avif",
+          "bytes": 11488
+        },
+        "960": {
+          "file": "/cinematic/render-case-studies-960.avif",
+          "bytes": 8790
+        },
+        "768": {
+          "file": "/cinematic/render-case-studies-768.avif",
+          "bytes": 6684
+        },
+        "480": {
+          "file": "/cinematic/render-case-studies-480.avif",
+          "bytes": 3960
+        }
+      },
+      "purpose": "Case studies page header",
+      "used_by": [
+        "/case-studies"
+      ],
+      "alt": "3D render: a branching decision tree of nodes, with one path lit from the root to a single outcome.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-contact",
+      "brief_image": null,
+      "source": "brand/renders/source/render-contact.webp",
+      "source_bytes": 141014,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-contact-1600.webp",
+          "bytes": 41328
+        },
+        "1200": {
+          "file": "/cinematic/render-contact-1200.webp",
+          "bytes": 27936
+        },
+        "960": {
+          "file": "/cinematic/render-contact-960.webp",
+          "bytes": 20680
+        },
+        "768": {
+          "file": "/cinematic/render-contact-768.webp",
+          "bytes": 15224
+        },
+        "480": {
+          "file": "/cinematic/render-contact-480.webp",
+          "bytes": 7806
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-contact-1600.avif",
+          "bytes": 23769
+        },
+        "1200": {
+          "file": "/cinematic/render-contact-1200.avif",
+          "bytes": 15831
+        },
+        "960": {
+          "file": "/cinematic/render-contact-960.avif",
+          "bytes": 11653
+        },
+        "768": {
+          "file": "/cinematic/render-contact-768.avif",
+          "bytes": 9209
+        },
+        "480": {
+          "file": "/cinematic/render-contact-480.avif",
+          "bytes": 4743
+        }
+      },
+      "purpose": "Contact page header",
+      "used_by": [
+        "/contact"
+      ],
+      "alt": "3D render: a beacon on a mast sending rings of signal outward.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-lab-notes",
+      "brief_image": null,
+      "source": "brand/renders/source/render-lab-notes.webp",
+      "source_bytes": 98794,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-lab-notes-1600.webp",
+          "bytes": 26024
+        },
+        "1200": {
+          "file": "/cinematic/render-lab-notes-1200.webp",
+          "bytes": 17182
+        },
+        "960": {
+          "file": "/cinematic/render-lab-notes-960.webp",
+          "bytes": 12634
+        },
+        "768": {
+          "file": "/cinematic/render-lab-notes-768.webp",
+          "bytes": 9260
+        },
+        "480": {
+          "file": "/cinematic/render-lab-notes-480.webp",
+          "bytes": 4800
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-lab-notes-1600.avif",
+          "bytes": 17353
+        },
+        "1200": {
+          "file": "/cinematic/render-lab-notes-1200.avif",
+          "bytes": 11233
+        },
+        "960": {
+          "file": "/cinematic/render-lab-notes-960.avif",
+          "bytes": 8116
+        },
+        "768": {
+          "file": "/cinematic/render-lab-notes-768.avif",
+          "bytes": 6307
+        },
+        "480": {
+          "file": "/cinematic/render-lab-notes-480.avif",
+          "bytes": 3502
+        }
+      },
+      "purpose": "Lab Notes header",
+      "used_by": [
+        "/lab-notes"
+      ],
+      "alt": "3D render: translucent ruled pages floating above a lit plinth.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-product-thinking",
+      "brief_image": null,
+      "source": "brand/renders/source/render-product-thinking.webp",
+      "source_bytes": 106682,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-product-thinking-1600.webp",
+          "bytes": 28376
+        },
+        "1200": {
+          "file": "/cinematic/render-product-thinking-1200.webp",
+          "bytes": 19326
+        },
+        "960": {
+          "file": "/cinematic/render-product-thinking-960.webp",
+          "bytes": 14680
+        },
+        "768": {
+          "file": "/cinematic/render-product-thinking-768.webp",
+          "bytes": 11052
+        },
+        "480": {
+          "file": "/cinematic/render-product-thinking-480.webp",
+          "bytes": 5890
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-product-thinking-1600.avif",
+          "bytes": 18085
+        },
+        "1200": {
+          "file": "/cinematic/render-product-thinking-1200.avif",
+          "bytes": 12097
+        },
+        "960": {
+          "file": "/cinematic/render-product-thinking-960.avif",
+          "bytes": 8804
+        },
+        "768": {
+          "file": "/cinematic/render-product-thinking-768.avif",
+          "bytes": 6564
+        },
+        "480": {
+          "file": "/cinematic/render-product-thinking-480.avif",
+          "bytes": 3857
+        }
+      },
+      "purpose": "Product Thinking page header",
+      "used_by": [
+        "/product-thinking"
+      ],
+      "alt": "3D render: stacked rings narrowing like a funnel, with particles falling through to one glowing point.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-projects",
+      "brief_image": null,
+      "source": "brand/renders/source/render-projects.webp",
+      "source_bytes": 126470,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-projects-1600.webp",
+          "bytes": 30444
+        },
+        "1200": {
+          "file": "/cinematic/render-projects-1200.webp",
+          "bytes": 19790
+        },
+        "960": {
+          "file": "/cinematic/render-projects-960.webp",
+          "bytes": 14010
+        },
+        "768": {
+          "file": "/cinematic/render-projects-768.webp",
+          "bytes": 10106
+        },
+        "480": {
+          "file": "/cinematic/render-projects-480.webp",
+          "bytes": 4840
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-projects-1600.avif",
+          "bytes": 21516
+        },
+        "1200": {
+          "file": "/cinematic/render-projects-1200.avif",
+          "bytes": 13833
+        },
+        "960": {
+          "file": "/cinematic/render-projects-960.avif",
+          "bytes": 9850
+        },
+        "768": {
+          "file": "/cinematic/render-projects-768.avif",
+          "bytes": 7305
+        },
+        "480": {
+          "file": "/cinematic/render-projects-480.avif",
+          "bytes": 3832
+        }
+      },
+      "purpose": "Projects page header",
+      "used_by": [
+        "/projects"
+      ],
+      "alt": "3D render: five layered platforms carrying abstract interface blocks, stacked above a lit plinth.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-search",
+      "brief_image": null,
+      "source": "brand/renders/source/render-search.webp",
+      "source_bytes": 102380,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-search-1600.webp",
+          "bytes": 25578
+        },
+        "1200": {
+          "file": "/cinematic/render-search-1200.webp",
+          "bytes": 17838
+        },
+        "960": {
+          "file": "/cinematic/render-search-960.webp",
+          "bytes": 13770
+        },
+        "768": {
+          "file": "/cinematic/render-search-768.webp",
+          "bytes": 10576
+        },
+        "480": {
+          "file": "/cinematic/render-search-480.webp",
+          "bytes": 6280
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-search-1600.avif",
+          "bytes": 20931
+        },
+        "1200": {
+          "file": "/cinematic/render-search-1200.avif",
+          "bytes": 14747
+        },
+        "960": {
+          "file": "/cinematic/render-search-960.avif",
+          "bytes": 10941
+        },
+        "768": {
+          "file": "/cinematic/render-search-768.avif",
+          "bytes": 8548
+        },
+        "480": {
+          "file": "/cinematic/render-search-480.avif",
+          "bytes": 5044
+        }
+      },
+      "purpose": "Search page header",
+      "used_by": [
+        "/search"
+      ],
+      "alt": "3D render: a glowing lens over a field of points, the points under it brighter.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-skills",
+      "brief_image": null,
+      "source": "brand/renders/source/render-skills.webp",
+      "source_bytes": 127402,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-skills-1600.webp",
+          "bytes": 25510
+        },
+        "1200": {
+          "file": "/cinematic/render-skills-1200.webp",
+          "bytes": 16404
+        },
+        "960": {
+          "file": "/cinematic/render-skills-960.webp",
+          "bytes": 11706
+        },
+        "768": {
+          "file": "/cinematic/render-skills-768.webp",
+          "bytes": 8482
+        },
+        "480": {
+          "file": "/cinematic/render-skills-480.webp",
+          "bytes": 4370
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-skills-1600.avif",
+          "bytes": 18359
+        },
+        "1200": {
+          "file": "/cinematic/render-skills-1200.avif",
+          "bytes": 12147
+        },
+        "960": {
+          "file": "/cinematic/render-skills-960.avif",
+          "bytes": 8757
+        },
+        "768": {
+          "file": "/cinematic/render-skills-768.avif",
+          "bytes": 6355
+        },
+        "480": {
+          "file": "/cinematic/render-skills-480.avif",
+          "bytes": 3383
+        }
+      },
+      "purpose": "Skills library header",
+      "used_by": [
+        "/skills"
+      ],
+      "alt": "3D render: a grid of columns of varying height, the tallest lit at their tops.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
     }
   ],
   "missing": [],

@@ -40,10 +40,34 @@ META = {
 }
 MISSING = []  # all eight brief images are integrated (1 and 3 share the campus illustration)
 
+# Original procedural 3D renders (brand/renders/scenes.js, rendered by brand/tools/render_3d.mjs).
+# Abstract metaphors with no text, logos or data — never evidence of a product or result.
+RENDERS = ROOT / "renders"
+RENDER_META = {
+  "render-about": dict(purpose="About page header", used_by=["/about"], alt="3D render: eight glowing nodes orbit a glass cube above a lit plinth — the operating loop."),
+  "render-projects": dict(purpose="Projects page header", used_by=["/projects"], alt="3D render: five layered platforms carrying abstract interface blocks, stacked above a lit plinth."),
+  "render-case-studies": dict(purpose="Case studies page header", used_by=["/case-studies"], alt="3D render: a branching decision tree of nodes, with one path lit from the root to a single outcome."),
+  "render-product-thinking": dict(purpose="Product Thinking page header", used_by=["/product-thinking"], alt="3D render: stacked rings narrowing like a funnel, with particles falling through to one glowing point."),
+  "render-skills": dict(purpose="Skills library header", used_by=["/skills"], alt="3D render: a grid of columns of varying height, the tallest lit at their tops."),
+  "render-atlas": dict(purpose="Product Atlas header", used_by=["/atlas"], alt="3D render: a globe made of points with glowing arcs between them."),
+  "render-contact": dict(purpose="Contact page header", used_by=["/contact"], alt="3D render: a beacon on a mast sending rings of signal outward."),
+  "render-lab-notes": dict(purpose="Lab Notes header", used_by=["/lab-notes"], alt="3D render: translucent ruled pages floating above a lit plinth."),
+  "render-ask": dict(purpose="Ask Gaurav header", used_by=["/ask"], alt="3D render: a faceted core with a ring of index cards in orbit; a beam links the core to one card."),
+  "render-search": dict(purpose="Search page header", used_by=["/search"], alt="3D render: a glowing lens over a field of points, the points under it brighter."),
+}
+(RENDERS / "source").mkdir(parents=True, exist_ok=True)
+for png in sorted((RENDERS / ".cache").glob("render-*.png")):
+    dst = RENDERS / "source" / f"{png.stem}.webp"
+    if not dst.exists() or png.stat().st_mtime > dst.stat().st_mtime:
+        with Image.open(png) as im:
+            im.convert("RGB").resize((2400, 1500), Image.LANCZOS).save(dst, "WEBP", quality=92, method=6)
+
 OUT.mkdir(parents=True, exist_ok=True)
 assets = []
-for src in sorted(SRC.glob("*.webp")):
-    m = META[src.stem]
+sources = sorted(SRC.glob("*.webp")) + sorted((RENDERS / "source").glob("render-*.webp"))
+for src in sources:
+    is_render = src.stem in RENDER_META
+    m = RENDER_META[src.stem] if is_render else META[src.stem]
     w, h = map(int, subprocess.check_output(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=p=0", str(src)]).decode().strip().split(","))
     files = {}
     for width in WIDTHS:
@@ -58,12 +82,12 @@ for src in sorted(SRC.glob("*.webp")):
             im.resize((width, round(width * h / w)), Image.LANCZOS).save(out, "AVIF", quality=52, speed=4)
             avif[width] = {"file": f"/cinematic/{out.name}", "bytes": out.stat().st_size}
     assets.append({
-        "id": src.stem, "brief_image": m["n"], "source": f"brand/cinematic/source/{src.name}", "source_bytes": src.stat().st_size,
+        "id": src.stem, "brief_image": None if is_render else m["n"], "source": str(src.relative_to(ROOT.parent)), "source_bytes": src.stat().st_size,
         "width": w, "height": h, "aspect": round(w / h, 4), "format": "AVIF + WebP fallback", "sizes": files, "avif": avif,
         "purpose": m["purpose"], "used_by": m["used_by"], "alt": m["alt"],
-        "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
-        "baked_text": m["baked_text"], "caution": m.get("caution", ""),
-        "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+        "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)" if is_render else "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+        "baked_text": [] if is_render else m["baked_text"], "caution": m.get("caution", ""),
+        "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product." if is_render else "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
         "status": "INTEGRATED",
     })
 manifest = {"generated_by": "brand/tools/build_cinematic.py", "assets": assets, "missing": MISSING,

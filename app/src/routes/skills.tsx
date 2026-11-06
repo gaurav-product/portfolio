@@ -1,3 +1,4 @@
+import { heroArt } from "~/components/CinematicImage";
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router";
 import { capabilities, CAPABILITY_CATEGORIES, type CapabilityStatus } from "~/content/capabilities";
@@ -18,7 +19,7 @@ export default function Skills() {
   const counts = STATUSES.map((s) => [s, capabilities.filter((c) => c.status === s).length] as const);
   return (
     <>
-      <PageHero eyebrow="Skills library" title="Capabilities, mapped to evidence"
+      <PageHero {...heroArt("render-skills")} eyebrow="Skills library" title="Capabilities, mapped to evidence"
         intro="No percentages, no self-ratings. A capability is “demonstrated” only when a project or role shows it; otherwise it says what kind of evidence exists, or that none does." >
         <ul className="flex flex-wrap gap-2">{counts.map(([s, n]) => <li key={s}><Pill tone={statusPillTone(s)}>{n} · {s}</Pill></li>)}</ul>
       </PageHero>
@@ -33,7 +34,7 @@ export default function Skills() {
           <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {shown.map((c) => (
               <li key={c.id}>
-                <Link to={`/skills/${c.id}`} className={cx("card card-link flex h-full flex-col p-4", c.status === "Not yet evidenced" && "opacity-80")}>
+                <Link to={`/skills/${c.id}`} className={cx("card card-link flex h-full flex-col p-4", c.status === "Not yet evidenced" && "border-dashed")}>
                   <span className="flex items-start justify-between gap-2"><span className="font-medium">{c.name}</span><Pill tone={statusPillTone(c.status)} className="shrink-0">{c.status === "Demonstrated in work" ? "Work" : c.status === "Applied in case studies" ? "Case studies" : "None"}</Pill></span>
                   <span className="label mt-1">{c.category}</span>
                   <span className="mt-2 text-sm text-muted">{c.definition}</span>

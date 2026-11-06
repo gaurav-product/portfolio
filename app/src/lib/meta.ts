@@ -4,8 +4,19 @@ export const SITE_URL = (import.meta.env.VITE_SITE_URL as string | undefined)?.r
 export const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
 export const asset = (p: string) => BASE + p;
 
-export function seo(title: string, description: string, path: string) {
-  const full = title === profile.brand ? `${profile.name} — ${profile.brandLine} | ${profile.brand}` : `${title} · ${profile.brand}`;
+/** Search snippets read best between 50 and 160 characters: short descriptions gain the site
+ *  context, long ones are cut at a word boundary. Content itself is never rewritten. */
+export function fitDescription(d: string) {
+  let out = d.trim().replace(/\s+/g, " ");
+  if (out.length < 50) out = `${out.replace(/[.\s]*$/, "")}. From ${profile.name}'s product, AI and research portfolio.`;
+  if (out.length > 160) out = out.slice(0, 157).replace(/[\s,;:—-]+\S*$/, "") + "…";
+  return out;
+}
+export function seo(title: string, rawDescription: string, path: string) {
+  const description = fitDescription(rawDescription);
+  const branded = `${title} · ${profile.brand}`;
+  // titles over ~65 characters get truncated in results; long ones drop the brand suffix
+  const full = title === profile.brand ? `${profile.name} — ${profile.brandLine} | ${profile.brand}` : branded.length > 65 ? title : branded;
   const tags: Record<string, string>[] = [
     { title: full },
     { name: "description", content: description },

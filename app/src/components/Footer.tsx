@@ -28,10 +28,10 @@ export function Footer() {
         <div>
           <p className="label mb-3">Contact</p>
           <ul className="grid gap-2 text-sm">
-            <li><a href={`mailto:${profile.contact.email}`} className="inline-flex items-center gap-2 text-muted hover:text-ink"><Icon name="mail" />{profile.contact.email}</a></li>
-            <li><a href={profile.contact.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-muted hover:text-ink"><Icon name="linkedin" />LinkedIn</a></li>
-            <li><a href={profile.contact.github} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-muted hover:text-ink"><Icon name="github" />GitHub</a></li>
-            <li><a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" className="inline-flex items-center gap-2 text-muted hover:text-ink"><Icon name="download" />Download CV (PDF)</a></li>
+            <li><a href={`mailto:${profile.contact.email}`} className="inline-flex min-h-7 items-center gap-2 text-muted hover:text-ink"><Icon name="mail" />{profile.contact.email}</a></li>
+            <li><a href={profile.contact.linkedin} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-7 items-center gap-2 text-muted hover:text-ink"><Icon name="linkedin" />LinkedIn</a></li>
+            <li><a href={profile.contact.github} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-7 items-center gap-2 text-muted hover:text-ink"><Icon name="github" />GitHub</a></li>
+            <li><a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" className="inline-flex min-h-7 items-center gap-2 text-muted hover:text-ink"><Icon name="download" />Download CV (PDF)</a></li>
           </ul>
         </div>
       </Container>

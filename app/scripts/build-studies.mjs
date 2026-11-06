@@ -46,6 +46,8 @@ vm.runInNewContext(fs.readFileSync(path.join(REPO, "site/corpus.js"), "utf8"), c
 const studies = ctx.window.GOS_CORPUS.studies;
 
 const enc = (p) => p.split("/").map(encodeURIComponent).join("/");
+/** Decodes the HTML entities marked emits, so plain-text uses (the contents list) show "&", not "&amp;". */
+const unescape = (t) => t.replace(/&(amp|lt|gt|quot|#39|#x27|nbsp);/g, (_, e) => ({ amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'", "#x27": "'", nbsp: " " })[e]);
 const BLOB = (p) => `${lock.repo}/blob/${lock.commit}/${enc(p)}`;
 const RAW = (p) => `${lock.repo.replace("github.com", "raw.githubusercontent.com")}/${lock.commit}/${enc(p)}`;
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -77,13 +79,14 @@ function render(md, dir) {
     if (!href || /^(https?:|mailto:|#)/i.test(href)) return href;
     return path.posix.normalize(path.posix.join(dir, decodeURIComponent(href)));
   };
+  const lastOpen = [];
   const m = new Marked({ gfm: true });
   m.use({
     renderer: {
       heading({ tokens, depth }) {
         const text = this.parser.parseInline(tokens);
         const id = slug(text);
-        if (depth <= 3) toc.push({ id, text: text.replace(/<[^>]+>/g, ""), level: depth });
+        if (depth <= 3) toc.push({ id, text: unescape(text.replace(/<[^>]+>/g, "")), level: depth }); // React escapes it again on render
         return `<h${depth} id="${id}">${text}</h${depth}>\n`;
       },
       code({ text, lang }) {
@@ -130,7 +133,27 @@ function render(md, dir) {
     if (ids.has(id)) return all; dead++; return `<span class="md-deadlink" title="Link target not present in the source document">${text}</span>`;
   });
   deadLinks += dead;
-  return { html: fixed, toc };
+  // Images written as inline HTML in the source bypass the Markdown image renderer: resolve their
+  // relative paths the same way (raw file at the pinned commit, or a visible "not in repository" note).
+  let out = fixed.replace(/<img\b([^>]*?)\bsrc="([^"]+)"([^>]*)>/g, (all, pre, src, post) => {
+    if (/^(https?:|data:)/i.test(src)) return all;
+    const r = resolve(src.replace(/&amp;/g, "&"));
+    if (!fs.existsSync(path.join(CACHE, r))) { const alt = (all.match(/alt="([^"]*)"/) || [])[1]; return `<span class="md-missing">Image not in the repository: ${alt || esc(r)}</span>`; }
+    return `<img${pre}src="${esc(RAW(r))}"${post}>`;
+  });
+  // The page owns the single <h1>, so study headings render one level down, and levels never skip
+  // (h2 → h4 becomes h2 → h3). The original level is kept in data-l for styling. Text is unchanged.
+  let prev = 1;
+  out = out.replace(/<(\/?)h([1-6])\b([^>]*)>/g, (all, close, n, attrs) => {
+    if (close) return `</h${close === "/" ? lastOpen.pop() : n}>`;
+    const level = Math.min(Number(n) + 1, prev + 1, 6); prev = level; lastOpen.push(level);
+    return `<h${level} data-l="${n}"${attrs}>`;
+  });
+  // Wide tables and code blocks scroll sideways; make them reachable by keyboard.
+  out = out.replace(/<table>/g, '<table tabindex="0">').replace(/<pre>/g, '<pre tabindex="0">').replace(/<pre class="mermaid-src">/g, '<pre class="mermaid-src" tabindex="0">');
+  // Empty header cells in the source get a screen-reader label so every column has a name.
+  out = out.replace(/<th([^>]*)><\/th>/g, '<th$1><span class="sr-only">Unlabelled column</span></th>');
+  return { html: out, toc };
 }
 let deadLinks = 0;
 

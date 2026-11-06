@@ -132,7 +132,8 @@ describe("cinematic images", () => {
   const pub = path.resolve(__dirname, "../../public");
   it("every generated size exists on disk and is labelled as an illustration", () => {
     for (const a of (cinematicManifest as any).assets) {
-      expect(a.provenance).toMatch(/AI-GENERATED ILLUSTRATION/);
+      expect(a.provenance).toMatch(/^(AI-GENERATED ILLUSTRATION|ORIGINAL 3D RENDER)/);
+      if (a.provenance.startsWith("ORIGINAL 3D RENDER")) { expect(a.baked_text).toEqual([]); expect(a.alt).toMatch(/^3D render: /); }
       for (const s of Object.values<any>(a.sizes)) expect(fs.existsSync(path.join(pub, s.file.replace(/^\//, ""))), s.file).toBe(true);
       expect(Object.keys(a.avif ?? {}), `${a.id} AVIF widths`).toEqual(Object.keys(a.sizes));
       for (const s of Object.values<any>(a.avif)) expect(fs.existsSync(path.join(pub, s.file.replace(/^\//, ""))), s.file).toBe(true);
@@ -142,7 +143,7 @@ describe("cinematic images", () => {
     const m = cinematicManifest as any;
     const ids = m.assets.map((a: any) => a.id);
     expect(m.missing).toEqual([]);
-    expect(m.assets.flatMap((a: any) => a.brief_image).sort()).toEqual([1, 2, 4, 5, 6, 7, 8]); // 3 shares the campus image with 1
+    expect(m.assets.filter((a: any) => a.brief_image !== null).flatMap((a: any) => a.brief_image).sort()).toEqual([1, 2, 4, 5, 6, 7, 8]); // 3 shares the campus image with 1
     for (const d of districts) { expect(ids, d.id).toContain(d.image); expect(d.background).toMatch(/\.svg$/); }
     expect(districts.map((d) => d.name)).toContain("Professional Experience");
   });

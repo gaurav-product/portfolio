@@ -1,3 +1,4 @@
+import { heroArt } from "~/components/CinematicImage";
 import { Link, useSearchParams } from "react-router";
 import { useMemo } from "react";
 import { search } from "~/lib/search";
@@ -14,7 +15,7 @@ export default function SearchPage() {
   const set = (v: string) => setParams(v ? { q: v } : {}, { replace: true });
   return (
     <>
-      <PageHero eyebrow="Search" title="Search everything">
+      <PageHero {...heroArt("render-search")} eyebrow="Search" title="Search everything">
         <form role="search" onSubmit={(e) => e.preventDefault()} className="flex max-w-2xl gap-2">
           <label htmlFor="sq" className="sr-only">Search query</label>
           <input id="sq" type="search" value={q} onChange={(e) => set(e.target.value)} placeholder="Projects, skills, companies, notes…" className="field h-12 text-[17px]" autoFocus />

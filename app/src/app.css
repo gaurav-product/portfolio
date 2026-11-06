@@ -62,7 +62,7 @@
   .prose-os ol { counter-reset: s; list-style: none; padding: 0; display: grid; gap: .55em; }
   .prose-os ol li { counter-increment: s; padding-left: 2.1em; position: relative; }
   .prose-os ol li::before { content: counter(s, decimal-leading-zero); position: absolute; left: 0; font-family: var(--font-mono); font-size: 12px; color: var(--color-green); top: .25em; }
-  .prose-os h4 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-green); margin-top: 1.6em; }
+  .prose-os h4, .prose-os h2.as-label { font-family: var(--font-mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--color-green); margin-top: 1.6em; }
   .field { width: 100%; background: var(--color-bg); border: 1px solid var(--color-line); border-radius: 10px; padding: .6rem .75rem; color: var(--color-ink); font-size: 15px; }
   .field:focus-visible { outline: 2px solid var(--color-green); outline-offset: 1px; border-color: transparent; }
   .field[aria-invalid="true"] { border-color: var(--color-red); }
@@ -94,10 +94,10 @@
 /* Rendered study text (research reading pages) — long-form reading typography */
 .md { color: #D3DBD7; font-size: 17px; line-height: 1.75; overflow-wrap: anywhere; }
 .md > * + * { margin-top: 1em; }
-.md h1 { font-size: 2rem; font-weight: 700; color: var(--color-ink); margin-top: 0; }
-.md h2 { font-size: 1.55rem; font-weight: 700; color: var(--color-ink); margin-top: 2.4em; padding-top: .6em; border-top: 1px solid var(--color-line-soft); scroll-margin-top: 90px; }
-.md h3 { font-size: 1.2rem; font-weight: 600; color: var(--color-ink); margin-top: 1.8em; scroll-margin-top: 90px; }
-.md h4, .md h5, .md h6 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-green); margin-top: 1.6em; }
+.md [data-l="1"] { font-size: 2rem; font-weight: 700; color: var(--color-ink); margin-top: 0; }
+.md [data-l="2"] { font-size: 1.55rem; font-weight: 700; color: var(--color-ink); margin-top: 2.4em; padding-top: .6em; border-top: 1px solid var(--color-line-soft); scroll-margin-top: 90px; }
+.md [data-l="3"] { font-size: 1.2rem; font-weight: 600; color: var(--color-ink); margin-top: 1.8em; scroll-margin-top: 90px; }
+.md [data-l="4"], .md [data-l="5"], .md [data-l="6"] { font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--color-green); margin-top: 1.6em; }
 .md a { color: var(--color-green); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgb(107 227 154 / .4); }
 .md strong { color: var(--color-ink); }
 .md ul { list-style: disc; padding-left: 1.4em; } .md ol { list-style: decimal; padding-left: 1.6em; }
@@ -107,7 +107,8 @@
 .md code { font-family: var(--font-mono); font-size: .86em; background: var(--color-raise); padding: .1em .35em; border-radius: 5px; }
 .md pre { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 12px; padding: 1em 1.1em; overflow-x: auto; font-size: 14px; line-height: 1.55; }
 .md pre code { background: none; padding: 0; font-size: inherit; }
-.md table { display: block; width: max-content; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 14.5px; line-height: 1.5; }
+.md table:focus-visible, .md pre:focus-visible { outline: 2px solid var(--color-green); outline-offset: 2px; }
+.md table { position: relative; display: block; width: max-content; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 14.5px; line-height: 1.5; }
 .md th, .md td { border: 1px solid var(--color-line); padding: .5em .75em; vertical-align: top; text-align: left; }
 .md th { background: var(--color-raise); color: var(--color-ink); font-weight: 600; }
 .md img { max-width: 100%; height: auto; border-radius: 8px; }
@@ -115,6 +116,7 @@
 .md summary { cursor: pointer; color: var(--color-ink); }
 .md .md-badge { display: inline-block; margin: 0 .3em .3em 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; border: 1px solid var(--color-line); border-radius: 999px; padding: .15em .7em; color: var(--color-muted); }
 .md .mermaid-block { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 12px; padding: 1em; overflow-x: auto; }
+.md .mermaid-block .edgeLabel, .md .mermaid-block .edgeLabel p, .md .mermaid-block .edgeLabel span { color: #E6ECE9 !important; background-color: #1B2924 !important; }
 .md .mermaid-block svg { max-width: 100%; height: auto; margin: 0 auto; display: block; }
 .md .mermaid-block pre { border: 0; padding: 0; margin: 0; }
 .md .mermaid-source { margin-top: .8em; font-size: 14px; }

@@ -1,3 +1,4 @@
+import { heroArt } from "~/components/CinematicImage";
 import { useState } from "react";
 import { Link } from "react-router";
 import { legacy } from "~/content/data";
@@ -14,7 +15,7 @@ export const meta = () => seo("Product Thinking", "The operating loop, principle
 export default function ProductThinking() {
   return (
     <>
-      <PageHero eyebrow="Product Thinking" title="Discover → define → decide → measure → learn."
+      <PageHero {...heroArt("render-product-thinking")} eyebrow="Product Thinking" title="Discover → define → decide → measure → learn."
         intro="How the work gets done, with the evidence for each step — then tools you can use and challenges you can answer." />
       <Container wide className="grid gap-20 py-14">
         <section aria-labelledby="loop">
@@ -68,7 +69,7 @@ function Challenge({ c }: { c: (typeof legacy.challenges)[number] }) {
         <div className="grid gap-2 md:grid-cols-2">
           {c.options.map((o, i) => (
             <label key={o} className={cx("flex cursor-pointer items-start gap-3 rounded-xl border p-3", pick === i ? "border-green bg-green/5" : "border-line hover:border-green/50")}>
-              <input type="radio" name={c.id} checked={pick === i} onChange={() => { setPick(i); track("tool_used", { tool: "challenge", id: c.id }); }} className="mt-1 accent-[#6BE39A]" />
+              <input type="radio" name={c.id} checked={pick === i} onChange={() => { setPick(i); track("tool_used", { tool: "challenge", id: c.id }); }} className="mt-0.5 size-5 shrink-0 accent-[#6BE39A]" />
               <span><span className="font-mono text-xs text-dim">{"ABCD"[i]}</span> {o}</span>
             </label>
           ))}
