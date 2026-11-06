@@ -66,7 +66,7 @@ export function Header() {
             className="absolute right-0 top-0 flex h-dvh w-[min(360px,88vw)] flex-col overflow-y-auto border-l border-line bg-surface p-5">
             <div className="mb-4 flex items-center justify-between">
               <Wordmark />
-              <button type="button" onClick={() => setOpen(false)} aria-label="Close menu" className="inline-flex size-10 items-center justify-center rounded-lg border border-line"><Icon name="close" /></button>
+              <button type="button" onClick={() => setOpen(false)} aria-label="Close menu" className="inline-flex size-10 items-center justify-center rounded-full border border-line hover:bg-raise"><Icon name="close" /></button>
             </div>
             <nav aria-label="Mobile">
               <ul className="grid gap-1">

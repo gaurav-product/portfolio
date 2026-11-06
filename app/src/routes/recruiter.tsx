@@ -32,13 +32,13 @@ export default function Recruiter() {
   const cv = asset(profile.cvFile);
 
   return (
-    <Container wide className="py-10">
-      <header className="flex flex-col gap-6 border-b border-line pb-8 lg:flex-row lg:items-end lg:justify-between">
+    <Container wide className="py-14">
+      <header className="flex flex-col gap-6 border-b border-line-soft pb-10 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="eyebrow mb-3">Recruiter Mode · 30-second overview</p>
-          <h1 className="text-4xl font-bold sm:text-5xl">{profile.name}</h1>
-          <p className="mt-2 text-lg text-green">{profile.cvHeadline}</p>
-          <p className="mt-1 text-muted">{profile.location} · {profile.availability}</p>
+          <p className="eyebrow mb-4">Recruiter Mode · 30-second overview</p>
+          <h1 className="text-[40px] font-bold leading-[1.04] sm:text-6xl">{profile.name}</h1>
+          <p className="mt-4 font-display text-xl text-ink">{profile.cvHeadline}</p>
+          <p className="mt-2 text-muted">{profile.location} · {profile.availability}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <ButtonLink to={cv} download="Gaurav-Kumar-Singh-CV.pdf" variant="primary" icon="download" onClick={() => track("cv_downloaded", { from: "recruiter" })}>Download CV</ButtonLink>

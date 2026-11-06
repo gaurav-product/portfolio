@@ -52,6 +52,7 @@
   .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--radius-card); }
   .card-link { transition: border-color .25s ease, transform .25s ease, background .25s ease; }
   .card-link:hover { border-color: rgb(107 227 154 / .35); background: #141F1B; transform: translateY(-2px); }
+  .hero-glow { background: radial-gradient(60% 120% at 85% 0%, rgb(107 227 154 / .07), transparent 60%), radial-gradient(40% 80% at 0% 100%, rgb(53 214 208 / .04), transparent 70%); }
   .grid-bg { background-image: linear-gradient(rgb(243 246 244 / .035) 1px, transparent 1px), linear-gradient(90deg, rgb(243 246 244 / .035) 1px, transparent 1px); background-size: 64px 64px; }
   .prose-os p, .prose-os li { color: #C9D2CD; }
   .prose-os p + p { margin-top: .85em; }

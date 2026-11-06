@@ -32,10 +32,14 @@ export default function ProjectDetail() {
   const district = districtById(p.district);
   return (
     <article>
-      <header className="relative overflow-hidden border-b border-line-soft">
-        <img src={asset(p.cover)} alt="" aria-hidden width={1200} height={750} className="absolute inset-0 h-full w-full object-cover opacity-30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/90 to-bg/40" aria-hidden />
-        <Container wide className="relative py-12 sm:py-16">
+      <header className="hero-glow relative overflow-hidden border-b border-line-soft">
+        {/* cover diagram sits right of the text column on desktop only, so its lettering never runs behind the copy */}
+        <div aria-hidden className="absolute inset-y-0 right-0 w-[46%] max-lg:hidden">
+          <img src={asset(p.cover)} alt="" width={1200} height={750} className="h-full w-full object-cover opacity-70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-bg via-bg/50 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />
+        </div>
+        <Container wide className="relative py-16 sm:py-20">
           <Link to="/projects" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All projects</Link>
           <div className="mt-6 flex flex-wrap items-center gap-2"><Pill tone={statusTone(p.status)}>{p.status}</Pill><Pill>{p.kindLabel}</Pill></div>
           <h1 className="mt-4 text-4xl font-bold sm:text-6xl">{p.name}</h1>

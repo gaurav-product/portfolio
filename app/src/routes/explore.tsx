@@ -104,13 +104,13 @@ export default function Explore() {
       </div>
       <div className="relative -mt-10 p-5">
         <div className="flex items-start justify-between gap-3">
-          <div><p className="font-mono text-sm text-green">DISTRICT {d.index}</p><h2 className="mt-1 text-2xl font-bold">{d.name}</h2></div>
-          <button type="button" onClick={() => { setTour(null); select(null); }} aria-label="Close district" className="inline-flex size-10 items-center justify-center rounded-lg border border-line bg-bg/70"><Icon name="close" /></button>
+          <div><p className="eyebrow">District {d.index}</p><h2 className="mt-2 text-2xl font-bold">{d.name}</h2></div>
+          <button type="button" onClick={() => { setTour(null); select(null); }} aria-label="Close district" className="inline-flex size-10 items-center justify-center rounded-full border border-line bg-bg/70 hover:bg-raise"><Icon name="close" /></button>
         </div>
         <p className="mt-2 text-[#C9D2CD]">{d.summary}</p>
         <ul className="mt-4 grid gap-2">
           {d.destinations.map((x) => (
-            <li key={x.to}><Link to={x.to} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-bg/80 px-4 py-2.5 hover:border-green/60">
+            <li key={x.to}><Link to={x.to} className="flex items-center justify-between gap-3 rounded-xl border border-line-soft bg-bg/70 px-4 py-3 transition-colors hover:border-green/40 hover:bg-raise">
               <span><span className="block font-medium">{x.label}</span><span className="block text-sm text-dim">{x.note}</span></span><Icon name="arrow" className="shrink-0 text-green" />
             </Link></li>
           ))}
@@ -122,11 +122,11 @@ export default function Explore() {
 
   return (
     <div className="relative">
-      <Container wide className="flex flex-wrap items-end justify-between gap-4 py-6">
+      <Container wide className="flex flex-wrap items-end justify-between gap-5 py-10">
         <div>
           <p className="eyebrow mb-2">Explore Mode · Gaurav.OS world</p>
-          <h1 className="text-3xl font-bold sm:text-4xl">Six districts, one portfolio</h1>
-          <p className="mt-1 text-muted">Every district opens real content. Nothing essential lives only here — <Link to="/recruiter" className="text-green underline underline-offset-4">Recruiter Mode</Link> has it all on one page.</p>
+          <h1 className="text-3xl font-bold sm:text-[44px] sm:leading-[1.05]">Six districts, one portfolio</h1>
+          <p className="mt-3 max-w-2xl text-muted">Every district opens real content. Nothing essential lives only here — <Link to="/recruiter" className="text-green underline underline-offset-4">Recruiter Mode</Link> has it all on one page.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {tour === null && <Button variant="primary" icon="play" onClick={() => goTour(0)}>Guided tour</Button>}
@@ -134,7 +134,7 @@ export default function Explore() {
           {mode === "3d" && <Button onClick={() => switchTo("2d")}>Map view</Button>}
           {mode === "2d" && webglOkSafe() && <Button onClick={() => switchTo("3d")} icon="explore">3D view</Button>}
           <Button icon={sound ? "sound" : "mute"} onClick={toggleSound} aria-pressed={sound} aria-label={sound ? "Turn ambient sound off" : "Turn ambient sound on"}>{sound ? "Sound on" : "Sound off"}</Button>
-          <Link to="/recruiter" onClick={() => track("recruiter_mode_opened", { from: "explore" })} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-line px-4 text-[15px] hover:border-green/60"><Icon name="recruiter" />Exit to Recruiter Mode</Link>
+          <Link to="/recruiter" onClick={() => track("recruiter_mode_opened", { from: "explore" })} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-5 text-[15px] font-medium transition-colors hover:border-ink/30 hover:bg-raise"><Icon name="recruiter" />Exit to Recruiter Mode</Link>
         </div>
         {soundError && <p role="alert" className="w-full text-sm text-amber">{soundError}</p>}
       </Container>
@@ -145,7 +145,7 @@ export default function Explore() {
 
       {mode === "3d" && (
         <Container wide>
-          <div className="relative h-[min(72vh,720px)] min-h-[460px] overflow-hidden rounded-2xl border border-line" data-testid="scene">
+          <div className="relative h-[min(74vh,760px)] min-h-[460px] overflow-hidden rounded-3xl border border-line-soft" data-testid="scene">
             <SceneBoundary onFail={() => { setMode("2d"); setWhy2d("The 3D scene failed to start, so the map is shown instead."); }}>
               <Suspense fallback={<p role="status" className="grid h-full place-items-center text-muted">Loading the 3D scene…</p>}>
                 <Scene districts={districts} selected={selected} onSelect={(id) => { setTour(null); select(id); }} resetKey={resetKey} labels={labels} reduced={reduced} />
@@ -156,15 +156,17 @@ export default function Explore() {
                 {districts.map((x) => (
                   <li key={x.id}>
                     <button ref={(el) => { labels.current[x.id] = el; }} type="button" onClick={() => { setTour(null); select(x.id); }} aria-pressed={selected === x.id}
-                      className={cx("pointer-events-auto absolute left-0 top-0 inline-flex items-center gap-2 whitespace-nowrap rounded-xl border px-3 py-2 text-sm backdrop-blur transition-colors",
-                        selected === x.id ? "border-green bg-green text-green-ink font-semibold" : "border-line bg-bg/80 text-ink hover:border-green/60")}>
-                      <Icon name={x.icon} size={16} />{x.name}
+                      className={cx("group pointer-events-auto absolute left-0 top-0 inline-flex min-h-10 items-center whitespace-nowrap rounded-full border px-3 text-sm backdrop-blur-md transition-colors",
+                        selected === x.id ? "border-green bg-green text-green-ink font-semibold" : "border-line bg-bg/75 text-ink hover:border-green/60 focus-visible:border-green")}>
+                      <Icon name={x.icon} size={16} />
+                      {/* the name is always in the accessible name; visually it opens on hover, focus or selection — the world sign carries it otherwise */}
+                      <span className={cx("overflow-hidden transition-[max-width,margin] duration-300", selected === x.id ? "ml-2 max-w-[260px]" : "max-w-0 group-hover:ml-2 group-hover:max-w-[260px] group-focus-visible:ml-2 group-focus-visible:max-w-[260px]")}>{x.name}</span>
                     </button>
                   </li>
                 ))}
               </ul>
             </nav>
-            <p className="pointer-events-none absolute bottom-3 left-4 text-xs text-dim">Drag to orbit · scroll to zoom · Tab through districts · Esc to close · abstract architecture, not real facilities</p>
+            <p className="pointer-events-none absolute bottom-3 left-4 right-4 text-xs text-dim">Drag to orbit · scroll to zoom · Tab through districts · Esc to close · abstract architecture, not real facilities</p>
             {d && <div className="absolute right-3 top-3 max-h-[calc(100%-24px)] w-[min(400px,calc(100%-24px))] overflow-y-auto rounded-[var(--radius-card)]">{Panel}</div>}
           </div>
         </Container>
@@ -189,7 +191,7 @@ export default function Explore() {
                 </ul>
               </nav>
               </div>
-              <figcaption className="absolute bottom-2 left-3 rounded-md bg-black/60 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[.14em] text-white/80">Illustration · select a district</figcaption>
+              <figcaption className="absolute bottom-2 left-3 rounded-full bg-black/60 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[.08em] text-white/85">Illustration · select a district</figcaption>
             </figure>
             <div>{Panel ?? (
               <ul className="grid gap-2">
@@ -204,6 +206,6 @@ export default function Explore() {
 }
 
 function ButtonLinkLike({ to }: { to: string }) {
-  return <Link to={to} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-green px-4 font-semibold text-green-ink">Finish in Recruiter Mode <Icon name="arrow" /></Link>;
+  return <Link to={to} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-green px-5 font-semibold text-green-ink hover:bg-[#8cebb2]">Finish in Recruiter Mode <Icon name="arrow" /></Link>;
 }
 function webglOkSafe() { return typeof document !== "undefined" && webglOk(); }

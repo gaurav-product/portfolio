@@ -8,11 +8,11 @@ import { asset } from "~/lib/meta";
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-line-soft print:hidden">
-      <Container wide className="grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr]">
+    <footer className="mt-28 border-t border-line-soft print:hidden">
+      <Container wide className="grid gap-12 py-16 md:grid-cols-[1.3fr_1fr_1fr]">
         <div>
           <Wordmark />
-          <p className="mt-2 font-mono text-xs tracking-[.2em] text-dim">{profile.brandLine.toUpperCase()}</p>
+          <p className="label mt-3">{profile.brandLine}</p>
           <p className="mt-4 max-w-sm text-sm text-muted">Every figure on this site is traced to the CV or a public repository, and labelled with its evidence status. Where evidence is missing, the page says so.</p>
         </div>
         <nav aria-label="Footer">

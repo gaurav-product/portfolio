@@ -22,7 +22,7 @@ export default function Experience() {
                 <h2 className="mt-3 text-2xl font-bold"><Link to={`/experience/${r.id}`} className="hover:text-green">{r.role}</Link></h2>
                 <p className="text-muted">{r.employer} · {r.location}</p>
                 <p className="mt-3 text-[#C9D2CD]">{r.scope}</p>
-                <ul className="mt-4 flex flex-wrap gap-2">{r.outcomes.map((o) => <li key={o.label}><Pill tone="cyan">{o.value} · {o.label}</Pill></li>)}</ul>
+                <ul className="mt-4 flex flex-wrap gap-2">{r.outcomes.map((o) => <li key={o.label}><span className="inline-flex items-baseline gap-1.5 rounded-full border border-line-soft bg-raise/60 px-3 py-1 text-[13px] text-muted"><b className="font-semibold text-ink">{o.value}</b>{o.label}</span></li>)}</ul>
                 <div className="mt-5 flex flex-wrap items-center gap-4">
                   <Link to={`/experience/${r.id}`} className="inline-flex items-center gap-1.5 text-sm font-medium text-green">Role details <Icon name="arrow" size={16} /></Link>
                   {r.related.map((s) => <Link key={s} to={`/projects/${s}`} className="text-sm text-muted underline underline-offset-4 hover:text-ink">{projects.find((p) => p.slug === s)?.name} case study</Link>)}

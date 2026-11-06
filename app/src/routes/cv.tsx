@@ -13,8 +13,8 @@ const CV_PROJECTS = ["aaroh", "careconnect", "ghargyaan", "phonepe-smart-spend-c
 export default function CV() {
   const list = CV_PROJECTS.map((s) => projects.find((p) => p.slug === s)!).filter(Boolean);
   return (
-    <Container className="py-10 print:p-0">
-      <div className="mb-6 flex flex-wrap gap-2 print:hidden">
+    <Container wide className="py-12 print:p-0">
+      <div className="mx-auto mb-6 flex max-w-[860px] flex-wrap gap-2 print:hidden">
         <ButtonLink to={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" variant="primary" icon="download">Download PDF</ButtonLink>
         <Button icon="download" onClick={() => window.print()}>Print</Button>
       </div>

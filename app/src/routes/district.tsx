@@ -45,13 +45,13 @@ export default function DistrictPage() {
           <div className="absolute inset-x-0 top-0 hidden h-40 bg-gradient-to-b from-bg to-transparent lg:block" />
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />
         </div>
-        <Container wide className="relative py-14 sm:py-20">
+        <Container wide className="relative py-16 sm:py-24">
           <Link to="/explore" className="inline-flex items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All districts</Link>
-          <p className={`mt-6 font-mono text-sm tracking-[.18em] ${tone}`}>DISTRICT {d.index}</p>
-          <h1 className="mt-2 flex items-center gap-3 text-4xl font-bold sm:text-6xl"><Icon name={d.icon} size={40} className={tone} />{d.name}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-[#D7DEDA]">{d.summary}</p>
-          <ul className="mt-6 flex max-w-3xl flex-wrap gap-2" aria-label="What this district represents">
-            {d.represents.map((r) => <li key={r} className="rounded-full border border-line bg-bg/70 px-3 py-1 text-sm">{r}</li>)}
+          <p className="eyebrow mt-8">District {d.index}</p>
+          <h1 className="mt-4 flex items-center gap-4 text-[40px] font-bold leading-[1.04] sm:text-6xl"><Icon name={d.icon} size={40} className={tone} />{d.name}</h1>
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-[#D7DEDA]">{d.summary}</p>
+          <ul className="mt-6 flex max-w-2xl flex-wrap gap-x-2 gap-y-1 text-[15px] text-muted" aria-label="What this district represents">
+            {d.represents.map((r, k) => <li key={r} className="inline-flex items-center gap-2">{k > 0 && <span aria-hidden className="size-1 rounded-full bg-dim" />}{r}</li>)}
           </ul>
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink to={`/explore?d=${d.id}`} variant="primary" icon="explore" onClick={() => track("explore_mode_opened", { from: "district" })}>See it in Explore Mode</ButtonLink>
@@ -60,7 +60,7 @@ export default function DistrictPage() {
         </Container>
       </header>
 
-      <Container wide className="grid gap-14 py-12">
+      <Container wide className="grid gap-16 py-16">
         <section aria-labelledby="dest-h">
           <h2 id="dest-h" className="mb-5 text-2xl font-bold">Destinations</h2>
           <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">

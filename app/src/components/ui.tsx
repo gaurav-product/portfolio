@@ -7,7 +7,9 @@ import { Icon, type IconName } from "./Icon";
 export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
 
 export function Container({ children, className = "", wide = false }: { children: ReactNode; className?: string; wide?: boolean }) {
-  return <div className={cx("mx-auto w-full px-4 sm:px-6 lg:px-10", wide ? "max-w-[1440px]" : "max-w-6xl", className)}>{children}</div>;
+  // Narrow containers share the wide container's left edge (aligned with the header) and cap the
+  // line length on the right, so every page starts from the same margin.
+  return <div className={cx("mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10", !wide && "lg:pr-[max(2.5rem,calc(min(100vw,1440px)-74.5rem))]", className)}>{children}</div>;
 }
 
 type Variant = "primary" | "secondary" | "ghost";
@@ -59,11 +61,11 @@ export const evidenceTone = (s: EvidenceStatus | string): Tone =>
 
 export function SectionHeader({ eyebrow, title, intro, id, as: H = "h2", action }: { eyebrow?: string; title: string; intro?: ReactNode; id?: string; as?: "h1" | "h2"; action?: ReactNode }) {
   return (
-    <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
       <div className="max-w-3xl">
-        {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
+        {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
         <H id={id} className={H === "h1" ? "text-4xl sm:text-5xl font-bold" : "text-3xl sm:text-4xl font-bold"}>{title}</H>
-        {intro && <div className="mt-4 text-lg text-muted">{intro}</div>}
+        {intro && <div className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">{intro}</div>}
       </div>
       {action}
     </div>
@@ -72,18 +74,19 @@ export function SectionHeader({ eyebrow, title, intro, id, as: H = "h2", action 
 
 export function PageHero({ eyebrow, title, intro, children, backdrop }: { eyebrow: string; title: string; intro?: ReactNode; children?: ReactNode; backdrop?: ReactNode }) {
   return (
-    <header className={cx("relative overflow-hidden border-b border-line-soft", !backdrop && "grid-bg")}>
+    <header className={cx("relative overflow-hidden border-b border-line-soft", !backdrop && "hero-glow")}>
       {backdrop && (
         <div aria-hidden="true" className="absolute inset-0 max-lg:hidden" data-testid="hero-backdrop">
-          <div className="absolute inset-y-0 right-0 w-[52%] opacity-95 [&_img]:h-full [&_img]:w-full [&_img]:object-cover">{backdrop}</div>
+          <div className="absolute inset-y-0 right-0 w-[52%] opacity-95 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[60%_80%]">{backdrop}</div>
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg to-transparent" />
           <div className="absolute inset-0 bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_50%,rgb(11_17_16/.75)_64%,rgb(11_17_16/.1)_100%)]" />
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />
         </div>
       )}
-      <Container className="relative py-14 sm:py-20">
-        <p className="eyebrow mb-4">{eyebrow}</p>
-        <h1 className="max-w-4xl text-4xl font-bold sm:text-6xl">{title}</h1>
-        {intro && <div className="mt-5 max-w-3xl text-lg text-muted">{intro}</div>}
+      <Container className="relative py-16 sm:py-24">
+        <p className="eyebrow mb-5">{eyebrow}</p>
+        <h1 className="max-w-4xl text-[40px] font-bold leading-[1.04] sm:text-6xl">{title}</h1>
+        {intro && <div className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{intro}</div>}
         {children && <div className="mt-8">{children}</div>}
       </Container>
     </header>
@@ -100,7 +103,7 @@ export function Blocks({ blocks }: { blocks: Block[] }) {
         if ("note" in b) return <p key={i} className="rounded-xl border border-amber/30 bg-amber/5 px-4 py-3 text-[15px] !text-[#E9DDBA]"><span className="label mr-2 !text-amber">Note</span>{b.note}</p>;
         if ("flow" in b) return (
           <ol key={i} aria-label="Sequence" className="!flex flex-wrap items-center !gap-2">
-            {b.flow.map((x, j) => <li key={x} className="!pl-0 before:!hidden flex items-center gap-2"><span className="rounded-lg border border-green/40 bg-green/5 px-3 py-1.5 font-mono text-xs tracking-wider text-green">{x}</span>{j < b.flow.length - 1 && <Icon name="arrow" size={14} className="text-dim" />}</li>)}
+            {b.flow.map((x, j) => <li key={x} className="!pl-0 before:!hidden flex items-center gap-2"><span className="rounded-full border border-green/30 bg-green/5 px-3 py-1.5 text-xs font-medium tracking-wide text-green">{x}</span>{j < b.flow.length - 1 && <Icon name="arrow" size={14} className="text-dim" />}</li>)}
           </ol>);
         if ("kv" in b) return (
           <dl key={i} className="grid gap-x-6 gap-y-3 sm:grid-cols-[minmax(140px,220px)_1fr]">
@@ -110,7 +113,7 @@ export function Blocks({ blocks }: { blocks: Block[] }) {
           <div key={i} className="overflow-x-auto rounded-xl border border-line">
             <table className="w-full min-w-[520px] text-left text-[15px]">
               {b.table.caption && <caption className="caption-bottom px-4 py-2 text-left text-sm text-dim">{b.table.caption}</caption>}
-              <thead className="bg-raise"><tr>{b.table.head.map((h) => <th key={h} scope="col" className="px-4 py-2.5 font-mono text-[11.5px] font-medium uppercase tracking-wider text-muted">{h}</th>)}</tr></thead>
+              <thead className="bg-raise"><tr>{b.table.head.map((h) => <th key={h} scope="col" className="px-4 py-3 text-[11.5px] font-semibold uppercase tracking-[.08em] text-muted">{h}</th>)}</tr></thead>
               <tbody>{b.table.rows.map((r, ri) => <tr key={ri} className="border-t border-line-soft">{r.map((c, ci) => <td key={ci} className="px-4 py-2.5 align-top text-[#C9D2CD]">{c}</td>)}</tr>)}</tbody>
             </table>
           </div>);

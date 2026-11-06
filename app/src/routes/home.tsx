@@ -154,7 +154,7 @@ export default function Home() {
                   <span className="label">{r.period} · {r.type}</span>
                   <span className="mt-3 block font-display text-xl font-bold">{r.role}</span>
                   <span className="block text-muted">{r.employer} · {r.location}</span>
-                  <span className="mt-4 flex flex-wrap gap-2">{r.outcomes.slice(0, 2).map((o) => <Pill key={o.label} tone="green">{o.value} {o.label}</Pill>)}</span>
+                  <span className="mt-4 flex flex-wrap gap-2">{r.outcomes.slice(0, 2).map((o) => <span key={o.label} className="inline-flex items-baseline gap-1.5 rounded-full border border-line-soft bg-raise/60 px-3 py-1 text-[13px] text-muted"><b className="font-semibold text-ink">{o.value}</b>{o.label}</span>)}</span>
                 </Link>
               </li>
             ))}
@@ -190,7 +190,7 @@ export default function Home() {
       {/* ------------------------------------------------------------- CTA */}
       <section aria-labelledby="cta" className="py-10">
         <Container wide>
-          <div className="card grid-bg flex flex-col items-start gap-6 p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between">
+          <div className="card hero-glow flex flex-col items-start gap-6 p-8 sm:p-12 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 id="cta" className="text-3xl font-bold sm:text-4xl">Hiring for product, analytics or health?</h2>
               <p className="mt-3 max-w-2xl text-muted">{profile.availability}. The 30-second Recruiter Mode has everything on one page.</p>
