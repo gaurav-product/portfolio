@@ -167,7 +167,7 @@ describe("public identity", () => {
 import { newsletter, writing as writingList } from "../../src/content/experience";
 describe("The Teardown newsletter", () => {
   it("states only the owner-supplied facts, consistently everywhere", () => {
-    expect(newsletter).toMatchObject({ name: "The Teardown", platform: "LinkedIn", cadence: "Weekly", subscribers: "674" });
+    expect(newsletter).toMatchObject({ name: "The Teardown", platform: "LinkedIn", cadence: "Weekly", subscribers: "800" });
     const entry = writingList.find((w) => w.title === newsletter.name)!;
     expect(entry.status).toBe("SELF-REPORTED");
     expect(entry.detail).toContain(`${newsletter.subscribers} subscribers`);

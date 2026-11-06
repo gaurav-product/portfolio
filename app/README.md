@@ -81,8 +81,13 @@ app/
 | `VITE_SITE_URL` | build | Public URL. Enables canonical URLs, `og:url`/`og:image` and `sitemap.xml`. Omit for local builds. |
 | `BASE_PATH` | build + preview | Path prefix, e.g. `/portfolio/` for a GitHub project site. Default `/`. |
 | `CHROME_PATH` | tests, CV, Lighthouse | Optional Chromium binary; otherwise Playwright's own. |
+| `VITE_GUIDE_API_URL` | build | Optional. Public URL of the deployed `guide-api` endpoint; turns on the live-AI brain for Oz. Unset = local grounded brain. |
 
-No secrets, API keys or server-side credentials exist or are needed.
+The site itself needs no secrets. The optional live-AI endpoint for Oz keeps its key server-side in `../guide-api` (not deployed; see `../guide-api/README.md`).
+
+## Oz, the AI guide
+
+`src/guide/` — site-wide mascot and voice/text guide. Grounded local brain by default; optional server brain in `../guide-api`. Handover, limits and checklist: `../audit/AI-GUIDE.md`. Regenerate the server knowledge pack after content edits: `node scripts/build-guide-knowledge.mjs`.
 
 ## Deploying (requires approval — nothing deploys automatically)
 

@@ -3,7 +3,8 @@
 export type EventName =
   | "page_view" | "cta_click" | "recruiter_mode_opened" | "explore_mode_opened" | "district_opened"
   | "project_opened" | "search_used" | "ask_question" | "ask_refused" | "tool_used" | "export_downloaded"
-  | "cv_downloaded" | "contact_click" | "intro_started" | "intro_skipped" | "intro_completed";
+  | "cv_downloaded" | "contact_click" | "intro_started" | "intro_skipped" | "intro_completed"
+  | "guide_opened" | "guide_text" | "guide_voice" | "guide_prompt" | "guide_navigate";
 export function track(name: EventName, detail?: Record<string, string | number>) {
   if (typeof window === "undefined") return;
   const w = window as unknown as { dataLayer?: unknown[] };

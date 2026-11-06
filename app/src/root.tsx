@@ -6,6 +6,7 @@ import { Footer } from "./components/Footer";
 import { SearchProvider } from "./components/Search";
 import { Container } from "./components/ui";
 import { asset } from "./lib/meta";
+import { GuideRoot } from "./guide/GuideRoot";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: asset("/favicon.svg"), type: "image/svg+xml" },
@@ -40,6 +41,7 @@ export default function App() {
         <Outlet />
       </main>
       <Footer />
+      <GuideRoot />
     </SearchProvider>
   );
 }

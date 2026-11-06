@@ -101,7 +101,7 @@ export { newsletter } from "./newsletter";
 
 export const writing = [
   { title: "90 daily product case studies", detail: "Jul – Sep 2026 · public repository", href: "/research", status: "VERIFIED" },
-  { title: "The Teardown", detail: "Weekly LinkedIn newsletter · 674 subscribers (self-reported, Nov 2026)", href: "https://www.linkedin.com/build-relation/newsletter-follow?entityUrn=7488215816266584064", status: "SELF-REPORTED" }, // mirrors `newsletter`
+  { title: "The Teardown", detail: "Weekly LinkedIn newsletter · 800 subscribers (self-reported, Nov 2026)", href: "https://www.linkedin.com/build-relation/newsletter-follow?entityUrn=7488215816266584064", status: "SELF-REPORTED" }, // mirrors `newsletter`
 ] as const;
 
 export const tools = {

@@ -31,13 +31,14 @@ export const kb: KbEntry[] = [
     id: "products", q: "What products has Gaurav worked on?",
     keys: ["products", "worked on", "projects", "built", "portfolio", "work"],
     answer: [
-      { p: "Seven, and they are different kinds of work:" },
+      { p: "Eight, and they are different kinds of work:" },
       { ul: [
         "Evamastu — digital mindfulness platform, as Associate Product Manager at Adhyatm Sadhna Kendra (employment). Shipped.",
         "Aaroh — AI root-cause health platform, as founder and product lead. Pre-launch interactive prototype, 0 live users.",
         "CareConnect — post-discharge care accountability layer. Independent build; working MVP, no users.",
         "GharGyaan — self-care knowledge app with a safety engine. Independent build; prototype in demo mode, not deployed.",
         "Nexus — situation inbox over email, calendar and documents. Independent build; demo mode with fictional data.",
+        "RupeeRadar — bank-statement analysis built to an AI engineering challenge brief. Independent build; working prototype, not deployed.",
         "PhonePe Smart Spend Coach — academic capstone (Masai School × IIT Roorkee faculty). Case data; A/B test designed, not run.",
         "90 daily product case studies — public repository.",
       ] },
