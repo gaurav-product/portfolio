@@ -15,5 +15,12 @@ export const cinematic = (id: string): Cinematic => {
 };
 export const cinematicIds = list.map((x) => x.id);
 export const hasCinematic = (id: string) => list.some((x) => x.id === id);
-/** The original 3D render for a project, when one exists. */
-export const projectArt = (slug: string) => (hasCinematic(`render-project-${slug}`) ? `render-project-${slug}` : null);
+/** Art for a project's chapter and card: the owner's own brand artwork when supplied, else the 3D render. */
+export const projectArt = (slug: string) =>
+  hasCinematic(`brand-${slug}`) ? `brand-${slug}` : hasCinematic(`render-project-${slug}`) ? `render-project-${slug}` : null;
+/** Text-free art for page headers, where copy sits beside the image: always the 3D render. */
+export const projectBackdrop = (slug: string) => (hasCinematic(`render-project-${slug}`) ? `render-project-${slug}` : null);
+/** Owner brand artwork that shows another company's mark (e.g. PhonePe) needs a not-affiliated note. */
+export const THIRD_PARTY_MARK: Record<string, string> = {
+  "phonepe-smart-spend-coach": "Academic capstone concept. Not affiliated with or endorsed by PhonePe; the PhonePe name and logo belong to PhonePe.",
+};

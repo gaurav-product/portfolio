@@ -1643,16 +1643,362 @@
           "bytes": 2894
         }
       },
-      "purpose": "The Teardown newsletter feature",
-      "used_by": [
-        "/",
-        "/about"
-      ],
+      "purpose": "Alternate newsletter art (the owner-supplied logo is used instead)",
+      "used_by": [],
       "alt": "3D render: an exploded view of a slim device, its layers separated above a lit plinth with dotted assembly guides.",
       "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
       "baked_text": [],
       "caution": "",
       "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-90-day-case-studies",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-90-day-case-studies.webp",
+      "source_bytes": 85040,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-90-day-case-studies-1600.webp",
+          "bytes": 55290
+        },
+        "1200": {
+          "file": "/cinematic/brand-90-day-case-studies-1200.webp",
+          "bytes": 40434
+        },
+        "960": {
+          "file": "/cinematic/brand-90-day-case-studies-960.webp",
+          "bytes": 31530
+        },
+        "768": {
+          "file": "/cinematic/brand-90-day-case-studies-768.webp",
+          "bytes": 24754
+        },
+        "480": {
+          "file": "/cinematic/brand-90-day-case-studies-480.webp",
+          "bytes": 14238
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-90-day-case-studies-1600.avif",
+          "bytes": 33917
+        },
+        "1200": {
+          "file": "/cinematic/brand-90-day-case-studies-1200.avif",
+          "bytes": 23917
+        },
+        "960": {
+          "file": "/cinematic/brand-90-day-case-studies-960.avif",
+          "bytes": 19372
+        },
+        "768": {
+          "file": "/cinematic/brand-90-day-case-studies-768.avif",
+          "bytes": 15743
+        },
+        "480": {
+          "file": "/cinematic/brand-90-day-case-studies-480.avif",
+          "bytes": 8706
+        }
+      },
+      "purpose": "90 case studies project banner",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Banner: Product Management Case Studies — real products, deep analysis, product thinking — with tiles for problem framing, solution design, product strategy, and impact and learnings.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "Product Management Case Studies",
+        "Real Products",
+        "Deep Analysis",
+        "Product Thinking",
+        "Problem Framing",
+        "Solution Design",
+        "Product Strategy",
+        "Impact & Learnings"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-nexus",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-nexus.webp",
+      "source_bytes": 52074,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-nexus-1600.webp",
+          "bytes": 32906
+        },
+        "1200": {
+          "file": "/cinematic/brand-nexus-1200.webp",
+          "bytes": 23410
+        },
+        "960": {
+          "file": "/cinematic/brand-nexus-960.webp",
+          "bytes": 18228
+        },
+        "768": {
+          "file": "/cinematic/brand-nexus-768.webp",
+          "bytes": 14250
+        },
+        "480": {
+          "file": "/cinematic/brand-nexus-480.webp",
+          "bytes": 8082
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-nexus-1600.avif",
+          "bytes": 20726
+        },
+        "1200": {
+          "file": "/cinematic/brand-nexus-1200.avif",
+          "bytes": 14711
+        },
+        "960": {
+          "file": "/cinematic/brand-nexus-960.avif",
+          "bytes": 11393
+        },
+        "768": {
+          "file": "/cinematic/brand-nexus-768.avif",
+          "bytes": 9167
+        },
+        "480": {
+          "file": "/cinematic/brand-nexus-480.avif",
+          "bytes": 5277
+        }
+      },
+      "purpose": "Nexus project banner",
+      "used_by": [
+        "/projects"
+      ],
+      "alt": "Banner: the Nexus logo, an N folded from a ribbon, above the line Your Evidence-Backed Situation Inbox, with mail, calendar and document icons.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "Nexus",
+        "Your Evidence-Backed Situation Inbox"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-phonepe-smart-spend-coach",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-phonepe-smart-spend-coach.webp",
+      "source_bytes": 72882,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-1600.webp",
+          "bytes": 46972
+        },
+        "1200": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-1200.webp",
+          "bytes": 33420
+        },
+        "960": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-960.webp",
+          "bytes": 26184
+        },
+        "768": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-768.webp",
+          "bytes": 20132
+        },
+        "480": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-480.webp",
+          "bytes": 11880
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-1600.avif",
+          "bytes": 31314
+        },
+        "1200": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-1200.avif",
+          "bytes": 20527
+        },
+        "960": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-960.avif",
+          "bytes": 16741
+        },
+        "768": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-768.avif",
+          "bytes": 13530
+        },
+        "480": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-480.avif",
+          "bytes": 7553
+        }
+      },
+      "purpose": "PhonePe Smart Spend Coach (academic case) banner",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Banner: Smart Spend Coach concept for PhonePe — track, understand, take control — with tiles for detecting subscriptions, managing commitments, analysing spends and building better habits.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "PhonePe",
+        "Smart Spend Coach",
+        "Track",
+        "Understand",
+        "Take Control",
+        "Detect Subscriptions",
+        "Manage Commitments",
+        "Analyse Spends",
+        "Build Better Habits"
+      ],
+      "caution": "Shows the PhonePe logo. This is an academic capstone, not PhonePe work: always shown with the academic label and a not-affiliated note.",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-rupee-radar",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-rupee-radar.webp",
+      "source_bytes": 51912,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-rupee-radar-1600.webp",
+          "bytes": 32418
+        },
+        "1200": {
+          "file": "/cinematic/brand-rupee-radar-1200.webp",
+          "bytes": 23308
+        },
+        "960": {
+          "file": "/cinematic/brand-rupee-radar-960.webp",
+          "bytes": 18646
+        },
+        "768": {
+          "file": "/cinematic/brand-rupee-radar-768.webp",
+          "bytes": 14192
+        },
+        "480": {
+          "file": "/cinematic/brand-rupee-radar-480.webp",
+          "bytes": 8620
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-rupee-radar-1600.avif",
+          "bytes": 20272
+        },
+        "1200": {
+          "file": "/cinematic/brand-rupee-radar-1200.avif",
+          "bytes": 14251
+        },
+        "960": {
+          "file": "/cinematic/brand-rupee-radar-960.avif",
+          "bytes": 11195
+        },
+        "768": {
+          "file": "/cinematic/brand-rupee-radar-768.avif",
+          "bytes": 8475
+        },
+        "480": {
+          "file": "/cinematic/brand-rupee-radar-480.avif",
+          "bytes": 5523
+        }
+      },
+      "purpose": "RupeeRadar logo (not yet used: not a listed project)",
+      "used_by": [],
+      "alt": "RupeeRadar logo: a radar sweep around a rupee sign with a rising bar chart, and the line See where your money goes.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "RupeeRadar",
+        "See where your money goes"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-the-teardown",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-the-teardown.webp",
+      "source_bytes": 61360,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-the-teardown-1600.webp",
+          "bytes": 34580
+        },
+        "1200": {
+          "file": "/cinematic/brand-the-teardown-1200.webp",
+          "bytes": 23804
+        },
+        "960": {
+          "file": "/cinematic/brand-the-teardown-960.webp",
+          "bytes": 18396
+        },
+        "768": {
+          "file": "/cinematic/brand-the-teardown-768.webp",
+          "bytes": 13856
+        },
+        "480": {
+          "file": "/cinematic/brand-the-teardown-480.webp",
+          "bytes": 8244
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-the-teardown-1600.avif",
+          "bytes": 24132
+        },
+        "1200": {
+          "file": "/cinematic/brand-the-teardown-1200.avif",
+          "bytes": 15524
+        },
+        "960": {
+          "file": "/cinematic/brand-the-teardown-960.avif",
+          "bytes": 11180
+        },
+        "768": {
+          "file": "/cinematic/brand-the-teardown-768.avif",
+          "bytes": 8968
+        },
+        "480": {
+          "file": "/cinematic/brand-the-teardown-480.avif",
+          "bytes": 5327
+        }
+      },
+      "purpose": "The Teardown newsletter logo",
+      "used_by": [
+        "/",
+        "/about"
+      ],
+      "alt": "The Teardown logo: stacked cards with a bar chart beside the words The Teardown, and the line Products, Strategy, Lessons.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "The Teardown",
+        "PRODUCTS · STRATEGY · LESSONS"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
       "status": "INTEGRATED"
     }
   ],

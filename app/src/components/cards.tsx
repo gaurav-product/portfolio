@@ -4,7 +4,7 @@ import { capabilityById } from "~/content/capabilities";
 import { Pill, statusTone, cx } from "./ui";
 import { Icon } from "./Icon";
 import { asset } from "~/lib/meta";
-import { projectArt } from "~/content/cinematic";
+import { projectArt, THIRD_PARTY_MARK } from "~/content/cinematic";
 import { CinematicImage } from "./CinematicImage";
 import { track } from "~/lib/analytics";
 
@@ -25,6 +25,7 @@ export function ProjectCard({ p, compact = false, headingLevel = 3 }: { p: Proje
         </H>
         <p className="text-sm text-muted">{p.subtitle} · {p.period}</p>
         <p className="mt-3 text-[15px] text-[#C9D2CD]">{p.oneLine}</p>
+        {THIRD_PARTY_MARK[p.slug] && <p className="mt-2 text-xs text-dim">{THIRD_PARTY_MARK[p.slug]}</p>}
         {!compact && (
           <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Relevant skills">
             {p.skills.slice(0, 4).map((s) => <li key={s} className="rounded-md bg-raise px-2 py-0.5 text-xs text-muted">{capabilityById(s)?.name ?? s}</li>)}

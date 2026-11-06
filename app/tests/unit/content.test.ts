@@ -133,7 +133,7 @@ describe("cinematic images", () => {
   const pub = path.resolve(__dirname, "../../public");
   it("every generated size exists on disk and is labelled as an illustration", () => {
     for (const a of (cinematicManifest as any).assets) {
-      expect(a.provenance).toMatch(/^(AI-GENERATED ILLUSTRATION|ORIGINAL 3D RENDER)/);
+      expect(a.provenance).toMatch(/^(AI-GENERATED ILLUSTRATION|ORIGINAL 3D RENDER|OWNER-SUPPLIED BRAND ARTWORK)/);
       if (a.provenance.startsWith("ORIGINAL 3D RENDER")) { expect(a.baked_text).toEqual([]); expect(a.alt).toMatch(/^3D render: /); }
       for (const s of Object.values<any>(a.sizes)) expect(fs.existsSync(path.join(pub, s.file.replace(/^\//, ""))), s.file).toBe(true);
       expect(Object.keys(a.avif ?? {}), `${a.id} AVIF widths`).toEqual(Object.keys(a.sizes));

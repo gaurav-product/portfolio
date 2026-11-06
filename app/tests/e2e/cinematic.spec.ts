@@ -112,7 +112,7 @@ test("J23 About → How I Think: illustration and interactive loop", async ({ pa
   await expect(panel).toContainText("Stage 1 of 8");
 });
 
-test("J24 Explore my work — every project is a chapter with its own 3D art, status and case-study link", async ({ page }) => {
+test("J24 Explore my work — every project is a chapter with its own art (brand artwork or 3D render), status and case-study link", async ({ page }) => {
   const errs = noErrors(page);
   await page.goto("/projects");
   await expect(page.getByRole("heading", { level: 1, name: "Explore my work" })).toBeVisible();
@@ -120,7 +120,7 @@ test("J24 Explore my work — every project is a chapter with its own 3D art, st
   await expect(chapters).toHaveCount(7);
   for (const li of await chapters.all()) {
     await li.scrollIntoViewIfNeeded();
-    const img = li.locator("[data-cinematic^='render-project-'] img");
+    const img = li.locator("[data-cinematic^='render-project-'] img, [data-cinematic^='brand-'] img");
     await expect(img).toHaveCount(1);
     await expect.poll(() => img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);
     await expect(li.getByRole("link", { name: /^Read the case study: / })).toBeVisible();

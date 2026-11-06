@@ -1,5 +1,5 @@
 import { CinematicImage } from "~/components/CinematicImage";
-import { projectArt } from "~/content/cinematic";
+import { projectBackdrop as projectArt } from "~/content/cinematic";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { projects } from "~/content/projects";

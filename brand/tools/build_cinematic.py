@@ -60,8 +60,28 @@ RENDER_META = {
   "render-project-phonepe-smart-spend-coach": dict(purpose="PhonePe Smart Spend Coach project art (academic case)", used_by=["/projects", "/projects/phonepe-smart-spend-coach"], alt="3D render: stacks of coin-like discs on a plinth under a glowing guardrail, with a small light connected to one stack."),
   "render-project-nexus": dict(purpose="Nexus project art", used_by=["/projects", "/projects/nexus"], alt="3D render: three streams of light converge on a glass cube; small amber markers sit on two of the streams."),
   "render-project-90-day-case-studies": dict(purpose="90 case studies project art", used_by=["/projects", "/projects/90-day-case-studies"], alt="3D render: a curved wall of ninety tiles, some lit, facing a single point of light."),
-  "render-teardown": dict(purpose="The Teardown newsletter feature", used_by=["/", "/about"], alt="3D render: an exploded view of a slim device, its layers separated above a lit plinth with dotted assembly guides."),
+  "render-teardown": dict(purpose="Alternate newsletter art (the owner-supplied logo is used instead)", used_by=[], alt="3D render: an exploded view of a slim device, its layers separated above a lit plinth with dotted assembly guides."),
   "render-search": dict(purpose="Search page header", used_by=["/search"], alt="3D render: a glowing lens over a field of points, the points under it brighter."),
+}
+# Brand artwork supplied by Gaurav for his own projects and newsletter (logos and banners).
+OWNER_ART = ROOT / "owner-art"
+OWNER_META = {
+  "brand-the-teardown": dict(purpose="The Teardown newsletter logo", used_by=["/", "/about"],
+      alt="The Teardown logo: stacked cards with a bar chart beside the words The Teardown, and the line Products, Strategy, Lessons.",
+      baked_text=["The Teardown", "PRODUCTS · STRATEGY · LESSONS"]),
+  "brand-90-day-case-studies": dict(purpose="90 case studies project banner", used_by=["/projects", "/"],
+      alt="Banner: Product Management Case Studies — real products, deep analysis, product thinking — with tiles for problem framing, solution design, product strategy, and impact and learnings.",
+      baked_text=["Product Management Case Studies", "Real Products", "Deep Analysis", "Product Thinking", "Problem Framing", "Solution Design", "Product Strategy", "Impact & Learnings"]),
+  "brand-phonepe-smart-spend-coach": dict(purpose="PhonePe Smart Spend Coach (academic case) banner", used_by=["/projects", "/"],
+      alt="Banner: Smart Spend Coach concept for PhonePe — track, understand, take control — with tiles for detecting subscriptions, managing commitments, analysing spends and building better habits.",
+      baked_text=["PhonePe", "Smart Spend Coach", "Track", "Understand", "Take Control", "Detect Subscriptions", "Manage Commitments", "Analyse Spends", "Build Better Habits"],
+      caution="Shows the PhonePe logo. This is an academic capstone, not PhonePe work: always shown with the academic label and a not-affiliated note."),
+  "brand-nexus": dict(purpose="Nexus project banner", used_by=["/projects"],
+      alt="Banner: the Nexus logo, an N folded from a ribbon, above the line Your Evidence-Backed Situation Inbox, with mail, calendar and document icons.",
+      baked_text=["Nexus", "Your Evidence-Backed Situation Inbox"]),
+  "brand-rupee-radar": dict(purpose="RupeeRadar logo (not yet used: not a listed project)", used_by=[],
+      alt="RupeeRadar logo: a radar sweep around a rupee sign with a rising bar chart, and the line See where your money goes.",
+      baked_text=["RupeeRadar", "See where your money goes"]),
 }
 (RENDERS / "source").mkdir(parents=True, exist_ok=True)
 for png in sorted((RENDERS / ".cache").glob("render-*.png")):
@@ -72,10 +92,11 @@ for png in sorted((RENDERS / ".cache").glob("render-*.png")):
 
 OUT.mkdir(parents=True, exist_ok=True)
 assets = []
-sources = sorted(SRC.glob("*.webp")) + sorted((RENDERS / "source").glob("render-*.webp"))
+sources = sorted(SRC.glob("*.webp")) + sorted((RENDERS / "source").glob("render-*.webp")) + sorted((OWNER_ART / "source").glob("brand-*.webp"))
 for src in sources:
     is_render = src.stem in RENDER_META
-    m = RENDER_META[src.stem] if is_render else META[src.stem]
+    is_owner = src.stem in OWNER_META
+    m = RENDER_META[src.stem] if is_render else OWNER_META[src.stem] if is_owner else META[src.stem]
     w, h = map(int, subprocess.check_output(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height", "-of", "csv=p=0", str(src)]).decode().strip().split(","))
     files = {}
     for width in WIDTHS:
@@ -90,12 +111,12 @@ for src in sources:
             im.resize((width, round(width * h / w)), Image.LANCZOS).save(out, "AVIF", quality=52, speed=4)
             avif[width] = {"file": f"/cinematic/{out.name}", "bytes": out.stat().st_size}
     assets.append({
-        "id": src.stem, "brief_image": None if is_render else m["n"], "source": str(src.relative_to(ROOT.parent)), "source_bytes": src.stat().st_size,
+        "id": src.stem, "brief_image": None if (is_render or is_owner) else m["n"], "source": str(src.relative_to(ROOT.parent)), "source_bytes": src.stat().st_size,
         "width": w, "height": h, "aspect": round(w / h, 4), "format": "AVIF + WebP fallback", "sizes": files, "avif": avif,
         "purpose": m["purpose"], "used_by": m["used_by"], "alt": m["alt"],
-        "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)" if is_render else "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+        "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)" if is_render else "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project" if is_owner else "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
         "baked_text": [] if is_render else m["baked_text"], "caution": m.get("caution", ""),
-        "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product." if is_render else "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+        "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product." if is_render else "Brand artwork. Feature tiles name intended capabilities, not shipped results or data." if is_owner else "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
         "status": "INTEGRATED",
     })
 manifest = {"generated_by": "brand/tools/build_cinematic.py", "assets": assets, "missing": MISSING,

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router";
 import { projects, PROJECT_FILTERS } from "~/content/projects";
-import { projectArt } from "~/content/cinematic";
+import { projectArt, THIRD_PARTY_MARK } from "~/content/cinematic";
 import { PageHero, Container, Empty, Pill, statusTone, evidenceTone, ButtonLink, cx } from "~/components/ui";
 import { CinematicImage, heroArt } from "~/components/CinematicImage";
 import { Icon } from "~/components/Icon";
@@ -71,9 +71,9 @@ function Chapter({ p, n, flip }: { p: Project; n: number; flip: boolean }) {
         {art
           ? <CinematicImage id={art} decorative sizes="(min-width: 1024px) 46vw, 100vw" imgClassName="aspect-[16/10] object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]" />
           : <img src={asset(p.cover)} alt="" width={1200} height={750} loading="lazy" className="aspect-[16/10] w-full object-cover" />}
-        <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />
-        <span aria-hidden className="pointer-events-none absolute left-5 top-4 font-display text-6xl font-bold text-ink/15 sm:text-7xl">{String(n).padStart(2, "0")}</span>
-        <span className="pointer-events-none absolute bottom-3 right-4 rounded-full bg-black/55 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[.08em] text-white/80">{art ? "3D render" : "Illustration"}</span>
+        {!art?.startsWith("brand-") && <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-transparent" />}
+        {!art?.startsWith("brand-") && <span aria-hidden className="pointer-events-none absolute left-5 top-4 font-display text-6xl font-bold text-ink/15 sm:text-7xl">{String(n).padStart(2, "0")}</span>}
+        <span className="pointer-events-none absolute bottom-3 right-4 rounded-full bg-black/55 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[.08em] text-white/80">{art?.startsWith("brand-") ? "Project artwork" : art ? "3D render" : "Illustration"}</span>
       </Link>
 
       <div className="chapter-copy">
@@ -84,6 +84,7 @@ function Chapter({ p, n, flip }: { p: Project; n: number; flip: boolean }) {
         <p className="mt-2 text-lg text-muted">{p.subtitle} · {p.period}</p>
         <div className="mt-4 flex flex-wrap items-center gap-2"><Pill tone={statusTone(p.status)}>{p.status}</Pill><span className="text-sm text-dim">{p.role}</span></div>
         <p className="mt-5 max-w-xl text-lg leading-relaxed text-[#D7DEDA]">{p.oneLine}</p>
+        {THIRD_PARTY_MARK[p.slug] && <p className="mt-3 max-w-xl text-sm text-dim">{THIRD_PARTY_MARK[p.slug]}</p>}
         <ul className="mt-6 grid max-w-xl gap-2.5">
           {p.highlights.slice(0, 3).map((h) => (
             <li key={h.text} className="flex gap-3 text-[15px] text-[#C9D2CD]">
