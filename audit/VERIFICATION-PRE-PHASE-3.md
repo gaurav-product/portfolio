@@ -142,3 +142,25 @@ Recommendation: **A**, unless the intent really is B. With A, the 90-study map i
 | A transition that never reports finishing | The flag stays until the **5 s safety net** clears it | 5/5 · slow 5/5 |
 | Cleanup after the reveal | Started → finished → flag cleared | 20/20 at 6× CPU and slow JS (from `61eb856`) |
 | No View Transitions support (Firefox-like) | Nothing wrapped or polyfilled; plain navigation; no flag; no errors | 5/5 |
+
+## 7. Final verification (closed 7 Nov 2026)
+
+**CI**
+
+| Commit | What | Push run | Pull-request run |
+|---|---|---|---|
+| `8aba845` (head; includes the `072303a` lifecycle tests) | Docs + lifecycle tests | ✅ [42390715169](https://github.com/gaurav-product/portfolio/actions/runs/42390715169) | ✅ [42390719713](https://github.com/gaurav-product/portfolio/actions/runs/42390719713) |
+| `61eb856` | CI test fix | ✅ | ✅ |
+
+**Local checks (at `072303a`)**
+- Playwright: 103 passed, 2 skipped by design.
+- Vitest: 85/85.
+- `tsc`: clean.
+
+**PR #1**
+- open, **draft**, **not merged**;
+- base `main` unchanged at `0f453f7`.
+
+**Deployment: none.** Only `app-ci` (test only) is registered. `app-deploy-pages.yml` is manual-dispatch only and has never run.
+
+Phase 2 is closed. The owner chose **Option A**: all three separate 3D experiences are preserved. Part 2, the 90-study Earth, starts from this state.
