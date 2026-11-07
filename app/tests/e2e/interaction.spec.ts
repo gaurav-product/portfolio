@@ -2,6 +2,11 @@ import { test, expect, type Page } from "@playwright/test";
 
 /** Phase 1 — the signature cursor, context labels, magnetic actions and spotlight. */
 const ring = (p: Page) => p.locator(".gos-ring");
+/** Wait until the app has started (hydrated): the cursor engine and the transition listener mount in the
+ *  same commit. Before that, links are plain links — a full page load with no transition, by design. */
+/** SLOW_JS=<ms> delays every JS module, like a cold, busy CI runner (used to verify the ready() wait). */
+const maybeSlow = async (p: Page) => { const ms = Number(process.env.SLOW_JS || 0); if (ms) await p.route("**/assets/*.js", async (r) => { await new Promise((res) => setTimeout(res, ms)); await r.continue(); }); };
+const ready = (p: Page) => p.waitForFunction(() => document.documentElement.classList.contains("gos-cursor"), null, { timeout: 15_000 });
 const labelText = (p: Page) => p.locator(".gos-label").textContent();
 async function hoverCentre(p: Page, sel: ReturnType<Page["locator"]>) {
   await sel.scrollIntoViewIfNeeded();
@@ -13,7 +18,7 @@ async function hoverCentre(p: Page, sel: ReturnType<Page["locator"]>) {
 test.describe("desktop (fine pointer)", () => {
   test("cursor starts, follows the pointer and never takes pointer events", async ({ page }) => {
     const errs: string[] = []; page.on("pageerror", (e) => errs.push(e.message));
-    await page.goto("/?nointro");
+    await page.goto("/?nointro"); await ready(page);
     await expect(page.locator("html")).toHaveClass(/gos-cursor/);
     await page.mouse.move(300, 300); await page.mouse.move(420, 360, { steps: 5 });
     await expect(page.locator("html")).toHaveClass(/gos-cursor-visible/);
@@ -28,7 +33,7 @@ test.describe("desktop (fine pointer)", () => {
   });
 
   test("context labels: EXPLORE on the Universe CTA, VIEW on project art, OPEN on studies, PLAY on the film", async ({ page }) => {
-    await page.goto("/?nointro");
+    await page.goto("/?nointro"); await ready(page);
     await hoverCentre(page, page.getByRole("link", { name: "Explore my work" }));
     await expect(ring(page)).toHaveAttribute("data-state", "tag"); // small target: label beside the pointer, button text stays readable
     expect(await labelText(page)).toBe("Explore");
@@ -37,19 +42,19 @@ test.describe("desktop (fine pointer)", () => {
     await hoverCentre(page, page.getByRole("link", { name: "Contact", exact: true }).first());
     await expect(ring(page)).toHaveAttribute("data-state", "hover");
 
-    await page.goto("/projects");
+    await page.goto("/projects"); await ready(page);
     await hoverCentre(page, page.locator(".chapter-art").first());
     await expect(ring(page)).toHaveAttribute("data-state", "label"); // big target: filled disc
     expect(await labelText(page)).toBe("View");
 
-    await page.goto("/research");
+    await page.goto("/research"); await ready(page);
     await hoverCentre(page, page.locator('a[href="/research/1"]').first());
     expect(await labelText(page)).toBe("Open");
   });
 
   test("DRAG over the 3D Universe, BACK on Back to Earth", async ({ page }) => {
     await page.addInitScript(() => localStorage.setItem("gos-universe-intro", "1"));
-    await page.goto("/universe/careconnect?tier=laptop");
+    await page.goto("/universe/careconnect?tier=laptop"); await ready(page);
     await expect(page.getByTestId("case-panel")).toBeVisible();
     await page.mouse.move(300, 700, { steps: 4 }); await page.waitForTimeout(200);
     expect(await labelText(page)).toBe("Drag");
@@ -58,7 +63,7 @@ test.describe("desktop (fine pointer)", () => {
   });
 
   test("magnetic: a primary CTA leans towards the pointer, resets on leave, and still clicks", async ({ page }) => {
-    await page.goto("/?nointro");
+    await page.goto("/?nointro"); await ready(page);
     const cta = page.getByRole("link", { name: "Explore my work" });
     await expect(cta).toHaveAttribute("data-magnetic", "");
     const b = (await cta.boundingBox())!;
@@ -73,14 +78,14 @@ test.describe("desktop (fine pointer)", () => {
   });
 
   test("text fields and text selection keep the native cursor", async ({ page }) => {
-    await page.goto("/projects");
+    await page.goto("/projects"); await ready(page);
     const field = page.getByRole("searchbox", { name: "Search projects" });
     expect(await field.evaluate((el) => getComputedStyle(el).cursor)).not.toBe("none");
     await hoverCentre(page, field);
     await expect(ring(page)).toHaveAttribute("data-state", "native");
     expect(await page.locator(".gos-ring").evaluate((el) => getComputedStyle(el).opacity)).toBe("0");
 
-    await page.goto("/about");
+    await page.goto("/about"); await ready(page);
     const para = page.locator("main p").filter({ hasText: /./ }).nth(2);
     const pb = (await para.boundingBox())!;
     await page.mouse.move(pb.x + 4, pb.y + pb.height / 2);
@@ -92,7 +97,7 @@ test.describe("desktop (fine pointer)", () => {
   });
 
   test("keyboard navigation and focus are unaffected", async ({ page }) => {
-    await page.goto("/?nointro");
+    await page.goto("/?nointro"); await ready(page);
     await page.keyboard.press("Tab"); // skip link
     await page.keyboard.press("Tab");
     const focused = await page.evaluate(() => document.activeElement?.getAttribute("aria-label") ?? document.activeElement?.textContent);
@@ -117,7 +122,7 @@ test.describe("touch and reduced motion keep the native cursor", () => {
   test("reduced motion", async ({ browser }) => {
     const ctx = await browser.newContext({ reducedMotion: "reduce", baseURL: "http://127.0.0.1:4173" });
     const page = await ctx.newPage();
-    await page.goto("/?nointro");
+    await page.goto("/?nointro", { waitUntil: "networkidle" });
     await page.mouse.move(400, 400, { steps: 4 });
     await expect(page.locator("html")).not.toHaveClass(/gos-cursor/);
     expect(await page.locator("body").evaluate((b) => getComputedStyle(b).cursor)).not.toBe("none");
@@ -141,7 +146,8 @@ const rot = (p: Page, sel: ReturnType<Page["locator"]>) => sel.evaluate((el) => 
 
 test.describe("Phase 2 — tilt cards", () => {
   test("a project card tilts towards the pointer within 5°, lights up, and springs back", async ({ page }) => {
-    await page.goto("/?nointro");
+    await maybeSlow(page);
+    await page.goto("/?nointro"); await ready(page);
     const card = page.locator("article[data-tilt]").first();
     await card.scrollIntoViewIfNeeded();
     const b = (await card.boundingBox())!;
@@ -150,7 +156,7 @@ test.describe("Phase 2 — tilt cards", () => {
     const r = await rot(page, card);
     expect(r.ry).toBeGreaterThan(2); expect(r.rx).toBeGreaterThan(2); // leans right and back, towards the pointer
     expect(Math.abs(r.rx)).toBeLessThanOrEqual(5); expect(Math.abs(r.ry)).toBeLessThanOrEqual(5);
-    expect(await card.evaluate((el) => getComputedStyle(el, "::before").opacity)).not.toBe("0");
+    await expect.poll(() => card.evaluate((el) => Number(getComputedStyle(el, "::before").opacity))).toBeGreaterThan(0.5); // light fades in over .45 s
     await page.mouse.move(b.x + b.width / 2, b.y - 200, { steps: 6 });
     await expect.poll(async () => (await rot(page, card)).tilting).toBe(false);
     expect(await rot(page, card)).toEqual({ rx: 0, ry: 0, tilting: false });
@@ -160,7 +166,7 @@ test.describe("Phase 2 — tilt cards", () => {
   });
 
   test("chapter art and study cards tilt; layout does not move", async ({ page }) => {
-    await page.goto("/research");
+    await page.goto("/research"); await ready(page);
     const card = page.locator('a[href="/research/5"]');
     await card.scrollIntoViewIfNeeded();
     const before = (await card.boundingBox())!;
@@ -184,7 +190,7 @@ test.describe("Phase 2 — tilt cards", () => {
   });
   test("no tilt with reduced motion", async ({ browser }) => {
     const ctx = await browser.newContext({ reducedMotion: "reduce", baseURL: "http://127.0.0.1:4173" });
-    const page = await ctx.newPage(); await page.goto("/?nointro");
+    const page = await ctx.newPage(); await page.goto("/?nointro", { waitUntil: "networkidle" });
     const card = page.locator("article[data-tilt]").first(); await card.scrollIntoViewIfNeeded();
     const b = (await card.boundingBox())!; await page.mouse.move(b.x + 20, b.y + 20, { steps: 4 }); await page.waitForTimeout(200);
     expect((await rot(page, card)).tilting).toBe(false);
@@ -195,7 +201,7 @@ test.describe("Phase 2 — tilt cards", () => {
 test.describe("Phase 2 — page transitions", () => {
   test("internal links animate; Back, Forward and direct URLs still work", async ({ page }) => {
     await page.addInitScript(countTransitions);
-    await page.goto("/about");
+    await page.goto("/about"); await ready(page);
     await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Experience" }).click();
     await expect(page).toHaveURL(/\/experience$/);
     await expect(page.locator("h1").first()).toBeVisible();
@@ -207,9 +213,10 @@ test.describe("Phase 2 — page transitions", () => {
 
   test("entering the Universe uses the circular reveal", async ({ page }) => {
     // CPU_THROTTLE=6 reproduces a slow CI runner (CDP CPU throttling)
+    await maybeSlow(page);
     if (process.env.CPU_THROTTLE) { const cdp = await page.context().newCDPSession(page); await cdp.send("Emulation.setCPUThrottlingRate", { rate: Number(process.env.CPU_THROTTLE) }); }
     await page.addInitScript(countTransitions);
-    await page.goto("/?nointro");
+    await page.goto("/?nointro"); await ready(page);
     await page.getByRole("link", { name: "Explore my work" }).click();
     await expect(page).toHaveURL(/\/universe$/);
     // 1. the reveal flag was applied (recorded when set, so the check cannot be too late)
@@ -223,7 +230,7 @@ test.describe("Phase 2 — page transitions", () => {
 
   test("leaves new-tab clicks, same-page anchors and downloads alone", async ({ page, context }) => {
     await page.addInitScript(countTransitions);
-    await page.goto("/projects");
+    await page.goto("/projects"); await ready(page);
     await page.getByRole("link", { name: "Emerging Ventures" }).first().click(); // #hash on the same page
     await expect(page).toHaveURL(/\/projects#emerging-ventures$/);
     const [popup] = await Promise.all([context.waitForEvent("page"), page.getByRole("link", { name: "Read the case study: CareConnect" }).click({ modifiers: ["ControlOrMeta"] })]);
@@ -234,7 +241,7 @@ test.describe("Phase 2 — page transitions", () => {
 
   test("rapid clicks never get stuck: the last navigation wins and no overlay remains", async ({ page }) => {
     await page.addInitScript(countTransitions);
-    await page.goto("/about");
+    await page.goto("/about"); await ready(page);
     const nav = page.getByRole("navigation", { name: "Primary" });
     await nav.getByRole("link", { name: "Experience" }).click({ noWaitAfter: true });
     await nav.getByRole("link", { name: "Research" }).click({ noWaitAfter: true });
@@ -247,7 +254,7 @@ test.describe("Phase 2 — page transitions", () => {
 
   test("browsers without View Transitions (e.g. Firefox) navigate normally", async ({ page }) => {
     await page.addInitScript(() => { delete (Document.prototype as unknown as Record<string, unknown>).startViewTransition; delete (document as unknown as Record<string, unknown>).startViewTransition; });
-    await page.goto("/about");
+    await page.goto("/about", { waitUntil: "networkidle" });
     expect(await page.evaluate(() => "startViewTransition" in document)).toBe(false);
     await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Projects" }).click();
     await expect(page).toHaveURL(/\/projects$/);
@@ -257,7 +264,7 @@ test.describe("Phase 2 — page transitions", () => {
   test("reduced motion: no transition", async ({ browser }) => {
     const ctx = await browser.newContext({ reducedMotion: "reduce", baseURL: "http://127.0.0.1:4173" });
     const page = await ctx.newPage(); await page.addInitScript(countTransitions);
-    await page.goto("/about");
+    await page.goto("/about", { waitUntil: "networkidle" });
     await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Projects" }).click();
     await expect(page).toHaveURL(/\/projects$/);
     expect(await vtCount(page)).toBe(0);
