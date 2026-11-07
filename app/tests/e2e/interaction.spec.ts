@@ -124,3 +124,132 @@ test.describe("touch and reduced motion keep the native cursor", () => {
     await ctx.close();
   });
 });
+
+/* ------------------------------------------------------------------ Phase 2 */
+const countTransitions = () => {
+  const w = window as unknown as { __vt: number }; w.__vt = 0;
+  const d = document as Document & { startViewTransition?: (cb: () => unknown) => unknown };
+  const orig = d.startViewTransition?.bind(d);
+  if (orig) d.startViewTransition = (cb: () => unknown) => { w.__vt++; return orig(cb); };
+};
+const vtCount = (p: Page) => p.evaluate(() => (window as unknown as { __vt: number }).__vt);
+const rot = (p: Page, sel: ReturnType<Page["locator"]>) => sel.evaluate((el) => ({ rx: parseFloat(el.style.getPropertyValue("--rx") || "0"), ry: parseFloat(el.style.getPropertyValue("--ry") || "0"), tilting: el.classList.contains("is-tilting") }));
+
+test.describe("Phase 2 — tilt cards", () => {
+  test("a project card tilts towards the pointer within 5°, lights up, and springs back", async ({ page }) => {
+    await page.goto("/?nointro");
+    const card = page.locator("article[data-tilt]").first();
+    await card.scrollIntoViewIfNeeded();
+    const b = (await card.boundingBox())!;
+    await page.mouse.move(b.x + b.width * 0.9, b.y + b.height * 0.1, { steps: 6 }); // top-right corner
+    await expect.poll(async () => (await rot(page, card)).tilting).toBe(true);
+    const r = await rot(page, card);
+    expect(r.ry).toBeGreaterThan(2); expect(r.rx).toBeGreaterThan(2); // leans right and back, towards the pointer
+    expect(Math.abs(r.rx)).toBeLessThanOrEqual(5); expect(Math.abs(r.ry)).toBeLessThanOrEqual(5);
+    expect(await card.evaluate((el) => getComputedStyle(el, "::before").opacity)).not.toBe("0");
+    await page.mouse.move(b.x + b.width / 2, b.y - 200, { steps: 6 });
+    await expect.poll(async () => (await rot(page, card)).tilting).toBe(false);
+    expect(await rot(page, card)).toEqual({ rx: 0, ry: 0, tilting: false });
+    // still a normal link
+    await card.getByRole("link").first().click();
+    await expect(page).toHaveURL(/\/projects\/[a-z0-9-]+$/);
+  });
+
+  test("chapter art and study cards tilt; layout does not move", async ({ page }) => {
+    await page.goto("/research");
+    const card = page.locator('a[href="/research/5"]');
+    await card.scrollIntoViewIfNeeded();
+    const before = (await card.boundingBox())!;
+    await page.mouse.move(before.x + 10, before.y + before.height - 10, { steps: 6 });
+    await expect.poll(async () => (await rot(page, card)).tilting).toBe(true);
+    const next = page.locator('a[href="/research/6"]');
+    const nb = (await next.boundingBox())!;
+    await page.mouse.move(before.x + 10, before.y + before.height - 12);
+    expect((await next.boundingBox())!.y).toBe(nb.y); // neighbours never shift
+  });
+
+  test.describe("touch", () => {
+    test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+    test("no tilt on touch", async ({ page }) => {
+      await page.goto("/?nointro");
+      const card = page.locator("article[data-tilt]").first();
+      await card.scrollIntoViewIfNeeded();
+      await card.tap({ position: { x: 20, y: 20 } }).catch(() => {});
+      expect((await rot(page, card)).tilting).toBe(false);
+    });
+  });
+  test("no tilt with reduced motion", async ({ browser }) => {
+    const ctx = await browser.newContext({ reducedMotion: "reduce", baseURL: "http://127.0.0.1:4173" });
+    const page = await ctx.newPage(); await page.goto("/?nointro");
+    const card = page.locator("article[data-tilt]").first(); await card.scrollIntoViewIfNeeded();
+    const b = (await card.boundingBox())!; await page.mouse.move(b.x + 20, b.y + 20, { steps: 4 }); await page.waitForTimeout(200);
+    expect((await rot(page, card)).tilting).toBe(false);
+    await ctx.close();
+  });
+});
+
+test.describe("Phase 2 — page transitions", () => {
+  test("internal links animate; Back, Forward and direct URLs still work", async ({ page }) => {
+    await page.addInitScript(countTransitions);
+    await page.goto("/about");
+    await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Experience" }).click();
+    await expect(page).toHaveURL(/\/experience$/);
+    await expect(page.locator("h1").first()).toBeVisible();
+    await expect.poll(() => vtCount(page)).toBe(1); // the router updates the URL first, then starts the transition
+    await page.goBack(); await expect(page).toHaveURL(/\/about$/);
+    await page.goForward(); await expect(page).toHaveURL(/\/experience$/);
+    await page.goto("/research/12"); await expect(page.locator("h1").first()).toBeVisible(); // direct URL
+  });
+
+  test("entering the Universe uses the circular reveal", async ({ page }) => {
+    await page.addInitScript(countTransitions);
+    await page.goto("/?nointro");
+    await page.getByRole("link", { name: "Explore my work" }).click();
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.vt)).toBe("reveal");
+    await expect(page).toHaveURL(/\/universe$/);
+    await expect.poll(() => vtCount(page)).toBe(1); // the router updates the URL first, then starts the transition
+  });
+
+  test("leaves new-tab clicks, same-page anchors and downloads alone", async ({ page, context }) => {
+    await page.addInitScript(countTransitions);
+    await page.goto("/projects");
+    await page.getByRole("link", { name: "Emerging Ventures" }).first().click(); // #hash on the same page
+    await expect(page).toHaveURL(/\/projects#emerging-ventures$/);
+    const [popup] = await Promise.all([context.waitForEvent("page"), page.getByRole("link", { name: "Read the case study: CareConnect" }).click({ modifiers: ["ControlOrMeta"] })]);
+    await popup.close();
+    await expect(page).toHaveURL(/\/projects#emerging-ventures$/);
+    expect(await vtCount(page)).toBe(0);
+  });
+
+  test("rapid clicks never get stuck: the last navigation wins and no overlay remains", async ({ page }) => {
+    await page.addInitScript(countTransitions);
+    await page.goto("/about");
+    const nav = page.getByRole("navigation", { name: "Primary" });
+    await nav.getByRole("link", { name: "Experience" }).click({ noWaitAfter: true });
+    await nav.getByRole("link", { name: "Research" }).click({ noWaitAfter: true });
+    await nav.getByRole("link", { name: "Contact" }).click();
+    await expect(page).toHaveURL(/\/contact$/);
+    await expect(page.locator("h1").first()).toBeVisible();
+    await page.getByRole("link", { name: "Gaurav.OS — home" }).click(); // still interactive afterwards
+    await expect(page).toHaveURL(/\/$/);
+  });
+
+  test("browsers without View Transitions (e.g. Firefox) navigate normally", async ({ page }) => {
+    await page.addInitScript(() => { delete (Document.prototype as unknown as Record<string, unknown>).startViewTransition; delete (document as unknown as Record<string, unknown>).startViewTransition; });
+    await page.goto("/about");
+    expect(await page.evaluate(() => "startViewTransition" in document)).toBe(false);
+    await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Projects" }).click();
+    await expect(page).toHaveURL(/\/projects$/);
+    expect(await page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBeNull();
+  });
+
+  test("reduced motion: no transition", async ({ browser }) => {
+    const ctx = await browser.newContext({ reducedMotion: "reduce", baseURL: "http://127.0.0.1:4173" });
+    const page = await ctx.newPage(); await page.addInitScript(countTransitions);
+    await page.goto("/about");
+    await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Projects" }).click();
+    await expect(page).toHaveURL(/\/projects$/);
+    expect(await vtCount(page)).toBe(0);
+    await ctx.close();
+  });
+});

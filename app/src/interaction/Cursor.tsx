@@ -9,6 +9,7 @@ import "./interaction.css";
  * Opt-in markup, read with `closest()`:
  *   data-cursor="view|explore|open|drag|play|back|none|native"   context label
  *   data-magnetic                                                 subtle pull towards the pointer
+ *   data-tilt                                                     subtle 3D tilt + light towards the pointer (cards)
  * Links to /universe or /explore get EXPLORE automatically.
  *
  * Safety rules:
@@ -25,6 +26,7 @@ const LABELS: Record<Label, string> = { view: "View", explore: "Explore", open: 
 const NATIVE = 'input:not([type="button"],[type="submit"],[type="reset"],[type="checkbox"],[type="radio"],[type="range"],[type="color"],[type="file"]),textarea,select,[contenteditable]:not([contenteditable="false"]),[data-cursor="native"]';
 const INTERACTIVE = 'a[href],button,[role="button"],[role="tab"],[role="link"],summary,label[for],[data-cursor]';
 const MAGNET_MAX = 6; // px
+const TILT_MAX = 5;   // degrees
 
 export function Cursor() {
   const dot = useRef<HTMLDivElement>(null);
@@ -39,6 +41,7 @@ export function Cursor() {
     let on = false, raf = 0, visible = false, down = false;
     let tx = -100, ty = -100, rx = -100, ry = -100, sx = -100, sy = -100;
     let magnet: HTMLElement | null = null;
+    let tilt: HTMLElement | null = null;
     let state = "";
 
     const setState = (s: string, text = "") => {
@@ -50,7 +53,20 @@ export function Cursor() {
     };
     const show = (v: boolean) => { if (v === visible) return; visible = v; html.classList.toggle("gos-cursor-visible", v); };
 
-    const releaseMagnet = () => { if (magnet) { magnet.style.translate = ""; magnet = null; } };
+    const releaseMagnet = () => { if (magnet) { magnet.style.translate = ""; magnet = null; } releaseTilt(); };
+    /** spring back: drop the angles; the CSS transition does the settling */
+    const releaseTilt = () => { if (!tilt) return; tilt.classList.remove("is-tilting"); tilt.style.removeProperty("--rx"); tilt.style.removeProperty("--ry"); tilt = null; };
+    const applyTilt = (el: HTMLElement | null) => {
+      if (el !== tilt) { releaseTilt(); tilt = el; }
+      if (!tilt) return;
+      const r = tilt.getBoundingClientRect(); if (!r.width || !r.height) return;
+      const px = Math.min(1, Math.max(0, (tx - r.left) / r.width)), py = Math.min(1, Math.max(0, (ty - r.top) / r.height));
+      tilt.style.setProperty("--rx", `${((0.5 - py) * 2 * TILT_MAX).toFixed(2)}deg`);
+      tilt.style.setProperty("--ry", `${((px - 0.5) * 2 * TILT_MAX).toFixed(2)}deg`);
+      tilt.style.setProperty("--gx", `${(px * 100).toFixed(1)}%`);
+      tilt.style.setProperty("--gy", `${(py * 100).toFixed(1)}%`);
+      tilt.classList.add("is-tilting");
+    };
     const tick = () => {
       raf = 0;
       rx += (tx - rx) * 0.2; ry += (ty - ry) * 0.2;
@@ -101,6 +117,7 @@ export function Cursor() {
         const dx = (tx - (r.left + r.width / 2)) / (r.width / 2), dy = (ty - (r.top + r.height / 2)) / (r.height / 2);
         magnet.style.translate = `${(Math.max(-1, Math.min(1, dx)) * MAGNET_MAX).toFixed(1)}px ${(Math.max(-1, Math.min(1, dy)) * MAGNET_MAX * 0.6).toFixed(1)}px`;
       }
+      applyTilt(e.target instanceof Element ? e.target.closest<HTMLElement>("[data-tilt]") : null);
       kick();
     };
     const onDown = (e: PointerEvent) => {

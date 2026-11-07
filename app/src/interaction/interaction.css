@@ -35,4 +35,15 @@ html.gos-cursor.gos-selecting, html.gos-cursor.gos-selecting * { cursor: text !i
 /* magnetic actions: the pull uses the independent `translate` property, so existing transforms are untouched */
 [data-magnetic] { transition: translate .45s cubic-bezier(.2,.8,.2,1); }
 
+/* card tilt (only ever set by the cursor engine, so touch and reduced motion never tilt).
+   One transform holds the existing hover lift plus the tilt; leaving springs back with a light overshoot. */
+[data-tilt] { position: relative; transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
+  transition: transform .7s cubic-bezier(.25, 1.35, .5, 1), border-color .25s ease, background .25s ease; }
+.card-link[data-tilt]:hover { --lift: -2px; transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px)); }
+[data-tilt].is-tilting { transition: transform .14s ease-out, border-color .25s ease, background .25s ease; }
+/* restrained light that follows the pointer across the card */
+[data-tilt]::before { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .45s ease;
+  background: radial-gradient(420px circle at var(--gx, 50%) var(--gy, 50%), rgb(255 255 255 / .10), rgb(77 255 77 / .04) 35%, transparent 60%); mix-blend-mode: soft-light; }
+[data-tilt].is-tilting::before { opacity: 1; }
+
 @media print { .gos-dot, .gos-ring, .gos-spot { display: none !important; } }

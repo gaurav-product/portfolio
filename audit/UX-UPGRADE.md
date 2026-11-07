@@ -110,3 +110,108 @@ Lighthouse, mobile / desktop. "Before" is the Phase 0 baseline; "after" is Phase
 - How the cursor feels on a real mouse and monitor. Headless browsers can't judge smoothness or perceived lag.
 - Safari and Firefox on real machines. The logic uses only standard pointer events and CSS `translate`.
 - Behaviour with a Windows touch-and-mouse hybrid switching live. The `matchMedia` change listener is in place but was not exercised on hardware.
+
+## Phase 2 — 3D tilt cards and cinematic page transitions
+
+### What was built
+
+**Tilt cards**
+- **Where:**
+  - project cards (home and experience pages);
+  - project chapter art on `/projects`;
+  - the 90 case-study cards on `/research`;
+  - the approved-screenshot cards on project pages.
+- **Not tilted:** the large text rows on `/case-studies` and interface controls. Tilting those would be excessive.
+- **Movement.** The card leans towards the pointer by at most 5° on each axis, with a 1000 px perspective. A soft light follows the pointer across the card (white-to-green radial, soft-light blend). On leave it springs back with a light overshoot (0.7 s).
+- **Shared engine.** It runs on the Phase 1 cursor engine, with the same single listener and the same rules: never on touch screens, pens or reduced motion.
+- **No conflicts.** One `transform` holds both the tilt and the existing 2 px hover lift. The project-chapter scroll reveal was moved from `transform` to the separate `scale` property, so they can't clash.
+- **Layout stays fixed.** Transforms never affect layout, and a test confirms neighbouring cards don't move.
+
+**Page transitions** (`src/interaction/Transitions.tsx`)
+- **How it works.** React Router's built-in `viewTransition` navigation, which uses the browser's View Transitions API. There's no new library and the app doesn't remount.
+- **Default effect.** The old page settles back and fades over 0.24 s; the new page rises in over 0.46 s.
+- **Into the Product Universe:** a circular reveal from the point you clicked, over 0.8 s.
+- **Stays fixed during transitions:** the site header, Oz and the cursor layers. They don't cross-fade.
+- **One capture-phase listener** upgrades ordinary internal link clicks. Everything else behaves as before:
+  - **Browsers without the API** (Firefox, older browsers) and **reduced motion** get normal instant navigation.
+  - **Ctrl/⌘/Shift/Alt and middle clicks**, `target` and download links, external links, files, same-page `#anchors` and `data-no-transition` are left alone.
+  - **Back/Forward and direct URLs** are never intercepted. Browser history is unchanged.
+  - **Interrupted navigation.** A new click during a transition starts a new navigation; the browser skips the unfinished one. A test checks that the last click wins and nothing stays on screen.
+- **Inside the Universe.** Entering and leaving buildings keeps the Universe's existing camera flight and fade, so it isn't animated twice.
+
+### Files
+
+**New**
+- `src/interaction/Transitions.tsx`
+- `src/interaction/transitions.css`
+
+**Modified**
+
+| File | Change |
+|---|---|
+| `src/interaction/Cursor.tsx` | Tilt |
+| `src/interaction/interaction.css` | Tilt and light |
+| `src/root.tsx` | Mounts `Transitions` |
+| `src/app.css` | Chapter reveal uses `scale` |
+| `components/cards.tsx`, `components/Screenshots.tsx`, `routes/projects.tsx`, `routes/research.tsx` | `data-tilt` |
+| `tests/e2e/interaction.spec.ts` | 10 new tests |
+
+### Weight
+
+About 1.6 KB gzipped in total:
+
+| Part | JS | CSS |
+|---|---|---|
+| Transitions | ~0.7 KB | 0.5 KB |
+| Tilt | ~0.2 KB | 0.2 KB |
+
+### Tests
+
+| Check | Result |
+|---|---|
+| `tsc` | Clean |
+| Vitest | 85/85 |
+| Playwright | **100 passed** (90 + 10 new), 2 skipped by design |
+| Accessibility crawler | 326 × 2: **0 problems** |
+
+The 10 new tests cover:
+- tilt direction and the 5° limit, the light, spring-back, and that the card still clicks;
+- neighbouring cards not moving;
+- no tilt on touch or with reduced motion;
+- the transition running on internal links;
+- Back, Forward and direct URLs;
+- the circular reveal into the Universe;
+- new-tab, hash and download links left alone;
+- rapid clicks never getting stuck;
+- a browser without View Transitions navigating normally;
+- no transition with reduced motion.
+
+The transition tests passed 30/30 across 5 repeats. An early version read its counter too soon: the router updates the URL just before it starts the transition. That was a test-timing issue, fixed by waiting.
+
+### Lighthouse (mobile / desktop)
+
+| Page | Baseline | Phase 2 |
+|---|---|---|
+| `/` | 86 / 99 | 84–86 / 99 (4 runs, median 85) |
+| `/recruiter` | 91 / 100 | 91 / 100 |
+| `/projects` | 93 / 100 | 93 / 100 |
+| `/projects/careconnect` | 87–90 / 100 | 88 / 100 |
+| `/research` | 93 / 100 | 93 / 100 |
+| `/research/90` | 88 / 100 | 88 / 100 |
+| `/about` | 89 / 100 | 90 / 100 |
+| `/universe` | 88 / 100 | 88 / 100 |
+| `/universe/careconnect` | 89 / 100 | 90 / 100 |
+
+- No page lost more than the 2-point budget.
+- Layout shift: 0 or 0.001.
+- Accessibility, best practices and SEO: 100.
+
+### Screenshots
+
+`audit/screens/ux-phase2/` holds `before-*`, `after-*` and `compare-*` images for a home project card, project chapter art and a research card, plus mid-transition frames (`transition-page-midframe.png`, `transition-universe-reveal-midframe.png`).
+
+### Not verified here
+
+- **Safari's View Transitions on real hardware.** Same API as Chromium; tested only in Chromium.
+- **Real Firefox.** Its behaviour was simulated by removing the API.
+- **How the tilt and spring feel with a real mouse.**

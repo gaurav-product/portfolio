@@ -78,7 +78,7 @@
     .chapter-copy { animation: chapter-copy linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
   }
 }
-@keyframes chapter-art { from { clip-path: inset(9% 7% round 24px); transform: scale(.97); } to { clip-path: inset(0 round 24px); transform: none; } }
+@keyframes chapter-art { from { clip-path: inset(9% 7% round 24px); scale: .97; } to { clip-path: inset(0 round 24px); scale: 1; } } /* `scale`, not transform: transform is free for the card tilt */
 @keyframes chapter-copy { from { transform: translateY(56px); } to { transform: none; } }
 
 /* Explore Mode cinema */
