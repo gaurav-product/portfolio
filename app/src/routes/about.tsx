@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { profile } from "~/content/profile";
-import { education, certifications, writing, tools } from "~/content/experience";
+import { education, certificationGroups, certificationCount, writing, tools } from "~/content/experience";
 import { NewsletterFeature } from "~/components/Newsletter";
 import { EARTH_CREDIT } from "~/content/universe";
 import { legacy } from "~/content/data";
@@ -60,12 +60,26 @@ export default function About() {
         </section>
 
         <section aria-labelledby="certifications" id="certifications">
-          <SectionHeader id="certifications-h" eyebrow="Certifications" title="Certifications and learning" />
+          <SectionHeader id="certifications-h" eyebrow="Certifications" title="Certifications and learning" intro={`${certificationCount} certificates and programmes, with issuer and issue date as stated by Gaurav.`} />
           <div className="grid gap-4 md:grid-cols-2">
-            {certifications.map((c) => (
-              <div key={c.issuer} className="card p-5"><p className="label mb-3">{c.issuer}</p><ul className="grid gap-1.5">{c.items.map((i) => <li key={i} className="text-[#C9D2CD]">{i}</li>)}</ul></div>
+            {certificationGroups.map((c) => (
+              <div key={c.issuer} className="card p-5" data-testid="cert-group">
+                <div className="mb-3 flex items-center gap-3">
+                  {c.logo && <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white p-1.5"><img src={asset(c.logo)} alt="" width={24} height={24} className="size-6" /></span>}
+                  <h3 className="label !text-ink">{c.issuer}<span className="ml-2 font-normal text-dim">· {c.items.length}</span></h3>
+                </div>
+                <ul className="grid gap-2">
+                  {c.items.map((i) => (
+                    <li key={i.title} className="flex items-baseline justify-between gap-3 text-[#C9D2CD]">
+                      <span>{i.url ? <a href={i.url} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-ink">{i.title}</a> : i.title}</span>
+                      {i.date && <span className="shrink-0 font-mono text-xs text-dim">{i.date}</span>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
           </div>
+          <p className="mt-3 text-xs text-dim">Logos are trademarks of their owners, shown only to identify the issuer.</p>
         </section>
 
         <section aria-labelledby="writing-h">

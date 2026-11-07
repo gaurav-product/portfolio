@@ -187,3 +187,21 @@ describe("The Teardown newsletter", () => {
     expect(entry.href).toBe(newsletter.url);
   });
 });
+
+import { certificationGroups, certificationCount, certifications } from "~/content/experience";
+describe("certifications and learning", () => {
+  it("lists 17 certificates with no duplicates, the earlier ones kept", () => {
+    const titles = certificationGroups.flatMap((g) => g.items.map((i) => i.title));
+    expect(certificationCount).toBe(17);
+    expect(new Set(titles.map((t) => t.toLowerCase())).size).toBe(titles.length);
+    for (const kept of ["Claude Developer Platform", "Claude Agent Development", "Model Context Protocol (MCP)", "Claude Code Learning Path",
+      "AI in Product Management and Product Strategy (Product School)", "Product Analytics (Pendo)", "Generative AI Mastermind"]) expect(titles).toContain(kept);
+    expect(titles).not.toContain("Qualcomm AI Upskilling"); // now listed as its two certificates
+  });
+  it("shows issue dates where stated, and no invented credential links", () => {
+    for (const g of certificationGroups.filter((x) => x.issuer !== "Product and AI")) for (const i of g.items) expect(i.date, i.title).toMatch(/^(May|Jun|Jul|Aug) 2026$/);
+    expect(certificationGroups.flatMap((g) => g.items).some((i) => i.url)).toBe(false);
+    for (const g of certificationGroups) if (g.logo) expect(fs.existsSync(path.join(ROOT, "public", g.logo)), g.logo).toBe(true);
+    expect(certifications.reduce((n, g) => n + g.items.length, 0)).toBe(17);
+  });
+});

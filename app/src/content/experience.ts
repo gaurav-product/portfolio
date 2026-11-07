@@ -92,10 +92,44 @@ export const education = [
   { id: "bsc", what: "B.Sc.", org: "University of Patanjali, Haridwar", period: "2017 – 2020", kind: "Degree" },
 ] as const;
 
-export const certifications = [
-  { issuer: "Anthropic", items: ["Claude Developer Platform", "Claude Agent Development", "Model Context Protocol (MCP)", "Claude Code Learning Path"] },
-  { issuer: "Product and AI", items: ["AI in Product Management and Product Strategy (Product School)", "Product Analytics (Pendo)", "Qualcomm AI Upskilling", "Generative AI Mastermind"] },
-] as const;
+/** Certifications and learning (owner-supplied, Nov 2026). Issuer, title and issue
+ *  date only. A credential link appears only where the owner has supplied its URL —
+ *  none has been supplied yet, so none is shown; no credential IDs are invented.
+ *  The generic "Qualcomm AI Upskilling" entry is now listed as its two certificates. */
+export interface Certification { title: string; date?: string; url?: string }
+export interface CertificationGroup { issuer: string; logo?: string; items: Certification[] }
+export const certificationGroups: CertificationGroup[] = [
+  { issuer: "Qualcomm", logo: "/brand/issuers/qualcomm.svg", items: [
+    { title: "AI Upskilling Certificate: Technical Foundations", date: "Aug 2026" },
+    { title: "AI Upskilling Certificate: Hands-On Development from Model to App", date: "Aug 2026" },
+  ] },
+  { issuer: "Anthropic", logo: "/brand/issuers/anthropic.svg", items: [
+    { title: "Claude on Cloud Platforms", date: "Jul 2026" },
+    { title: "AI Fluency", date: "Jul 2026" },
+    { title: "Claude Agent Development", date: "Jul 2026" },
+    { title: "Model Context Protocol (MCP)", date: "Jul 2026" },
+    { title: "Claude Developer Platform", date: "Jul 2026" },
+    { title: "Claude Code Learning Path", date: "Jul 2026" },
+    { title: "Claude Fundamentals", date: "Jul 2026" },
+  ] },
+  { issuer: "HP LIFE", logo: "/brand/issuers/hp.svg", items: [
+    { title: "Data Science & Analytics", date: "Jun 2026" },
+    { title: "Agile Project Management Certifications", date: "May 2026" },
+    { title: "Critical Thinking in the AI Era", date: "May 2026" },
+    { title: "AI for Business Professionals", date: "May 2026" },
+  ] },
+  { issuer: "GeeksforGeeks", logo: "/brand/issuers/geeksforgeeks.svg", items: [
+    { title: "Breaking into Product Management", date: "Jun 2026" },
+  ] },
+  { issuer: "Product and AI", items: [
+    { title: "AI in Product Management and Product Strategy (Product School)" },
+    { title: "Product Analytics (Pendo)" },
+    { title: "Generative AI Mastermind" },
+  ] },
+];
+/** Flat view used by the CV, Recruiter Mode, search and Oz (titles only). */
+export const certifications = certificationGroups.map((g) => ({ issuer: g.issuer, items: g.items.map((i) => i.title) }));
+export const certificationCount = certificationGroups.reduce((n, g) => n + g.items.length, 0);
 
 export { newsletter } from "./newsletter";
 
