@@ -12,7 +12,8 @@ test("J1 home → explore my work → project → case study → home", async ({
   const errs = noErrors(page);
   await page.goto("/?nointro");
   await expect(page.getByRole("heading", { level: 1, name: "Gaurav Singh" })).toBeVisible();
-  await page.getByRole("link", { name: "Explore my work" }).click();
+  await expect(page.getByRole("link", { name: "Explore my work" })).toHaveAttribute("href", "/universe"); // cinematic entry (owner-approved)
+  await page.getByRole("link", { name: "Project list" }).click(); // the classic list stays one click away
   await expect(page).toHaveURL(/\/projects$/);
   await page.getByRole("link", { name: "CareConnect", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: "CareConnect" })).toBeVisible();

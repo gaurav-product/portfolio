@@ -64,8 +64,13 @@ for (const it of inventory.filter((x) => approvals[x.id].approved)) {
   const set = SETS.find((s) => s.project === it.project);
   const out = `/screenshots/${it.id.replace("/", "--")}.webp`;
   fs.mkdirSync(pubDir, { recursive: true });
-  sh("ffmpeg", ["-v", "error", "-y", "-i", path.join(SRC, set.repo, set.dir, it.file), "-vf", "scale='min(1280,iw)':-2", "-c:v", "libwebp", "-quality", "82", path.join(APP, "public", out)]);
-  approved.push({ id: it.id, project: it.project, src: out, alt: approvals[it.id].caption || it.shows, caption: approvals[it.id].caption || it.shows, data_note: it.data_note, source: it.source });
+  const srcFile = path.join(SRC, set.repo, set.dir, it.file);
+  sh("ffmpeg", ["-v", "error", "-y", "-i", srcFile, "-vf", "scale='min(1280,iw)':-2", "-c:v", "libwebp", "-quality", "82", path.join(APP, "public", out)]);
+  // a 16:10 top crop for in-scene display panels in the 3D universe (never stretched)
+  const panel = out.replace(/\.webp$/, "-panel.webp");
+  sh("ffmpeg", ["-v", "error", "-y", "-i", srcFile, "-vf", "scale='min(960,iw)':-2,crop=iw:'min(ih,iw*10/16)':0:0", "-c:v", "libwebp", "-quality", "80", path.join(APP, "public", panel)]);
+  const w = Math.min(1280, it.width), h = Math.round((it.height * w) / it.width);
+  approved.push({ id: it.id, project: it.project, src: out, panel, width: w, height: h, alt: approvals[it.id].caption || it.shows, caption: approvals[it.id].caption || it.shows, data_note: it.data_note, source: it.source });
 }
 fs.writeFileSync(path.join(APP, "src/data/screenshots.json"), JSON.stringify(approved, null, 2) + "\n");
 

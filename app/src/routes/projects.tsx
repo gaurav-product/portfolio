@@ -9,6 +9,7 @@ import { asset, seo } from "~/lib/meta";
 import { norm } from "~/lib/text";
 import { track } from "~/lib/analytics";
 import type { Project } from "~/content/types";
+import { ventures, VENTURES_NOTE } from "~/content/ventures";
 
 export const meta = () => seo("Explore my work", "Eight projects with their real status: Evamastu, Aaroh, CareConnect, GharGyaan, PhonePe Smart Spend Coach (academic), Nexus, RupeeRadar and 90 case studies.", "/projects");
 
@@ -24,7 +25,12 @@ export default function Projects() {
   return (
     <>
       <PageHero {...heroArt("render-projects")} eyebrow={`Projects · ${projects.length} builds`} title="Explore my work"
-        intro="Professional work, independent builds, an academic capstone and published research. Each chapter carries its real status, my role, and only the outcomes the evidence supports." />
+        intro="Professional work, independent builds, an academic capstone and published research. Each chapter carries its real status, my role, and only the outcomes the evidence supports.">
+        <div className="mt-8 flex flex-wrap gap-3">
+          <ButtonLink to="/universe" variant="primary" icon="explore">Enter the 3D Product Universe</ButtonLink>
+          <ButtonLink to="#emerging-ventures" icon="down">Emerging Ventures</ButtonLink>
+        </div>
+      </PageHero>
 
       <Container wide className="sticky top-[72px] z-30 -mt-px border-b border-line-soft bg-bg/85 py-4 backdrop-blur-xl">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -54,6 +60,24 @@ export default function Projects() {
             <button type="button" onClick={() => setParams(new URLSearchParams(), { replace: true })} className="mt-3 underline underline-offset-4">Clear filters</button>
           </Empty></div>
         )}
+      </Container>
+
+      <Container wide>
+        <section id="emerging-ventures" aria-labelledby="ev-h" className="scroll-mt-40 border-t border-line-soft py-16">
+          <p className="eyebrow">Emerging Ventures · concepts in development</p>
+          <h2 id="ev-h" className="mt-3 text-4xl font-bold">The next chapter</h2>
+          <p className="mt-3 max-w-2xl text-muted">{VENTURES_NOTE} They are not counted among the builds above.</p>
+          <ul className="mt-8 grid gap-5 md:grid-cols-2">
+            {ventures.map((v) => (
+              <li key={v.slug} className="card p-6">
+                <div className="flex flex-wrap items-center gap-2"><Pill tone="amber">{v.status}</Pill><span className="text-sm text-dim">{v.category}</span></div>
+                <h3 className="mt-3 text-2xl font-bold"><Link to={`/ventures/${v.slug}`} className="hover:text-green">{v.name}</Link></h3>
+                <p className="mt-2 text-[#D7DEDA]">“{v.vision}”</p>
+                <div className="mt-5 flex flex-wrap gap-3"><ButtonLink to={`/ventures/${v.slug}`} icon="arrow" aria-label={`Read the concept: ${v.name}`}>Read the concept</ButtonLink><ButtonLink to={`/universe/${v.slug}`} icon="explore" aria-label={`Visit in 3D: ${v.name}`}>Visit in 3D</ButtonLink></div>
+              </li>
+            ))}
+          </ul>
+        </section>
       </Container>
     </>
   );

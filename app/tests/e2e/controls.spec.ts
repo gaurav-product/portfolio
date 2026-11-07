@@ -61,7 +61,7 @@ for (let shard = 0; shard < SHARDS; shard++) {
           if (!href || href === "#" || href.startsWith("javascript:")) result = "FAIL: placeholder href";
           else if (/^https?:\/\//.test(href)) { if (it.target !== "_blank" || !String(it.rel).includes("noopener")) result = "FAIL: external link without target=_blank rel=noopener"; }
           else if (href.startsWith("mailto:")) { if (!/^mailto:[^@]+@[^@]+$/.test(href.split("?")[0])) result = "FAIL: bad mailto"; }
-          else if (it.download || /\.(pdf|mp4|csv)$/.test(href)) {
+          else if (it.download || /\.(pdf|mp4|csv|webp|png|jpe?g|avif)$/.test(href)) {
             if (!checkedDownloads.has(href)) { checkedDownloads.add(href); const r = await request.get(href); if (r.status() !== 200) result = `FAIL: download ${r.status()}`; }
             expected = `download ${href}`;
           } else if (href.startsWith("#")) { if (!items.ids.includes(href.slice(1))) result = `FAIL: missing anchor ${href}`; }

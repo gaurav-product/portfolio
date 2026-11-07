@@ -52,18 +52,20 @@ export default function GuidePanel({ anchorLeft }: { anchorLeft: boolean }) {
     mouthDecay.current = setTimeout(() => svg.style.setProperty("--mouth", "0.2"), 140);
   };
 
-  const stopSpeech = useCallback(() => { tts.stop(); setSpeakingId(null); send({ type: "STOP" }); }, [tts, send]);
+  /** tells the Universe audio to duck its ambient bed while Oz talks */
+  const ozSpeaking = (on: boolean) => window.dispatchEvent(new CustomEvent("oz:speaking", { detail: on }));
+  const stopSpeech = useCallback(() => { tts.stop(); setSpeakingId(null); ozSpeaking(false); send({ type: "STOP" }); }, [tts, send]);
 
   const speak = useCallback((id: number, r: GuideReply) => {
     if (!tts.supported) { setError("This browser can't speak replies aloud. The text is shown here instead."); return; }
     const svg = mouthSvg(); if (svg) { svg.dataset.lipsync = "loop"; svg.style.setProperty("--mouth", "0.35"); }
     setSpeakingId(id);
     tts.speak(r.speech, SPEECH_TAG[r.lang], rate, {
-      onStart: () => send({ type: "SPEECH_START" }),
+      onStart: () => { ozSpeaking(true); send({ type: "SPEECH_START" }); },
       onBoundary: pulseMouth,
-      onEnd: () => { setSpeakingId(null); send({ type: "SPEECH_END" }); settleSoon(1800); },
+      onEnd: () => { ozSpeaking(false); setSpeakingId(null); send({ type: "SPEECH_END" }); settleSoon(1800); },
       onError: (why) => {
-        setSpeakingId(null); send({ type: "FAIL" }); settleSoon(3000);
+        ozSpeaking(false); setSpeakingId(null); send({ type: "FAIL" }); settleSoon(3000);
         if (/synthesis|voice|unavailable|not-allowed/.test(why) && !voiceCount()) {
           // no speech voice installed on this device: say so once and stop trying for this visit
           setSound(false);
@@ -134,11 +136,11 @@ export default function GuidePanel({ anchorLeft }: { anchorLeft: boolean }) {
   useEffect(() => { input.current?.focus(); const t = setTimeout(() => send({ type: "GREETED" }), 1600); return () => clearTimeout(t); }, [send]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { e.stopPropagation(); setOpen(false); (document.querySelector(".oz-launch") as HTMLElement | null)?.focus(); } };
-    const onHide = () => { if (document.hidden) { tts.stop(); stt.abort(); setSpeakingId(null); send({ type: "STOP" }); } };
+    const onHide = () => { if (document.hidden) { tts.stop(); ozSpeaking(false); stt.abort(); setSpeakingId(null); send({ type: "STOP" }); } };
     panel.current?.addEventListener("keydown", onKey);
     document.addEventListener("visibilitychange", onHide);
     const p = panel.current;
-    return () => { p?.removeEventListener("keydown", onKey); document.removeEventListener("visibilitychange", onHide); tts.stop(); stt.abort(); inflight.current?.abort(); if (settleTimer.current) clearTimeout(settleTimer.current); };
+    return () => { p?.removeEventListener("keydown", onKey); document.removeEventListener("visibilitychange", onHide); tts.stop(); ozSpeaking(false); stt.abort(); inflight.current?.abort(); if (settleTimer.current) clearTimeout(settleTimer.current); };
   }, [tts, stt, send, setOpen]);
   useEffect(() => { list.current?.scrollTo?.({ top: list.current.scrollHeight, behavior: "smooth" }); }, [turns, error]);
 

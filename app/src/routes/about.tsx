@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { profile } from "~/content/profile";
 import { education, certifications, writing, tools } from "~/content/experience";
 import { NewsletterFeature } from "~/components/Newsletter";
+import { EARTH_CREDIT } from "~/content/universe";
 import { legacy } from "~/content/data";
 import { PageHero, Container, SectionHeader, Pill, ButtonLink } from "~/components/ui";
 import { seo, asset } from "~/lib/meta";
@@ -98,6 +99,11 @@ export default function About() {
               <div key={k} className="card flex flex-col gap-2 p-5"><dt><Pill tone={tone as "green"}>{k}</Pill></dt><dd className="text-[#C9D2CD]">{d}</dd></div>
             ))}
           </dl>
+        </section>
+
+        <section aria-labelledby="credits-h">
+          <SectionHeader id="credits-h" eyebrow="Credits" title="Third-party assets" />
+          <p className="max-w-3xl text-muted">The Product Universe's Earth uses textures by <a href={EARTH_CREDIT.href} target="_blank" rel="noopener noreferrer" className="text-ink underline underline-offset-4">Solar System Scope</a>, licensed <a href={EARTH_CREDIT.license} target="_blank" rel="noopener noreferrer" className="text-ink underline underline-offset-4">CC BY 4.0</a> and based on NASA imagery, as distributed with three.js; resized for the web. All sound is synthesised in the browser and original.</p>
         </section>
       </Container>
     </>

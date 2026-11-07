@@ -10,7 +10,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--01-sign-in.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/02-family-dashboard",
@@ -23,7 +23,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--02-family-dashboard.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/03-day-record",
@@ -36,7 +36,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--03-day-record.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/04-handover-pack",
@@ -49,7 +49,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--04-handover-pack.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/05-attendants",
@@ -62,7 +62,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--05-attendants.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/06-insights",
@@ -75,7 +75,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--06-insights.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/07-attendant-shift",
@@ -88,7 +88,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--07-attendant-shift.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/08-attendant-report",
@@ -101,7 +101,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--08-attendant-report.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/09-attendant-reason",
@@ -114,7 +114,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--09-attendant-reason.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/10-family-dashboard-mobile",
@@ -127,7 +127,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--10-family-dashboard-mobile.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/11-corrections",
@@ -140,7 +140,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--11-corrections.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/12-create-care-case",
@@ -153,7 +153,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--12-create-care-case.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/13-choose-recovery-type",
@@ -166,7 +166,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--13-choose-recovery-type.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/14-care-plan-medicines",
@@ -179,7 +179,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--14-care-plan-medicines.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/15-invite-code",
@@ -192,7 +192,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--15-invite-code.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/16-attendant-join",
@@ -205,7 +205,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--16-attendant-join.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/17-attendant-before-shift",
@@ -218,7 +218,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--17-attendant-before-shift.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "careconnect/18-family-tablet",
@@ -231,7 +231,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo episode seeded by the repository (fictional patient). No production usage.",
     "thumb": "thumbs/careconnect--18-family-tablet.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "ghargyaan/00-landing-desktop",
@@ -244,7 +244,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo-mode prototype. Not clinically reviewed; no users.",
     "thumb": "thumbs/ghargyaan--00-landing-desktop.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "ghargyaan/01-home",
@@ -257,7 +257,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo-mode prototype. Not clinically reviewed; no users.",
     "thumb": "thumbs/ghargyaan--01-home.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "ghargyaan/02-query-flow",
@@ -270,7 +270,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo-mode prototype. Not clinically reviewed; no users.",
     "thumb": "thumbs/ghargyaan--02-query-flow.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "ghargyaan/03-result",
@@ -283,7 +283,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo-mode prototype. Not clinically reviewed; no users.",
     "thumb": "thumbs/ghargyaan--03-result.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "ghargyaan/04-dadi-says",
@@ -296,7 +296,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo-mode prototype. Not clinically reviewed; no users.",
     "thumb": "thumbs/ghargyaan--04-dadi-says.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "ghargyaan/05-explore",
@@ -309,7 +309,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo-mode prototype. Not clinically reviewed; no users.",
     "thumb": "thumbs/ghargyaan--05-explore.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "ghargyaan/06-safety-escalation",
@@ -322,7 +322,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo-mode prototype. Not clinically reviewed; no users.",
     "thumb": "thumbs/ghargyaan--06-safety-escalation.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/01-inbox",
@@ -335,7 +335,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--01-inbox.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/02-resolve-conflict",
@@ -348,7 +348,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--02-resolve-conflict.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/03-change",
@@ -361,7 +361,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--03-change.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/04-commitment",
@@ -374,7 +374,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--04-commitment.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/05-missing-document",
@@ -387,7 +387,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--05-missing-document.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/06-sources-injection-flag",
@@ -400,7 +400,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--06-sources-injection-flag.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/07-dark",
@@ -413,7 +413,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--07-dark.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/08-mobile-inbox",
@@ -426,7 +426,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--08-mobile-inbox.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/09-mobile-conflict",
@@ -439,7 +439,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--09-mobile-conflict.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/10-research-first",
@@ -452,7 +452,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--10-research-first.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/11-mobile-research-first",
@@ -465,7 +465,7 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--11-mobile-research-first.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   },
   {
     "id": "nexus/12-research-compare",
@@ -478,6 +478,6 @@
     "provenance": "ACTUAL PRODUCT SCREENSHOT — owner's public repository",
     "data_note": "Demo mode with fictional data. No real accounts connected.",
     "thumb": "thumbs/nexus--12-research-compare.webp",
-    "status": "PENDING REVIEW"
+    "status": "APPROVED"
   }
 ]

@@ -2,7 +2,7 @@ import screenshots from "~/data/screenshots.json";
 import { Pill } from "./ui";
 import { asset } from "~/lib/meta";
 
-interface Shot { id: string; project: string; src: string; alt: string; caption: string; data_note: string; source: string }
+interface Shot { id: string; project: string; src: string; panel?: string; width?: number; alt: string; caption: string; data_note: string; source: string }
 
 /** Real product screenshots — rendered only once approved in
  *  brand/screenshot-review/approvals.json. Always labelled as demo data. */
@@ -17,7 +17,7 @@ export function Screenshots({ project }: { project: string }) {
         {list.map((s) => (
           <li key={s.id}>
             <figure className="card overflow-hidden">
-              <a href={asset(s.src)} target="_blank" rel="noopener noreferrer"><img src={asset(s.src)} alt={`${s.alt} (demo data)`} loading="lazy" className="max-h-[520px] w-full object-cover object-top" /></a>
+              <a href={asset(s.src)} target="_blank" rel="noopener noreferrer"><img src={asset(s.panel ?? s.src)} alt={`${s.alt} (demo data)`} loading="lazy" decoding="async" width={960} height={600} className="aspect-[16/10] w-full object-cover object-top" /></a>
               <figcaption className="flex flex-wrap items-center justify-between gap-2 p-3 text-sm"><span>{s.caption} <span className="text-amber">· Demo data</span></span><a href={s.source} target="_blank" rel="noopener noreferrer" className="text-dim underline underline-offset-4 hover:text-ink">Original</a></figcaption>
             </figure>
           </li>

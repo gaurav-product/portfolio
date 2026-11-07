@@ -21,8 +21,8 @@ test("J18 home hero: cinematic world image, tagline, Explore + Recruiter entry p
   expect(await page.content()).not.toContain("Gaurav Kumar Singh"); // legal name is for the formal CV only
   expect(await page.locator('meta[property="og:title"]').getAttribute("content")).toMatch(/^Gaurav Singh/);
   expect(await page.locator('meta[name="description"]').getAttribute("content")).toMatch(/Product Management, AI and Digital Product Building/);
-  await page.getByRole("link", { name: "Enter Explore Mode" }).click();
-  await expect(page).toHaveURL(/\/explore/);
+  await page.getByRole("link", { name: "3D city", exact: true }).click();
+  await expect(page).toHaveURL(/\/explore\/city/);
   await page.getByRole("link", { name: "Exit to Recruiter Mode" }).click();
   await expect(page).toHaveURL(/\/recruiter$/);
   expect(errs).toEqual([]);

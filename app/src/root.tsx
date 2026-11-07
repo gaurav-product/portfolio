@@ -1,4 +1,4 @@
-import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, Link } from "react-router";
+import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, Link, useLocation } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { Header } from "./components/Header";
@@ -33,14 +33,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  // the Product Universe is a full-screen cinematic mode with its own top bar (and an Exit)
+  const immersive = useLocation().pathname.replace(/^\/+/, "/").startsWith("/universe");
   return (
     <SearchProvider>
       <a href="#main" className="skip-link">Skip to content</a>
-      <Header />
+      {!immersive && <Header />}
       <main id="main" tabIndex={-1} className="outline-none">
         <Outlet />
       </main>
-      <Footer />
+      {!immersive && <Footer />}
       <GuideRoot />
     </SearchProvider>
   );

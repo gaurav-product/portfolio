@@ -13,6 +13,8 @@ import { profile } from "~/content/profile";
 import { projects } from "~/content/projects";
 import { experience, education, tools } from "~/content/experience";
 import { newsletter } from "~/content/newsletter";
+import { ventures, VENTURES_NOTE, MODEL_NOTE } from "~/content/ventures";
+import { destinations, type Cluster } from "~/content/universe";
 import type { Block } from "~/content/types";
 import type { Reply } from "../lang";
 import type { Brain, GuideLink, GuideReply } from "./types";
@@ -69,6 +71,9 @@ const PAGES: { keys: RegExp; to: string; label: string }[] = [
   { keys: /\brecruiter\b/i, to: "/recruiter", label: "Recruiter Mode" },
   { keys: /\bresearch\b/i, to: "/research", label: "Research library" },
   { keys: /\b(ai lab|lab)\b/i, to: "/ai-lab", label: "AI Lab" },
+  ...ventures.map((v) => ({ keys: new RegExp(v.name.replace(/ /g, "[ -]?"), "i"), to: `/universe/${v.slug}`, label: `${v.name} (concept)` })),
+  { keys: /\b(emerging ventures?|ventures?|concepts? in development)\b/i, to: "/ventures", label: "Emerging Ventures" },
+  { keys: /\b(earth|universe|globe)\b|पृथ्वी|अर्थ/i, to: "/universe", label: "the Product Universe" },
   { keys: /\bexplore( mode)?\b|\b3d\b|\bcity\b/i, to: "/explore", label: "Explore Mode" },
   { keys: /\bskills?\b/i, to: "/skills", label: "Skills library" },
   { keys: /\bproduct thinking\b|\btools?\b/i, to: "/product-thinking", label: "Product Thinking" },
@@ -89,6 +94,32 @@ function intent(q: string, r: Reply): GuideReply | null {
   // explicit language switch
   if (/^(please )?(speak|talk|reply|answer|bolo|baat karo)?\s*(in )?(hindi|english)( please| mein| me| main| mein bolo)?[.!]*$/i.test(q.trim()) || /^(हिंदी|हिन्दी|अंग्रेज़ी)( में)?( बोलो)?$/.test(q.trim()))
     return reply(r, "answer", L("Sure! I'll reply in English.", "Theek hai! Ab main Hinglish mein jawab dunga.", "ठीक है! अब मैं हिंदी में जवाब दूँगा।", r));
+
+  // Product Universe clusters: "show me Gaurav's healthcare projects", "explore the AI projects"
+  const CL: [RegExp, Cluster][] = [[/\bhealth ?(care|tech)?\b|हेल्थ/i, "Healthcare"], [/\b(ai|artificial intelligence)\b/i, "AI"], [/\b(fintech|finance|money|payments?)\b/i, "Fintech"]];
+  const cl = /\b(projects?|work|builds?|products?)\b|प्रोजेक्ट/i.test(q) ? CL.find(([re]) => re.test(q)) : undefined;
+  if (cl && !/\b(experience|skills?)\b/i.test(q)) {
+    const items = destinations.filter((d) => d.cluster === cl[1]);
+    const lines = items.map((d) => `• ${d.name}: ${lc(d.category)} (${status(d.status, r)})`).join("\n");
+    const name = { Healthcare: ["healthcare", "healthcare", "हेल्थकेयर"], AI: ["AI", "AI", "AI"], Fintech: ["fintech", "fintech", "फ़िनटेक"] }[cl[1] as "Healthcare" | "AI" | "Fintech"];
+    return reply(r, "answer", L(`His ${name[0]} work, each with its real status:\n${lines}\nTap one to visit its 3D world.`, `Unka ${name[1]} kaam, asli status ke saath:\n${lines}\nKisi par tap karke uski 3D duniya dekhiye.`, `उनका ${name[2]} काम, असली स्टेटस के साथ:\n${lines}`, r),
+      items.map((d) => ({ label: d.name, to: `/universe/${d.slug}` })).slice(0, 4));
+  }
+
+  // Emerging Ventures: concepts, never presented as built products
+  const vt = ventures.find((v) => new RegExp(v.name.replace(/ /g, "[ -]?"), "i").test(q));
+  if (vt && !NAV_VERB.test(q)) {
+    return reply(r, "answer", L(
+      `${vt.name} is a ${vt.status.toLowerCase()} (${vt.category}): “${vt.vision}” ${vt.solution} ${VENTURES_NOTE} Business-model ideas are ${MODEL_NOTE.toLowerCase()}`,
+      `${vt.name} ek early-stage concept hai (${vt.category}): “${vt.vision}” Yeh abhi bana nahi hai, launch nahi hua aur validate nahi hua — koi users ya revenue nahi.`,
+      `${vt.name} एक शुरुआती कॉन्सेप्ट है (${vt.category}): “${vt.vision}” यह अभी बना नहीं है, लॉन्च नहीं हुआ और वैलिडेट नहीं हुआ है।`, r),
+      [{ label: `Visit ${vt.name} in 3D`, to: `/universe/${vt.slug}` }, { label: "Read the concept", to: `/ventures/${vt.slug}` }]);
+  }
+  if (/\b(emerging ventures?|ventures?|startup (ideas?|concepts?)|concepts?|what('?s| is) next|next chapter)\b/i.test(q) && !NAV_VERB.test(q)) {
+    const lines = ventures.map((v) => `• ${v.name}: ${v.category} — “${v.vision}”`).join("\n");
+    return reply(r, "answer", L(`Two concepts in development — not built, launched or validated yet:\n${lines}`, `Do concepts development mein hain — abhi bane nahi, launch ya validate nahi hue:\n${lines}`, `दो कॉन्सेप्ट विकास में हैं — अभी बने नहीं, लॉन्च या वैलिडेट नहीं हुए:\n${lines}`, r),
+      [{ label: "Emerging Ventures", to: "/ventures" }, ...ventures.map((v) => ({ label: v.name, to: `/universe/${v.slug}` }))]);
+  }
 
   // navigation: "open RupeeRadar", "take me to the CV"
   if (has(t, NAV_VERB) || has(q, NAV_VERB)) {

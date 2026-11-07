@@ -84,8 +84,8 @@ describe("referential integrity", () => {
     expect(corpus.studies.filter((s) => !s.summary).length).toBe(corpus.counts.empty);
     expect(new Set(corpus.studies.map((s) => s.day)).size).toBe(90);
   });
-  it("prerenders one route per project, role, skill, tool, study and note", () => {
-    expect(paths.size).toBe(17 + projects.length + experience.length + capabilities.length + TOOLS.length + corpus.studies.length + legacy.lab_notes.length + districts.length);
+  it("prerenders one route per project, role, skill, tool, study, note, venture and universe destination", () => {
+    expect(paths.size).toBe(20 + ventures.length + destinations.length + projects.length + experience.length + capabilities.length + TOOLS.length + corpus.studies.length + legacy.lab_notes.length + districts.length);
   });
 });
 
@@ -125,10 +125,21 @@ describe("asset manifest", () => {
       expect(a.status).toBeTruthy();
     }
   });
-  it("no real screenshot is used before approval", () => expect(allSource()).not.toMatch(/docs\/10-evidence\/screenshots|docs\/assets\/screenshots|docs\/images\/0/));
+  it("every published screenshot was approved by the owner", () => {
+    const approvals = JSON.parse(fs.readFileSync(path.resolve(ROOT, "../brand/screenshot-review/approvals.json"), "utf8"));
+    for (const sh of screenshotList as { id: string; src: string }[]) {
+      expect(approvals[sh.id]?.approved, sh.id).toBe(true);
+      expect(fs.existsSync(path.join(ROOT, "public", sh.src)), sh.src).toBe(true);
+    }
+    // nothing outside the approval pipeline points at the original repository files
+    expect(allSource().replace(/"source": "https:\/\/github\.com\/gaurav-product\/[^"]+"/g, "")).not.toMatch(/docs\/10-evidence\/screenshots|docs\/assets\/screenshots|docs\/images\/0/);
+  });
 });
 
 import cinematicManifest from "../../src/data/generated/cinematic.json";
+import screenshotList from "../../src/data/screenshots.json";
+import { ventures } from "~/content/ventures";
+import { destinations } from "~/content/universe";
 describe("cinematic images", () => {
   const pub = path.resolve(__dirname, "../../public");
   it("every generated size exists on disk and is labelled as an illustration", () => {

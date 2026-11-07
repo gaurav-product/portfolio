@@ -6,6 +6,7 @@ import type { Turn } from "./brain/types";
 import type { GuideReply } from "./brain/types";
 import type { LangPref } from "./lang";
 import { track } from "~/lib/analytics";
+import { audio } from "~/universe/audio";
 import "./guide.css";
 
 /* ---------------------------------------------------------------------------
@@ -65,7 +66,7 @@ export function GuideRoot() {
 
   const setOpen = useCallback((v: boolean) => {
     setOpenRaw(v); setBubble(null);
-    if (v) { dispatch({ type: "OPEN" }); track("guide_opened"); store.set(KEY.seen, "1"); }
+    if (v) { dispatch({ type: "OPEN" }); track("guide_opened"); store.set(KEY.seen, "1"); audio.cue("oz"); }
     else dispatch({ type: "CLOSE" });
   }, []);
 
@@ -73,8 +74,9 @@ export function GuideRoot() {
   const hidden = loc.pathname === "/cv";
 
   /* first-visit hello and one rare nudge — text only, never sound */
+  const cinematic = loc.pathname.startsWith("/universe");
   useEffect(() => {
-    if (open || hidden) return;
+    if (open || hidden || cinematic) return; // never talk over the cinematic universe
     const firstVisit = !store.get(KEY.seen);
     const nudged = store.sget(KEY.nudged);
     if (nudged) return;
@@ -84,7 +86,7 @@ export function GuideRoot() {
       store.sset(KEY.nudged, "1");
     }, firstVisit ? 5000 : 45000);
     return () => clearTimeout(t);
-  }, [open, hidden]);
+  }, [open, hidden, cinematic]);
   useEffect(() => { if (!bubble) return; const t = setTimeout(() => setBubble(null), 9000); return () => clearTimeout(t); }, [bubble]);
 
   /* sleepy after a minute without any activity on the page; any movement wakes Oz */
