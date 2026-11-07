@@ -161,7 +161,7 @@ export default function Explore() {
 
       {mode === "3d" && (
         <Container wide>
-          <div className="relative h-[min(74vh,760px)] min-h-[460px] overflow-hidden rounded-3xl border border-line-soft" data-testid="scene">
+          <div className="relative h-[min(74vh,760px)] min-h-[460px] overflow-hidden rounded-3xl border border-line-soft" data-testid="scene" data-cursor="drag">
             <SceneBoundary onFail={() => { setMode("2d"); setWhy2d("The 3D scene failed to start, so the map is shown instead."); }}>
               <Suspense fallback={<p role="status" className="grid h-full place-items-center text-muted">Loading the 3D scene…</p>}>
                 <Scene districts={districts} selected={selected} onSelect={(id) => { setTour(null); setAuto(false); select(id); }} resetKey={resetKey} labels={labels} reduced={reduced}

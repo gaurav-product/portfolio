@@ -135,7 +135,7 @@ export default function Universe() {
     <Shell exit={exit} world={world} onBack={backToEarth} onList={world ? undefined : () => setListOpen(!listOpen)} listOpen={listOpen}>
       {!world && mode === "3d" && <h1 className="sr-only">Explore the Product Universe</h1>}
       {mode === "3d" && (
-        <div ref={canvasBox} tabIndex={0} onKeyDown={onKey} data-testid="universe-canvas" role="application" aria-roledescription="3D view"
+        <div ref={canvasBox} tabIndex={0} onKeyDown={onKey} data-testid="universe-canvas" data-cursor="drag" role="application" aria-roledescription="3D view"
           aria-label={world ? `3D view of the ${world.name} world. Arrow keys rotate, plus and minus zoom. The case study is in the panel.` : "3D Earth. Arrow keys rotate, plus and minus zoom. Use the destination list to choose a project."}
           className="absolute inset-0 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green/60">
           <CanvasBoundary onFail={() => { setMode("2d"); setWhy2d("The 3D scene could not start on this device, so every destination is listed here instead."); }}>
@@ -217,7 +217,7 @@ function Shell({ children, exit, world, onBack, onList, listOpen }: { children: 
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex items-center justify-between gap-3 p-3 sm:p-4">
         <div className="pointer-events-auto flex items-center gap-2">
           <button type="button" onClick={exit} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/15 bg-black/40 px-4 text-sm backdrop-blur-md hover:bg-white/10" data-testid="exit-universe"><Icon name="close" size={16} /><span>Exit<span className="max-sm:hidden"> cinematic mode</span></span></button>
-          {world && onBack && <button type="button" onClick={onBack} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/15 bg-black/40 px-4 text-sm backdrop-blur-md hover:bg-white/10" data-testid="back-to-earth"><Icon name="back" size={16} />Earth</button>}
+          {world && onBack && <button type="button" onClick={onBack} data-cursor="back" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/15 bg-black/40 px-4 text-sm backdrop-blur-md hover:bg-white/10" data-testid="back-to-earth"><Icon name="back" size={16} />Earth</button>}
         </div>
         <p className="pointer-events-none font-display text-lg font-bold max-md:hidden">Gaurav<span className="text-green">.OS</span> <span className="ml-2 font-mono text-[11px] font-normal uppercase tracking-[.22em] text-white/50">Product Universe</span></p>
         <div className="pointer-events-auto flex items-center gap-2">

@@ -35,7 +35,7 @@ export default function Research() {
           <>
             <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {list.slice(0, shownCount).map((s) => (
-                <li key={s.day}><Link to={`/research/${s.day}`} className="card card-link flex h-full flex-col p-5">
+                <li key={s.day}><Link to={`/research/${s.day}`} data-cursor="open" className="card card-link flex h-full flex-col p-5">
                   <span className="flex items-center justify-between gap-2"><span className="font-mono text-sm text-green">DAY {String(s.day).padStart(2, "0")}</span><Pill tone={evidenceTone(s.evidence_level)}>{s.evidence_level}</Pill></span>
                   <span className="mt-2 font-display text-lg font-bold">{s.company}</span>
                   <span className="mt-1 line-clamp-2 text-sm text-muted">{s.title}</span>

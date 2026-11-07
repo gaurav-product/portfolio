@@ -46,7 +46,7 @@ export default function DistrictPage() {
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />
         </div>
         <Container wide className="relative py-16 sm:py-24">
-          <Link to="/explore" className="inline-flex min-h-8 items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All districts</Link>
+          <Link to="/explore" data-cursor="back" className="inline-flex min-h-8 items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All districts</Link>
           <p className="eyebrow mt-8">District {d.index}</p>
           <h1 className="mt-4 flex items-center gap-4 text-[40px] font-bold leading-[1.04] sm:text-6xl"><Icon name={d.icon} size={40} className={tone} />{d.name}</h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-[#D7DEDA]">{d.summary}</p>

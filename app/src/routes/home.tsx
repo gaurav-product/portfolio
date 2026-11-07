@@ -60,7 +60,7 @@ export default function Home() {
               <Link to="/projects" className="group inline-flex items-center gap-2 hover:text-ink"><Icon name="product" size={16} className="text-green" />Project list<Icon name="arrow" size={14} className="transition-transform group-hover:translate-x-0.5" /></Link>
               <Link to="/explore/city" onClick={() => track("explore_mode_opened", { from: "hero" })} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="hq" size={16} />3D city</Link>
               <Link to="/recruiter" onClick={() => track("recruiter_mode_opened")} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="recruiter" size={16} />Recruiter Mode</Link>
-              <button type="button" onClick={intro.play} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="play" size={16} />Watch the intro film (1:05)</button>
+              <button type="button" onClick={intro.play} data-cursor="play" className="inline-flex items-center gap-2 hover:text-ink"><Icon name="play" size={16} />Watch the intro film (1:05)</button>
             </div>
           </div>
         </Container>
@@ -212,7 +212,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-3">
               <ButtonLink to="/recruiter" variant="primary" icon="recruiter">Recruiter Mode</ButtonLink>
               <ButtonLink to="/contact" icon="mail">Get in touch</ButtonLink>
-              <Button onClick={intro.play} variant="ghost" icon="play">Intro film</Button>
+              <Button onClick={intro.play} variant="ghost" icon="play" data-cursor="play">Intro film</Button>
             </div>
           </div>
         </Container>

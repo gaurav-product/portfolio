@@ -51,9 +51,9 @@ export function Header() {
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
           <button type="button" onClick={openSearch} aria-label="Search the portfolio" aria-keyshortcuts="Control+K /" title="Search (Ctrl K)"
             className="inline-flex size-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-raise hover:text-ink"><Icon name="search" /></button>
-          <Link to="/recruiter" onClick={() => track("recruiter_mode_opened")} aria-label="Recruiter Mode" title="Recruiter Mode"
+          <Link to="/recruiter" data-magnetic onClick={() => track("recruiter_mode_opened")} aria-label="Recruiter Mode" title="Recruiter Mode"
             className="inline-flex h-10 items-center gap-2 rounded-full px-3 text-sm text-muted transition-colors hover:bg-raise hover:text-ink"><Icon name="recruiter" /><span className="hidden xl:inline whitespace-nowrap">Recruiter Mode</span></Link>
-          <a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" onClick={() => track("cv_downloaded")} className="hidden md:inline-flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-sm font-semibold text-bg transition-colors hover:bg-white"><Icon name="download" size={16} />CV</a>
+          <a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" data-magnetic onClick={() => track("cv_downloaded")} className="hidden md:inline-flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-sm font-semibold text-bg transition-colors hover:bg-white"><Icon name="download" size={16} />CV</a>
           <button ref={menuBtn} type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="nav-drawer" aria-label="Open menu" title="Menu"
             className="inline-flex size-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:bg-raise"><Icon name="menu" /></button>
         </div>

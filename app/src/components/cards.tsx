@@ -11,7 +11,7 @@ import { track } from "~/lib/analytics";
 export function ProjectCard({ p, compact = false, headingLevel = 3 }: { p: Project; compact?: boolean; headingLevel?: 2 | 3 }) {
   const H = headingLevel === 2 ? "h2" : "h3";
   return (
-    <article className="card card-link group relative flex flex-col overflow-hidden">
+    <article className="card card-link group relative flex flex-col overflow-hidden" data-cursor="view">
       {!compact && (projectArt(p.slug)
         ? <span className="block overflow-hidden border-b border-line"><CinematicImage id={projectArt(p.slug)!} decorative sizes="(min-width: 1280px) 30vw, (min-width: 768px) 45vw, 100vw" imgClassName="aspect-[16/10] object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.05]" /></span>
         : <img src={asset(p.cover)} alt="" width={1200} height={750} loading="lazy" decoding="async" className="aspect-[16/10] w-full border-b border-line object-cover" />)}

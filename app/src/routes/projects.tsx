@@ -90,7 +90,7 @@ function Chapter({ p, n, flip }: { p: Project; n: number; flip: boolean }) {
   const open = () => track("project_opened", { slug: p.slug, from: "projects" });
   return (
     <li id={p.slug} className="chapter grid scroll-mt-40 items-center gap-8 border-b border-line-soft py-14 last:border-b-0 lg:grid-cols-2 lg:gap-16 lg:py-24">
-      <Link to={to} onClick={open} tabIndex={-1} aria-hidden="true"
+      <Link to={to} onClick={open} tabIndex={-1} aria-hidden="true" data-cursor="view"
         className={cx("chapter-art group relative block overflow-hidden rounded-3xl border border-line-soft bg-surface", flip && "lg:order-2")}>
         {art
           ? <CinematicImage id={art} decorative sizes="(min-width: 1024px) 46vw, 100vw" imgClassName="aspect-[16/10] object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]" />

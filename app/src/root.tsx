@@ -7,6 +7,7 @@ import { SearchProvider } from "./components/Search";
 import { Container } from "./components/ui";
 import { asset } from "./lib/meta";
 import { GuideRoot } from "./guide/GuideRoot";
+import { Cursor } from "./interaction/Cursor";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: asset("/favicon.svg"), type: "image/svg+xml" },
@@ -44,6 +45,7 @@ export default function App() {
       </main>
       {!immersive && <Footer />}
       <GuideRoot />
+      <Cursor />
     </SearchProvider>
   );
 }

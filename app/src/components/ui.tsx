@@ -23,14 +23,15 @@ const base = "inline-flex items-center justify-center gap-2 rounded-full px-5 mi
 export function ButtonLink({ to, children, variant = "secondary", icon, className = "", external, download, onClick, ...rest }:
   { to: string; children: ReactNode; variant?: Variant; icon?: IconName; className?: string; external?: boolean; download?: string | boolean; onClick?: () => void; "aria-label"?: string }) {
   const cls = cx(base, BTN[variant], className);
+  const mag = variant === "primary" ? { "data-magnetic": "" } : {};
   const inner = <>{icon && <Icon name={icon} />}{children}{external && <Icon name="external" size={14} />}</>;
   if (external || download !== undefined || to.startsWith("mailto:"))
-    return <a href={to} className={cls} onClick={onClick} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})} {...(download !== undefined ? { download } : {})} {...rest}>{inner}</a>;
-  return <Link to={to} className={cls} onClick={onClick} {...rest}>{inner}</Link>;
+    return <a href={to} className={cls} onClick={onClick} {...mag} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})} {...(download !== undefined ? { download } : {})} {...rest}>{inner}</a>;
+  return <Link to={to} className={cls} onClick={onClick} {...mag} {...rest}>{inner}</Link>;
 }
 
 export function Button({ variant = "secondary", icon, children, className = "", ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; icon?: IconName }) {
-  return <button type="button" className={cx(base, BTN[variant], className)} {...rest}>{icon && <Icon name={icon} />}{children}</button>;
+  return <button type="button" className={cx(base, BTN[variant], className)} {...(variant === "primary" ? { "data-magnetic": "" } : {})} {...rest}>{icon && <Icon name={icon} />}{children}</button>;
 }
 
 export function IconButton({ icon, label, className = "", ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { icon: IconName; label: string }) {

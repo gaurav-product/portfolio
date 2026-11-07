@@ -1,0 +1,38 @@
+/* Gaurav.OS signature cursor. Decorative only: never intercepts the pointer.
+   The native arrow is hidden only once html.gos-cursor is set by Cursor.tsx. */
+.gos-dot, .gos-ring, .gos-spot { position: fixed; left: 0; top: 0; pointer-events: none; opacity: 0; will-change: transform; z-index: 2147483600; }
+.gos-cursor-visible .gos-dot, .gos-cursor-visible .gos-ring { opacity: 1; }
+.gos-cursor-visible .gos-spot { opacity: 1; }
+
+.gos-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 9999px; background: #4DFF4D; box-shadow: 0 0 8px rgb(77 255 77 / .75); z-index: 2147483602; transition: opacity .2s, width .2s, height .2s, margin .2s; }
+.gos-ring { width: 34px; height: 34px; margin: -17px 0 0 -17px; z-index: 2147483601; transition: opacity .25s; display: grid; place-items: center; }
+.gos-ring-circle { position: absolute; inset: 0; border-radius: 9999px; border: 1px solid rgb(77 255 77 / .55); box-shadow: 0 0 14px rgb(77 255 77 / .14); transition: transform .32s cubic-bezier(.2,.8,.2,1), border-color .25s, background-color .25s; }
+.gos-label { position: relative; font: 600 9.5px/1 "IBM Plex Mono", ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: #0B1110; opacity: 0; transition: opacity .2s; white-space: nowrap; }
+
+/* states */
+.gos-ring[data-state="hover"] .gos-ring-circle { transform: scale(1.45); border-color: rgb(77 255 77 / .85); }
+.gos-ring[data-state="label"] .gos-ring-circle { transform: scale(2.05); background: #4DFF4D; border-color: #4DFF4D; box-shadow: 0 0 24px rgb(77 255 77 / .35); }
+.gos-ring[data-state="label"] .gos-label { opacity: 1; }
+.gos-dot[data-state="label"] { opacity: 0 !important; }
+/* small targets: the ring grows and the label sits beside the pointer as a tag */
+.gos-ring[data-state="tag"] .gos-ring-circle { transform: scale(1.45); border-color: rgb(77 255 77 / .85); }
+.gos-ring[data-state="tag"] .gos-label { opacity: 1; position: absolute; left: 30px; top: 26px; padding: 5px 8px; border-radius: 9999px; background: rgb(11 17 16 / .92); color: #4DFF4D; border: 1px solid rgb(77 255 77 / .45); }
+.gos-ring.is-pressed .gos-ring-circle { transform: scale(.8); }
+.gos-ring[data-state="label"].is-pressed .gos-ring-circle { transform: scale(1.8); }
+/* over text fields and during text selection the custom cursor steps aside */
+.gos-ring[data-state="native"], .gos-dot[data-state="native"], .gos-selecting .gos-ring, .gos-selecting .gos-dot { opacity: 0 !important; }
+
+/* soft spotlight: a fixed, pre-drawn gradient that is only moved (no repaint of the page) */
+.gos-spot { width: 560px; height: 560px; margin: -280px 0 0 -280px; z-index: 2147483599; border-radius: 9999px;
+  background: radial-gradient(circle, rgb(77 255 77 / .075) 0%, rgb(53 214 208 / .03) 38%, transparent 68%); mix-blend-mode: screen; transition: opacity .6s; }
+
+/* hide the native arrow only while the custom cursor is running */
+html.gos-cursor, html.gos-cursor *, html.gos-cursor *::before, html.gos-cursor *::after { cursor: none !important; }
+html.gos-cursor :is(input:not([type="button"],[type="submit"],[type="reset"],[type="checkbox"],[type="radio"],[type="range"],[type="color"],[type="file"]), textarea, select, [contenteditable]:not([contenteditable="false"]), [data-cursor="native"]),
+html.gos-cursor :is([contenteditable]:not([contenteditable="false"]), [data-cursor="native"]) * { cursor: auto !important; }
+html.gos-cursor.gos-selecting, html.gos-cursor.gos-selecting * { cursor: text !important; }
+
+/* magnetic actions: the pull uses the independent `translate` property, so existing transforms are untouched */
+[data-magnetic] { transition: translate .45s cubic-bezier(.2,.8,.2,1); }
+
+@media print { .gos-dot, .gos-ring, .gos-spot { display: none !important; } }

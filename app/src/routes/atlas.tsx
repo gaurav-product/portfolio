@@ -49,7 +49,7 @@ export default function Atlas() {
                 return (
                   <circle key={s.day} cx={x} cy={y} r={LEVEL_R[s.evidence_level]} fill={CAT_COLOR[s.category] ?? "#A1ADA7"} fillOpacity={on ? 0.9 : 0.12}
                     stroke={hover?.day === s.day ? "#fff" : "none"} strokeWidth={2} className="cursor-pointer" data-day={s.day}
-                    onMouseEnter={() => setHover(s)} onMouseLeave={() => setHover(null)} onClick={() => nav(`/research/${s.day}`)} />
+                    onMouseEnter={() => setHover(s)} onMouseLeave={() => setHover(null)} onClick={() => nav(`/research/${s.day}`)} data-cursor="open" />
                 );
               })}
             </svg>

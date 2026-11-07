@@ -94,7 +94,7 @@ export function CaseStudyPanel({ d, section, onSection, onGallery, onBack, compa
             <ul className="grid grid-cols-2 gap-3">
               {d.gallery.map((g, i) => (
                 <li key={i}>
-                  <button type="button" onClick={() => onGallery(i)} className="group block w-full overflow-hidden rounded-xl border border-white/10 text-left hover:border-green/50">
+                  <button type="button" onClick={() => onGallery(i)} data-cursor="open" className="group block w-full overflow-hidden rounded-xl border border-white/10 text-left hover:border-green/50">
                     {g.src ? <img src={asset(g.panel ?? g.src)} alt="" loading="lazy" className="aspect-[16/10] w-full object-cover object-top" />
                       : <span className="grid aspect-[16/10] place-items-center bg-[#121C19] px-3 text-center text-xs text-muted">{g.lines?.[0] ?? g.title}</span>}
                     <span className="block px-2.5 py-2 text-xs"><span className="block truncate font-medium text-ink">{g.title}</span><span className="block truncate text-[10.5px] uppercase tracking-[.08em] text-amber">{g.label}</span></span>
@@ -107,7 +107,7 @@ export function CaseStudyPanel({ d, section, onSection, onGallery, onBack, compa
       )}
 
       <footer className="flex flex-wrap gap-2 border-t border-white/10 py-3 pl-5 pr-24 min-[900px]:pr-5">{/* room for Oz on phones */}
-        <button type="button" onClick={onBack} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-green px-4 text-sm font-semibold text-green-ink"><Icon name="back" />Back to Earth</button>
+        <button type="button" onClick={onBack} data-cursor="back" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-green px-4 text-sm font-semibold text-green-ink"><Icon name="back" />Back to Earth</button>
         {d.external
           ? <a href={d.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10">Subscribe on LinkedIn<Icon name="external" size={16} /></a>
           : <Link to={d.href} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10">Read the full page<Icon name="arrow" size={16} /></Link>}

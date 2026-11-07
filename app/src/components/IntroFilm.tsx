@@ -75,7 +75,7 @@ export function IntroFilm({ onClose }: { onClose: (how: "skip" | "end") => void 
       {reduce || failed ? (
         <img src={asset(FILM.poster)} alt="Final frame of the Gaurav.OS introduction film" className="h-full w-full object-contain" />
       ) : (
-        <video ref={video} className="h-full w-full object-cover max-lg:object-contain" poster={asset(FILM.poster)} data-testid="intro-video"
+        <video ref={video} className="h-full w-full object-cover max-lg:object-contain" poster={asset(FILM.poster)} data-testid="intro-video" data-cursor="play"
           playsInline muted preload="auto" onEnded={() => close("end")} onError={() => setFailed(true)}
           onTimeUpdate={(e) => setProgress(e.currentTarget.currentTime / (e.currentTarget.duration || legacy.intro.duration))}>
           {FILM.sources.map((s, i) => (
