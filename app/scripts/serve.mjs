@@ -3,7 +3,7 @@
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import zlib from "node:zlib";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../build/client");
 const BASE = (process.env.BASE_PATH || "/").replace(/\/$/, "");
@@ -43,4 +43,5 @@ export function start(port = PORT) {
   });
   return new Promise((r) => server.listen(port, "127.0.0.1", () => r(server)));
 }
-if (import.meta.url === `file://${process.argv[1]}`) start().then(() => console.log(`serving build/client on http://127.0.0.1:${PORT}${BASE}/`));
+// run directly (also on Windows, where argv paths look like C:\\...)
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) start().then(() => console.log(`serving build/client on http://127.0.0.1:${PORT}${BASE}/`));
