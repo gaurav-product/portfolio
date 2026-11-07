@@ -215,3 +215,24 @@ The transition tests passed 30/30 across 5 repeats. An early version read its co
 - **Safari's View Transitions on real hardware.** Same API as Chromium; tested only in Chromium.
 - **Real Firefox.** Its behaviour was simulated by removing the API.
 - **How the tilt and spring feel with a real mouse.**
+
+### Phase 2 follow-up: CI flake and correction (7 Nov)
+
+**What happened**
+- After the Phase 2 commit, one GitHub Actions push run failed on the circular-reveal test; the pull-request run for the same commit passed.
+- I first attributed this to the fixed 1.2 s flag-cleanup timer. **That was wrong.** The real cause: on a slow runner the test clicked before the app had hydrated, so the link did a plain full-page load with no transition, which is the intended fallback. Details and the local reproduction are in `audit/VERIFICATION-PRE-PHASE-3.md` §1.
+
+**Fixes**
+
+| Commit | Kind | Change |
+|---|---|---|
+| `61eb856` | Test-only, the actual fix | Interaction tests wait until the app has started; the tilt light waits for its fade-in |
+| `f38d093` | Runtime hardening | The reveal flag clears when the browser's transition finishes or is skipped, with a 5 s safety net. On slow devices the circular reveal now still plays. |
+
+New lifecycle tests cover:
+- rapid navigation;
+- a skipped transition;
+- the 5 s safety net;
+- a browser without View Transitions.
+
+The review of the hardening, including whether wrapping `document.startViewTransition` is necessary (it isn't strictly; a supported React Router hook could replace it), is in `audit/VERIFICATION-PRE-PHASE-3.md` §6.

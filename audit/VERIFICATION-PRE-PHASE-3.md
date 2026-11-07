@@ -11,16 +11,30 @@ Status: 7 Nov 2026. Branch `claude/beautiful-goldberg-radrlu` at `4bf200f`. Repo
 
 **The failing test:** "Phase 2 — page transitions › entering the Universe uses the circular reveal". It expected the page marker `data-vt="reveal"` but read `undefined` for the full 5 seconds.
 
-**Root cause (reproduced and isolated)**
-- `Transitions.tsx` marks the reveal with `html[data-vt="reveal"]` and removes the mark **on a fixed 1.2 s timer**. The test checks the live attribute.
-- On a slow CI runner, Playwright's click returned more than 1.2 s after the click, by which time the mark was already removed. Same commit, the other run passed, so this is timing-dependent.
-- Under 6× CPU throttling locally, the reveal is applied every time (8/8), including clicks before the page finished starting up. Navigation is never a full reload.
-- **Product side effect of the same timer:** on a slow device, if the Universe chunk takes longer than 1.2 s to render, the mark is gone before the animation starts, and the visitor sees the default fade instead of the circular reveal. Nothing breaks.
+> **Correction (7 Nov, later the same day).** The root cause first written here, "a fixed 1.2 s cleanup timer", was **wrong**. The text below is the corrected account.
 
-**Proposed fix** (small; not applied yet)
-1. `Transitions.tsx`: remove the mark when the transition's own animation ends (`animationend` on the view-transition pseudo-element), with a 5 s safety timeout, instead of a fixed 1.2 s.
-2. Test: record that the reveal mark was applied (a flag set when it appears) rather than polling the live attribute.
-3. Verify with 20 repeats under 6× CPU throttling, then let CI run.
+**Actual root cause: the test interacted before the app had started**
+- On a slow CI runner, the test clicked "Explore my work" before the app had hydrated.
+- Before hydration, links are plain HTML links. The click is a normal full-page load to `/universe`: no transition and no reveal flag. This is the intended progressive-enhancement fallback, not a product bug.
+- The URL check passed, and the flag check failed because the new document never had the flag.
+- The next CI push run (for `f38d093`) recorded every flag value, so it couldn't have checked too late, and it still recorded none. A tilt test failed in the same run for the same reason: the cursor engine hadn't started yet.
+- **Reproduced locally** by delaying every JS module by 1.5 s:
+  - click before hydration: no flag, new document;
+  - click after hydration: `["reveal"]`, same document.
+- **What misled the first diagnosis.** 6× CPU throttling alone doesn't delay script loading enough to reproduce it, and an early diagnostic script of mine had a bug.
+
+**Fixes**
+
+| Commit | Kind | Change |
+|---|---|---|
+| `61eb856` | Test-only, **the actual CI fix** | Desktop interaction tests wait until the app has started (`ready()`); reduced-motion and no-View-Transitions tests wait for `networkidle`; the tilt-light check waits for its fade-in. |
+| `f38d093` | Runtime, **transition-lifecycle hardening** | The reveal flag is cleared when the browser's transition finishes (or is skipped), with a 5 s safety net, instead of after a fixed 1.2 s. |
+
+`f38d093` was approved, but it did not fix the CI failure. Its own value is that on a slow device, where the Universe takes more than 1.2 s to render, the circular reveal still plays instead of falling back to a plain fade. It is reviewed in §6.
+
+**CI after the fixes**
+- `61eb856`: push run ✅ and pull-request run ✅.
+- `c228166`: pull-request run ✅ (docs-only, so by the workflow's `paths` filter there is no push run).
 
 ## 2. What the Earth at `/universe` contains today
 
@@ -85,7 +99,7 @@ Recommendation: **A**, unless the intent really is B. With A, the 90-study map i
   - Home on mobile scored 84–86 over four runs (median 85, baseline 86).
   - Layout shift is 0 everywhere.
 
-**Unresolved Phase 2 issues:** one. The flaky reveal test, and the slow-device fallback behind it, described in §1. The fix awaits your approval.
+**Unresolved Phase 2 issues:** none. See the corrected §1 and the hardening review in §6.
 
 **PR #1**
 - open, **draft**, **not merged**;
@@ -102,3 +116,29 @@ Recommendation: **A**, unless the intent really is B. With A, the 90-study map i
 - `72fd7f3` Windows preview fix;
 - `250d5ec` Phase 0;
 - `1f19ab1` Phase 1.
+
+## 6. Review of the `f38d093` runtime change (transition-lifecycle hardening)
+
+**What it does**
+- `Transitions.tsx` wraps `document.startViewTransition` while the app is mounted, and restores it on unmount.
+- When React Router starts the transition that a click asked for, the wrapper attaches to that transition's `finished` promise, which settles when the transition finishes or is skipped. It then removes the `data-vt` flag.
+- A 5 s safety timer covers the case where no transition ever starts.
+- An older transition never clears a newer click's flag (an id check).
+
+**Is the wrapping necessary?** No, not strictly.
+- **The hook alternative.** React Router itself awaits each transition's `finished` promise and skips the previous transition when navigation is interrupted. It exposes that lifecycle through a supported public hook, `useViewTransitionState(path)`, which is true while a transition to that path is running. The flag could be cleared when that hook turns false, with no global patch.
+- **Why the wrapper was chosen.** It ties each click to its exact browser `ViewTransition` object, without tracking target paths.
+- **Its cost.** It patches a global browser method. Any other code that patches the same method stacks with it; our own test instrumentation does exactly that, and it works.
+- **Recommendation.** Replace the wrapper with `useViewTransitionState` in a small, separate commit, if you approve. Behaviour stays the same and the tests below remain the acceptance criteria.
+
+**Tests of the hardening**
+- All are in `tests/e2e/interaction.spec.ts`, running in Chromium (the View Transitions API).
+- Each ran 5× normally, and the lifecycle tests also ran 5× with every JS module delayed 1.5 s.
+
+| Scenario | Test | Result |
+|---|---|---|
+| Rapid navigation (4 clicks back-to-back) | Every started transition settles; the flag is cleared; the page stays interactive | 5/5 · slow 5/5 |
+| Skipped transition | Navigation completes and the flag is cleared | 5/5 · slow 5/5 |
+| A transition that never reports finishing | The flag stays until the **5 s safety net** clears it | 5/5 · slow 5/5 |
+| Cleanup after the reveal | Started → finished → flag cleared | 20/20 at 6× CPU and slow JS (from `61eb856`) |
+| No View Transitions support (Firefox-like) | Nothing wrapped or polyfilled; plain navigation; no flag; no errors | 5/5 |
