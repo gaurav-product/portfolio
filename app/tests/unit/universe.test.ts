@@ -8,6 +8,7 @@ import { answerLocally } from "~/guide/brain/local";
 import { buildKnowledgePack } from "~/guide/knowledge";
 import { staticPaths } from "~/content/routes-manifest";
 import { isImmersive, project3dPath } from "~/lib/immersive";
+import { withQuery } from "~/routes/universe-redirect";
 import shots from "~/data/screenshots.json";
 
 const studies = corpus.studies;
@@ -107,6 +108,15 @@ describe("routes and redirects", () => {
     expect(UNIVERSE_REDIRECTS["the-teardown"]).toBe("/writing/the-teardown");
     expect(UNIVERSE_REDIRECTS["repass"]).toBe("/ventures/repass/world");
     expect(UNIVERSE_REDIRECTS["90-day-case-studies"]).toBe("/universe");
+  });
+  it("redirects carry the query string and hash", () => {
+    expect(withQuery("/worlds/nexus", "?tier=laptop", "#x")).toBe("/worlds/nexus?tier=laptop#x");
+    expect(withQuery("/universe", "?study=4", "")).toBe("/universe?study=4");
+    expect(withQuery("/about#writing-h", "?a=1", "")).toBe("/about?a=1#writing-h");
+    expect(withQuery("/about#writing-h", "", "#other")).toBe("/about#other");
+  });
+  it("no world uses a building archetype that does not exist", () => {
+    for (const d of destinations) expect(["pavilion", "retreat", "campus", "house", "tower", "facility", "station", "workshop", "command", "hall"]).toContain(d.building.archetype);
   });
   it("full-screen mode covers the Earth and the worlds, not the hub or concept pages", () => {
     for (const p of ["/universe", "/universe/repass", "/worlds/nexus", "/writing/the-teardown", "/ventures/repass/world"]) expect(isImmersive(p)).toBe(true);

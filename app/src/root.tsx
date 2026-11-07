@@ -24,6 +24,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="theme-color" content="#0B1110" />
         <meta name="author" content="Gaurav Singh" />
         <Meta />
+        {/* old addresses (prerendered redirect pages): carry the query string and hash to the new address before the meta refresh fires */}
+        <script dangerouslySetInnerHTML={{ __html: KEEP_QUERY }} />
         <Links />
       </head>
       <body>
@@ -34,6 +36,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
+
+const KEEP_QUERY = `(function(){var m=document.querySelector('meta[http-equiv="refresh"]');if(!m||!(location.search||location.hash))return;var u=(m.getAttribute("content")||"").split("url=")[1];if(!u)return;var p=u.split("#");location.replace(p[0]+location.search+(location.hash||(p[1]?"#"+p[1]:"")));})()`;
 
 export default function App() {
   // the 3D Earth and the 3D worlds are full-screen cinematic modes with their own top bar (and an Exit)

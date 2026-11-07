@@ -76,7 +76,6 @@ export function Header() {
               </ul>
             </nav>
             <div className="mt-6 grid gap-2 border-t border-line pt-5">
-              <Link to="/universe" className="flex min-h-12 items-center gap-3 rounded-lg px-3 hover:bg-raise"><Icon name="explore" />90 case studies in 3D</Link>
               <Link to="/recruiter" className="flex min-h-12 items-center gap-3 rounded-lg px-3 hover:bg-raise"><Icon name="recruiter" />Recruiter Mode</Link>
               <Link to="/skills" className="flex min-h-12 items-center gap-3 rounded-lg px-3 hover:bg-raise"><Icon name="product" />Skills library</Link>
               <Link to="/ask" className="flex min-h-12 items-center gap-3 rounded-lg px-3 hover:bg-raise"><Icon name="ask" />Ask Gaurav</Link>

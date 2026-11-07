@@ -216,10 +216,45 @@ The interaction, journey and drawer tests were updated for the new CTAs, routes 
 ## 9. Known limitations
 
 - **Software rendering.** Headless Chromium draws WebGL without a GPU, so the tests check behaviour, not frame rate or visual quality on real devices.
-- **Mobile labels.** On phones the category labels can sit under the top-bar buttons at some angles. They fade on the far side but are not repositioned.
+- ~~Mobile labels under the top bar~~: fixed in the polish pass (§10).
 - **Filtered-out markers** dim to about 13% opacity rather than disappearing, so the shape of the corpus stays visible. On bright parts of the globe they are faint.
 - **Many summaries are boilerplate.** Several study summaries in the corpus are the studies' own boilerplate notice (for example Day 12, Netflix). They are shown as written, not rewritten.
-- **Old URLs drop their query string.** The meta refresh fires before the app starts, so an old `/universe/<slug>?…` URL loses its query. Paths are preserved.
+- ~~Old URLs drop their query string~~: fixed in the polish pass (§10). Only a browser with JavaScript fully disabled still loses the query (the meta refresh can't carry it).
 - **Cold arrival in worlds.** A world opened from the hub plays the standard 1.8 s arrival, not the old descent from the Earth, because worlds are no longer entered from the Earth.
-- **Unused archetype.** The `archive` building (the old corpus world) is no longer used by any route. Its code remains in `World.tsx`; it can be removed in a follow-up.
-- **Duplicate drawer link.** The menu drawer shows "90 case studies in 3D" twice: in the list and in the shortcut block, as the old universe link did before.
+- ~~Unused `archive` archetype~~: removed in the polish pass (§10).
+- ~~Duplicate drawer link~~: fixed in the polish pass (§10).
+
+
+## 10. Polish pass (before Phase 3)
+
+| Item | Change |
+|---|---|
+| Category labels on phones | Each frame, every label's on-screen box is measured, using the camera's current projection including the panel view offset. A label fades out where its top edge would come within 76 px of the top (the full-screen top bar: padding plus 44 px buttons) or where it would leave the screen's sides. The labels' positions on the globe and the 90-marker data and layout are unchanged. |
+| Menu drawer | The duplicate "90 case studies in 3D" shortcut is removed. The single link stays in the menu list, next to "Project Worlds". |
+| Legacy `/universe/<slug>` query strings | The query string and hash now survive the redirect, in two ways. While the app runs, the client navigation carries them. Before the app starts, a tiny inline script in `<head>`, placed after the meta refresh tag, does the same; it runs before the meta refresh, which only fires after load. Example: `/universe/careconnect?tier=laptop#x` → `/worlds/careconnect?tier=laptop#x`. With JavaScript fully disabled the meta refresh still redirects, without the query. |
+| `archive` archetype | Removed from `World.tsx` and from the `Archetype` type. Nothing used it after the corpus world was retired; a unit test now checks that every world uses an existing archetype. The Teardown workshop, the command centre and the ticket hall are untouched. |
+
+Screenshots: `polish-before-*.png` and `polish-after-*.png` in `audit/screens/universe-90/` (mobile Earth, studies 1, 7 and 40, the menu drawer; after-only: studies 12, 70 and 85).
+
+**Verification after the polish pass**
+
+| Check | Result |
+|---|---|
+| `tsc` | clean |
+| Vitest | **97/97** (+2: redirect query/hash, archetypes) |
+| Playwright, full suite | **109 passed, 2 skipped by design, 0 failed** (+2: legacy query kept with and without the app's scripts; one Earth link in the drawer) |
+| Accessibility crawler | **337 routes × 2 viewports, 0 problems** |
+
+Lighthouse, mobile / desktop. Every page is within the 2-point budget, layout shift is 0 or 0.001, and accessibility, best practices and SEO score 100.
+
+| Page | Score |
+|---|---|
+| `/` | 85 / 99 |
+| `/universe` | 90 / 100 |
+| `/worlds` | 90 / 100 |
+| `/worlds/careconnect` | 90 / 100 |
+| `/writing/the-teardown` | 90 / 100 |
+| `/ventures/repass/world` | 90 / 100 |
+| `/projects` | 91 / 100 |
+| `/research` | 92 / 100 |
+| `/about` | 89 / 100 |

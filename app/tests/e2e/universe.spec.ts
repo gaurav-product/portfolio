@@ -227,6 +227,27 @@ test("old /universe/<slug> addresses redirect to their new homes", async ({ page
   }
 });
 
+test("old addresses keep their query string and hash: with the app running and before it starts", async ({ page }) => {
+  await page.goto("/universe/careconnect?tier=laptop&view=2d#gallery");
+  await expect(page).toHaveURL(/\/worlds\/careconnect\?tier=laptop&view=2d#gallery$/, { timeout: 10_000 });
+  await page.goto("/universe/90-day-case-studies?study=40&cat=SaaS");
+  await expect(page).toHaveURL(/\/universe\?study=40&cat=SaaS$/, { timeout: 10_000 });
+  await expect(page.getByTestId("study-panel")).toContainText("Day 40");
+  // the app's scripts never load: the inline head script still carries the query across
+  await page.route(/\/assets\/.*\.js$/, (r) => r.abort());
+  await page.goto("/universe/repass?view=2d");
+  await expect(page).toHaveURL(/\/ventures\/repass\/world\?view=2d$/, { timeout: 10_000 });
+});
+
+test("the menu drawer links the 3D Earth exactly once", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/about");
+  await page.getByRole("button", { name: "Open menu" }).click();
+  const drawer = page.getByRole("dialog", { name: "Site menu" });
+  await expect(drawer.getByRole("link", { name: "90 case studies in 3D" })).toHaveCount(1);
+  await expect(drawer.getByRole("link", { name: "Project Worlds" })).toHaveCount(1);
+});
+
 test("Oz opens a concept page and offers its 3D world, and finds the Earth", async ({ page }) => {
   await seen(page);
   await page.goto("/ventures");

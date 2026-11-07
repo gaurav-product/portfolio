@@ -9,7 +9,14 @@ import type { Route } from "./+types/universe-redirect";
  * Static hosting has no server redirects, so each old address is a prerendered
  * page that moves on at once: client navigation when the app runs, a meta
  * refresh without JavaScript, and a canonical link to the new address.
+ * The query string and hash are carried over (e.g. ?tier=laptop, ?view=2d):
+ * by the client navigation, and before the app starts by the inline script
+ * in root.tsx, which runs before the meta refresh (that only fires after load).
  */
+export const withQuery = (to: string, search: string, hash: string) => {
+  const [path, toHash] = to.split("#");
+  return path + search + (hash || (toHash ? `#${toHash}` : ""));
+};
 export const meta = ({ params }: Route.MetaArgs) => {
   const to = UNIVERSE_REDIRECTS[params.slug];
   if (!to) return [{ title: "Moved · Gaurav.OS" }, { name: "robots", content: "noindex" }];
@@ -23,10 +30,10 @@ export const meta = ({ params }: Route.MetaArgs) => {
 
 export default function UniverseRedirect() {
   const { slug = "" } = useParams();
-  const { search } = useLocation();
+  const { search, hash } = useLocation();
   const navigate = useNavigate();
   const to = UNIVERSE_REDIRECTS[slug];
-  useEffect(() => { if (to) navigate(to + (to.includes("#") ? "" : search), { replace: true }); }, [to, search, navigate]);
+  useEffect(() => { if (to) navigate(withQuery(to, search, hash), { replace: true }); }, [to, search, hash, navigate]);
   return (
     <div className="grid min-h-[60svh] place-items-center p-6 text-center" data-testid="moved">
       <div>

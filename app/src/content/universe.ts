@@ -15,7 +15,7 @@ import shots from "../data/screenshots.json";
 import type { CaseSectionKey } from "./types";
 
 export type Cluster = "Healthcare" | "AI" | "Fintech" | "Research & writing" | "Emerging Ventures";
-export type Archetype = "pavilion" | "retreat" | "campus" | "house" | "tower" | "facility" | "station" | "archive" | "workshop" | "command" | "hall";
+export type Archetype = "pavilion" | "retreat" | "campus" | "house" | "tower" | "facility" | "station" | "workshop" | "command" | "hall";
 
 export interface GalleryItem {
   kind: "screenshot" | "brand" | "render" | "concept" | "missing";

@@ -128,7 +128,7 @@ function Building({ spec, seed }: { spec: BuildingSpec; seed: number }) {
   const B: Record<BuildingSpec["archetype"], () => ReactNode> = {
     tower: () => <Tower m={m} floors={spec.floors} spec={spec} />, campus: () => <Campus m={m} />, pavilion: () => <Pavilion m={m} />,
     retreat: () => <Retreat m={m} />, house: () => <House m={m} />, facility: () => <Facility m={m} />, station: () => <Station m={m} />,
-    archive: () => <Archive m={m} />, workshop: () => <Workshop m={m} />, command: () => <Command m={m} />, hall: () => <Hall m={m} />,
+    workshop: () => <Workshop m={m} />, command: () => <Command m={m} />, hall: () => <Hall m={m} />,
   };
   return <group>{B[spec.archetype]()}</group>;
 }
@@ -235,25 +235,6 @@ function Station({ m }: { m: Mats }) {
         <mesh rotation={[-0.9, 0, 0]} position={[0, 0.2, 0.25]} material={m.accent}><coneGeometry args={[0.07, 1.1, 8]} /></mesh>
       </group>
       {[-2.4, -0.6].map((x) => <Box key={x} s={[1.4, 1.1, 0.08]} p={[x, 2.4, 0.9]} mat={m.light} />)}
-    </group>
-  );
-}
-function Archive({ m }: { m: Mats }) {
-  /* 90 lit volumes on a spiral shelf — one per published study */
-  const vols = useMemo(() => {
-    const g = new THREE.InstancedMesh(new THREE.BoxGeometry(0.22, 0.34, 0.12), m.light, 90), o = new THREE.Object3D();
-    for (let i = 0; i < 90; i++) { const a = i * 0.42, y = 0.6 + i * 0.075; o.position.set(Math.cos(a) * 1.25, y, Math.sin(a) * 1.25); o.lookAt(0, y, 0); o.updateMatrix(); g.setMatrixAt(i, o.matrix); }
-    return g;
-  }, [m]);
-  useEffect(() => () => vols.geometry.dispose(), [vols]);
-  return (
-    <group>
-      <Box s={[4.6, 0.4, 4.6]} p={[0, 0.2, 0]} mat={m.body} />
-      <mesh position={[0, 4, 0]} material={m.glass}><cylinderGeometry args={[1.9, 1.9, 7.4, 48, 1, true]} /></mesh>
-      <mesh position={[0, 4, 0]} material={m.metal}><cylinderGeometry args={[0.18, 0.18, 7.4, 12]} /></mesh>
-      <primitive object={vols} />
-      <mesh position={[0, 7.85, 0]} material={m.body}><cylinderGeometry args={[2.1, 2.1, 0.3, 48]} /></mesh>
-      <mesh position={[0, 8.05, 0]} material={m.accent}><torusGeometry args={[1.4, 0.04, 8, 64]} /></mesh>
     </group>
   );
 }

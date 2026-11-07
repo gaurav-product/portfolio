@@ -88,6 +88,7 @@ void main() { gl_FragColor = vec4(vColor * 1.35, vAlpha); if (vAlpha < 0.01) dis
   #include <colorspace_fragment>
 }`;
 const PIN_ALT = R * 1.03; // just above the cloud shell
+const TOP_BAR = 76; // px kept clear of category labels: the full-screen top bar (12–16px padding + 44px buttons) and a margin
 
 export function EarthView({ tier, reduced, pins, regions, dim, selected, events, api, hovered, intro, preview }: {
   tier: Tier; reduced: boolean; pins: StudyPin[]; regions: Region[]; dim: Set<number> | null; selected: number | null;
@@ -271,7 +272,7 @@ export function EarthView({ tier, reduced, pins, regions, dim, selected, events,
   useEffect(() => { if (selected === null && pausedUntil.current === Infinity) pausedUntil.current = performance.now() + 4000; }, [selected]);
 
   /* per frame: slow spin, clouds, rings, label fade and the preview card */
-  const v = useMemo(() => ({ p: new THREE.Vector3(), n: new THREE.Vector3(), c: new THREE.Vector3(), q: new THREE.Quaternion(), up: new THREE.Vector3(0, 0, 1) }), []);
+  const v = useMemo(() => ({ p: new THREE.Vector3(), n: new THREE.Vector3(), c: new THREE.Vector3(), q: new THREE.Quaternion(), up: new THREE.Vector3(0, 0, 1), right: new THREE.Vector3(), upv: new THREE.Vector3(), q2: new THREE.Vector3() }), []);
   useFrame((state, dt) => {
     const now = performance.now();
     if (!reduced && now > pausedUntil.current && !hoveredRef.current) spin.current.rotation.y += dt * 0.045;
@@ -289,9 +290,24 @@ export function EarthView({ tier, reduced, pins, regions, dim, selected, events,
     const hd = hoveredRef.current ? Number(hoveredRef.current) : null;
     placeRing(hoverRing.current, hd, hd !== null ? pins.find((p) => p.day === hd)?.color ?? "#fff" : "#fff", reduced ? 0 : 0.15 * Math.sin(time * 5));
     placeRing(selRing.current, selectedRef.current, "#4DFF4D", reduced ? 0.3 : 0.3 + 0.25 * ((time * 0.8) % 1));
+    // labels fade out wherever their on-screen box would reach the top bar (its buttons) or leave the screen
+    const W = gl.domElement.clientWidth, H = gl.domElement.clientHeight;
+    v.right.setFromMatrixColumn(camera.matrixWorld, 0); v.upv.setFromMatrixColumn(camera.matrixWorld, 1);
+    const toPx = (p: THREE.Vector3) => { p.project(camera); return [(p.x * 0.5 + 0.5) * W, (-p.y * 0.5 + 0.5) * H]; };
     for (const l of labels) {
       l.getWorldPosition(v.p); v.n.copy(v.p).normalize(); v.c.copy(camera.position).sub(v.p).normalize();
-      l.material.opacity = THREE.MathUtils.smoothstep(v.n.dot(v.c), 0.1, 0.45) * pinUniforms.uReveal.value * (selectedRef.current !== null ? 0.45 : 0.9);
+      const facing = THREE.MathUtils.smoothstep(v.n.dot(v.c), 0.1, 0.45);
+      let clear = 0;
+      if (facing > 0) {
+        const wx = l.scale.x * 0.5, wy = l.scale.y * 0.5;
+        const [x0] = toPx(v.q2.copy(v.p).addScaledVector(v.right, -wx)), [x1] = toPx(v.q2.copy(v.p).addScaledVector(v.right, wx));
+        const [, yTop] = toPx(v.q2.copy(v.p).addScaledVector(v.upv, wy));
+        const left = Math.min(x0, x1), right = Math.max(x0, x1);
+        // TOP_BAR: the top bar's height in CSS px (buttons 44px + padding) plus a margin
+        clear = THREE.MathUtils.smoothstep(yTop, TOP_BAR, TOP_BAR + 24) * THREE.MathUtils.smoothstep(left, 0, 12) * THREE.MathUtils.smoothstep(W - right, 0, 12);
+      }
+      l.material.opacity = facing * clear * pinUniforms.uReveal.value * (selectedRef.current !== null ? 0.45 : 0.9);
+      l.visible = l.material.opacity > 0.01;
     }
     const el = preview.current;
     if (el) {
