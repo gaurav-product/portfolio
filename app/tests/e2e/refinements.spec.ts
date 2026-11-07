@@ -82,7 +82,7 @@ test("J16 portrait and RoboGuide", async ({ page }) => {
 
 test("J17 mobile menu — every drawer destination works", async ({ page }) => {
   test.skip((page.viewportSize()?.width ?? 1440) >= 1440, "Drawer is used below 1440px");
-  const targets = ["Home", "About", "Experience", "Projects", "Case Studies", "Product Thinking", "Research", "Product Atlas", "AI Lab", "Contact", "Product Universe", "Emerging Ventures", "Product Universe (3D)", "Recruiter Mode", "Skills library", "Ask Gaurav"];
+  const targets = ["Home", "About", "Experience", "Projects", "Case Studies", "Product Thinking", "Research", "Product Atlas", "AI Lab", "Contact", "Project Worlds", "Emerging Ventures", "Recruiter Mode", "Skills library", "Ask Gaurav"];
   for (const name of targets) {
     await page.goto("/about");
     await page.getByRole("button", { name: "Open menu" }).click();

@@ -1,3 +1,4 @@
+import { isImmersive } from "~/lib/immersive";
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, Link, useLocation } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -35,8 +36,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  // the Product Universe is a full-screen cinematic mode with its own top bar (and an Exit)
-  const immersive = useLocation().pathname.replace(/^\/+/, "/").startsWith("/universe");
+  // the 3D Earth and the 3D worlds are full-screen cinematic modes with their own top bar (and an Exit)
+  const immersive = isImmersive(useLocation().pathname);
   return (
     <SearchProvider>
       <a href="#main" className="skip-link">Skip to content</a>

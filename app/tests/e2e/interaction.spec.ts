@@ -32,9 +32,9 @@ test.describe("desktop (fine pointer)", () => {
     expect(errs).toEqual([]);
   });
 
-  test("context labels: EXPLORE on the Universe CTA, VIEW on project art, OPEN on studies, PLAY on the film", async ({ page }) => {
+  test("context labels: EXPLORE on the 3D Earth CTA, VIEW on project art, OPEN on studies, PLAY on the film", async ({ page }) => {
     await page.goto("/?nointro"); await ready(page);
-    await hoverCentre(page, page.getByRole("link", { name: "Explore my work" }));
+    await hoverCentre(page, page.getByRole("link", { name: "Explore 90 case studies in 3D" }));
     await expect(ring(page)).toHaveAttribute("data-state", "tag"); // small target: label beside the pointer, button text stays readable
     expect(await labelText(page)).toBe("Explore");
     await hoverCentre(page, page.getByRole("button", { name: /Watch the intro film/ }));
@@ -52,13 +52,12 @@ test.describe("desktop (fine pointer)", () => {
     expect(await labelText(page)).toBe("Open");
   });
 
-  test("DRAG over the 3D Universe, BACK on Back to Earth", async ({ page }) => {
-    await page.addInitScript(() => localStorage.setItem("gos-universe-intro", "1"));
-    await page.goto("/universe/careconnect?tier=laptop"); await ready(page);
+  test("DRAG over a 3D world, BACK on its back button", async ({ page }) => {
+    await page.goto("/worlds/careconnect?tier=laptop"); await ready(page);
     await expect(page.getByTestId("case-panel")).toBeVisible();
     await page.mouse.move(300, 700, { steps: 4 }); await page.waitForTimeout(200);
     expect(await labelText(page)).toBe("Drag");
-    await hoverCentre(page, page.getByTestId("case-panel").getByRole("button", { name: "Back to Earth" }));
+    await hoverCentre(page, page.getByTestId("case-panel").getByRole("button", { name: "Back to all worlds" }));
     expect(await labelText(page)).toBe("Back");
   });
 
@@ -74,7 +73,7 @@ test.describe("desktop (fine pointer)", () => {
     await page.mouse.move(b.x + b.width / 2, b.y - 160, { steps: 4 });
     await expect.poll(() => cta.evaluate((el) => el.style.translate)).toBe("");
     await cta.click();
-    await expect(page).toHaveURL(/\/universe$/);
+    await expect(page).toHaveURL(/\/projects$/);
   });
 
   test("text fields and text selection keep the native cursor", async ({ page }) => {
@@ -104,7 +103,7 @@ test.describe("desktop (fine pointer)", () => {
     expect(focused).toBeTruthy();
     await page.getByRole("link", { name: "Explore my work" }).focus();
     await page.keyboard.press("Enter");
-    await expect(page).toHaveURL(/\/universe$/);
+    await expect(page).toHaveURL(/\/projects$/);
   });
 });
 
@@ -113,7 +112,7 @@ test.describe("touch and reduced motion keep the native cursor", () => {
     test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
     test("no custom cursor on a touch screen", async ({ page }) => {
       await page.goto("/?nointro");
-      await page.getByRole("link", { name: "Explore my work" }).tap();
+      await page.getByRole("link", { name: "Explore 90 case studies in 3D" }).tap();
       await expect(page).toHaveURL(/\/universe$/);
       await expect(page.locator("html")).not.toHaveClass(/gos-cursor/);
       expect(await page.locator(".gos-ring").evaluate((el) => getComputedStyle(el).opacity)).toBe("0");
@@ -217,7 +216,7 @@ test.describe("Phase 2 — page transitions", () => {
     if (process.env.CPU_THROTTLE) { const cdp = await page.context().newCDPSession(page); await cdp.send("Emulation.setCPUThrottlingRate", { rate: Number(process.env.CPU_THROTTLE) }); }
     await page.addInitScript(countTransitions);
     await page.goto("/?nointro"); await ready(page);
-    await page.getByRole("link", { name: "Explore my work" }).click();
+    await page.getByRole("link", { name: "Explore 90 case studies in 3D" }).click();
     await expect(page).toHaveURL(/\/universe$/);
     // 1. the reveal flag was applied (recorded when set, so the check cannot be too late)
     await expect.poll(() => page.evaluate(() => (window as unknown as { __vtFlags: string[] }).__vtFlags)).toContain("reveal");
@@ -260,7 +259,7 @@ test.describe("Phase 2 — page transitions", () => {
     await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Projects" }).click();
     await expect(page).toHaveURL(/\/projects$/);
     expect(await page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBeNull();
-    await page.getByRole("link", { name: "Enter the 3D Product Universe" }).click(); // no reveal either
+    await page.getByRole("link", { name: "Explore 90 case studies in 3D" }).click(); // no reveal either
     await expect(page).toHaveURL(/\/universe$/);
     expect(await page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBeNull();
     expect(errs).toEqual([]);
@@ -292,7 +291,7 @@ test.describe("Phase 2 — page transitions", () => {
       if (orig) d.startViewTransition = (cb: () => unknown) => { const t = orig(cb); t.skipTransition(); return t; };
     });
     await page.goto("/?nointro"); await ready(page);
-    await page.getByRole("link", { name: "Explore my work" }).click();
+    await page.getByRole("link", { name: "Explore 90 case studies in 3D" }).click();
     await expect(page).toHaveURL(/\/universe$/);
     await expect.poll(() => page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBeNull();
   });
@@ -308,7 +307,7 @@ test.describe("Phase 2 — page transitions", () => {
       };
     });
     await page.goto("/?nointro"); await ready(page);
-    await page.getByRole("link", { name: "Explore my work" }).click();
+    await page.getByRole("link", { name: "Explore 90 case studies in 3D" }).click();
     await expect(page).toHaveURL(/\/universe$/);
     expect(await page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBe("reveal"); // still set: no finish signal yet
     await expect.poll(() => page.evaluate(() => document.documentElement.dataset.vt ?? null), { timeout: 7_000, intervals: [250] }).toBeNull();

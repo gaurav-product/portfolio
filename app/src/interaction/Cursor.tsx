@@ -1,3 +1,4 @@
+import { isImmersive } from "~/lib/immersive";
 import { useEffect, useRef } from "react";
 import "./interaction.css";
 
@@ -10,7 +11,7 @@ import "./interaction.css";
  *   data-cursor="view|explore|open|drag|play|back|none|native"   context label
  *   data-magnetic                                                 subtle pull towards the pointer
  *   data-tilt                                                     subtle 3D tilt + light towards the pointer (cards)
- * Links to /universe or /explore get EXPLORE automatically.
+ * Links to /universe, /explore, /worlds or a 3D world get EXPLORE automatically.
  *
  * Safety rules:
  *  - Only on a fine, hovering pointer with motion allowed. Touch, pens, reduced
@@ -101,7 +102,7 @@ export function Cursor() {
       const link = target.closest<HTMLElement>(INTERACTIVE);
       if (link) {
         const href = link.getAttribute("href") ?? "";
-        if (/^\/(universe|explore)(\/|$|\?)/.test(href.replace(/^https?:\/\/[^/]+/, ""))) return labelled(link, "explore");
+        { const path = href.replace(/^https?:\/\/[^/]+/, "").split(/[?#]/)[0]; if (/^\/(universe|explore|worlds)(\/|$)/.test(path) || isImmersive(path)) return labelled(link, "explore"); }
         return setState(kind === "none" ? "idle" : "hover");
       }
       setState("idle");

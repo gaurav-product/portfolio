@@ -54,7 +54,7 @@ export function WorldView({ d, tier, reduced, events, api, hotspots, fromEarth }
     api.current = {
       rotate(dx, dy) { controls.autoRotate = false; const o = camera.position.clone().sub(TARGET), s = new THREE.Spherical().setFromVector3(o); s.theta -= dx; s.phi = THREE.MathUtils.clamp(s.phi - dy, 0.25, Math.PI / 2 - 0.06); camera.position.copy(TARGET).add(new THREE.Vector3().setFromSpherical(s)); controls.update(); invalidate(); },
       zoom(f) { const o = camera.position.clone().sub(TARGET); o.setLength(THREE.MathUtils.clamp(o.length() * f, 7, 30)); camera.position.copy(TARGET).add(o); controls.update(); invalidate(); },
-      face() { /* globe only */ }, fly() { /* globe only */ },
+      face() { /* globe only */ }, focus() { /* globe only */ },
       skipIntro() { tl.k?.progress(1); }, replayIntro() { /* globe only */ },
     };
     return () => { tl.k?.kill(); controls.removeEventListener("start", stopAuto); controls.dispose(); api.current = null; };

@@ -1,8 +1,9 @@
 import { test, expect, type Page } from "@playwright/test";
 
-/** The Product Universe. Headless Chromium renders WebGL in software, so these
- *  tests check behaviour and honesty (routes, panels, labels, fallbacks, sound
- *  rules), not frame rate or visual quality. */
+/** The 3D pages: the Earth of the 90 case studies (/universe), the project
+ *  worlds (/worlds), The Teardown and the two concept worlds. Headless Chromium
+ *  renders WebGL in software, so these tests check behaviour and honesty
+ *  (routes, URL state, panels, labels, fallbacks, sound rules), not frame rate. */
 const errorsOf = (page: Page) => {
   const errs: string[] = [];
   page.on("pageerror", (e) => errs.push(e.message));
@@ -10,6 +11,7 @@ const errorsOf = (page: Page) => {
   return errs;
 };
 const seen = (page: Page) => page.addInitScript(() => localStorage.setItem("gos-universe-intro", "1"));
+const studyList = (page: Page) => page.getByTestId("study-list");
 
 test("first visit: cinematic intro with Skip, then the Earth; no errors, no Oz bubble, no sound", async ({ page }) => {
   await page.addInitScript(() => {
@@ -20,7 +22,6 @@ test("first visit: cinematic intro with Skip, then the Earth; no errors, no Oz b
   const errs = errorsOf(page);
   await page.goto("/universe?tier=laptop");
   await expect(page.getByTestId("intro-titles")).toBeVisible();
-  await expect(page.getByTestId("skip-intro")).toBeVisible();
   await page.getByTestId("skip-intro").click();
   await expect(page.getByTestId("intro-titles")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Replay intro" })).toBeVisible({ timeout: 15_000 });
@@ -40,49 +41,72 @@ test("the intro plays to the end and offers Enter exploration", async ({ page })
   await expect(page.getByRole("button", { name: "Replay intro" })).toBeVisible();
 });
 
-test("destination list → fly into CareConnect → honest case panel, gallery, lightbox → back to Earth", async ({ page }) => {
+test("the Earth lists exactly the 90 studies — no projects, concepts, newsletter or corpus marker", async ({ page }) => {
   await seen(page);
   await page.goto("/universe?tier=laptop");
-  await page.getByTestId("destinations-toggle").click();
-  const list = page.getByTestId("destination-list");
-  await expect(list.getByRole("button")).toHaveCount(11);
-  await list.getByRole("button", { name: /CareConnect/ }).click();
-  await expect(page).toHaveURL(/\/universe\/careconnect$/, { timeout: 15_000 });
-  const panel = page.getByTestId("case-panel");
-  await expect(panel).toBeVisible();
-  await expect(panel).toContainText("MVP · NO USERS");
-  await panel.getByRole("tab", { name: "Case study" }).click();
-  await expect(panel.locator("section h3").first()).toBeVisible();
-  await panel.getByRole("tab", { name: /Gallery/ }).click();
-  await panel.getByRole("tabpanel").getByRole("button").first().click();
-  const lb = page.getByTestId("lightbox");
-  await expect(lb).toBeVisible();
-  await expect(lb).toContainText(/Actual product screenshot · demo data/i);
-  const img = lb.locator("img");
-  await expect(img).toHaveJSProperty("complete", true);
-  expect(await img.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(400);
-  await page.keyboard.press("Escape");
-  await expect(lb).toHaveCount(0);
-  await page.getByTestId("back-to-earth").click();
-  await expect(page).toHaveURL(/\/universe$/);
-  await page.goBack();
-  await expect(page).toHaveURL(/\/universe\/careconnect$/);
+  await page.getByTestId("studies-toggle").click();
+  await expect(studyList(page).getByRole("button")).toHaveCount(90);
+  await expect(page.getByTestId("study-count")).toContainText("90 of 90 studies");
+  for (const name of ["CareConnect", "Interview Radar", "Repass", "The Teardown", "90-Day"]) await expect(studyList(page).getByRole("button", { name: new RegExp(name) })).toHaveCount(0);
 });
 
-test("concepts are labelled as concepts in development, never as built products", async ({ page }) => {
-  for (const [slug, name] of [["interview-radar", "Interview Radar"], ["repass", "Repass"]]) {
-    await page.goto(`/universe/${slug}`);
-    const panel = page.getByTestId("case-panel");
-    await expect(panel).toContainText("Concept in development");
-    await expect(panel).toContainText(/Not built, not launched and not validated/);
-    await expect(panel.getByRole("heading", { level: 1 })).toHaveText(name);
-  }
-  await page.goto("/ventures/repass");
-  await expect(page.getByText("Illustrative example — not transaction data")).toBeVisible();
-  await expect(page.getByText(/Indian Railways/)).toBeVisible();
+test("select a study: panel, URL, Previous/Next, Back/Forward, close; the full study is one click away", async ({ page }) => {
+  await seen(page);
+  await page.goto("/universe?tier=laptop");
+  await page.getByTestId("studies-toggle").click();
+  await studyList(page).getByRole("button", { name: /^Day 12\b/ }).click();
+  await expect(page).toHaveURL(/[?&]study=12\b/);
+  const panel = page.getByTestId("study-panel");
+  await expect(panel).toContainText("Day 12");
+  await expect(panel).toContainText("Netflix");
+  await expect(panel).toContainText("Case study (research) — not a launched product");
+  await expect(panel).toContainText(/SOURCED|DOCUMENTED|VERIFIED|NARRATIVE/);
+  await expect(panel.getByRole("link", { name: "Read the full study" })).toHaveAttribute("href", "/research/12");
+  await panel.getByTestId("next-study").click();
+  await expect(page).toHaveURL(/study=13\b/);
+  await panel.getByTestId("prev-study").click();
+  await panel.getByTestId("prev-study").click();
+  await expect(page).toHaveURL(/study=11\b/);
+  await page.goBack(); await expect(page).toHaveURL(/study=12\b/);
+  await page.goBack(); await expect(page).toHaveURL(/study=13\b/);
+  await page.goForward(); await expect(page).toHaveURL(/study=12\b/);
+  await expect(page.getByTestId("study-panel")).toContainText("Netflix");
+  await page.getByTestId("close-study").click();
+  await expect(page).not.toHaveURL(/study=/);
+  await expect(page.getByTestId("study-panel")).toHaveCount(0);
+  await page.goBack(); await expect(page.getByTestId("study-panel")).toContainText("Netflix");
+  await page.getByTestId("study-panel").getByRole("link", { name: "Read the full study" }).click();
+  await expect(page).toHaveURL(/\/research\/12$/);
+  await expect(page.locator("h1").first()).toBeVisible();
 });
 
-test("2D list view works without WebGL and still reaches every case study", async ({ page }) => {
+test("search and filters live in the URL, narrow the list, and Previous/Next stays inside the filtered set", async ({ page }) => {
+  await seen(page);
+  await page.goto("/universe?tier=laptop");
+  await page.getByTestId("studies-toggle").click();
+  await page.getByRole("button", { name: /^Fintech/ }).click();
+  await expect(page).toHaveURL(/cat=Fintech/);
+  const n = await studyList(page).getByRole("button").count();
+  expect(n).toBeGreaterThan(0); expect(n).toBeLessThan(90);
+  await expect(page.getByTestId("study-count")).toContainText(`${n} of 90 studies`);
+  await page.getByRole("button", { name: /^Verified/ }).click();
+  await expect(page).toHaveURL(/ev=verified/);
+  await page.getByRole("button", { name: "Clear filters" }).first().click();
+  await expect(studyList(page).getByRole("button")).toHaveCount(90);
+  await page.getByTestId("study-search").fill("day 40");
+  await expect(page).toHaveURL(/q=day\+40|q=day%2040/);
+  await expect(studyList(page).getByRole("button")).toHaveCount(1);
+
+  // a shared filtered link: no intro, the same filtered set; stepping wraps within it
+  await page.goto("/universe?tier=laptop&cat=Fintech&study=7");
+  await expect(page.getByTestId("intro-titles")).toHaveCount(0);
+  const panel = page.getByTestId("study-panel");
+  await expect(panel).toContainText(`of ${n} matching`);
+  for (let i = 0; i < n; i++) await panel.getByTestId("next-study").click();
+  await expect(page).toHaveURL(/study=7\b/);
+});
+
+test("2D list view works without WebGL and still reaches every study", async ({ page }) => {
   await page.addInitScript(() => {
     const orig = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...rest: unknown[]) {
@@ -93,9 +117,11 @@ test("2D list view works without WebGL and still reaches every case study", asyn
   await page.goto("/universe");
   await expect(page.getByText(/needs WebGL/)).toBeVisible();
   await expect(page.locator("canvas")).toHaveCount(0);
-  await page.getByTestId("destination-list").getByRole("button", { name: /Nexus/ }).click();
-  await expect(page).toHaveURL(/\/universe\/nexus$/);
-  await expect(page.getByTestId("case-panel")).toContainText("Nexus");
+  await expect(page.getByRole("heading", { level: 1, name: "90 product case studies" })).toBeVisible();
+  await expect(studyList(page).getByRole("button")).toHaveCount(90);
+  await studyList(page).getByRole("button", { name: /^Day 40\b/ }).click();
+  await expect(page).toHaveURL(/study=40\b/);
+  await expect(page.getByTestId("study-panel")).toContainText("Day 40");
 });
 
 test("without a graphics processor the list leads, and 3D can still be started", async ({ page }) => {
@@ -103,7 +129,7 @@ test("without a graphics processor the list leads, and 3D can still be started",
   await page.goto("/universe"); // headless Chromium renders WebGL in software
   await expect(page.getByText(/without a graphics processor/)).toBeVisible();
   await expect(page.locator("canvas")).toHaveCount(0);
-  await page.getByRole("button", { name: "Start the 3D universe anyway" }).click();
+  await page.getByRole("button", { name: "Start the 3D Earth anyway" }).click();
   await expect(page.locator("canvas")).toHaveCount(1);
   await expect(page.getByRole("button", { name: "Replay intro" })).toBeVisible({ timeout: 15_000 });
 });
@@ -122,48 +148,110 @@ test("sound: off by default, on with a click, remembered; settings popover works
   expect(prefs).toMatchObject({ enabled: true, ambient: false });
 });
 
-test("reduced motion: no flight, no skip button; keyboard reaches the list and Escape closes it", async ({ browser }) => {
+test("reduced motion: no flight, no skip button; keyboard reaches the search and Escape closes the list", async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: "reduce", baseURL: "http://127.0.0.1:4173" });
   const page = await ctx.newPage();
   await page.goto("/universe?intro=1&tier=laptop");
   await expect(page.getByTestId("skip-intro")).toHaveCount(0);
-  await page.getByTestId("destinations-toggle").click();
-  await expect(page.getByTestId("destination-list").getByRole("button").first()).toBeFocused();
+  await page.getByTestId("studies-toggle").click();
+  await expect(page.getByTestId("study-search")).toBeFocused();
   await page.keyboard.press("Escape");
-  await expect(page.getByTestId("destination-list")).toHaveCount(0);
+  await expect(page.getByTestId("study-browser")).toHaveCount(0);
   await ctx.close();
 });
 
-test("exit cinematic mode returns to where the visitor came from; home CTA opens the universe", async ({ page }) => {
+test("home: Explore my work opens the project list; the 3D Earth is the secondary CTA; Exit returns", async ({ page }) => {
   await seen(page);
   await page.goto("/?nointro");
-  await page.getByRole("link", { name: "Explore my work" }).click();
+  await expect(page.getByRole("link", { name: "Explore my work" })).toHaveAttribute("href", "/projects");
+  await page.getByRole("link", { name: "Explore 90 case studies in 3D" }).click();
   await expect(page).toHaveURL(/\/universe$/);
   await expect(page.locator("header").first()).toHaveCount(0); // site header hidden in cinematic mode
   await page.getByTestId("exit-universe").click();
   await expect(page).toHaveURL(/\/(\?nointro)?$/);
 });
 
-test("Oz can take a visitor to a concept world and back to Earth", async ({ page }) => {
+test("project worlds: the hub holds exactly 7 projects; a world keeps its building, panel, gallery and lightbox", async ({ page }) => {
+  await page.goto("/worlds");
+  const cards = page.getByTestId("world-cards").getByRole("listitem");
+  await expect(cards).toHaveCount(7);
+  for (const name of ["Interview Radar", "Repass", "The Teardown", "90-Day"]) await expect(page.getByTestId("world-cards").getByText(name)).toHaveCount(0);
+  await page.getByRole("link", { name: "Enter the world: CareConnect" }).click();
+  await expect(page).toHaveURL(/\/worlds\/careconnect$/);
+  const panel = page.getByTestId("case-panel");
+  await expect(panel).toContainText("MVP · NO USERS");
+  await panel.getByRole("tab", { name: "Case study" }).click();
+  await expect(panel.locator("section h3").first()).toBeVisible();
+  await panel.getByRole("tab", { name: /Gallery/ }).click();
+  await panel.getByRole("tabpanel").getByRole("button").first().click();
+  const lb = page.getByTestId("lightbox");
+  await expect(lb).toContainText(/Actual product screenshot · demo data/i);
+  const img = lb.locator("img");
+  await expect(img).toHaveJSProperty("complete", true);
+  expect(await img.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(400);
+  await page.keyboard.press("Escape");
+  await expect(lb).toHaveCount(0);
+  await panel.getByRole("button", { name: "Back to all worlds" }).click();
+  await expect(page).toHaveURL(/\/worlds$/);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/worlds\/careconnect$/);
+});
+
+test("The Teardown and the concepts keep their 3D worlds at their own routes, labelled honestly", async ({ page }) => {
+  await page.goto("/writing/the-teardown");
+  const tp = page.getByTestId("case-panel");
+  await expect(tp).toContainText("The Teardown");
+  await expect(tp.getByRole("link", { name: /Subscribe on LinkedIn/ })).toBeVisible();
+  await expect(page.getByTestId("world-back")).toHaveAttribute("href", "/about#writing-h");
+  for (const [slug, name] of [["interview-radar", "Interview Radar"], ["repass", "Repass"]]) {
+    await page.goto(`/ventures/${slug}/world`);
+    const panel = page.getByTestId("case-panel");
+    await expect(panel).toContainText("Concept in development");
+    await expect(panel).toContainText(/Not built, not launched and not validated/);
+    await expect(panel.getByRole("heading", { level: 1 })).toHaveText(name);
+    await expect(page.getByTestId("world-back")).toHaveAttribute("href", `/ventures/${slug}`);
+  }
+  await page.goto("/ventures/repass");
+  await expect(page.getByText("Illustrative example — not transaction data")).toBeVisible();
+  await page.getByRole("link", { name: "Visit in 3D" }).click();
+  await expect(page).toHaveURL(/\/ventures\/repass\/world$/);
+  await page.goto("/about");
+  await page.getByRole("link", { name: "See it in 3D" }).click();
+  await expect(page).toHaveURL(/\/writing\/the-teardown$/);
+});
+
+test("old /universe/<slug> addresses redirect to their new homes", async ({ page }) => {
+  for (const [from, to] of [["careconnect", /\/worlds\/careconnect$/], ["the-teardown", /\/writing\/the-teardown$/], ["repass", /\/ventures\/repass\/world$/], ["interview-radar", /\/ventures\/interview-radar\/world$/], ["90-day-case-studies", /\/universe$/]] as const) {
+    await page.goto(`/universe/${from}`);
+    await expect(page).toHaveURL(to, { timeout: 10_000 });
+  }
+});
+
+test("Oz opens a concept page and offers its 3D world, and finds the Earth", async ({ page }) => {
   await seen(page);
-  await page.goto("/universe");
+  await page.goto("/ventures");
   await page.getByRole("button", { name: "Open Oz, the Gaurav.OS AI Guide" }).click();
   await page.locator("#oz-input").fill("Take me to Repass");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/universe\/repass$/, { timeout: 10_000 });
-  await page.locator("#oz-input").fill("Take me back to Earth");
+  await expect(page).toHaveURL(/\/ventures\/repass$/, { timeout: 10_000 });
+  await expect(page.getByRole("link", { name: "Visit Repass in 3D" }).last()).toHaveAttribute("href", "/ventures/repass/world");
+  await page.locator("#oz-input").fill("Take me to the Earth");
   await page.keyboard.press("Enter");
   await expect(page).toHaveURL(/\/universe$/, { timeout: 10_000 });
 });
 
 test.describe("mobile", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
-  test("world panel is a bottom sheet, nothing overflows", async ({ page }) => {
-    await page.goto("/universe/ghargyaan");
+  test("world panel and study panel are bottom sheets, nothing overflows", async ({ page }) => {
+    await page.goto("/worlds/ghargyaan");
     const panel = page.getByTestId("case-panel");
     await expect(panel).toBeVisible();
-    const box = (await panel.boundingBox())!;
-    expect(box.width).toBeLessThanOrEqual(390);
+    expect((await panel.boundingBox())!.width).toBeLessThanOrEqual(390);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
+    await page.goto("/universe?study=40");
+    const sp = page.getByTestId("study-panel");
+    await expect(sp).toBeVisible();
+    expect((await sp.boundingBox())!.width).toBeLessThanOrEqual(390);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
   });
 });

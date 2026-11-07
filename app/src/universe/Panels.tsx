@@ -14,8 +14,8 @@ import { audio } from "./audio";
 type Tab = "summary" | "case" | "gallery";
 
 /** The case-study interface beside a building: recruiter summary first, then the full case study and the gallery. */
-export function CaseStudyPanel({ d, section, onSection, onGallery, onBack, compact }: {
-  d: Destination; section: string | null; onSection: (k: string | null) => void; onGallery: (i: number) => void; onBack: () => void; compact: boolean;
+export function CaseStudyPanel({ d, section, onSection, onGallery, onBack, backLabel, compact }: {
+  d: Destination; section: string | null; onSection: (k: string | null) => void; onGallery: (i: number) => void; onBack: () => void; backLabel: string; compact: boolean;
 }) {
   const p = projectBySlug(d.slug), v = ventureBySlug(d.slug);
   const sections = p ? d.sectionOrder.map((k) => p.sections.find((s) => s.key === k)).filter((s): s is NonNullable<typeof s> => !!s) : [];
@@ -107,7 +107,7 @@ export function CaseStudyPanel({ d, section, onSection, onGallery, onBack, compa
       )}
 
       <footer className="flex flex-wrap gap-2 border-t border-white/10 py-3 pl-5 pr-24 min-[900px]:pr-5">{/* room for Oz on phones */}
-        <button type="button" onClick={onBack} data-cursor="back" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-green px-4 text-sm font-semibold text-green-ink"><Icon name="back" />Back to Earth</button>
+        <button type="button" onClick={onBack} data-cursor="back" className="inline-flex min-h-10 items-center gap-2 rounded-full bg-green px-4 text-sm font-semibold text-green-ink"><Icon name="back" />Back to {backLabel}</button>
         {d.external
           ? <a href={d.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10">Subscribe on LinkedIn<Icon name="external" size={16} /></a>
           : <Link to={d.href} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10">Read the full page<Icon name="arrow" size={16} /></Link>}

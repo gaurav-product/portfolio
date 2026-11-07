@@ -9,15 +9,18 @@ import { EarthView } from "./Earth";
 import { WorldView } from "./World";
 import { dotTexture } from "./textures";
 import type { Destination } from "~/content/universe";
+import type { StudyPin, Region } from "~/content/studyMap";
 import type { SceneApi, SceneEvents, Tier } from "./bus";
 
+/** The Earth of the 90 case studies. */
+export interface EarthProps { pins: StudyPin[]; regions: Region[]; dim: Set<number> | null; selected: number | null; hovered: string | null; intro: boolean; preview: MutableRefObject<HTMLElement | null> }
 export interface SceneProps {
-  list: Destination[]; world: Destination | null; tier: Tier; reduced: boolean; paused: boolean;
-  events: MutableRefObject<SceneEvents>; api: MutableRefObject<SceneApi | null>; preview: MutableRefObject<HTMLElement | null>;
-  hovered: string | null; intro: boolean; returnFrom: string | null; fromEarth: boolean; hotspots: { key: string; title: string }[];
+  earth?: EarthProps; world?: Destination | null; tier: Tier; reduced: boolean; paused: boolean;
+  events: MutableRefObject<SceneEvents>; api: MutableRefObject<SceneApi | null>;
+  fromEarth?: boolean; hotspots?: { key: string; title: string }[];
 }
 
-/** The Universe canvas: Earth or one project's world, never both (GPU memory stays small). */
+/** The 3D canvas: the study Earth or one world, never both (GPU memory stays small). */
 export default function UniverseScene(p: SceneProps) {
   const dpr: [number, number] = p.tier === "high" ? [1, 1.75] : p.tier === "laptop" ? [1, 1.25] : [1, 1.5];
   return (
@@ -29,8 +32,8 @@ export default function UniverseScene(p: SceneProps) {
       <Stars count={p.tier === "high" ? 4200 : p.tier === "laptop" ? 2400 : 1200} />
       <Suspense fallback={null}>
         {p.world
-          ? <WorldView key={p.world.slug} d={p.world} tier={p.tier} reduced={p.reduced} events={p.events} api={p.api} hotspots={p.hotspots} fromEarth={p.fromEarth} />
-          : <EarthView tier={p.tier} reduced={p.reduced} list={p.list} events={p.events} api={p.api} hovered={p.hovered} intro={p.intro} returnFrom={p.returnFrom} preview={p.preview} />}
+          ? <WorldView key={p.world.slug} d={p.world} tier={p.tier} reduced={p.reduced} events={p.events} api={p.api} hotspots={p.hotspots ?? []} fromEarth={!!p.fromEarth} />
+          : p.earth ? <EarthView tier={p.tier} reduced={p.reduced} events={p.events} api={p.api} {...p.earth} /> : null}
       </Suspense>
       {p.tier === "high" && <Bloom strength={p.world ? 0.55 : 0.75} />}
     </Canvas>

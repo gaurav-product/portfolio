@@ -53,11 +53,12 @@ export default function Home() {
             <p className="mt-6 font-display text-[22px] font-medium leading-snug text-ink sm:text-[26px]">{profile.tagline}</p>
             <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-muted">{profile.intro}</p>
             <div className="mt-10 flex flex-wrap items-center gap-3">
-              <ButtonLink to="/universe" variant="primary" icon="explore" onClick={() => track("cta_click", { cta: "explore_work" })}>Explore my work</ButtonLink>
+              <ButtonLink to="/projects" variant="primary" icon="arrow" onClick={() => track("cta_click", { cta: "explore_work" })}>Explore my work</ButtonLink>
+              <ButtonLink to="/universe" icon="explore" onClick={() => track("cta_click", { cta: "universe_90" })}>Explore 90 case studies in 3D</ButtonLink>
               <ButtonLink to={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" icon="download" onClick={() => track("cv_downloaded")}>Download CV</ButtonLink>
             </div>
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-[14px] text-muted">
-              <Link to="/projects" className="group inline-flex items-center gap-2 hover:text-ink"><Icon name="product" size={16} className="text-green" />Project list<Icon name="arrow" size={14} className="transition-transform group-hover:translate-x-0.5" /></Link>
+              <Link to="/worlds" className="group inline-flex items-center gap-2 hover:text-ink"><Icon name="product" size={16} className="text-green" />Project worlds in 3D<Icon name="arrow" size={14} className="transition-transform group-hover:translate-x-0.5" /></Link>
               <Link to="/explore/city" onClick={() => track("explore_mode_opened", { from: "hero" })} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="hq" size={16} />3D city</Link>
               <Link to="/recruiter" onClick={() => track("recruiter_mode_opened")} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="recruiter" size={16} />Recruiter Mode</Link>
               <button type="button" onClick={intro.play} data-cursor="play" className="inline-flex items-center gap-2 hover:text-ink"><Icon name="play" size={16} />Watch the intro film (1:05)</button>

@@ -21,7 +21,7 @@ export default function Ventures() {
               <p className="mt-3 text-muted">{v.solution}</p>
               <div className="mt-auto flex flex-wrap gap-3 pt-6">
                 <ButtonLink to={`/ventures/${v.slug}`} variant="primary" icon="arrow" aria-label={`Read the concept: ${v.name}`}>Read the concept</ButtonLink>
-                <ButtonLink to={`/universe/${v.slug}`} icon="explore" aria-label={`Visit in 3D: ${v.name}`}>Visit in 3D</ButtonLink>
+                <ButtonLink to={`/ventures/${v.slug}/world`} icon="explore" aria-label={`Visit in 3D: ${v.name}`}>Visit in 3D</ButtonLink>
               </div>
             </li>
           ))}

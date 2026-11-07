@@ -1,3 +1,4 @@
+import { isImmersive } from "~/lib/immersive";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 import "./transitions.css";
@@ -16,7 +17,7 @@ import "./transitions.css";
  *  - Back/Forward (popstate) and direct URLs are never intercepted.
  * A new click while a transition runs simply starts a new navigation; the
  * browser skips the unfinished transition, so nothing can get stuck.
- * Entering the Product Universe uses a circular reveal from the click point.
+ * Entering a full-screen 3D page (the study Earth or a 3D world) uses a circular reveal from the click point.
  * The `data-vt` flag that selects the animation is removed when the browser's
  * own transition finishes (ViewTransition.finished), with a 5 s safety
  * fallback — never on a fixed timer, which a slow device could outlast.
@@ -58,7 +59,7 @@ export function Transitions() {
       const here = location.pathname.replace(BASE, "") || "/";
       if (path === here && url.search === location.search) return; // same page (incl. #hash): let the browser scroll
       e.preventDefault(); // the Link's own handler sees this and stands down; its onClick (analytics) has still run
-      const reveal = path.startsWith("/universe") && !here.startsWith("/universe");
+      const reveal = isImmersive(path) && !isImmersive(here);
       html.dataset.vt = reveal ? "reveal" : "page";
       html.style.setProperty("--vt-x", `${e.clientX}px`);
       html.style.setProperty("--vt-y", `${e.clientY}px`);

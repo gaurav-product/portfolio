@@ -1,9 +1,12 @@
 /**
- * The Product Universe: every destination on the Earth, derived from the
- * existing content modules (projects.ts, newsletter.ts, ventures.ts) so names,
- * statuses and descriptions have one source of truth. Marker coordinates are
- * a visual layout for navigation — NOT where anything was built.
+ * The 3D worlds: one per actual project (the /worlds hub), plus The Teardown
+ * (/writing/the-teardown) and the two concepts in development
+ * (/ventures/<slug>/world). Derived from the existing content modules
+ * (projects.ts, newsletter.ts, ventures.ts) so names, statuses and descriptions
+ * have one source of truth. The Earth at /universe shows the 90 case studies
+ * (see studyMap.ts) — none of these worlds sit on it.
  */
+import { CORPUS_SLUG } from "../lib/immersive";
 import { projects } from "./projects";
 import { newsletter } from "./newsletter";
 import { ventures, VENTURES_NOTE } from "./ventures";
@@ -50,7 +53,9 @@ export interface Destination {
   href: string;        // the readable page (recruiter-friendly)
   external?: boolean;
   concept: boolean;
-  lat: number; lon: number;
+  /** where the 3D world lives, and where its back button leads */
+  worldPath: string;
+  back: { to: string; label: string };
   building: BuildingSpec;
   gallery: GalleryItem[];
   /** case-study section keys to show, in the brief's order, if the project has them */
@@ -73,19 +78,18 @@ const STATUS_LABEL: Record<string, string> = {
   "PUBLISHED": "Research · published",
 };
 
-/** Visual layout only: clusters sit on different sides of the globe so a slow spin reveals them in turn. */
-const PLACE: Record<string, { cluster: Cluster; lat: number; lon: number; building: BuildingSpec }> = {
-  "evamastu": { cluster: "Healthcare", lat: 24, lon: 72, building: { archetype: "pavilion", floors: 3, palette: { body: "#2B2A24", glass: "#9FE8C4", light: "#F2C14E", accent: "#6BE39A" }, idea: "A calm mindfulness pavilion: timber-toned fins around a still water court, lit like early morning." } },
-  "aaroh": { cluster: "Healthcare", lat: 6, lon: 94, building: { archetype: "retreat", floors: 2, palette: { body: "#20302A", glass: "#B9F3D6", light: "#FFB36B", accent: "#6BE39A" }, idea: "A low healing retreat: curved terraces with green roofs and a warm interior glow." } },
-  "careconnect": { cluster: "Healthcare", lat: 38, lon: 104, building: { archetype: "campus", floors: 5, palette: { body: "#1B2A27", glass: "#7FE0D8", light: "#35D6D0", accent: "#4DFF4D" }, idea: "A glass care campus: two linked wings — family and attendant — joined by a handover bridge." } },
-  "ghargyaan": { cluster: "Healthcare", lat: 16, lon: 120, building: { archetype: "house", floors: 3, palette: { body: "#2C2620", glass: "#FFD9A0", light: "#FFB36B", accent: "#6BE39A" }, idea: "A home-scale knowledge house: stacked library volumes with lantern windows." } },
-  "nexus": { cluster: "AI", lat: 30, lon: -18, building: { archetype: "facility", floors: 4, palette: { body: "#141C22", glass: "#8FD8FF", light: "#35D6D0", accent: "#A98BFF" }, idea: "A research facility: a lit core inside orbiting decision rings, with data-wall screens." } },
-  "phonepe-smart-spend-coach": { cluster: "Fintech", lat: 46, lon: -96, building: { archetype: "tower", floors: 9, palette: { body: "#1A1B26", glass: "#B7A6FF", light: "#A98BFF", accent: "#35D6D0" }, idea: "A faceted fintech tower in metal and glass. Its chart façade is decorative — no data." } },
-  "rupee-radar": { cluster: "Fintech", lat: 22, lon: -74, building: { archetype: "station", floors: 2, palette: { body: "#18211E", glass: "#9CF0C8", light: "#4DFF4D", accent: "#35D6D0" }, idea: "A low radar station: a dish array beside statement-ledger screens." } },
-  "90-day-case-studies": { cluster: "Research & writing", lat: -14, lon: 18, building: { archetype: "archive", floors: 6, palette: { body: "#1C1F1D", glass: "#D7F5E6", light: "#6BE39A", accent: "#F2C14E" }, idea: "An archive tower holding 90 lit volumes — one for each published study." } },
-  "the-teardown": { cluster: "Research & writing", lat: -32, lon: 40, building: { archetype: "workshop", floors: 2, palette: { body: "#221E1A", glass: "#FFD9A0", light: "#F2C14E", accent: "#6BE39A" }, idea: "A teardown workshop: product panels pulled apart and laid out for inspection." } },
-  "interview-radar": { cluster: "Emerging Ventures", lat: -18, lon: 156, building: { archetype: "command", floors: 4, palette: { body: "#161D24", glass: "#8FE7FF", light: "#35D6D0", accent: "#4DFF4D" }, idea: "Concept: a glass recruitment command centre with live opportunity boards and interview pods." } },
-  "repass": { cluster: "Emerging Ventures", lat: -40, lon: -150, building: { archetype: "hall", floors: 3, palette: { body: "#1E1826", glass: "#E2B8FF", light: "#FF7AC8", accent: "#35D6D0" }, idea: "Concept: a digital ticket hall with floating ticket displays and a verification desk." } },
+/** Each world's building (procedural, original) and its group in the hub. */
+const PLACE: Record<string, { cluster: Cluster; building: BuildingSpec }> = {
+  "evamastu": { cluster: "Healthcare", building: { archetype: "pavilion", floors: 3, palette: { body: "#2B2A24", glass: "#9FE8C4", light: "#F2C14E", accent: "#6BE39A" }, idea: "A calm mindfulness pavilion: timber-toned fins around a still water court, lit like early morning." } },
+  "aaroh": { cluster: "Healthcare", building: { archetype: "retreat", floors: 2, palette: { body: "#20302A", glass: "#B9F3D6", light: "#FFB36B", accent: "#6BE39A" }, idea: "A low healing retreat: curved terraces with green roofs and a warm interior glow." } },
+  "careconnect": { cluster: "Healthcare", building: { archetype: "campus", floors: 5, palette: { body: "#1B2A27", glass: "#7FE0D8", light: "#35D6D0", accent: "#4DFF4D" }, idea: "A glass care campus: two linked wings — family and attendant — joined by a handover bridge." } },
+  "ghargyaan": { cluster: "Healthcare", building: { archetype: "house", floors: 3, palette: { body: "#2C2620", glass: "#FFD9A0", light: "#FFB36B", accent: "#6BE39A" }, idea: "A home-scale knowledge house: stacked library volumes with lantern windows." } },
+  "nexus": { cluster: "AI", building: { archetype: "facility", floors: 4, palette: { body: "#141C22", glass: "#8FD8FF", light: "#35D6D0", accent: "#A98BFF" }, idea: "A research facility: a lit core inside orbiting decision rings, with data-wall screens." } },
+  "phonepe-smart-spend-coach": { cluster: "Fintech", building: { archetype: "tower", floors: 9, palette: { body: "#1A1B26", glass: "#B7A6FF", light: "#A98BFF", accent: "#35D6D0" }, idea: "A faceted fintech tower in metal and glass. Its chart façade is decorative — no data." } },
+  "rupee-radar": { cluster: "Fintech", building: { archetype: "station", floors: 2, palette: { body: "#18211E", glass: "#9CF0C8", light: "#4DFF4D", accent: "#35D6D0" }, idea: "A low radar station: a dish array beside statement-ledger screens." } },
+  "the-teardown": { cluster: "Research & writing", building: { archetype: "workshop", floors: 2, palette: { body: "#221E1A", glass: "#FFD9A0", light: "#F2C14E", accent: "#6BE39A" }, idea: "A teardown workshop: product panels pulled apart and laid out for inspection." } },
+  "interview-radar": { cluster: "Emerging Ventures", building: { archetype: "command", floors: 4, palette: { body: "#161D24", glass: "#8FE7FF", light: "#35D6D0", accent: "#4DFF4D" }, idea: "Concept: a glass recruitment command centre with live opportunity boards and interview pods." } },
+  "repass": { cluster: "Emerging Ventures", building: { archetype: "hall", floors: 3, palette: { body: "#1E1826", glass: "#E2B8FF", light: "#FF7AC8", accent: "#35D6D0" }, idea: "Concept: a digital ticket hall with floating ticket displays and a verification desk." } },
 };
 
 type Shot = { id: string; project: string; src: string; panel: string; width: number; height: number; caption: string; data_note: string; source: string };
@@ -93,7 +97,9 @@ const art = (slug: string) => (hasCinematic(`brand-${slug}`) ? `brand-${slug}` :
 const cine = (id: string) => `/cinematic/${id}-1200.webp`;
 
 /** Text products (the research corpus, the newsletter) have no product screens to miss. */
-const NO_SCREENS_EXPECTED = new Set(["90-day-case-studies", "the-teardown"]);
+const NO_SCREENS_EXPECTED = new Set(["the-teardown"]);
+/** The research corpus is not a world: its 90 studies are the markers on the Earth. */
+const CORPUS = CORPUS_SLUG;
 const dims = (id: string) => ({ width: cinematic(id).width, height: cinematic(id).height });
 
 function galleryFor(slug: string, name: string): GalleryItem[] {
@@ -107,12 +113,12 @@ function galleryFor(slug: string, name: string): GalleryItem[] {
   return g;
 }
 
-const projectDest: Destination[] = projects.map((p) => {
+const projectDest: Destination[] = projects.filter((p) => p.slug !== CORPUS).map((p) => {
   const place = PLACE[p.slug];
   return {
     slug: p.slug, name: p.name, cluster: place.cluster, category: p.subtitle, status: p.status,
     statusLabel: STATUS_LABEL[p.status] ?? p.status, tone: p.statusTone, oneLine: p.oneLine, art: art(p.slug),
-    href: `/projects/${p.slug}`, concept: false, lat: place.lat, lon: place.lon, building: place.building,
+    href: `/projects/${p.slug}`, concept: false, worldPath: `/worlds/${p.slug}`, back: { to: "/worlds", label: "All worlds" }, building: place.building,
     gallery: galleryFor(p.slug, p.name), sectionOrder: SECTION_ORDER,
   };
 });
@@ -122,14 +128,14 @@ const teardown: Destination = {
   status: "PUBLISHED", statusLabel: "Product teardowns · newsletter", tone: "green",
   oneLine: `A ${newsletter.cadence.toLowerCase()} newsletter on ${newsletter.platform} that takes products apart. ${newsletter.subscribers} subscribers (${newsletter.subscribersNote}).`,
   art: art("the-teardown"), href: newsletter.url ?? newsletter.profileUrl, external: true, concept: false,
-  lat: PLACE["the-teardown"].lat, lon: PLACE["the-teardown"].lon, building: PLACE["the-teardown"].building,
+  worldPath: "/writing/the-teardown", back: { to: "/about#writing-h", label: "Writing" }, building: PLACE["the-teardown"].building,
   gallery: galleryFor("the-teardown", newsletter.name), sectionOrder: [],
 };
 
 const ventureDest: Destination[] = ventures.map((v) => ({
   slug: v.slug, name: v.name, cluster: "Emerging Ventures", category: v.category, status: v.status, statusLabel: v.status, tone: "amber",
   oneLine: `${v.vision} ${VENTURES_NOTE}`, art: null, href: `/ventures/${v.slug}`, concept: true,
-  lat: PLACE[v.slug].lat, lon: PLACE[v.slug].lon, building: PLACE[v.slug].building, sectionOrder: [],
+  worldPath: `/ventures/${v.slug}/world`, back: { to: `/ventures/${v.slug}`, label: v.name }, building: PLACE[v.slug].building, sectionOrder: [],
   gallery: [
     { kind: "concept", title: `${v.name} — vision`, label: "Concept visual · not a product screen", lines: [v.name.toUpperCase(), "", `“${v.vision}”`, "", v.category, "Concept in development"] },
     { kind: "concept", title: `${v.name} — proposed features`, label: "Concept visual · not a product screen", lines: ["PROPOSED FEATURES", "", ...v.features.slice(0, 6).map((f) => `• ${f.name}`)] },
@@ -138,9 +144,22 @@ const ventureDest: Destination[] = ventures.map((v) => ({
   ],
 }));
 
+/** The /worlds hub: the actual projects only (never the concepts or the newsletter). */
+export const worlds: Destination[] = projectDest;
+export const teardownWorld = teardown;
+export const ventureWorlds: Destination[] = ventureDest;
+/** Every 3D world, wherever it lives. */
 export const destinations: Destination[] = [...projectDest, teardown, ...ventureDest];
 export const destinationBySlug = (s: string) => destinations.find((d) => d.slug === s);
+export const worldBySlug = (s: string) => worlds.find((d) => d.slug === s);
 export const CLUSTERS: Cluster[] = ["Healthcare", "AI", "Fintech", "Research & writing", "Emerging Ventures"];
+export const WORLD_CLUSTERS = CLUSTERS.filter((c) => worlds.some((w) => w.cluster === c));
+
+/** Old /universe/<slug> addresses and where they now live (prerendered redirect pages). */
+export const UNIVERSE_REDIRECTS: Record<string, string> = {
+  ...Object.fromEntries(destinations.map((d) => [d.slug, d.worldPath])),
+  [CORPUS]: "/universe",
+};
 
 /** Credit required by the Earth textures' licence (CC BY 4.0). */
 export const EARTH_CREDIT = {

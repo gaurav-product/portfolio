@@ -19,14 +19,14 @@ export default function VentureDetail() {
       <nav aria-label="Breadcrumb" className="mb-6 text-sm text-dim"><Link to="/ventures" className="hover:text-ink">Emerging Ventures</Link> / {v.name}</nav>
       <VentureBody v={v} headingLevel={1} />
       <div className="mt-10 flex flex-wrap gap-3">
-        <ButtonLink to={`/universe/${v.slug}`} variant="primary" icon="explore">Visit in the 3D universe</ButtonLink>
+        <ButtonLink to={`/ventures/${v.slug}/world`} variant="primary" icon="explore">Visit in 3D</ButtonLink>
         <ButtonLink to="/contact" icon="mail">Talk to Gaurav about it</ButtonLink>
       </div>
     </Container>
   );
 }
 
-/** Shared by the readable page and the 3D universe's concept panel. */
+/** Shared by the readable page and the 3D concept world's panel. */
 export function VentureBody({ v, headingLevel = 2, bare = false }: { v: Venture; headingLevel?: 1 | 2; bare?: boolean }) {
   const H = headingLevel === 1 ? "h1" : "h2";
   const S = headingLevel === 1 ? "h2" : "h3";

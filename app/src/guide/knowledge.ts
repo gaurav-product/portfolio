@@ -44,7 +44,7 @@ export function buildKnowledgePack(): string {
 
   out.push("", "## Emerging Ventures (concepts in development — never describe them as built, launched or validated)", VENTURES_NOTE);
   for (const v of ventures) {
-    out.push(`- ${v.name} (${v.category}) — ${v.status}. Vision: “${v.vision}”. Page: /ventures/${v.slug}; 3D world: /universe/${v.slug}.`, `  Problem: ${v.problem.join(" ")}`, `  Proposed solution: ${v.solution}`,
+    out.push(`- ${v.name} (${v.category}) — ${v.status}. Vision: “${v.vision}”. Page: /ventures/${v.slug}; 3D world: /ventures/${v.slug}/world.`, `  Problem: ${v.problem.join(" ")}`, `  Proposed solution: ${v.solution}`,
       `  Proposed features: ${v.features.map((f) => f.name).join("; ")}`, `  Business model (${MODEL_NOTE}): ${v.model.join("; ")}`);
     if (v.example) out.push(`  ${v.example.label}: ${v.example.rows.map(([k, val]) => `${k} ${val}`).join("; ")}`);
     v.trust?.forEach((t) => out.push(`  Trust/legal: ${t}`));
@@ -54,6 +54,6 @@ export function buildKnowledgePack(): string {
   for (const e of kb) out.push(`Q: ${e.q}`, `A: ${blocksToText(e.answer)}`, `Links: ${e.links.map((l) => `${l.label} (${l.to})`).join("; ")}`, "");
 
   out.push("## Not in the portfolio (always refuse)", NO_EVIDENCE_TERMS.join(", "));
-  out.push("", "## Site pages", "/, /about, /experience, /projects, /case-studies, /product-thinking, /research, /ai-lab, /skills, /explore, /universe, /ventures, /recruiter, /contact, /cv");
+  out.push("", "## Site pages", "/, /about, /experience, /projects, /case-studies, /product-thinking, /research, /ai-lab, /skills, /explore, /universe (the 90 case studies on a 3D Earth), /worlds (3D worlds of the 7 projects), /writing/the-teardown (newsletter in 3D), /ventures, /recruiter, /contact, /cv");
   return out.join("\n");
 }

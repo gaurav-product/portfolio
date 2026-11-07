@@ -29,7 +29,8 @@ export function Footer() {
             <li><Link to="/skills" className="text-muted hover:text-ink">Skills</Link></li>
             <li><Link to="/lab-notes" className="text-muted hover:text-ink">Lab Notes</Link></li>
             <li><Link to="/recruiter" className="text-muted hover:text-ink">Recruiter Mode</Link></li>
-            <li><Link to="/universe" className="text-muted hover:text-ink">Product Universe</Link></li>
+            <li><Link to="/worlds" className="text-muted hover:text-ink">Project worlds</Link></li>
+            <li><Link to="/universe" className="text-muted hover:text-ink">90 case studies in 3D</Link></li>
             <li><Link to="/explore/city" className="text-muted hover:text-ink">3D city (Explore Mode)</Link></li>
             <li><Link to="/ventures" className="text-muted hover:text-ink">Emerging Ventures</Link></li>
           </ul>

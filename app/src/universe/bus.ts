@@ -7,8 +7,6 @@ export interface SceneEvents {
   onHover(slug: string | null): void;
   /** a marker was clicked */
   onSelect(slug: string): void;
-  /** the camera finished flying into a marker: the page switches to the world */
-  onArrive(slug: string): void;
   /** intro progress for the DOM titles: 0..1 */
   onIntro(progress: number): void;
   /** a building hotspot (floor) was activated */
@@ -25,8 +23,8 @@ export interface SceneApi {
   zoom(factor: number): void;
   /** turn the globe so a marker faces the camera (keyboard / list focus) */
   face(slug: string): void;
-  /** fly into a marker, then call onArrive */
-  fly(slug: string): void;
+  /** select (id) or release (null) a study: turn it to the camera and move closer / back out */
+  focus(id: string | null): void;
   skipIntro(): void;
   replayIntro(): void;
 }

@@ -91,6 +91,8 @@ export default function Study() {
           <div className="mt-12 flex flex-wrap gap-3 border-t border-line pt-6">
             <ButtonLink to={text.source.readme_url} external icon="github">View source on GitHub</ButtonLink>
             {text.assumptions && <ButtonLink to={text.assumptions.url} external variant="ghost">ASSUMPTIONS source</ButtonLink>}
+            <ButtonLink to={`/universe?study=${s.day}`} icon="explore">Show on the 3D Earth</ButtonLink>
+            <ButtonLink to={`/atlas?day=${s.day}`} variant="ghost">Show on Atlas</ButtonLink>
           </div>
           {related.length > 0 && <section className="mt-10"><h2 className="label mb-3">Related projects</h2><ul className="flex flex-wrap gap-2">{related.map((p) => <li key={p.slug}><Link to={`/projects/${p.slug}`} className="inline-block rounded-lg border border-line px-3 py-1.5 text-sm hover:border-green/60">{p.name}</Link></li>)}</ul></section>}
           <nav aria-label="Adjacent studies" className="mt-10 grid gap-3 sm:grid-cols-2">

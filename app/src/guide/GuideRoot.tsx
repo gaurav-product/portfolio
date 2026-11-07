@@ -1,3 +1,4 @@
+import { isImmersive } from "~/lib/immersive";
 import { createContext, lazy, Suspense, useCallback, useContext, useEffect, useReducer, useRef, useState } from "react";
 import { useLocation } from "react-router";
 import { Oz } from "./Oz";
@@ -74,7 +75,7 @@ export function GuideRoot() {
   const hidden = loc.pathname === "/cv";
 
   /* first-visit hello and one rare nudge — text only, never sound */
-  const cinematic = loc.pathname.startsWith("/universe");
+  const cinematic = isImmersive(loc.pathname);
   useEffect(() => {
     if (open || hidden || cinematic) return; // never talk over the cinematic universe
     const firstVisit = !store.get(KEY.seen);

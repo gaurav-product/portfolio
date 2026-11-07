@@ -17,7 +17,7 @@ const blockText = (b: Block): string =>
 
 const PAGES: Doc[] = [
   ["/", "Home", "Gaurav.OS overview"], ["/about", "About", "background education certifications writing"],
-  ["/recruiter", "Recruiter Mode", "30-second overview CV skills experience"], ["/explore", "Explore Mode", "3D districts city map"], ["/universe", "Product Universe", "3D earth globe projects worlds cinematic"], ["/ventures", "Emerging Ventures", "concepts interview radar repass startup ideas"],
+  ["/recruiter", "Recruiter Mode", "30-second overview CV skills experience"], ["/explore", "Explore Mode", "3D districts city map"], ["/universe", "90 case studies in 3D", "3D earth globe product universe research case studies map"], ["/worlds", "Project worlds", "3D buildings project worlds universe screenshots"], ["/writing/the-teardown", "The Teardown in 3D", "newsletter writing workshop 3D"], ["/ventures", "Emerging Ventures", "concepts interview radar repass startup ideas"],
   ["/case-studies", "Case Studies", "in-depth case studies"], ["/product-thinking", "Product Thinking", "operating loop principles challenge tools"],
   ["/skills", "Skills library", "product management capabilities evidence"], ["/atlas", "Product Atlas", "90 studies constellation evolution filters"],
   ["/ai-lab", "AI Lab", "AI safety evaluation guardrails experiments"], ["/ask", "Ask Gaurav", "questions grounded answers"],

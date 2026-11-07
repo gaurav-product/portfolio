@@ -3,19 +3,15 @@ import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
-import type { Destination, Cluster } from "~/content/universe";
+import type { StudyPin, Region } from "~/content/studyMap";
 import type { SceneApi, SceneEvents, Tier } from "./bus";
 import { audio } from "./audio";
 import { asset } from "~/lib/meta";
 
-/* Earth radius 2. Markers are a visual layout on the globe — not locations of the work. */
+/* Earth radius 2. The 90 study markers are grouped by derived category — a visual layout, not geography. */
 const R = 2;
 const HOME_DIST = 7.2;
 const SUN = new THREE.Vector3(0.95, 0.28, 0.42).normalize();
-export const CLUSTER_COLOR: Record<Cluster, string> = {
-  "Healthcare": "#4DFF4D", "AI": "#35D6D0", "Fintech": "#A98BFF", "Research & writing": "#F2C14E", "Emerging Ventures": "#FF9E6B",
-};
-const CLUSTER_ORDER: Cluster[] = ["Healthcare", "AI", "Fintech", "Research & writing", "Emerging Ventures"];
 const TEX: Record<Tier, { day: string; night: string | null; brc: string; seg: number }> = {
   high: { day: "/universe/earth-day-4k.webp", night: "/universe/earth-night-2k.webp", brc: "/universe/earth-brc-2k.webp", seg: 96 },
   laptop: { day: "/universe/earth-day-2k.webp", night: "/universe/earth-night-2k.webp", brc: "/universe/earth-brc-1k.webp", seg: 72 },
@@ -74,16 +70,34 @@ void main() {
   #include <colorspace_fragment>
 }`;
 
-interface MarkerRef { group: THREE.Group; head: THREE.MeshBasicMaterial; beam: THREE.MeshBasicMaterial; ring: THREE.Mesh; ringMat: THREE.MeshBasicMaterial; cluster: Cluster; facing: number }
+/* one marker per study: instanced heads with per-pin colour, size, far-side fade and filter dimming on the GPU */
+const pinVert = /* glsl */ `
+attribute vec3 aColor; attribute float aDim;
+uniform float uReveal;
+varying vec3 vColor; varying float vAlpha;
+void main() {
+  vec4 c = modelMatrix * instanceMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+  float facing = dot(normalize(c.xyz), normalize(cameraPosition - c.xyz));
+  vAlpha = smoothstep(0.02, 0.3, facing) * uReveal * mix(1.0, 0.13, aDim);
+  vColor = aColor;
+  gl_Position = projectionMatrix * viewMatrix * modelMatrix * instanceMatrix * vec4(position, 1.0);
+}`;
+const pinFrag = /* glsl */ `
+varying vec3 vColor; varying float vAlpha;
+void main() { gl_FragColor = vec4(vColor * 1.35, vAlpha); if (vAlpha < 0.01) discard;
+  #include <colorspace_fragment>
+}`;
+const PIN_ALT = R * 1.03; // just above the cloud shell
 
-export function EarthView({ tier, reduced, list, events, api, hovered, intro, returnFrom, preview }: {
-  tier: Tier; reduced: boolean; list: Destination[]; events: MutableRefObject<SceneEvents>; api: MutableRefObject<SceneApi | null>;
-  hovered: string | null; intro: boolean; returnFrom: string | null; preview: MutableRefObject<HTMLElement | null>;
+export function EarthView({ tier, reduced, pins, regions, dim, selected, events, api, hovered, intro, preview }: {
+  tier: Tier; reduced: boolean; pins: StudyPin[]; regions: Region[]; dim: Set<number> | null; selected: number | null;
+  events: MutableRefObject<SceneEvents>; api: MutableRefObject<SceneApi | null>;
+  hovered: string | null; intro: boolean; preview: MutableRefObject<HTMLElement | null>;
 }) {
   const t = TEX[tier];
   const urls = [t.day, t.brc, ...(t.night ? [t.night] : [])].map(asset);
   const [day, brc, night] = useLoader(THREE.TextureLoader, urls);
-  const { camera, gl, invalidate } = useThree();
+  const { camera, gl, invalidate, size } = useThree();
   useMemo(() => {
     const aniso = Math.min(8, gl.capabilities.getMaxAnisotropy());
     day.colorSpace = THREE.SRGBColorSpace; day.anisotropy = aniso;
@@ -93,11 +107,9 @@ export function EarthView({ tier, reduced, list, events, api, hovered, intro, re
 
   const spin = useRef<THREE.Group>(null!);
   const clouds = useRef<THREE.Mesh>(null!);
-  const markers = useRef<Record<string, MarkerRef>>({});
   const hoveredRef = useRef(hovered); hoveredRef.current = hovered;
-  const reveal = useRef(intro && !reduced ? 0 : 1);
+  const selectedRef = useRef(selected); selectedRef.current = selected;
   const pausedUntil = useRef(0);
-  const busy = useRef(false);
   /** while the camera is being directed, orbit controls must not clamp or fight it */
   const animating = useRef(false);
 
@@ -107,11 +119,58 @@ export function EarthView({ tier, reduced, list, events, api, hovered, intro, re
   const cloudUniforms = useMemo(() => ({ brcMap: { value: brc }, sunDir: { value: SUN } }), [brc]);
   const atmoUniforms = useMemo(() => ({ sunDir: { value: SUN }, glow: { value: new THREE.Color("#4FC3FF") } }), []);
 
+  /* ---- the 90 pins: positions, instanced heads and an instanced (invisible) hit layer ---- */
+  const local = useMemo(() => new Map(pins.map((p) => [p.day, latLon(p.lat, p.lon, PIN_ALT)])), [pins]);
+  const byIndex = pins.map((p) => p.day);
+  const pinUniforms = useMemo(() => ({ uReveal: { value: intro && !reduced ? 0 : 1 } }), [intro, reduced]);
+  const { heads, hits } = useMemo(() => {
+    const base = tier === "mobile" ? 0.036 : 0.03;
+    const geo = new THREE.SphereGeometry(1, 14, 10);
+    const colors = new Float32Array(pins.length * 3), dims = new Float32Array(pins.length);
+    const c = new THREE.Color();
+    pins.forEach((p, i) => { c.set(p.color); colors.set([c.r, c.g, c.b], i * 3); });
+    geo.setAttribute("aColor", new THREE.InstancedBufferAttribute(colors, 3));
+    geo.setAttribute("aDim", new THREE.InstancedBufferAttribute(dims, 1));
+    const mat = new THREE.ShaderMaterial({ vertexShader: pinVert, fragmentShader: pinFrag, uniforms: pinUniforms, transparent: true, depthWrite: false, toneMapped: false });
+    const heads = new THREE.InstancedMesh(geo, mat, pins.length);
+    const hitGeo = new THREE.SphereGeometry(tier === "mobile" ? 0.12 : 0.075, 8, 6);
+    const hits = new THREE.InstancedMesh(hitGeo, new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, colorWrite: false }), pins.length);
+    const o = new THREE.Object3D();
+    pins.forEach((p, i) => {
+      o.position.copy(local.get(p.day)!); o.scale.setScalar(base * (0.55 + 0.45 * (p.size / 9))); o.updateMatrix(); heads.setMatrixAt(i, o.matrix);
+      o.scale.setScalar(1); o.updateMatrix(); hits.setMatrixAt(i, o.matrix);
+    });
+    heads.frustumCulled = false; hits.frustumCulled = false;
+    return { heads, hits };
+  }, [pins, local, tier, pinUniforms]);
+  useEffect(() => () => { heads.geometry.dispose(); (heads.material as THREE.Material).dispose(); hits.geometry.dispose(); (hits.material as THREE.Material).dispose(); }, [heads, hits]);
+  // filters dim non-matching pins (attribute update, no re-render of the scene graph)
+  useEffect(() => {
+    const a = heads.geometry.getAttribute("aDim") as THREE.InstancedBufferAttribute;
+    pins.forEach((p, i) => a.setX(i, dim && !dim.has(p.day) ? 1 : 0));
+    a.needsUpdate = true; invalidate();
+  }, [dim, pins, heads, invalidate]);
+
+  /* hover and selection rings, region labels */
+  const ringGeo = useMemo(() => new THREE.RingGeometry(0.055, 0.07, 40), []);
+  const hoverRing = useRef<THREE.Mesh>(null!), selRing = useRef<THREE.Mesh>(null!);
+  const labels = useMemo(() => regions.map((r) => {
+    const cv = document.createElement("canvas"); cv.width = 512; cv.height = 96; const g = cv.getContext("2d")!;
+    g.font = "600 40px 'IBM Plex Mono', ui-monospace, monospace"; g.textAlign = "center"; g.fillStyle = "rgba(255,255,255,.9)";
+    g.fillText(`${r.name.toUpperCase()} · ${r.count}`, 256, 62);
+    const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false }));
+    sp.scale.set(0.72, 0.135, 1); sp.position.copy(latLon(r.lat + 9, r.lon, R * 1.16));
+    return sp;
+  }), [regions]);
+  useEffect(() => () => labels.forEach((l) => { l.material.map?.dispose(); l.material.dispose(); }), [labels]);
+  useEffect(() => () => ringGeo.dispose(), [ringGeo]);
+
   /* orbit controls: drag to rotate, wheel/pinch to zoom, no pan */
   const controls = useMemo(() => {
     const c = new OrbitControls(camera, gl.domElement);
     c.enablePan = false; c.enableDamping = true; c.dampingFactor = 0.08; c.rotateSpeed = 0.55; c.zoomSpeed = 0.7;
-    c.minDistance = 3.4; c.maxDistance = 14; c.minPolarAngle = 0.35; c.maxPolarAngle = Math.PI - 0.35;
+    c.minDistance = 3.2; c.maxDistance = 14; c.minPolarAngle = 0.35; c.maxPolarAngle = Math.PI - 0.35;
     return c;
   }, [camera, gl]);
   useEffect(() => {
@@ -121,50 +180,60 @@ export function EarthView({ tier, reduced, list, events, api, hovered, intro, re
     controls.addEventListener("change", redraw);
     return () => { controls.removeEventListener("start", pause); controls.removeEventListener("change", redraw); controls.dispose(); };
   }, [controls, invalidate]);
-
   const direct = (on: boolean) => { animating.current = on; controls.enabled = !on; if (!on) controls.update(); };
 
-  /* where a marker currently is, in world space */
-  const worldOf = (slug: string) => { const m = markers.current[slug]; return m ? m.group.getWorldPosition(new THREE.Vector3()) : null; };
-  /** the spin angle that turns a marker to face a direction */
-  const angleFacing = (slug: string, dir: THREE.Vector3) => {
+  /* where a pin is in world space, and whether it faces the camera */
+  const worldOf = (day: number) => { const l = local.get(day); return l ? spin.current.localToWorld(l.clone()) : null; };
+  const facingOf = (day: number) => { const p = worldOf(day); if (!p) return 0; return p.clone().normalize().dot(camera.position.clone().sub(p).normalize()); };
+  /** the spin angle that turns a pin to face a direction */
+  const angleFacing = (day: number, dir: THREE.Vector3) => {
     const g = spin.current, keep = g.rotation.y; let best = keep, bestDot = -2;
     for (let i = 0; i < 360; i += 2) {
       g.rotation.y = keep + THREE.MathUtils.degToRad(i); g.updateMatrixWorld(true);
-      const p = worldOf(slug)!.normalize(), d = p.dot(dir);
+      const d = worldOf(day)!.normalize().dot(dir);
       if (d > bestDot) { bestDot = d; best = g.rotation.y; }
     }
     g.rotation.y = keep; g.updateMatrixWorld(true);
     return best;
   };
+  const turnTo = (day: number, seconds: number) => {
+    const target = angleFacing(day, camera.position.clone().normalize());
+    let d = target - spin.current.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d));
+    gsap.to(spin.current.rotation, { y: spin.current.rotation.y + d, duration: reduced ? 0 : seconds, ease: "power2.inOut", onUpdate: invalidate });
+  };
+  /** move the camera around the globe (never through it) to look along `dir` from `dist` */
+  const move = useRef<gsap.core.Tween | null>(null);
+  const flyTo = (dir: THREE.Vector3, dist: number) => {
+    move.current?.kill();
+    const sph = new THREE.Spherical().setFromVector3(dir);
+    sph.phi = THREE.MathUtils.clamp(sph.phi, controls.minPolarAngle + 0.02, controls.maxPolarAngle - 0.02); sph.radius = 1;
+    const to = new THREE.Vector3().setFromSpherical(sph);
+    const fromDir = camera.position.clone().normalize(), d0 = camera.position.length();
+    const q = new THREE.Quaternion().setFromUnitVectors(fromDir, to), qi = new THREE.Quaternion(), o = { t: 0 };
+    direct(true);
+    move.current = gsap.to(o, { t: 1, duration: reduced ? 0 : 1.4, ease: "power2.inOut",
+      onUpdate: () => { qi.identity().slerp(q, o.t); camera.position.copy(fromDir).applyQuaternion(qi).multiplyScalar(d0 + (dist - d0) * o.t); camera.lookAt(0, 0, 0); invalidate(); },
+      onComplete: () => direct(false) });
+  };
 
-  /* intro, return-from-world, and the imperative API */
+  /* intro and the imperative API */
   const tl = useRef<gsap.core.Timeline | null>(null);
   useEffect(() => {
     const home = new THREE.Vector3(0, 1.1, HOME_DIST);
     const report = (p: number) => events.current.onIntro(p);
     const runIntro = () => {
       tl.current?.kill();
-      if (reduced) { camera.position.copy(home); reveal.current = 1; report(1); invalidate(); return; }
-      camera.position.set(16, 5, 66); reveal.current = 0; direct(true);
+      if (reduced) { camera.position.copy(home); pinUniforms.uReveal.value = 1; report(1); invalidate(); return; }
+      camera.position.set(16, 5, 66); pinUniforms.uReveal.value = 0; direct(true);
       const prog = { p: 0 };
       tl.current = gsap.timeline({ onUpdate: () => { report(prog.p); invalidate(); }, onComplete: () => { direct(false); report(1); audio.cue("earth"); } })
         .to(prog, { p: 1, duration: 9, ease: "none" }, 0)
         .to(camera.position, { x: 0, y: 1.1, z: HOME_DIST, duration: 7.4, ease: "power3.inOut" }, 0.6)
-        .to(reveal, { current: 1, duration: 2.2, ease: "power1.out" }, 5.4)
+        .to(pinUniforms.uReveal, { value: 1, duration: 2.2, ease: "power1.out" }, 5.4)
         .add(() => audio.cue("zoom"), 2.4);
     };
-    if (returnFrom) {
-      // come back out of the world we were in, facing its marker — the visitor keeps their place
-      tl.current?.kill();
-      const dir = new THREE.Vector3(0, 0.15, 1).normalize();
-      spin.current.rotation.y = angleFacing(returnFrom, dir); spin.current.updateMatrixWorld(true);
-      const p = worldOf(returnFrom)!.normalize();
-      camera.position.copy(p.clone().multiplyScalar(reduced ? HOME_DIST : 2.9));
-      if (!reduced) { direct(true); audio.cue("back"); gsap.to(camera.position, { x: p.x * HOME_DIST, y: p.y * HOME_DIST, z: p.z * HOME_DIST, duration: 2, ease: "power2.out", onUpdate: invalidate, onComplete: () => direct(false) }); }
-      reveal.current = 1; report(1);
-    } else if (intro) runIntro();
-    else { camera.position.copy(home); reveal.current = 1; report(1); }
+    if (intro) runIntro();
+    else { camera.position.copy(home); pinUniforms.uReveal.value = 1; report(1); }
     controls.update();
     events.current.onReady("earth");
 
@@ -176,67 +245,65 @@ export function EarthView({ tier, reduced, list, events, api, hovered, intro, re
         camera.position.setFromSpherical(s); controls.update(); invalidate();
       },
       zoom(f) { const d = THREE.MathUtils.clamp(camera.position.length() * f, controls.minDistance, controls.maxDistance); camera.position.setLength(d); controls.update(); invalidate(); },
-      face(slug) {
-        if (!markers.current[slug] || busy.current) return;
-        pausedUntil.current = performance.now() + 8000;
-        const target = angleFacing(slug, camera.position.clone().normalize());
-        let d = target - spin.current.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d));
-        gsap.to(spin.current.rotation, { y: spin.current.rotation.y + d, duration: reduced ? 0 : 1.1, ease: "power2.inOut", onUpdate: invalidate });
-      },
-      fly(slug) {
-        if (busy.current || !markers.current[slug]) return;
-        busy.current = true; tl.current?.kill(); reveal.current = 1; direct(true);
-        const done = () => { busy.current = false; events.current.onArrive(slug); };
-        if (reduced) { done(); return; }
-        audio.cue("select");
-        const dir = camera.position.clone().normalize();
-        const target = angleFacing(slug, dir);
-        let d = target - spin.current.rotation.y; d = Math.atan2(Math.sin(d), Math.cos(d));
-        gsap.timeline({ onUpdate: invalidate, onComplete: done })
-          .to(spin.current.rotation, { y: spin.current.rotation.y + d, duration: 1.1, ease: "power2.inOut" }, 0)
-          .add(() => audio.cue("zoom"), 0.9)
-          .to(camera.position, { x: dir.x * 2.45, y: dir.y * 2.45, z: dir.z * 2.45, duration: 1.5, ease: "power3.in" }, 0.85);
+      face(id) { const d = Number(id); if (!local.has(d)) return; pausedUntil.current = performance.now() + 8000; turnTo(d, 1.1); },
+      focus(id) {
+        if (id !== null) { tl.current?.kill(); pinUniforms.uReveal.value = 1; events.current.onIntro(1); }
+        if (id === null) { pausedUntil.current = performance.now() + 4000; flyTo(camera.position.clone().normalize(), HOME_DIST); return; }
+        const d = Number(id); if (!local.has(d)) return;
+        pausedUntil.current = Infinity; audio.cue("select"); flyTo(worldOf(d)!.normalize(), gl.domElement.clientWidth < 900 ? 6.4 : 4.6); // narrow screens: stay back so the region stays readable
       },
       skipIntro() { if (tl.current?.isActive()) { tl.current.progress(1); } },
       replayIntro() { runIntro(); },
     };
-    return () => { tl.current?.kill(); api.current = null; };
+    return () => { tl.current?.kill(); move.current?.kill(); api.current = null; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  // keep the selected study clear of its panel: right-hand panel on wide screens, bottom sheet on narrow ones
+  useEffect(() => {
+    const cam = camera as THREE.PerspectiveCamera, w = size.width, h = size.height;
+    if (selected === null || !w) cam.clearViewOffset();
+    else if (w >= 900) cam.setViewOffset(w, h, Math.min(440, w * 0.4) / 2, 0, w, h);
+    else cam.setViewOffset(w, h, 0, h * 0.27, w, h);
+    invalidate();
+    return () => cam.clearViewOffset();
+  }, [selected, size, camera, invalidate]);
+  // releasing a selection lets the slow spin resume after a moment
+  useEffect(() => { if (selected === null && pausedUntil.current === Infinity) pausedUntil.current = performance.now() + 4000; }, [selected]);
 
-  /* per frame: slow spin, clouds drift, markers fade on the far side, preview card follows the hovered marker */
-  const v = useMemo(() => ({ p: new THREE.Vector3(), n: new THREE.Vector3(), c: new THREE.Vector3() }), []);
+  /* per frame: slow spin, clouds, rings, label fade and the preview card */
+  const v = useMemo(() => ({ p: new THREE.Vector3(), n: new THREE.Vector3(), c: new THREE.Vector3(), q: new THREE.Quaternion(), up: new THREE.Vector3(0, 0, 1) }), []);
   useFrame((state, dt) => {
     const now = performance.now();
-    if (!reduced && !busy.current && now > pausedUntil.current && !hoveredRef.current) spin.current.rotation.y += dt * 0.045;
+    if (!reduced && now > pausedUntil.current && !hoveredRef.current) spin.current.rotation.y += dt * 0.045;
     if (clouds.current && !reduced) clouds.current.rotation.y += dt * 0.008;
     if (!animating.current) controls.update();
     const time = state.clock.elapsedTime;
-    let order = 0;
-    for (const slug in markers.current) {
-      const m = markers.current[slug];
-      m.group.getWorldPosition(v.p); v.n.copy(v.p).normalize(); v.c.copy(camera.position).sub(v.p).normalize();
-      const facing = THREE.MathUtils.smoothstep(v.n.dot(v.c), 0.02, 0.3); m.facing = facing;
-      const r = THREE.MathUtils.clamp((reveal.current - CLUSTER_ORDER.indexOf(m.cluster) * 0.12) * 2.2, 0, 1);
-      const hot = hoveredRef.current === slug ? 1 : 0;
-      const a = facing * r;
-      m.head.opacity = a; m.beam.opacity = a * 0.55; m.ringMat.opacity = a * (0.35 + 0.35 * Math.sin(time * 2.4 + order));
-      const s = 1 + hot * 0.7 + (reduced ? 0 : 0.08 * Math.sin(time * 2 + order));
-      m.group.scale.setScalar(s); m.ring.scale.setScalar(1 + ((time * 0.6 + order * 0.2) % 1) * (reduced ? 0 : 1.6));
-      m.group.visible = a > 0.01;
-      order++;
+    const placeRing = (mesh: THREE.Mesh, day: number | null, color: string, pulse: number) => {
+      const l = day !== null ? local.get(day) : null;
+      if (!l || facingOf(day!) < 0.15) { mesh.visible = false; return; }
+      mesh.visible = true; mesh.position.copy(l);
+      mesh.quaternion.copy(v.q.setFromUnitVectors(v.up, l.clone().normalize()));
+      mesh.scale.setScalar(1 + pulse);
+      (mesh.material as THREE.MeshBasicMaterial).color.set(color);
+    };
+    const hd = hoveredRef.current ? Number(hoveredRef.current) : null;
+    placeRing(hoverRing.current, hd, hd !== null ? pins.find((p) => p.day === hd)?.color ?? "#fff" : "#fff", reduced ? 0 : 0.15 * Math.sin(time * 5));
+    placeRing(selRing.current, selectedRef.current, "#4DFF4D", reduced ? 0.3 : 0.3 + 0.25 * ((time * 0.8) % 1));
+    for (const l of labels) {
+      l.getWorldPosition(v.p); v.n.copy(v.p).normalize(); v.c.copy(camera.position).sub(v.p).normalize();
+      l.material.opacity = THREE.MathUtils.smoothstep(v.n.dot(v.c), 0.1, 0.45) * pinUniforms.uReveal.value * (selectedRef.current !== null ? 0.45 : 0.9);
     }
-    const el = preview.current, h = hoveredRef.current;
+    const el = preview.current;
     if (el) {
-      const m = h ? markers.current[h] : null;
-      if (m && m.facing > 0.2) {
-        m.group.getWorldPosition(v.p); v.p.project(camera);
+      if (hd !== null && facingOf(hd) > 0.2) {
+        v.p.copy(worldOf(hd)!).project(camera);
         const x = (v.p.x * 0.5 + 0.5) * gl.domElement.clientWidth, y = (-v.p.y * 0.5 + 0.5) * gl.domElement.clientHeight;
         el.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`; el.dataset.visible = "true";
       } else el.dataset.visible = "false";
     }
   });
 
+  const usable = (i: number | undefined) => i !== undefined && facingOf(byIndex[i]) > 0.25 && pinUniforms.uReveal.value > 0.5;
   return (
     <group rotation={[0, 0, THREE.MathUtils.degToRad(-23.4)]}>
       <group ref={spin} rotation={[0, -1.2, 0]}>
@@ -250,47 +317,22 @@ export function EarthView({ tier, reduced, list, events, api, hovered, intro, re
             <shaderMaterial vertexShader={earthVert} fragmentShader={cloudFrag} uniforms={cloudUniforms} transparent depthWrite={false} />
           </mesh>
         )}
-        {list.map((d) => <Marker key={d.slug} d={d} reg={markers} events={events} />)}
+        <primitive object={heads} />
+        <primitive object={hits}
+          onPointerMove={(e: { instanceId?: number; stopPropagation(): void }) => {
+            if (!usable(e.instanceId)) return; e.stopPropagation();
+            const id = String(byIndex[e.instanceId!]);
+            if (hoveredRef.current !== id) { document.body.style.cursor = "pointer"; audio.cue("hover"); events.current.onHover(id); }
+          }}
+          onPointerOut={() => { document.body.style.cursor = ""; events.current.onHover(null); }}
+          onClick={(e: { instanceId?: number; stopPropagation(): void }) => { if (!usable(e.instanceId)) return; e.stopPropagation(); events.current.onSelect(String(byIndex[e.instanceId!])); }} />
+        <mesh ref={hoverRing} geometry={ringGeo} visible={false}><meshBasicMaterial transparent opacity={0.9} side={THREE.DoubleSide} depthWrite={false} toneMapped={false} /></mesh>
+        <mesh ref={selRing} geometry={ringGeo} visible={false}><meshBasicMaterial transparent opacity={0.95} side={THREE.DoubleSide} depthWrite={false} toneMapped={false} /></mesh>
+        {labels.map((l, i) => <primitive key={i} object={l} />)}
       </group>
       <mesh scale={1.16}>
         <sphereGeometry args={[R, 64, 32]} />
         <shaderMaterial vertexShader={earthVert} fragmentShader={atmoFrag} uniforms={atmoUniforms} transparent side={THREE.BackSide} blending={THREE.AdditiveBlending} depthWrite={false} />
-      </mesh>
-    </group>
-  );
-}
-
-function Marker({ d, reg, events }: { d: Destination; reg: MutableRefObject<Record<string, MarkerRef>>; events: MutableRefObject<SceneEvents> }) {
-  const color = CLUSTER_COLOR[d.cluster];
-  const pos = useMemo(() => latLon(d.lat, d.lon, R * 1.002), [d.lat, d.lon]);
-  const quat = useMemo(() => new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), pos.clone().normalize()), [pos]);
-  const group = useRef<THREE.Group>(null!), head = useRef<THREE.MeshBasicMaterial>(null!), beam = useRef<THREE.MeshBasicMaterial>(null!), ring = useRef<THREE.Mesh>(null!), ringMat = useRef<THREE.MeshBasicMaterial>(null!);
-  useEffect(() => {
-    reg.current[d.slug] = { group: group.current, head: head.current, beam: beam.current, ring: ring.current, ringMat: ringMat.current, cluster: d.cluster, facing: 1 };
-    return () => { delete reg.current[d.slug]; };
-  }, [d.slug, d.cluster, reg]);
-  const usable = () => (reg.current[d.slug]?.facing ?? 0) > 0.25;
-  return (
-    <group ref={group} position={pos} quaternion={quat}>
-      <mesh position={[0, 0.14, 0]}>
-        <cylinderGeometry args={[0.006, 0.006, 0.28, 6]} />
-        <meshBasicMaterial ref={beam} color={color} transparent blending={THREE.AdditiveBlending} depthWrite={false} />
-      </mesh>
-      <mesh position={[0, 0.29, 0]}>
-        <sphereGeometry args={[d.concept ? 0.032 : 0.04, 16, 12]} />
-        <meshBasicMaterial ref={head} color={color} transparent toneMapped={false} />
-      </mesh>
-      <mesh ref={ring} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.004, 0]}>
-        <ringGeometry args={[0.05, 0.065, 32]} />
-        <meshBasicMaterial ref={ringMat} color={color} transparent side={THREE.DoubleSide} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
-      </mesh>
-      {/* generous invisible hit area */}
-      <mesh position={[0, 0.22, 0]}
-        onPointerOver={(e) => { if (!usable()) return; e.stopPropagation(); document.body.style.cursor = "pointer"; audio.cue("hover"); events.current.onHover(d.slug); }}
-        onPointerOut={() => { document.body.style.cursor = ""; events.current.onHover(null); }}
-        onClick={(e) => { if (!usable()) return; e.stopPropagation(); events.current.onSelect(d.slug); }}>
-        <sphereGeometry args={[0.13, 8, 6]} />
-        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
     </group>
   );

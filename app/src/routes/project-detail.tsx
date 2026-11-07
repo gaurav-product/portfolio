@@ -1,3 +1,4 @@
+import { project3dPath, CORPUS_SLUG } from "~/lib/immersive";
 import { CinematicImage } from "~/components/CinematicImage";
 import { projectBackdrop as projectArt } from "~/content/cinematic";
 import { useEffect, useState } from "react";
@@ -60,7 +61,10 @@ export default function ProjectDetail() {
             <div><dt className="label">Period</dt><dd className="mt-1">{p.period}</dd></div>
             <div><dt className="label">Type</dt><dd className="mt-1">{p.kindLabel}</dd></div>
           </dl>
-          {p.repo && <div className="mt-6"><ButtonLink to={p.repo.href} external icon="github">{p.repo.label}</ButtonLink></div>}
+          <div className="mt-6 flex flex-wrap gap-3">
+            <ButtonLink to={project3dPath(p.slug)} icon="explore">{p.slug === CORPUS_SLUG ? "See all 90 on the 3D Earth" : "Explore in 3D"}</ButtonLink>
+            {p.repo && <ButtonLink to={p.repo.href} external icon="github">{p.repo.label}</ButtonLink>}
+          </div>
         </Container>
       </header>
 

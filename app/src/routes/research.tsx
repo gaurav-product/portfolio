@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { CinematicImage } from "~/components/CinematicImage";
 import { Link, useSearchParams } from "react-router";
 import { corpus } from "~/content/corpus";
-import { PageHero, Container, Pill, Empty, evidenceTone, cx } from "~/components/ui";
+import { PageHero, Container, Pill, Empty, evidenceTone, ButtonLink, cx } from "~/components/ui";
 import { seo } from "~/lib/meta";
 import { norm } from "~/lib/text";
 
@@ -22,7 +22,9 @@ export default function Research() {
   return (
     <>
       <PageHero backdrop={<CinematicImage id="research-analytics" decorative sizes="52vw" className="h-full" />} eyebrow="Research library" title={`${corpus.counts.written} product case studies`}
-        intro={<>Read from <a href={corpus.repo} target="_blank" rel="noopener noreferrer" className="text-green underline underline-offset-4">the public repository</a> by a build step — never retyped. Audited {corpus.audited}. Category is derived by rule; the evidence level counts what a study carries, not its quality.</>} />
+        intro={<>Read from <a href={corpus.repo} target="_blank" rel="noopener noreferrer" className="text-green underline underline-offset-4">the public repository</a> by a build step — never retyped. Audited {corpus.audited}. Category is derived by rule; the evidence level counts what a study carries, not its quality.</>}>
+        <div className="mt-6 flex flex-wrap gap-3"><ButtonLink to="/universe" icon="explore">See all 90 on the 3D Earth</ButtonLink><ButtonLink to="/atlas" icon="arrow">Product Atlas (2D)</ButtonLink></div>
+      </PageHero>
       <Container wide className="py-10">
         <div className="mb-6 grid gap-3 md:grid-cols-2 xl:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <label><span className="sr-only">Search studies</span><input type="search" value={q} onChange={(e) => set("q", e.target.value)} placeholder="Search company, title or summary" className="field" /></label>

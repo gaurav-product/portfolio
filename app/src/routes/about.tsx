@@ -85,6 +85,7 @@ export default function About() {
         <section aria-labelledby="writing-h">
           <SectionHeader id="writing-h" eyebrow="Writing" title="Writing and research" />
           <div className="mb-6"><NewsletterFeature headingLevel={3} /></div>
+          <p className="mb-6"><ButtonLink to="/writing/the-teardown" icon="explore">See it in 3D</ButtonLink> <span className="ml-2 text-sm text-dim">The Teardown's workshop: the brand artwork and the newsletter, in a small 3D scene.</span></p>
           <ul className="grid gap-3 md:grid-cols-2">
             {writing.map((w) => (
               <li key={w.title} className="card p-5">
@@ -117,7 +118,7 @@ export default function About() {
 
         <section aria-labelledby="credits-h">
           <SectionHeader id="credits-h" eyebrow="Credits" title="Third-party assets" />
-          <p className="max-w-3xl text-muted">The Product Universe's Earth uses textures by <a href={EARTH_CREDIT.href} target="_blank" rel="noopener noreferrer" className="text-ink underline underline-offset-4">Solar System Scope</a>, licensed <a href={EARTH_CREDIT.license} target="_blank" rel="noopener noreferrer" className="text-ink underline underline-offset-4">CC BY 4.0</a> and based on NASA imagery, as distributed with three.js; resized for the web. All sound is synthesised in the browser and original.</p>
+          <p className="max-w-3xl text-muted">The 3D Earth of case studies uses textures by <a href={EARTH_CREDIT.href} target="_blank" rel="noopener noreferrer" className="text-ink underline underline-offset-4">Solar System Scope</a>, licensed <a href={EARTH_CREDIT.license} target="_blank" rel="noopener noreferrer" className="text-ink underline underline-offset-4">CC BY 4.0</a> and based on NASA imagery, as distributed with three.js; resized for the web. All sound is synthesised in the browser and original.</p>
         </section>
       </Container>
     </>

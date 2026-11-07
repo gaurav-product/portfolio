@@ -84,8 +84,8 @@ describe("referential integrity", () => {
     expect(corpus.studies.filter((s) => !s.summary).length).toBe(corpus.counts.empty);
     expect(new Set(corpus.studies.map((s) => s.day)).size).toBe(90);
   });
-  it("prerenders one route per project, role, skill, tool, study, note, venture and universe destination", () => {
-    expect(paths.size).toBe(20 + ventures.length + destinations.length + projects.length + experience.length + capabilities.length + TOOLS.length + corpus.studies.length + legacy.lab_notes.length + districts.length);
+  it("prerenders one route per project, role, skill, tool, study, note, venture, world and old universe address", () => {
+    expect(paths.size).toBe(22 + ventures.length + worlds.length + ventureWorlds.length + Object.keys(UNIVERSE_REDIRECTS).length + projects.length + experience.length + capabilities.length + TOOLS.length + corpus.studies.length + legacy.lab_notes.length + districts.length);
   });
 });
 
@@ -139,7 +139,7 @@ describe("asset manifest", () => {
 import cinematicManifest from "../../src/data/generated/cinematic.json";
 import screenshotList from "../../src/data/screenshots.json";
 import { ventures } from "~/content/ventures";
-import { destinations } from "~/content/universe";
+import { worlds, ventureWorlds, UNIVERSE_REDIRECTS } from "~/content/universe";
 describe("cinematic images", () => {
   const pub = path.resolve(__dirname, "../../public");
   it("every generated size exists on disk and is labelled as an illustration", () => {

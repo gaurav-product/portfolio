@@ -1,3 +1,4 @@
+import { project3dPath } from "~/lib/immersive";
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router";
 import { projects, PROJECT_FILTERS } from "~/content/projects";
@@ -27,7 +28,8 @@ export default function Projects() {
       <PageHero {...heroArt("render-projects")} eyebrow={`Projects · ${projects.length} builds`} title="Explore my work"
         intro="Professional work, independent builds, an academic capstone and published research. Each chapter carries its real status, my role, and only the outcomes the evidence supports.">
         <div className="mt-8 flex flex-wrap gap-3">
-          <ButtonLink to="/universe" variant="primary" icon="explore">Enter the 3D Product Universe</ButtonLink>
+          <ButtonLink to="/worlds" variant="primary" icon="explore">Project worlds in 3D</ButtonLink>
+          <ButtonLink to="/universe" icon="explore">Explore 90 case studies in 3D</ButtonLink>
           <ButtonLink to="#emerging-ventures" icon="down">Emerging Ventures</ButtonLink>
         </div>
       </PageHero>
@@ -73,7 +75,7 @@ export default function Projects() {
                 <div className="flex flex-wrap items-center gap-2"><Pill tone="amber">{v.status}</Pill><span className="text-sm text-dim">{v.category}</span></div>
                 <h3 className="mt-3 text-2xl font-bold"><Link to={`/ventures/${v.slug}`} className="hover:text-green">{v.name}</Link></h3>
                 <p className="mt-2 text-[#D7DEDA]">“{v.vision}”</p>
-                <div className="mt-5 flex flex-wrap gap-3"><ButtonLink to={`/ventures/${v.slug}`} icon="arrow" aria-label={`Read the concept: ${v.name}`}>Read the concept</ButtonLink><ButtonLink to={`/universe/${v.slug}`} icon="explore" aria-label={`Visit in 3D: ${v.name}`}>Visit in 3D</ButtonLink></div>
+                <div className="mt-5 flex flex-wrap gap-3"><ButtonLink to={`/ventures/${v.slug}`} icon="arrow" aria-label={`Read the concept: ${v.name}`}>Read the concept</ButtonLink><ButtonLink to={`/ventures/${v.slug}/world`} icon="explore" aria-label={`Visit in 3D: ${v.name}`}>Visit in 3D</ButtonLink></div>
               </li>
             ))}
           </ul>
@@ -119,6 +121,7 @@ function Chapter({ p, n, flip }: { p: Project; n: number; flip: boolean }) {
         </ul>
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink to={to} variant="primary" icon="arrow" onClick={open} aria-label={`Read the case study: ${p.name}`}>Read the case study</ButtonLink>
+          <ButtonLink to={project3dPath(p.slug)} icon="explore" aria-label={`Explore in 3D: ${p.name}`}>Explore in 3D</ButtonLink>
           {p.repo && <ButtonLink to={p.repo.href} external icon="github" aria-label={`View repository: ${p.repo.label}`}>View repository</ButtonLink>}
         </div>
       </div>

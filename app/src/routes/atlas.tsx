@@ -1,20 +1,22 @@
 import { heroArt } from "~/components/CinematicImage";
-import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { type Study } from "~/content/data";
 import { corpus } from "~/content/corpus";
-import { PageHero, Container, SectionHeader, Pill, evidenceTone, cx } from "~/components/ui";
+import { PageHero, Container, SectionHeader, Pill, evidenceTone, ButtonLink, cx } from "~/components/ui";
 import { seo } from "~/lib/meta";
 
 export const meta = () => seo("Product Atlas", "The 90-day corpus as a constellation, an evolution view and an operating model — all drawn from the generated data.", "/atlas");
 
-const CAT_COLOR: Record<string, string> = { Healthcare: "#6BE39A", AI: "#35D6D0", Consumer: "#F2C14E", Fintech: "#BCA6FF", Marketplace: "#FF9F6E", SaaS: "#7FB2FF", B2B: "#E58BD8", Analytics: "#F3F6F4" };
-const LEVEL_R: Record<string, number> = { VERIFIED: 9, DOCUMENTED: 7, SOURCED: 5.5, NARRATIVE: 4 };
+import { CAT_COLOR, LEVEL_R } from "~/content/studyMap"; // shared with the 3D Earth (same values)
 
 export default function Atlas() {
   const [cat, setCat] = useState("All");
   const [hover, setHover] = useState<Study | null>(null);
   const nav = useNavigate();
+  // ?day=N (from the 3D Earth's "Show on Atlas") highlights that study
+  const [params] = useSearchParams();
+  useEffect(() => { const s = corpus.studies.find((x) => x.day === Number(params.get("day"))); if (s) setHover(s); }, [params]);
   const W = 900, H = 560, cx0 = W / 2, cy0 = H / 2;
   const pts = useMemo(() => corpus.studies.map((s, k) => {
     const a = k * 2.399963, r = 22 * Math.sqrt(k + 1) * 1.05;
@@ -31,7 +33,9 @@ export default function Atlas() {
   return (
     <>
       <PageHero {...heroArt("render-atlas")} eyebrow="Product Atlas" title="The 90-day corpus, mapped"
-        intro={`${corpus.counts.written} studies · ${corpus.counts.sources.toLocaleString("en-IN")} references · ${corpus.counts.assumption_files} ASSUMPTIONS files · ${corpus.counts.verified} studies with programmatic checks. Audited ${corpus.audited}.`} />
+        intro={`${corpus.counts.written} studies · ${corpus.counts.sources.toLocaleString("en-IN")} references · ${corpus.counts.assumption_files} ASSUMPTIONS files · ${corpus.counts.verified} studies with programmatic checks. Audited ${corpus.audited}.`}>
+        <div className="mt-6"><ButtonLink to="/universe" icon="explore">See the 90 on the 3D Earth</ButtonLink></div>
+      </PageHero>
       <Container wide className="grid gap-20 py-12">
         <section aria-labelledby="const">
           <SectionHeader id="const" eyebrow="Constellation" title="One point per study" intro="Colour is the derived category; size is the evidence level. Select a point to open the study." />
