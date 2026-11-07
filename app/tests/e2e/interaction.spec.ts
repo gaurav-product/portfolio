@@ -254,11 +254,64 @@ test.describe("Phase 2 — page transitions", () => {
 
   test("browsers without View Transitions (e.g. Firefox) navigate normally", async ({ page }) => {
     await page.addInitScript(() => { delete (Document.prototype as unknown as Record<string, unknown>).startViewTransition; delete (document as unknown as Record<string, unknown>).startViewTransition; });
+    const errs: string[] = []; page.on("pageerror", (e) => errs.push(e.message));
     await page.goto("/about", { waitUntil: "networkidle" });
-    expect(await page.evaluate(() => "startViewTransition" in document)).toBe(false);
+    expect(await page.evaluate(() => "startViewTransition" in document)).toBe(false); // nothing is wrapped or polyfilled
     await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Projects" }).click();
     await expect(page).toHaveURL(/\/projects$/);
     expect(await page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBeNull();
+    await page.getByRole("link", { name: "Enter the 3D Product Universe" }).click(); // no reveal either
+    await expect(page).toHaveURL(/\/universe$/);
+    expect(await page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBeNull();
+    expect(errs).toEqual([]);
+  });
+
+  /* ---- transition-lifecycle hardening (f38d093) ---- */
+  test("lifecycle: rapid navigation — every transition finishes and the flag is always cleared", async ({ page }) => {
+    await maybeSlow(page);
+    await page.addInitScript(countTransitions);
+    await page.goto("/about"); await ready(page);
+    const nav = page.getByRole("navigation", { name: "Primary" });
+    for (const name of ["Experience", "Research", "Projects", "Contact"]) await nav.getByRole("link", { name }).click({ noWaitAfter: true });
+    await expect(page).toHaveURL(/\/contact$/);
+    const started = await vtCount(page);
+    expect(started).toBeGreaterThanOrEqual(1);
+    // interrupted transitions are skipped by the router; skipped ones still settle, so done catches up with started
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __vtDone: number }).__vtDone), { timeout: 10_000 }).toBe(started);
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBeNull();
+    await page.getByRole("link", { name: "Gaurav.OS — home" }).click(); // the page is still fully interactive
+    await expect(page).toHaveURL(/\/$/);
+  });
+
+  test("lifecycle: a skipped transition still navigates and clears the flag", async ({ page }) => {
+    await maybeSlow(page);
+    // the browser may skip a transition (e.g. tab hidden); simulate by skipping every transition at once
+    await page.addInitScript(() => {
+      const d = document as Document & { startViewTransition?: (cb: () => unknown) => { skipTransition(): void } };
+      const orig = d.startViewTransition?.bind(d);
+      if (orig) d.startViewTransition = (cb: () => unknown) => { const t = orig(cb); t.skipTransition(); return t; };
+    });
+    await page.goto("/?nointro"); await ready(page);
+    await page.getByRole("link", { name: "Explore my work" }).click();
+    await expect(page).toHaveURL(/\/universe$/);
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBeNull();
+  });
+
+  test("lifecycle: if a transition never reports finishing, the 5 s safety net clears the flag", async ({ page }) => {
+    await maybeSlow(page);
+    // a transition whose `finished` never settles: the DOM update still runs, so navigation completes
+    await page.addInitScript(() => {
+      const d = document as unknown as Record<string, unknown>;
+      if (d.startViewTransition) d.startViewTransition = (cb: () => unknown) => { void Promise.resolve().then(cb);
+        const never = new Promise(() => {});
+        return { finished: never, ready: never, updateCallbackDone: Promise.resolve(), skipTransition() {}, types: new Set() };
+      };
+    });
+    await page.goto("/?nointro"); await ready(page);
+    await page.getByRole("link", { name: "Explore my work" }).click();
+    await expect(page).toHaveURL(/\/universe$/);
+    expect(await page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBe("reveal"); // still set: no finish signal yet
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.vt ?? null), { timeout: 7_000, intervals: [250] }).toBeNull();
   });
 
   test("reduced motion: no transition", async ({ browser }) => {
