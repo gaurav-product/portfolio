@@ -1,0 +1,1186 @@
+{
+ "generated": "2026-11-07",
+ "note": "Phase 0 inventory. 'project' is matched from the file path; review before use.",
+ "summary": {
+  "files": 454,
+  "logical_assets": 139,
+  "by_group": {
+   "brand (Gaurav.OS)": 8,
+   "site-graphic": 18,
+   "ui-icon": 18,
+   "case-study cover (illustration)": 8,
+   "cinematic-artwork": 18,
+   "brand (owner-supplied)": 18,
+   "existing-3d-render (project)": 8,
+   "video": 4,
+   "document": 1,
+   "profile": 1,
+   "product-ui (pending approval)": 37
+  },
+  "by_project": {
+   "evamastu": {
+    "case-study cover (illustration)": 1,
+    "existing-3d-render (project)": 1
+   },
+   "aaroh": {
+    "case-study cover (illustration)": 1,
+    "brand (owner-supplied)": 2,
+    "existing-3d-render (project)": 1
+   },
+   "careconnect": {
+    "case-study cover (illustration)": 1,
+    "existing-3d-render (project)": 1,
+    "brand (owner-supplied)": 2,
+    "product-ui (pending approval)": 18
+   },
+   "ghargyaan": {
+    "case-study cover (illustration)": 1,
+    "brand (owner-supplied)": 2,
+    "existing-3d-render (project)": 1,
+    "product-ui (pending approval)": 7
+   },
+   "phonepe-smart-spend-coach": {
+    "case-study cover (illustration)": 1,
+    "existing-3d-render (project)": 1,
+    "brand (owner-supplied)": 2
+   },
+   "nexus": {
+    "case-study cover (illustration)": 1,
+    "brand (owner-supplied)": 2,
+    "existing-3d-render (project)": 1,
+    "product-ui (pending approval)": 12
+   },
+   "rupee-radar": {
+    "case-study cover (illustration)": 1,
+    "brand (owner-supplied)": 2,
+    "existing-3d-render (project)": 1
+   },
+   "the-teardown": {
+    "brand (owner-supplied)": 2
+   },
+   "90-day-case-studies": {
+    "case-study cover (illustration)": 1,
+    "brand (owner-supplied)": 2,
+    "existing-3d-render (project)": 1
+   },
+   "interview-radar": {},
+   "repass": {}
+  },
+  "audio_files": 0,
+  "models_3d": 0
+ },
+ "assets": [
+  {
+   "path": "app/public/favicon.svg",
+   "type": "image",
+   "group": "brand (Gaurav.OS)",
+   "project": null,
+   "bytes": 718,
+   "variants": 1
+  },
+  {
+   "path": "app/public/og-default.png",
+   "type": "image",
+   "group": "brand (Gaurav.OS)",
+   "project": null,
+   "bytes": 124807,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/ui/divider-orbit.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 591,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/ui/focus-frame.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 316,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/sections/section-lab-notes.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 3503,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/sections/section-ask-gaurav-pipeline.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 24713,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/sections/section-challenge-branches.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 13559,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/sections/section-operating-loop.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 19751,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/sections/section-evidence-levels.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 19261,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/hero/hero-orbit-field-mobile.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 5532,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/hero/hero-orbit-field-desktop.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 5866,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/brand/gauravos-wordmark-on-dark.svg",
+   "type": "image",
+   "group": "brand (Gaurav.OS)",
+   "project": null,
+   "bytes": 8722,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/brand/gauravos-wordmark-compact.svg",
+   "type": "image",
+   "group": "brand (Gaurav.OS)",
+   "project": null,
+   "bytes": 3666,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/brand/gauravos-favicon.svg",
+   "type": "image",
+   "group": "brand (Gaurav.OS)",
+   "project": null,
+   "bytes": 718,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/brand/gauravos-wordmark-on-light.svg",
+   "type": "image",
+   "group": "brand (Gaurav.OS)",
+   "project": null,
+   "bytes": 8708,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/brand/gauravos-app-icon-512.svg",
+   "type": "image",
+   "group": "brand (Gaurav.OS)",
+   "project": null,
+   "bytes": 851,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/og/og-default-1200x630.svg",
+   "type": "image",
+   "group": "brand (Gaurav.OS)",
+   "project": null,
+   "bytes": 34340,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/spatial/skyline-panorama-3840.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 17983,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/spatial/district-map-2d.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 51132,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/spatial/ground-grid-tile-1024.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 1745,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-build-code.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 327,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-action-search.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 266,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-action-close.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 241,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-action-arrow.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 242,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-mode-explore.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 274,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-district-ai-safety.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 322,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-product-cube.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 304,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-district-product-leadership.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 334,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-mode-recruiter.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 360,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-action-skip.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 241,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-ai-network.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 395,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-action-ask.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 319,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-action-download-cv.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 290,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-district-healthtech.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 261,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-district-research.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 363,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-district-experience.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 354,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-district-knowledge-hq.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 377,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/icons/icon-status-evidence.svg",
+   "type": "image",
+   "group": "ui-icon",
+   "project": null,
+   "bytes": 322,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/districts/district-02-healthtech-innovation.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 2551,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/districts/district-01-product-leadership.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 3721,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/districts/district-05-professional-experience.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 7502,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/districts/district-04-research-analytics.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 8609,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/districts/district-06-knowledge-hq.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 2993,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/districts/district-03-ai-safety-lab.svg",
+   "type": "image",
+   "group": "site-graphic",
+   "project": null,
+   "bytes": 4282,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/covers/cover-aaroh.svg",
+   "type": "image",
+   "group": "case-study cover (illustration)",
+   "project": "aaroh",
+   "bytes": 20048,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/covers/cover-nexus.svg",
+   "type": "image",
+   "group": "case-study cover (illustration)",
+   "project": "nexus",
+   "bytes": 22569,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/covers/cover-careconnect.svg",
+   "type": "image",
+   "group": "case-study cover (illustration)",
+   "project": "careconnect",
+   "bytes": 27087,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/covers/cover-ghargyaan.svg",
+   "type": "image",
+   "group": "case-study cover (illustration)",
+   "project": "ghargyaan",
+   "bytes": 16966,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/covers/cover-rupee-radar.webp",
+   "type": "image",
+   "group": "case-study cover (illustration)",
+   "project": "rupee-radar",
+   "bytes": 25010,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/covers/cover-evamastu.svg",
+   "type": "image",
+   "group": "case-study cover (illustration)",
+   "project": "evamastu",
+   "bytes": 23762,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/covers/cover-phonepe-smart-spend-coach.svg",
+   "type": "image",
+   "group": "case-study cover (illustration)",
+   "project": "phonepe-smart-spend-coach",
+   "bytes": 33052,
+   "variants": 1
+  },
+  {
+   "path": "app/public/brand/covers/cover-90-day-corpus.svg",
+   "type": "image",
+   "group": "case-study cover (illustration)",
+   "project": "90-day-case-studies",
+   "bytes": 25891,
+   "variants": 1
+  },
+  {
+   "path": "app/public/cinematic/render-ask",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 115556,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/brand-nexus",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "nexus",
+   "bytes": 158150,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/knowledge-headquarters",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 829466,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/how-i-think",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 616966,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-lab-notes",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 116411,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-project-careconnect",
+   "type": "image",
+   "group": "existing-3d-render (project)",
+   "project": "careconnect",
+   "bytes": 89888,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/brand-ghargyaan",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "ghargyaan",
+   "bytes": 247189,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-project-nexus",
+   "type": "image",
+   "group": "existing-3d-render (project)",
+   "project": "nexus",
+   "bytes": 106283,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/research-analytics",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 705724,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-project-ghargyaan",
+   "type": "image",
+   "group": "existing-3d-render (project)",
+   "project": "ghargyaan",
+   "bytes": 95667,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-product-thinking",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 128731,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-project-evamastu",
+   "type": "image",
+   "group": "existing-3d-render (project)",
+   "project": "evamastu",
+   "bytes": 243109,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-project-phonepe-smart-spend-coach",
+   "type": "image",
+   "group": "existing-3d-render (project)",
+   "project": "phonepe-smart-spend-coach",
+   "bytes": 124706,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-about",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 120879,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/gaurav-world-hero",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 793383,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/brand-aaroh",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "aaroh",
+   "bytes": 123492,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/brand-careconnect",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "careconnect",
+   "bytes": 152521,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/brand-the-teardown",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "the-teardown",
+   "bytes": 164011,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/professional-experience",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 551768,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-project-aaroh",
+   "type": "image",
+   "group": "existing-3d-render (project)",
+   "project": "aaroh",
+   "bytes": 104344,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-teardown",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 111752,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-projects",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 135526,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-atlas",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 158047,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/brand-rupee-radar",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "rupee-radar",
+   "bytes": 156900,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/brand-90-day-case-studies",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "90-day-case-studies",
+   "bytes": 267901,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-skills",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 115473,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/brand-phonepe-smart-spend-coach",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "phonepe-smart-spend-coach",
+   "bytes": 228253,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-case-studies",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 118438,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/ai-safety-lab",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 706955,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/product-leadership",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 543972,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-project-90-day-case-studies",
+   "type": "image",
+   "group": "existing-3d-render (project)",
+   "project": "90-day-case-studies",
+   "bytes": 145021,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-contact",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 178179,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-search",
+   "type": "image",
+   "group": "cinematic-artwork",
+   "project": null,
+   "bytes": 134253,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/brand-gaurav-os-logo",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": null,
+   "bytes": 133387,
+   "variants": 10
+  },
+  {
+   "path": "app/public/cinematic/render-project-rupee-radar",
+   "type": "image",
+   "group": "existing-3d-render (project)",
+   "project": "rupee-radar",
+   "bytes": 171039,
+   "variants": 10
+  },
+  {
+   "path": "app/public/media/gaurav-os-intro-h264-720p.mp4",
+   "type": "video",
+   "group": "video",
+   "project": null,
+   "bytes": 3756033,
+   "variants": 1
+  },
+  {
+   "path": "app/public/media/gaurav-os-poster.webp",
+   "type": "image",
+   "group": "video",
+   "project": null,
+   "bytes": 15162,
+   "variants": 1
+  },
+  {
+   "path": "app/public/media/gaurav-kumar-singh-cv.pdf",
+   "type": "document",
+   "group": "document",
+   "project": null,
+   "bytes": 113312,
+   "variants": 1
+  },
+  {
+   "path": "app/public/media/gaurav-os-intro-av1-1080p.mp4",
+   "type": "video",
+   "group": "video",
+   "project": null,
+   "bytes": 3850704,
+   "variants": 1
+  },
+  {
+   "path": "app/public/media/gaurav-os-poster.jpg",
+   "type": "image",
+   "group": "video",
+   "project": null,
+   "bytes": 21020,
+   "variants": 1
+  },
+  {
+   "path": "app/public/media/portrait/gaurav-portrait.webp",
+   "type": "image",
+   "group": "profile",
+   "project": null,
+   "bytes": 42678,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--11-mobile-research-first.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 32246,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--06-sources-injection-flag.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 7554,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--14-care-plan-medicines.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 5510,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--18-family-tablet.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 25558,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--10-family-dashboard-mobile.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 29608,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/ghargyaan--03-result.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "ghargyaan",
+   "bytes": 26084,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--07-attendant-shift.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 23662,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--16-attendant-join.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 13176,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--10-research-first.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 10886,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--07-dark.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 17544,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--02-resolve-conflict.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 11322,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/ghargyaan--01-home.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "ghargyaan",
+   "bytes": 22694,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/ghargyaan--00-landing-desktop.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "ghargyaan",
+   "bytes": 20862,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--03-change.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 17850,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--08-mobile-inbox.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 39830,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--01-inbox.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 17528,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--12-research-compare.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 22572,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/ghargyaan--06-safety-escalation.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "ghargyaan",
+   "bytes": 22984,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--04-commitment.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 11628,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--04-handover-pack.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 23674,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--11-corrections.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 15276,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--05-missing-document.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 11940,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--02-family-dashboard.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 12464,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/nexus--09-mobile-conflict.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "nexus",
+   "bytes": 36142,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--03-day-record.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 15534,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--08-attendant-report.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 28918,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--05-attendants.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 6270,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/ghargyaan--02-query-flow.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "ghargyaan",
+   "bytes": 15532,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--15-invite-code.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 6574,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/ghargyaan--05-explore.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "ghargyaan",
+   "bytes": 19930,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/ghargyaan--04-dadi-says.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "ghargyaan",
+   "bytes": 27570,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--12-create-care-case.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 7116,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--17-attendant-before-shift.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 32366,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--01-sign-in.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 4326,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--06-insights.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 23070,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--13-choose-recovery-type.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 9470,
+   "variants": 1
+  },
+  {
+   "path": "brand/screenshot-review/thumbs/careconnect--09-attendant-reason.webp",
+   "type": "image",
+   "group": "product-ui (pending approval)",
+   "project": "careconnect",
+   "bytes": 24700,
+   "variants": 1
+  },
+  {
+   "path": "brand/owner-art/source/brand-90-day-case-studies.webp",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "90-day-case-studies",
+   "bytes": 85040,
+   "variants": 1
+  },
+  {
+   "path": "brand/owner-art/source/brand-the-teardown.webp",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "the-teardown",
+   "bytes": 61360,
+   "variants": 1
+  },
+  {
+   "path": "brand/owner-art/source/brand-nexus.webp",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "nexus",
+   "bytes": 52074,
+   "variants": 1
+  },
+  {
+   "path": "brand/owner-art/source/brand-ghargyaan.webp",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "ghargyaan",
+   "bytes": 81432,
+   "variants": 1
+  },
+  {
+   "path": "brand/owner-art/source/brand-rupee-radar.webp",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "rupee-radar",
+   "bytes": 51912,
+   "variants": 1
+  },
+  {
+   "path": "brand/owner-art/source/brand-careconnect.webp",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "careconnect",
+   "bytes": 49874,
+   "variants": 1
+  },
+  {
+   "path": "brand/owner-art/source/brand-gaurav-os-logo.webp",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": null,
+   "bytes": 43046,
+   "variants": 1
+  },
+  {
+   "path": "brand/owner-art/source/brand-aaroh.webp",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "aaroh",
+   "bytes": 39848,
+   "variants": 1
+  },
+  {
+   "path": "brand/owner-art/source/brand-phonepe-smart-spend-coach.webp",
+   "type": "image",
+   "group": "brand (owner-supplied)",
+   "project": "phonepe-smart-spend-coach",
+   "bytes": 72882,
+   "variants": 1
+  }
+ ]
+}

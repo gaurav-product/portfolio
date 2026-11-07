@@ -1,0 +1,2350 @@
+{
+  "generated_by": "brand/tools/build_cinematic.py",
+  "assets": [
+    {
+      "id": "ai-safety-lab",
+      "brief_image": 4,
+      "source": "brand/cinematic/source/ai-safety-lab.webp",
+      "source_bytes": 288796,
+      "width": 1672,
+      "height": 941,
+      "aspect": 1.7768,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/ai-safety-lab-1600.webp",
+          "bytes": 163638
+        },
+        "1200": {
+          "file": "/cinematic/ai-safety-lab-1200.webp",
+          "bytes": 114250
+        },
+        "960": {
+          "file": "/cinematic/ai-safety-lab-960.webp",
+          "bytes": 84642
+        },
+        "768": {
+          "file": "/cinematic/ai-safety-lab-768.webp",
+          "bytes": 62338
+        },
+        "480": {
+          "file": "/cinematic/ai-safety-lab-480.webp",
+          "bytes": 30760
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/ai-safety-lab-1600.avif",
+          "bytes": 90615
+        },
+        "1200": {
+          "file": "/cinematic/ai-safety-lab-1200.avif",
+          "bytes": 63360
+        },
+        "960": {
+          "file": "/cinematic/ai-safety-lab-960.avif",
+          "bytes": 46250
+        },
+        "768": {
+          "file": "/cinematic/ai-safety-lab-768.avif",
+          "bytes": 34001
+        },
+        "480": {
+          "file": "/cinematic/ai-safety-lab-480.avif",
+          "bytes": 17101
+        }
+      },
+      "purpose": "AI & Safety Lab district and AI Lab page",
+      "used_by": [
+        "/districts/ai-safety-lab",
+        "/ai-lab"
+      ],
+      "alt": "Illustration of a glass laboratory with a shield around a brain, beside panels reading safety screening, evidence labelling, guardrails and evaluation.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "Safety Screening",
+        "Evidence Labelling",
+        "Guardrails",
+        "Evaluation",
+        "AI"
+      ],
+      "caution": "",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "gaurav-world-hero",
+      "brief_image": 1,
+      "source": "brand/cinematic/source/gaurav-world-hero.webp",
+      "source_bytes": 348472,
+      "width": 1670,
+      "height": 941,
+      "aspect": 1.7747,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/gaurav-world-hero-1600.webp",
+          "bytes": 186896
+        },
+        "1200": {
+          "file": "/cinematic/gaurav-world-hero-1200.webp",
+          "bytes": 127578
+        },
+        "960": {
+          "file": "/cinematic/gaurav-world-hero-960.webp",
+          "bytes": 91844
+        },
+        "768": {
+          "file": "/cinematic/gaurav-world-hero-768.webp",
+          "bytes": 64348
+        },
+        "480": {
+          "file": "/cinematic/gaurav-world-hero-480.webp",
+          "bytes": 30182
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/gaurav-world-hero-1600.avif",
+          "bytes": 109125
+        },
+        "1200": {
+          "file": "/cinematic/gaurav-world-hero-1200.avif",
+          "bytes": 74578
+        },
+        "960": {
+          "file": "/cinematic/gaurav-world-hero-960.avif",
+          "bytes": 53176
+        },
+        "768": {
+          "file": "/cinematic/gaurav-world-hero-768.avif",
+          "bytes": 37868
+        },
+        "480": {
+          "file": "/cinematic/gaurav-world-hero-480.avif",
+          "bytes": 17788
+        }
+      },
+      "purpose": "Brief images 1 and 3: homepage hero; Explore Mode interactive map; HealthTech district (campus overview)",
+      "used_by": [
+        "/",
+        "/explore",
+        "/districts/healthtech-innovation"
+      ],
+      "alt": "Illustration of the Gaurav.OS campus: six glowing district platforms linked to a central headquarters in a misty mountain landscape at sunset.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "PRODUCT × AI × BUILDING",
+        "six district labels"
+      ],
+      "caution": "",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "how-i-think",
+      "brief_image": 8,
+      "source": "brand/cinematic/source/how-i-think.webp",
+      "source_bytes": 257780,
+      "width": 1670,
+      "height": 941,
+      "aspect": 1.7747,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/how-i-think-1600.webp",
+          "bytes": 141070
+        },
+        "1200": {
+          "file": "/cinematic/how-i-think-1200.webp",
+          "bytes": 98188
+        },
+        "960": {
+          "file": "/cinematic/how-i-think-960.webp",
+          "bytes": 71766
+        },
+        "768": {
+          "file": "/cinematic/how-i-think-768.webp",
+          "bytes": 51604
+        },
+        "480": {
+          "file": "/cinematic/how-i-think-480.webp",
+          "bytes": 25716
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/how-i-think-1600.avif",
+          "bytes": 84128
+        },
+        "1200": {
+          "file": "/cinematic/how-i-think-1200.avif",
+          "bytes": 57492
+        },
+        "960": {
+          "file": "/cinematic/how-i-think-960.avif",
+          "bytes": 41736
+        },
+        "768": {
+          "file": "/cinematic/how-i-think-768.avif",
+          "bytes": 30087
+        },
+        "480": {
+          "file": "/cinematic/how-i-think-480.avif",
+          "bytes": 15179
+        }
+      },
+      "purpose": "About — How I Think; Product Thinking",
+      "used_by": [
+        "/about",
+        "/product-thinking"
+      ],
+      "alt": "Illustration of the operating loop — observe, frame, research, hypothesize, build, measure, learn, iterate — around a glass cube holding a brain.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "Observe",
+        "Frame",
+        "Research",
+        "Hypothesize",
+        "Build",
+        "Measure",
+        "Learn",
+        "Iterate"
+      ],
+      "caution": "",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "knowledge-headquarters",
+      "brief_image": 7,
+      "source": "brand/cinematic/source/knowledge-headquarters.webp",
+      "source_bytes": 350688,
+      "width": 1671,
+      "height": 941,
+      "aspect": 1.7758,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/knowledge-headquarters-1600.webp",
+          "bytes": 199224
+        },
+        "1200": {
+          "file": "/cinematic/knowledge-headquarters-1200.webp",
+          "bytes": 135696
+        },
+        "960": {
+          "file": "/cinematic/knowledge-headquarters-960.webp",
+          "bytes": 97456
+        },
+        "768": {
+          "file": "/cinematic/knowledge-headquarters-768.webp",
+          "bytes": 69500
+        },
+        "480": {
+          "file": "/cinematic/knowledge-headquarters-480.webp",
+          "bytes": 32756
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/knowledge-headquarters-1600.avif",
+          "bytes": 107498
+        },
+        "1200": {
+          "file": "/cinematic/knowledge-headquarters-1200.avif",
+          "bytes": 74701
+        },
+        "960": {
+          "file": "/cinematic/knowledge-headquarters-960.avif",
+          "bytes": 54733
+        },
+        "768": {
+          "file": "/cinematic/knowledge-headquarters-768.avif",
+          "bytes": 39148
+        },
+        "480": {
+          "file": "/cinematic/knowledge-headquarters-480.avif",
+          "bytes": 18754
+        }
+      },
+      "purpose": "Knowledge & Headquarters district",
+      "used_by": [
+        "/districts/knowledge-hq",
+        "/explore?d=knowledge-hq"
+      ],
+      "alt": "Illustration of a domed glass library at night, flanked by glowing monoliths with education, certificate, knowledge-layer and people icons.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "PRODUCT × AI × BUILDNG (sic — misspelt in the source image)"
+      ],
+      "caution": "The tagline baked into this image is misspelt (\"BUILDNG\"); layouts must keep that corner covered or cropped.",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "product-leadership",
+      "brief_image": 2,
+      "source": "brand/cinematic/source/product-leadership.webp",
+      "source_bytes": 248408,
+      "width": 1671,
+      "height": 941,
+      "aspect": 1.7758,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/product-leadership-1600.webp",
+          "bytes": 123416
+        },
+        "1200": {
+          "file": "/cinematic/product-leadership-1200.webp",
+          "bytes": 84058
+        },
+        "960": {
+          "file": "/cinematic/product-leadership-960.webp",
+          "bytes": 61776
+        },
+        "768": {
+          "file": "/cinematic/product-leadership-768.webp",
+          "bytes": 43962
+        },
+        "480": {
+          "file": "/cinematic/product-leadership-480.webp",
+          "bytes": 22094
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/product-leadership-1600.avif",
+          "bytes": 77254
+        },
+        "1200": {
+          "file": "/cinematic/product-leadership-1200.avif",
+          "bytes": 52552
+        },
+        "960": {
+          "file": "/cinematic/product-leadership-960.avif",
+          "bytes": 37944
+        },
+        "768": {
+          "file": "/cinematic/product-leadership-768.avif",
+          "bytes": 27384
+        },
+        "480": {
+          "file": "/cinematic/product-leadership-480.avif",
+          "bytes": 13532
+        }
+      },
+      "purpose": "Product Leadership district",
+      "used_by": [
+        "/districts/product-leadership",
+        "/explore?d=product-leadership"
+      ],
+      "alt": "Illustration of three glass panels labelled Product, AI and Building beside a glowing stone path that winds up a misty mountain towards the sunrise.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "PRODUCT × AI × BUILDING",
+        "Product",
+        "AI",
+        "Building"
+      ],
+      "caution": "Panels show decorative layer, network and bar-chart motifs. Not data.",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "professional-experience",
+      "brief_image": 6,
+      "source": "brand/cinematic/source/professional-experience.webp",
+      "source_bytes": 239296,
+      "width": 1671,
+      "height": 941,
+      "aspect": 1.7758,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/professional-experience-1600.webp",
+          "bytes": 123740
+        },
+        "1200": {
+          "file": "/cinematic/professional-experience-1200.webp",
+          "bytes": 85540
+        },
+        "960": {
+          "file": "/cinematic/professional-experience-960.webp",
+          "bytes": 63372
+        },
+        "768": {
+          "file": "/cinematic/professional-experience-768.webp",
+          "bytes": 45268
+        },
+        "480": {
+          "file": "/cinematic/professional-experience-480.webp",
+          "bytes": 22706
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/professional-experience-1600.avif",
+          "bytes": 76996
+        },
+        "1200": {
+          "file": "/cinematic/professional-experience-1200.avif",
+          "bytes": 53430
+        },
+        "960": {
+          "file": "/cinematic/professional-experience-960.avif",
+          "bytes": 39018
+        },
+        "768": {
+          "file": "/cinematic/professional-experience-768.avif",
+          "bytes": 27947
+        },
+        "480": {
+          "file": "/cinematic/professional-experience-480.avif",
+          "bytes": 13751
+        }
+      },
+      "purpose": "Professional Experience district and Experience page",
+      "used_by": [
+        "/districts/professional-experience",
+        "/experience"
+      ],
+      "alt": "Illustration of an illuminated stairway climbing a mountain path past four glass markers.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark"
+      ],
+      "caution": "",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "research-analytics",
+      "brief_image": 5,
+      "source": "brand/cinematic/source/research-analytics.webp",
+      "source_bytes": 291854,
+      "width": 1672,
+      "height": 941,
+      "aspect": 1.7768,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/research-analytics-1600.webp",
+          "bytes": 164084
+        },
+        "1200": {
+          "file": "/cinematic/research-analytics-1200.webp",
+          "bytes": 114272
+        },
+        "960": {
+          "file": "/cinematic/research-analytics-960.webp",
+          "bytes": 83434
+        },
+        "768": {
+          "file": "/cinematic/research-analytics-768.webp",
+          "bytes": 60132
+        },
+        "480": {
+          "file": "/cinematic/research-analytics-480.webp",
+          "bytes": 28896
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/research-analytics-1600.avif",
+          "bytes": 93209
+        },
+        "1200": {
+          "file": "/cinematic/research-analytics-1200.avif",
+          "bytes": 64446
+        },
+        "960": {
+          "file": "/cinematic/research-analytics-960.avif",
+          "bytes": 46835
+        },
+        "768": {
+          "file": "/cinematic/research-analytics-768.avif",
+          "bytes": 33977
+        },
+        "480": {
+          "file": "/cinematic/research-analytics-480.avif",
+          "bytes": 16439
+        }
+      },
+      "purpose": "Research & Analytics district and Research library",
+      "used_by": [
+        "/districts/research-analytics",
+        "/research"
+      ],
+      "alt": "Illustration of an open glowing book on a plinth under a data globe, with research panels and a telescope.",
+      "provenance": "AI-GENERATED ILLUSTRATION — supplied by Gaurav (ChatGPT image generation)",
+      "baked_text": [
+        "Gaurav.OS wordmark",
+        "90 Case Studies",
+        "Research Insights",
+        "Evidence Framework",
+        "From Findings to Decisions"
+      ],
+      "caution": "Contains decorative charts. Never present as real data — always captioned as an illustration.",
+      "not_evidence": "Atmospheric illustration. Not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-about",
+      "brief_image": null,
+      "source": "brand/renders/source/render-about.webp",
+      "source_bytes": 98986,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-about-1600.webp",
+          "bytes": 26150
+        },
+        "1200": {
+          "file": "/cinematic/render-about-1200.webp",
+          "bytes": 17766
+        },
+        "960": {
+          "file": "/cinematic/render-about-960.webp",
+          "bytes": 13776
+        },
+        "768": {
+          "file": "/cinematic/render-about-768.webp",
+          "bytes": 9886
+        },
+        "480": {
+          "file": "/cinematic/render-about-480.webp",
+          "bytes": 5090
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-about-1600.avif",
+          "bytes": 17334
+        },
+        "1200": {
+          "file": "/cinematic/render-about-1200.avif",
+          "bytes": 11833
+        },
+        "960": {
+          "file": "/cinematic/render-about-960.avif",
+          "bytes": 8658
+        },
+        "768": {
+          "file": "/cinematic/render-about-768.avif",
+          "bytes": 6605
+        },
+        "480": {
+          "file": "/cinematic/render-about-480.avif",
+          "bytes": 3781
+        }
+      },
+      "purpose": "About page header",
+      "used_by": [
+        "/about"
+      ],
+      "alt": "3D render: eight glowing nodes orbit a glass cube above a lit plinth — the operating loop.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-ask",
+      "brief_image": null,
+      "source": "brand/renders/source/render-ask.webp",
+      "source_bytes": 99472,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-ask-1600.webp",
+          "bytes": 26046
+        },
+        "1200": {
+          "file": "/cinematic/render-ask-1200.webp",
+          "bytes": 16880
+        },
+        "960": {
+          "file": "/cinematic/render-ask-960.webp",
+          "bytes": 12126
+        },
+        "768": {
+          "file": "/cinematic/render-ask-768.webp",
+          "bytes": 8550
+        },
+        "480": {
+          "file": "/cinematic/render-ask-480.webp",
+          "bytes": 4188
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-ask-1600.avif",
+          "bytes": 17785
+        },
+        "1200": {
+          "file": "/cinematic/render-ask-1200.avif",
+          "bytes": 11463
+        },
+        "960": {
+          "file": "/cinematic/render-ask-960.avif",
+          "bytes": 8716
+        },
+        "768": {
+          "file": "/cinematic/render-ask-768.avif",
+          "bytes": 6417
+        },
+        "480": {
+          "file": "/cinematic/render-ask-480.avif",
+          "bytes": 3385
+        }
+      },
+      "purpose": "Ask Gaurav header",
+      "used_by": [
+        "/ask"
+      ],
+      "alt": "3D render: a faceted core with a ring of index cards in orbit; a beam links the core to one card.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-atlas",
+      "brief_image": null,
+      "source": "brand/renders/source/render-atlas.webp",
+      "source_bytes": 116090,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-atlas-1600.webp",
+          "bytes": 31960
+        },
+        "1200": {
+          "file": "/cinematic/render-atlas-1200.webp",
+          "bytes": 22110
+        },
+        "960": {
+          "file": "/cinematic/render-atlas-960.webp",
+          "bytes": 16882
+        },
+        "768": {
+          "file": "/cinematic/render-atlas-768.webp",
+          "bytes": 12988
+        },
+        "480": {
+          "file": "/cinematic/render-atlas-480.webp",
+          "bytes": 6892
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-atlas-1600.avif",
+          "bytes": 23678
+        },
+        "1200": {
+          "file": "/cinematic/render-atlas-1200.avif",
+          "bytes": 16841
+        },
+        "960": {
+          "file": "/cinematic/render-atlas-960.avif",
+          "bytes": 12378
+        },
+        "768": {
+          "file": "/cinematic/render-atlas-768.avif",
+          "bytes": 9232
+        },
+        "480": {
+          "file": "/cinematic/render-atlas-480.avif",
+          "bytes": 5086
+        }
+      },
+      "purpose": "Product Atlas header",
+      "used_by": [
+        "/atlas"
+      ],
+      "alt": "3D render: a globe made of points with glowing arcs between them.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-case-studies",
+      "brief_image": null,
+      "source": "brand/renders/source/render-case-studies.webp",
+      "source_bytes": 95220,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-case-studies-1600.webp",
+          "bytes": 25420
+        },
+        "1200": {
+          "file": "/cinematic/render-case-studies-1200.webp",
+          "bytes": 17386
+        },
+        "960": {
+          "file": "/cinematic/render-case-studies-960.webp",
+          "bytes": 13038
+        },
+        "768": {
+          "file": "/cinematic/render-case-studies-768.webp",
+          "bytes": 9894
+        },
+        "480": {
+          "file": "/cinematic/render-case-studies-480.webp",
+          "bytes": 5570
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-case-studies-1600.avif",
+          "bytes": 16208
+        },
+        "1200": {
+          "file": "/cinematic/render-case-studies-1200.avif",
+          "bytes": 11488
+        },
+        "960": {
+          "file": "/cinematic/render-case-studies-960.avif",
+          "bytes": 8790
+        },
+        "768": {
+          "file": "/cinematic/render-case-studies-768.avif",
+          "bytes": 6684
+        },
+        "480": {
+          "file": "/cinematic/render-case-studies-480.avif",
+          "bytes": 3960
+        }
+      },
+      "purpose": "Case studies page header",
+      "used_by": [
+        "/case-studies"
+      ],
+      "alt": "3D render: a branching decision tree of nodes, with one path lit from the root to a single outcome.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-contact",
+      "brief_image": null,
+      "source": "brand/renders/source/render-contact.webp",
+      "source_bytes": 141014,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-contact-1600.webp",
+          "bytes": 41328
+        },
+        "1200": {
+          "file": "/cinematic/render-contact-1200.webp",
+          "bytes": 27936
+        },
+        "960": {
+          "file": "/cinematic/render-contact-960.webp",
+          "bytes": 20680
+        },
+        "768": {
+          "file": "/cinematic/render-contact-768.webp",
+          "bytes": 15224
+        },
+        "480": {
+          "file": "/cinematic/render-contact-480.webp",
+          "bytes": 7806
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-contact-1600.avif",
+          "bytes": 23769
+        },
+        "1200": {
+          "file": "/cinematic/render-contact-1200.avif",
+          "bytes": 15831
+        },
+        "960": {
+          "file": "/cinematic/render-contact-960.avif",
+          "bytes": 11653
+        },
+        "768": {
+          "file": "/cinematic/render-contact-768.avif",
+          "bytes": 9209
+        },
+        "480": {
+          "file": "/cinematic/render-contact-480.avif",
+          "bytes": 4743
+        }
+      },
+      "purpose": "Contact page header",
+      "used_by": [
+        "/contact"
+      ],
+      "alt": "3D render: a beacon on a mast sending rings of signal outward.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-lab-notes",
+      "brief_image": null,
+      "source": "brand/renders/source/render-lab-notes.webp",
+      "source_bytes": 98794,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-lab-notes-1600.webp",
+          "bytes": 26024
+        },
+        "1200": {
+          "file": "/cinematic/render-lab-notes-1200.webp",
+          "bytes": 17182
+        },
+        "960": {
+          "file": "/cinematic/render-lab-notes-960.webp",
+          "bytes": 12634
+        },
+        "768": {
+          "file": "/cinematic/render-lab-notes-768.webp",
+          "bytes": 9260
+        },
+        "480": {
+          "file": "/cinematic/render-lab-notes-480.webp",
+          "bytes": 4800
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-lab-notes-1600.avif",
+          "bytes": 17353
+        },
+        "1200": {
+          "file": "/cinematic/render-lab-notes-1200.avif",
+          "bytes": 11233
+        },
+        "960": {
+          "file": "/cinematic/render-lab-notes-960.avif",
+          "bytes": 8116
+        },
+        "768": {
+          "file": "/cinematic/render-lab-notes-768.avif",
+          "bytes": 6307
+        },
+        "480": {
+          "file": "/cinematic/render-lab-notes-480.avif",
+          "bytes": 3502
+        }
+      },
+      "purpose": "Lab Notes header",
+      "used_by": [
+        "/lab-notes"
+      ],
+      "alt": "3D render: translucent ruled pages floating above a lit plinth.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-product-thinking",
+      "brief_image": null,
+      "source": "brand/renders/source/render-product-thinking.webp",
+      "source_bytes": 106682,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-product-thinking-1600.webp",
+          "bytes": 28376
+        },
+        "1200": {
+          "file": "/cinematic/render-product-thinking-1200.webp",
+          "bytes": 19326
+        },
+        "960": {
+          "file": "/cinematic/render-product-thinking-960.webp",
+          "bytes": 14680
+        },
+        "768": {
+          "file": "/cinematic/render-product-thinking-768.webp",
+          "bytes": 11052
+        },
+        "480": {
+          "file": "/cinematic/render-product-thinking-480.webp",
+          "bytes": 5890
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-product-thinking-1600.avif",
+          "bytes": 18085
+        },
+        "1200": {
+          "file": "/cinematic/render-product-thinking-1200.avif",
+          "bytes": 12097
+        },
+        "960": {
+          "file": "/cinematic/render-product-thinking-960.avif",
+          "bytes": 8804
+        },
+        "768": {
+          "file": "/cinematic/render-product-thinking-768.avif",
+          "bytes": 6564
+        },
+        "480": {
+          "file": "/cinematic/render-product-thinking-480.avif",
+          "bytes": 3857
+        }
+      },
+      "purpose": "Product Thinking page header",
+      "used_by": [
+        "/product-thinking"
+      ],
+      "alt": "3D render: stacked rings narrowing like a funnel, with particles falling through to one glowing point.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-90-day-case-studies",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-90-day-case-studies.webp",
+      "source_bytes": 104898,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-90-day-case-studies-1600.webp",
+          "bytes": 28786
+        },
+        "1200": {
+          "file": "/cinematic/render-project-90-day-case-studies-1200.webp",
+          "bytes": 20066
+        },
+        "960": {
+          "file": "/cinematic/render-project-90-day-case-studies-960.webp",
+          "bytes": 14526
+        },
+        "768": {
+          "file": "/cinematic/render-project-90-day-case-studies-768.webp",
+          "bytes": 10664
+        },
+        "480": {
+          "file": "/cinematic/render-project-90-day-case-studies-480.webp",
+          "bytes": 5650
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-90-day-case-studies-1600.avif",
+          "bytes": 24342
+        },
+        "1200": {
+          "file": "/cinematic/render-project-90-day-case-studies-1200.avif",
+          "bytes": 16071
+        },
+        "960": {
+          "file": "/cinematic/render-project-90-day-case-studies-960.avif",
+          "bytes": 11541
+        },
+        "768": {
+          "file": "/cinematic/render-project-90-day-case-studies-768.avif",
+          "bytes": 8825
+        },
+        "480": {
+          "file": "/cinematic/render-project-90-day-case-studies-480.avif",
+          "bytes": 4550
+        }
+      },
+      "purpose": "90 case studies project art",
+      "used_by": [
+        "/projects",
+        "/projects/90-day-case-studies"
+      ],
+      "alt": "3D render: a curved wall of ninety tiles, some lit, facing a single point of light.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-aaroh",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-aaroh.webp",
+      "source_bytes": 93092,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-aaroh-1600.webp",
+          "bytes": 22434
+        },
+        "1200": {
+          "file": "/cinematic/render-project-aaroh-1200.webp",
+          "bytes": 15470
+        },
+        "960": {
+          "file": "/cinematic/render-project-aaroh-960.webp",
+          "bytes": 11626
+        },
+        "768": {
+          "file": "/cinematic/render-project-aaroh-768.webp",
+          "bytes": 8866
+        },
+        "480": {
+          "file": "/cinematic/render-project-aaroh-480.webp",
+          "bytes": 4926
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-aaroh-1600.avif",
+          "bytes": 14141
+        },
+        "1200": {
+          "file": "/cinematic/render-project-aaroh-1200.avif",
+          "bytes": 9922
+        },
+        "960": {
+          "file": "/cinematic/render-project-aaroh-960.avif",
+          "bytes": 7537
+        },
+        "768": {
+          "file": "/cinematic/render-project-aaroh-768.avif",
+          "bytes": 5895
+        },
+        "480": {
+          "file": "/cinematic/render-project-aaroh-480.avif",
+          "bytes": 3527
+        }
+      },
+      "purpose": "Aaroh project art",
+      "used_by": [
+        "/projects",
+        "/projects/aaroh"
+      ],
+      "alt": "3D render: a glowing stem rises above a glass surface while a branching root system spreads beneath it.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-careconnect",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-careconnect.webp",
+      "source_bytes": 87032,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-careconnect-1600.webp",
+          "bytes": 19294
+        },
+        "1200": {
+          "file": "/cinematic/render-project-careconnect-1200.webp",
+          "bytes": 12274
+        },
+        "960": {
+          "file": "/cinematic/render-project-careconnect-960.webp",
+          "bytes": 8702
+        },
+        "768": {
+          "file": "/cinematic/render-project-careconnect-768.webp",
+          "bytes": 6348
+        },
+        "480": {
+          "file": "/cinematic/render-project-careconnect-480.webp",
+          "bytes": 3228
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-careconnect-1600.avif",
+          "bytes": 15201
+        },
+        "1200": {
+          "file": "/cinematic/render-project-careconnect-1200.avif",
+          "bytes": 9789
+        },
+        "960": {
+          "file": "/cinematic/render-project-careconnect-960.avif",
+          "bytes": 7018
+        },
+        "768": {
+          "file": "/cinematic/render-project-careconnect-768.avif",
+          "bytes": 5244
+        },
+        "480": {
+          "file": "/cinematic/render-project-careconnect-480.avif",
+          "bytes": 2790
+        }
+      },
+      "purpose": "CareConnect project art",
+      "used_by": [
+        "/projects",
+        "/projects/careconnect"
+      ],
+      "alt": "3D render: a path of thirty tiles from a building marked with a cross to a small house, with a glass card part-way along.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-evamastu",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-evamastu.webp",
+      "source_bytes": 210606,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-evamastu-1600.webp",
+          "bytes": 56696
+        },
+        "1200": {
+          "file": "/cinematic/render-project-evamastu-1200.webp",
+          "bytes": 37440
+        },
+        "960": {
+          "file": "/cinematic/render-project-evamastu-960.webp",
+          "bytes": 27794
+        },
+        "768": {
+          "file": "/cinematic/render-project-evamastu-768.webp",
+          "bytes": 19960
+        },
+        "480": {
+          "file": "/cinematic/render-project-evamastu-480.webp",
+          "bytes": 10622
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-evamastu-1600.avif",
+          "bytes": 34178
+        },
+        "1200": {
+          "file": "/cinematic/render-project-evamastu-1200.avif",
+          "bytes": 22021
+        },
+        "960": {
+          "file": "/cinematic/render-project-evamastu-960.avif",
+          "bytes": 15987
+        },
+        "768": {
+          "file": "/cinematic/render-project-evamastu-768.avif",
+          "bytes": 11908
+        },
+        "480": {
+          "file": "/cinematic/render-project-evamastu-480.avif",
+          "bytes": 6503
+        }
+      },
+      "purpose": "Evamastu project art",
+      "used_by": [
+        "/projects",
+        "/projects/evamastu"
+      ],
+      "alt": "3D render: calm concentric ripples on dark water beneath a glass lotus, with points of light rising steadily.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-ghargyaan",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-ghargyaan.webp",
+      "source_bytes": 82800,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-ghargyaan-1600.webp",
+          "bytes": 19612
+        },
+        "1200": {
+          "file": "/cinematic/render-project-ghargyaan-1200.webp",
+          "bytes": 13458
+        },
+        "960": {
+          "file": "/cinematic/render-project-ghargyaan-960.webp",
+          "bytes": 10290
+        },
+        "768": {
+          "file": "/cinematic/render-project-ghargyaan-768.webp",
+          "bytes": 7588
+        },
+        "480": {
+          "file": "/cinematic/render-project-ghargyaan-480.webp",
+          "bytes": 4372
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-ghargyaan-1600.avif",
+          "bytes": 13670
+        },
+        "1200": {
+          "file": "/cinematic/render-project-ghargyaan-1200.avif",
+          "bytes": 10091
+        },
+        "960": {
+          "file": "/cinematic/render-project-ghargyaan-960.avif",
+          "bytes": 7351
+        },
+        "768": {
+          "file": "/cinematic/render-project-ghargyaan-768.avif",
+          "bytes": 5747
+        },
+        "480": {
+          "file": "/cinematic/render-project-ghargyaan-480.avif",
+          "bytes": 3488
+        }
+      },
+      "purpose": "GharGyaan project art",
+      "used_by": [
+        "/projects",
+        "/projects/ghargyaan"
+      ],
+      "alt": "3D render: points of light approach a glowing arch; a few amber points stop at it while green points continue to a faceted core.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-nexus",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-nexus.webp",
+      "source_bytes": 94582,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-nexus-1600.webp",
+          "bytes": 22940
+        },
+        "1200": {
+          "file": "/cinematic/render-project-nexus-1200.webp",
+          "bytes": 15722
+        },
+        "960": {
+          "file": "/cinematic/render-project-nexus-960.webp",
+          "bytes": 11362
+        },
+        "768": {
+          "file": "/cinematic/render-project-nexus-768.webp",
+          "bytes": 8408
+        },
+        "480": {
+          "file": "/cinematic/render-project-nexus-480.webp",
+          "bytes": 4500
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-nexus-1600.avif",
+          "bytes": 15166
+        },
+        "1200": {
+          "file": "/cinematic/render-project-nexus-1200.avif",
+          "bytes": 10593
+        },
+        "960": {
+          "file": "/cinematic/render-project-nexus-960.avif",
+          "bytes": 7963
+        },
+        "768": {
+          "file": "/cinematic/render-project-nexus-768.avif",
+          "bytes": 6114
+        },
+        "480": {
+          "file": "/cinematic/render-project-nexus-480.avif",
+          "bytes": 3515
+        }
+      },
+      "purpose": "Nexus project art",
+      "used_by": [
+        "/projects",
+        "/projects/nexus"
+      ],
+      "alt": "3D render: three streams of light converge on a glass cube; small amber markers sit on two of the streams.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-phonepe-smart-spend-coach",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-phonepe-smart-spend-coach.webp",
+      "source_bytes": 124502,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-1600.webp",
+          "bytes": 29104
+        },
+        "1200": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-1200.webp",
+          "bytes": 18656
+        },
+        "960": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-960.webp",
+          "bytes": 13642
+        },
+        "768": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-768.webp",
+          "bytes": 9956
+        },
+        "480": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-480.webp",
+          "bytes": 5332
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-1600.avif",
+          "bytes": 17947
+        },
+        "1200": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-1200.avif",
+          "bytes": 11907
+        },
+        "960": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-960.avif",
+          "bytes": 8429
+        },
+        "768": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-768.avif",
+          "bytes": 6277
+        },
+        "480": {
+          "file": "/cinematic/render-project-phonepe-smart-spend-coach-480.avif",
+          "bytes": 3456
+        }
+      },
+      "purpose": "PhonePe Smart Spend Coach project art (academic case)",
+      "used_by": [
+        "/projects",
+        "/projects/phonepe-smart-spend-coach"
+      ],
+      "alt": "3D render: stacks of coin-like discs on a plinth under a glowing guardrail, with a small light connected to one stack.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-project-rupee-radar",
+      "brief_image": null,
+      "source": "brand/renders/source/render-project-rupee-radar.webp",
+      "source_bytes": 142900,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-project-rupee-radar-1600.webp",
+          "bytes": 37590
+        },
+        "1200": {
+          "file": "/cinematic/render-project-rupee-radar-1200.webp",
+          "bytes": 25010
+        },
+        "960": {
+          "file": "/cinematic/render-project-rupee-radar-960.webp",
+          "bytes": 18732
+        },
+        "768": {
+          "file": "/cinematic/render-project-rupee-radar-768.webp",
+          "bytes": 13838
+        },
+        "480": {
+          "file": "/cinematic/render-project-rupee-radar-480.webp",
+          "bytes": 7472
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-project-rupee-radar-1600.avif",
+          "bytes": 25317
+        },
+        "1200": {
+          "file": "/cinematic/render-project-rupee-radar-1200.avif",
+          "bytes": 16654
+        },
+        "960": {
+          "file": "/cinematic/render-project-rupee-radar-960.avif",
+          "bytes": 12177
+        },
+        "768": {
+          "file": "/cinematic/render-project-rupee-radar-768.avif",
+          "bytes": 9258
+        },
+        "480": {
+          "file": "/cinematic/render-project-rupee-radar-480.avif",
+          "bytes": 4991
+        }
+      },
+      "purpose": "RupeeRadar page header art",
+      "used_by": [
+        "/projects/rupee-radar"
+      ],
+      "alt": "3D render: a radar sweep over a field of glowing bars, with a ring of amber points around the centre.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-projects",
+      "brief_image": null,
+      "source": "brand/renders/source/render-projects.webp",
+      "source_bytes": 126470,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-projects-1600.webp",
+          "bytes": 30444
+        },
+        "1200": {
+          "file": "/cinematic/render-projects-1200.webp",
+          "bytes": 19790
+        },
+        "960": {
+          "file": "/cinematic/render-projects-960.webp",
+          "bytes": 14010
+        },
+        "768": {
+          "file": "/cinematic/render-projects-768.webp",
+          "bytes": 10106
+        },
+        "480": {
+          "file": "/cinematic/render-projects-480.webp",
+          "bytes": 4840
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-projects-1600.avif",
+          "bytes": 21516
+        },
+        "1200": {
+          "file": "/cinematic/render-projects-1200.avif",
+          "bytes": 13833
+        },
+        "960": {
+          "file": "/cinematic/render-projects-960.avif",
+          "bytes": 9850
+        },
+        "768": {
+          "file": "/cinematic/render-projects-768.avif",
+          "bytes": 7305
+        },
+        "480": {
+          "file": "/cinematic/render-projects-480.avif",
+          "bytes": 3832
+        }
+      },
+      "purpose": "Projects page header",
+      "used_by": [
+        "/projects"
+      ],
+      "alt": "3D render: five layered platforms carrying abstract interface blocks, stacked above a lit plinth.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-search",
+      "brief_image": null,
+      "source": "brand/renders/source/render-search.webp",
+      "source_bytes": 102380,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-search-1600.webp",
+          "bytes": 25578
+        },
+        "1200": {
+          "file": "/cinematic/render-search-1200.webp",
+          "bytes": 17838
+        },
+        "960": {
+          "file": "/cinematic/render-search-960.webp",
+          "bytes": 13770
+        },
+        "768": {
+          "file": "/cinematic/render-search-768.webp",
+          "bytes": 10576
+        },
+        "480": {
+          "file": "/cinematic/render-search-480.webp",
+          "bytes": 6280
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-search-1600.avif",
+          "bytes": 20931
+        },
+        "1200": {
+          "file": "/cinematic/render-search-1200.avif",
+          "bytes": 14747
+        },
+        "960": {
+          "file": "/cinematic/render-search-960.avif",
+          "bytes": 10941
+        },
+        "768": {
+          "file": "/cinematic/render-search-768.avif",
+          "bytes": 8548
+        },
+        "480": {
+          "file": "/cinematic/render-search-480.avif",
+          "bytes": 5044
+        }
+      },
+      "purpose": "Search page header",
+      "used_by": [
+        "/search"
+      ],
+      "alt": "3D render: a glowing lens over a field of points, the points under it brighter.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-skills",
+      "brief_image": null,
+      "source": "brand/renders/source/render-skills.webp",
+      "source_bytes": 127402,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-skills-1600.webp",
+          "bytes": 25510
+        },
+        "1200": {
+          "file": "/cinematic/render-skills-1200.webp",
+          "bytes": 16404
+        },
+        "960": {
+          "file": "/cinematic/render-skills-960.webp",
+          "bytes": 11706
+        },
+        "768": {
+          "file": "/cinematic/render-skills-768.webp",
+          "bytes": 8482
+        },
+        "480": {
+          "file": "/cinematic/render-skills-480.webp",
+          "bytes": 4370
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-skills-1600.avif",
+          "bytes": 18359
+        },
+        "1200": {
+          "file": "/cinematic/render-skills-1200.avif",
+          "bytes": 12147
+        },
+        "960": {
+          "file": "/cinematic/render-skills-960.avif",
+          "bytes": 8757
+        },
+        "768": {
+          "file": "/cinematic/render-skills-768.avif",
+          "bytes": 6355
+        },
+        "480": {
+          "file": "/cinematic/render-skills-480.avif",
+          "bytes": 3383
+        }
+      },
+      "purpose": "Skills library header",
+      "used_by": [
+        "/skills"
+      ],
+      "alt": "3D render: a grid of columns of varying height, the tallest lit at their tops.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "render-teardown",
+      "brief_image": null,
+      "source": "brand/renders/source/render-teardown.webp",
+      "source_bytes": 115392,
+      "width": 2400,
+      "height": 1500,
+      "aspect": 1.6,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/render-teardown-1600.webp",
+          "bytes": 25636
+        },
+        "1200": {
+          "file": "/cinematic/render-teardown-1200.webp",
+          "bytes": 16078
+        },
+        "960": {
+          "file": "/cinematic/render-teardown-960.webp",
+          "bytes": 11334
+        },
+        "768": {
+          "file": "/cinematic/render-teardown-768.webp",
+          "bytes": 7994
+        },
+        "480": {
+          "file": "/cinematic/render-teardown-480.webp",
+          "bytes": 4064
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/render-teardown-1600.avif",
+          "bytes": 18172
+        },
+        "1200": {
+          "file": "/cinematic/render-teardown-1200.avif",
+          "bytes": 11663
+        },
+        "960": {
+          "file": "/cinematic/render-teardown-960.avif",
+          "bytes": 8265
+        },
+        "768": {
+          "file": "/cinematic/render-teardown-768.avif",
+          "bytes": 5652
+        },
+        "480": {
+          "file": "/cinematic/render-teardown-480.avif",
+          "bytes": 2894
+        }
+      },
+      "purpose": "Alternate newsletter art (the owner-supplied logo is used instead)",
+      "used_by": [],
+      "alt": "3D render: an exploded view of a slim device, its layers separated above a lit plinth with dotted assembly guides.",
+      "provenance": "ORIGINAL 3D RENDER — procedural three.js scene (brand/renders/scenes.js)",
+      "baked_text": [],
+      "caution": "",
+      "not_evidence": "Abstract 3D render. No text, logos or data; not a screenshot, facility, dashboard or product.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-90-day-case-studies",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-90-day-case-studies.webp",
+      "source_bytes": 85040,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-90-day-case-studies-1600.webp",
+          "bytes": 55290
+        },
+        "1200": {
+          "file": "/cinematic/brand-90-day-case-studies-1200.webp",
+          "bytes": 40434
+        },
+        "960": {
+          "file": "/cinematic/brand-90-day-case-studies-960.webp",
+          "bytes": 31530
+        },
+        "768": {
+          "file": "/cinematic/brand-90-day-case-studies-768.webp",
+          "bytes": 24754
+        },
+        "480": {
+          "file": "/cinematic/brand-90-day-case-studies-480.webp",
+          "bytes": 14238
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-90-day-case-studies-1600.avif",
+          "bytes": 33917
+        },
+        "1200": {
+          "file": "/cinematic/brand-90-day-case-studies-1200.avif",
+          "bytes": 23917
+        },
+        "960": {
+          "file": "/cinematic/brand-90-day-case-studies-960.avif",
+          "bytes": 19372
+        },
+        "768": {
+          "file": "/cinematic/brand-90-day-case-studies-768.avif",
+          "bytes": 15743
+        },
+        "480": {
+          "file": "/cinematic/brand-90-day-case-studies-480.avif",
+          "bytes": 8706
+        }
+      },
+      "purpose": "90 case studies project banner",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Banner: Product Management Case Studies — real products, deep analysis, product thinking — with tiles for problem framing, solution design, product strategy, and impact and learnings.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "Product Management Case Studies",
+        "Real Products",
+        "Deep Analysis",
+        "Product Thinking",
+        "Problem Framing",
+        "Solution Design",
+        "Product Strategy",
+        "Impact & Learnings"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-aaroh",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-aaroh.webp",
+      "source_bytes": 39848,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-aaroh-1600.webp",
+          "bytes": 24864
+        },
+        "1200": {
+          "file": "/cinematic/brand-aaroh-1200.webp",
+          "bytes": 17958
+        },
+        "960": {
+          "file": "/cinematic/brand-aaroh-960.webp",
+          "bytes": 14146
+        },
+        "768": {
+          "file": "/cinematic/brand-aaroh-768.webp",
+          "bytes": 11188
+        },
+        "480": {
+          "file": "/cinematic/brand-aaroh-480.webp",
+          "bytes": 6824
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-aaroh-1600.avif",
+          "bytes": 16279
+        },
+        "1200": {
+          "file": "/cinematic/brand-aaroh-1200.avif",
+          "bytes": 11493
+        },
+        "960": {
+          "file": "/cinematic/brand-aaroh-960.avif",
+          "bytes": 9164
+        },
+        "768": {
+          "file": "/cinematic/brand-aaroh-768.avif",
+          "bytes": 6985
+        },
+        "480": {
+          "file": "/cinematic/brand-aaroh-480.avif",
+          "bytes": 4591
+        }
+      },
+      "purpose": "Aaroh project logo",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Aaroh logo: a peak sheltering a rising figure whose roots spread below, above the word AAROH and the line Understand, Heal, Grow.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "AAROH",
+        "UNDERSTAND · HEAL · GROW"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-careconnect",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-careconnect.webp",
+      "source_bytes": 49874,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-careconnect-1600.webp",
+          "bytes": 31330
+        },
+        "1200": {
+          "file": "/cinematic/brand-careconnect-1200.webp",
+          "bytes": 22872
+        },
+        "960": {
+          "file": "/cinematic/brand-careconnect-960.webp",
+          "bytes": 17308
+        },
+        "768": {
+          "file": "/cinematic/brand-careconnect-768.webp",
+          "bytes": 13380
+        },
+        "480": {
+          "file": "/cinematic/brand-careconnect-480.webp",
+          "bytes": 7908
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-careconnect-1600.avif",
+          "bytes": 20526
+        },
+        "1200": {
+          "file": "/cinematic/brand-careconnect-1200.avif",
+          "bytes": 14777
+        },
+        "960": {
+          "file": "/cinematic/brand-careconnect-960.avif",
+          "bytes": 10745
+        },
+        "768": {
+          "file": "/cinematic/brand-careconnect-768.avif",
+          "bytes": 8674
+        },
+        "480": {
+          "file": "/cinematic/brand-careconnect-480.avif",
+          "bytes": 5001
+        }
+      },
+      "purpose": "CareConnect project banner",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Banner: the CareConnect logo, two figures forming a heart, above the word CareConnect and the line People, Care, Support.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "CareConnect",
+        "People · Care · Support"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-gaurav-os-logo",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-gaurav-os-logo.webp",
+      "source_bytes": 43046,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-gaurav-os-logo-1600.webp",
+          "bytes": 29008
+        },
+        "1200": {
+          "file": "/cinematic/brand-gaurav-os-logo-1200.webp",
+          "bytes": 20442
+        },
+        "960": {
+          "file": "/cinematic/brand-gaurav-os-logo-960.webp",
+          "bytes": 15800
+        },
+        "768": {
+          "file": "/cinematic/brand-gaurav-os-logo-768.webp",
+          "bytes": 12062
+        },
+        "480": {
+          "file": "/cinematic/brand-gaurav-os-logo-480.webp",
+          "bytes": 7126
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-gaurav-os-logo-1600.avif",
+          "bytes": 17010
+        },
+        "1200": {
+          "file": "/cinematic/brand-gaurav-os-logo-1200.avif",
+          "bytes": 11603
+        },
+        "960": {
+          "file": "/cinematic/brand-gaurav-os-logo-960.avif",
+          "bytes": 8904
+        },
+        "768": {
+          "file": "/cinematic/brand-gaurav-os-logo-768.avif",
+          "bytes": 6952
+        },
+        "480": {
+          "file": "/cinematic/brand-gaurav-os-logo-480.avif",
+          "bytes": 4480
+        }
+      },
+      "purpose": "Gaurav.OS logo: share card and footer",
+      "used_by": [
+        "(share card)",
+        "(footer)"
+      ],
+      "alt": "Gaurav.OS logo: the wordmark Gaurav.OS with an orbit and a star, above the line Product × AI × Building.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "Gaurav.OS",
+        "Product × AI × Building"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-ghargyaan",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-ghargyaan.webp",
+      "source_bytes": 81432,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-ghargyaan-1600.webp",
+          "bytes": 51384
+        },
+        "1200": {
+          "file": "/cinematic/brand-ghargyaan-1200.webp",
+          "bytes": 37702
+        },
+        "960": {
+          "file": "/cinematic/brand-ghargyaan-960.webp",
+          "bytes": 29136
+        },
+        "768": {
+          "file": "/cinematic/brand-ghargyaan-768.webp",
+          "bytes": 22270
+        },
+        "480": {
+          "file": "/cinematic/brand-ghargyaan-480.webp",
+          "bytes": 13000
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-ghargyaan-1600.avif",
+          "bytes": 31218
+        },
+        "1200": {
+          "file": "/cinematic/brand-ghargyaan-1200.avif",
+          "bytes": 23034
+        },
+        "960": {
+          "file": "/cinematic/brand-ghargyaan-960.avif",
+          "bytes": 17509
+        },
+        "768": {
+          "file": "/cinematic/brand-ghargyaan-768.avif",
+          "bytes": 13892
+        },
+        "480": {
+          "file": "/cinematic/brand-ghargyaan-480.avif",
+          "bytes": 8044
+        }
+      },
+      "purpose": "GharGyaan project banner",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Banner: the GharGyaan logo, a house holding the letter ज्ञ over an open book, with the line Everyday Self-Care for Indian Homes and tiles for health basics, home remedies, safety and prevention, family care and trusted gyaan.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "GharGyaan",
+        "Everyday Self-Care for Indian Homes",
+        "Health Basics",
+        "Home Remedies",
+        "Safety & Prevention",
+        "Family Care",
+        "Trusted Gyaan"
+      ],
+      "caution": "Tiles name intended content areas of a demo-mode prototype; not clinically reviewed.",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-nexus",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-nexus.webp",
+      "source_bytes": 52074,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-nexus-1600.webp",
+          "bytes": 32906
+        },
+        "1200": {
+          "file": "/cinematic/brand-nexus-1200.webp",
+          "bytes": 23410
+        },
+        "960": {
+          "file": "/cinematic/brand-nexus-960.webp",
+          "bytes": 18228
+        },
+        "768": {
+          "file": "/cinematic/brand-nexus-768.webp",
+          "bytes": 14250
+        },
+        "480": {
+          "file": "/cinematic/brand-nexus-480.webp",
+          "bytes": 8082
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-nexus-1600.avif",
+          "bytes": 20726
+        },
+        "1200": {
+          "file": "/cinematic/brand-nexus-1200.avif",
+          "bytes": 14711
+        },
+        "960": {
+          "file": "/cinematic/brand-nexus-960.avif",
+          "bytes": 11393
+        },
+        "768": {
+          "file": "/cinematic/brand-nexus-768.avif",
+          "bytes": 9167
+        },
+        "480": {
+          "file": "/cinematic/brand-nexus-480.avif",
+          "bytes": 5277
+        }
+      },
+      "purpose": "Nexus project banner",
+      "used_by": [
+        "/projects"
+      ],
+      "alt": "Banner: the Nexus logo, an N folded from a ribbon, above the line Your Evidence-Backed Situation Inbox, with mail, calendar and document icons.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "Nexus",
+        "Your Evidence-Backed Situation Inbox"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-phonepe-smart-spend-coach",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-phonepe-smart-spend-coach.webp",
+      "source_bytes": 72882,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-1600.webp",
+          "bytes": 46972
+        },
+        "1200": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-1200.webp",
+          "bytes": 33420
+        },
+        "960": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-960.webp",
+          "bytes": 26184
+        },
+        "768": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-768.webp",
+          "bytes": 20132
+        },
+        "480": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-480.webp",
+          "bytes": 11880
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-1600.avif",
+          "bytes": 31314
+        },
+        "1200": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-1200.avif",
+          "bytes": 20527
+        },
+        "960": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-960.avif",
+          "bytes": 16741
+        },
+        "768": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-768.avif",
+          "bytes": 13530
+        },
+        "480": {
+          "file": "/cinematic/brand-phonepe-smart-spend-coach-480.avif",
+          "bytes": 7553
+        }
+      },
+      "purpose": "PhonePe Smart Spend Coach (academic case) banner",
+      "used_by": [
+        "/projects",
+        "/"
+      ],
+      "alt": "Banner: Smart Spend Coach concept for PhonePe — track, understand, take control — with tiles for detecting subscriptions, managing commitments, analysing spends and building better habits.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "PhonePe",
+        "Smart Spend Coach",
+        "Track",
+        "Understand",
+        "Take Control",
+        "Detect Subscriptions",
+        "Manage Commitments",
+        "Analyse Spends",
+        "Build Better Habits"
+      ],
+      "caution": "Shows the PhonePe logo. This is an academic capstone, not PhonePe work: always shown with the academic label and a not-affiliated note.",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-rupee-radar",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-rupee-radar.webp",
+      "source_bytes": 51912,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-rupee-radar-1600.webp",
+          "bytes": 32418
+        },
+        "1200": {
+          "file": "/cinematic/brand-rupee-radar-1200.webp",
+          "bytes": 23308
+        },
+        "960": {
+          "file": "/cinematic/brand-rupee-radar-960.webp",
+          "bytes": 18646
+        },
+        "768": {
+          "file": "/cinematic/brand-rupee-radar-768.webp",
+          "bytes": 14192
+        },
+        "480": {
+          "file": "/cinematic/brand-rupee-radar-480.webp",
+          "bytes": 8620
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-rupee-radar-1600.avif",
+          "bytes": 20272
+        },
+        "1200": {
+          "file": "/cinematic/brand-rupee-radar-1200.avif",
+          "bytes": 14251
+        },
+        "960": {
+          "file": "/cinematic/brand-rupee-radar-960.avif",
+          "bytes": 11195
+        },
+        "768": {
+          "file": "/cinematic/brand-rupee-radar-768.avif",
+          "bytes": 8475
+        },
+        "480": {
+          "file": "/cinematic/brand-rupee-radar-480.avif",
+          "bytes": 5523
+        }
+      },
+      "purpose": "RupeeRadar project logo",
+      "used_by": [
+        "/projects"
+      ],
+      "alt": "RupeeRadar logo: a radar sweep around a rupee sign with a rising bar chart, and the line See where your money goes.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "RupeeRadar",
+        "See where your money goes"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    },
+    {
+      "id": "brand-the-teardown",
+      "brief_image": null,
+      "source": "brand/owner-art/source/brand-the-teardown.webp",
+      "source_bytes": 61360,
+      "width": 1536,
+      "height": 1024,
+      "aspect": 1.5,
+      "format": "AVIF + WebP fallback",
+      "sizes": {
+        "1600": {
+          "file": "/cinematic/brand-the-teardown-1600.webp",
+          "bytes": 34580
+        },
+        "1200": {
+          "file": "/cinematic/brand-the-teardown-1200.webp",
+          "bytes": 23804
+        },
+        "960": {
+          "file": "/cinematic/brand-the-teardown-960.webp",
+          "bytes": 18396
+        },
+        "768": {
+          "file": "/cinematic/brand-the-teardown-768.webp",
+          "bytes": 13856
+        },
+        "480": {
+          "file": "/cinematic/brand-the-teardown-480.webp",
+          "bytes": 8244
+        }
+      },
+      "avif": {
+        "1600": {
+          "file": "/cinematic/brand-the-teardown-1600.avif",
+          "bytes": 24132
+        },
+        "1200": {
+          "file": "/cinematic/brand-the-teardown-1200.avif",
+          "bytes": 15524
+        },
+        "960": {
+          "file": "/cinematic/brand-the-teardown-960.avif",
+          "bytes": 11180
+        },
+        "768": {
+          "file": "/cinematic/brand-the-teardown-768.avif",
+          "bytes": 8968
+        },
+        "480": {
+          "file": "/cinematic/brand-the-teardown-480.avif",
+          "bytes": 5327
+        }
+      },
+      "purpose": "The Teardown newsletter logo",
+      "used_by": [
+        "/",
+        "/about"
+      ],
+      "alt": "The Teardown logo: stacked cards with a bar chart beside the words The Teardown, and the line Products, Strategy, Lessons.",
+      "provenance": "OWNER-SUPPLIED BRAND ARTWORK — logo or banner provided by Gaurav for his own project",
+      "baked_text": [
+        "The Teardown",
+        "PRODUCTS · STRATEGY · LESSONS"
+      ],
+      "caution": "",
+      "not_evidence": "Brand artwork. Feature tiles name intended capabilities, not shipped results or data.",
+      "status": "INTEGRATED"
+    }
+  ],
+  "missing": [],
+  "note": "Kept separate from the original SVG library (brand/asset-manifest.json)."
+}

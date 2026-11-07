@@ -1,0 +1,169 @@
+import { Link } from "react-router";
+import type { ReactNode, ButtonHTMLAttributes } from "react";
+import type { Block, Claim, EvidenceStatus, ProjectStatus } from "~/content/types";
+import { SOURCES } from "~/content/sources";
+import { Icon, type IconName } from "./Icon";
+
+export const cx = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
+
+export function Container({ children, className = "", wide = false }: { children: ReactNode; className?: string; wide?: boolean }) {
+  // Narrow containers share the wide container's left edge (aligned with the header) and cap the
+  // line length on the right, so every page starts from the same margin.
+  return <div className={cx("mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10", !wide && "lg:pr-[max(2.5rem,calc(min(100vw,1440px)-74.5rem))]", className)}>{children}</div>;
+}
+
+type Variant = "primary" | "secondary" | "ghost";
+const BTN: Record<Variant, string> = {
+  primary: "bg-green text-green-ink hover:bg-[#8cebb2] font-semibold",
+  secondary: "border border-line bg-surface/60 text-ink hover:border-ink/30 hover:bg-raise",
+  ghost: "text-muted hover:text-ink hover:bg-raise",
+};
+const base = "inline-flex items-center justify-center gap-2 rounded-full px-5 min-h-11 text-[15px] font-medium transition-colors whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed";
+
+export function ButtonLink({ to, children, variant = "secondary", icon, className = "", external, download, onClick, ...rest }:
+  { to: string; children: ReactNode; variant?: Variant; icon?: IconName; className?: string; external?: boolean; download?: string | boolean; onClick?: () => void; "aria-label"?: string }) {
+  const cls = cx(base, BTN[variant], className);
+  const mag = variant === "primary" ? { "data-magnetic": "" } : {};
+  const inner = <>{icon && <Icon name={icon} />}{children}{external && <Icon name="external" size={14} />}</>;
+  if (external || download !== undefined || to.startsWith("mailto:"))
+    return <a href={to} className={cls} onClick={onClick} {...mag} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})} {...(download !== undefined ? { download } : {})} {...rest}>{inner}</a>;
+  return <Link to={to} className={cls} onClick={onClick} {...mag} {...rest}>{inner}</Link>;
+}
+
+export function Button({ variant = "secondary", icon, children, className = "", ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; icon?: IconName }) {
+  return <button type="button" className={cx(base, BTN[variant], className)} {...(variant === "primary" ? { "data-magnetic": "" } : {})} {...rest}>{icon && <Icon name={icon} />}{children}</button>;
+}
+
+export function IconButton({ icon, label, className = "", ...rest }: ButtonHTMLAttributes<HTMLButtonElement> & { icon: IconName; label: string }) {
+  return (
+    <button type="button" aria-label={label} title={label} className={cx("inline-flex size-10 items-center justify-center rounded-lg border border-line text-muted hover:text-ink hover:border-green/60 disabled:opacity-40 disabled:cursor-not-allowed", className)} {...rest}>
+      <Icon name={icon} />
+    </button>
+  );
+}
+
+const TONES = {
+  green: "text-green border-green/40 bg-green/10",
+  cyan: "text-cyan border-cyan/40 bg-cyan/10",
+  amber: "text-amber border-amber/40 bg-amber/10",
+  violet: "text-violet border-violet/40 bg-violet/10",
+  dim: "text-muted border-line bg-raise",
+  red: "text-red border-red/40 bg-red/10",
+} as const;
+export type Tone = keyof typeof TONES;
+export function Pill({ children, tone = "dim", className = "" }: { children: ReactNode; tone?: Tone; className?: string }) {
+  return <span className={cx("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-[.08em]", TONES[tone], className)}>{children}</span>;
+}
+
+export const statusTone = (s: ProjectStatus): Tone =>
+  s === "SHIPPED" || s === "PUBLISHED" ? "green" : s === "ACADEMIC CASE" ? "violet" : s.startsWith("PRE-LAUNCH") ? "amber" : "cyan";
+export const evidenceTone = (s: EvidenceStatus | string): Tone =>
+  s === "VERIFIED" ? "green" : s === "CV" ? "cyan" : s === "CASE DATA" || s === "DESIGNED, NOT RUN" ? "violet" : s === "SELF-REPORTED" ? "amber" : "dim";
+
+export function SectionHeader({ eyebrow, title, intro, id, as: H = "h2", action }: { eyebrow?: string; title: string; intro?: ReactNode; id?: string; as?: "h1" | "h2"; action?: ReactNode }) {
+  return (
+    <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+      <div className="max-w-3xl">
+        {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
+        <H id={id} className={H === "h1" ? "text-4xl sm:text-5xl font-bold" : "text-3xl sm:text-4xl font-bold"}>{title}</H>
+        {intro && <div className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">{intro}</div>}
+      </div>
+      {action}
+    </div>
+  );
+}
+
+/** Section header. `backdrop` is desktop-only art beside the title; `mobileArt` is a slim banner
+ *  above it on phones (pass both via heroArt() for the 3D renders). */
+export function PageHero({ eyebrow, title, intro, children, backdrop, mobileArt }: { eyebrow: string; title: string; intro?: ReactNode; children?: ReactNode; backdrop?: ReactNode; mobileArt?: ReactNode }) {
+  return (
+    <header className={cx("relative overflow-hidden border-b border-line-soft", !backdrop && "hero-glow")}>
+      {mobileArt && (
+        <div aria-hidden="true" className="relative h-44 overflow-hidden sm:h-56 lg:hidden" data-testid="hero-mobile-art">
+          {mobileArt}
+          <div className="absolute inset-0 bg-gradient-to-b from-bg/40 via-transparent to-bg" />
+        </div>
+      )}
+      {backdrop && (
+        <div aria-hidden="true" className="absolute inset-0 max-lg:hidden" data-testid="hero-backdrop">
+          <div className="absolute inset-y-0 right-0 w-[52%] opacity-95 [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:object-[60%_80%]">{backdrop}</div>
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-bg to-transparent" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_50%,rgb(11_17_16/.75)_64%,rgb(11_17_16/.1)_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-bg to-transparent" />
+        </div>
+      )}
+      <Container className="relative py-16 sm:py-24">
+        <p className="eyebrow mb-5">{eyebrow}</p>
+        <h1 className="max-w-4xl text-[40px] font-bold leading-[1.04] sm:text-6xl">{title}</h1>
+        {intro && <div className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{intro}</div>}
+        {children && <div className="mt-8">{children}</div>}
+      </Container>
+    </header>
+  );
+}
+
+export function Blocks({ blocks }: { blocks: Block[] }) {
+  return (
+    <div className="prose-os space-y-4">
+      {blocks.map((b, i) => {
+        if ("p" in b) return <p key={i}>{b.p}</p>;
+        if ("ul" in b) return <ul key={i}>{b.ul.map((x) => <li key={x}>{x}</li>)}</ul>;
+        if ("ol" in b) return <ol key={i}>{b.ol.map((x) => <li key={x}>{x}</li>)}</ol>;
+        if ("note" in b) return <p key={i} className="rounded-xl border border-amber/30 bg-amber/5 px-4 py-3 text-[15px] !text-[#E9DDBA]"><span className="label mr-2 !text-amber">Note</span>{b.note}</p>;
+        if ("flow" in b) return (
+          <ol key={i} aria-label="Sequence" className="!flex flex-wrap items-center !gap-2">
+            {b.flow.map((x, j) => <li key={x} className="!pl-0 before:!hidden flex items-center gap-2"><span className="rounded-full border border-green/30 bg-green/5 px-3 py-1.5 text-xs font-medium tracking-wide text-green">{x}</span>{j < b.flow.length - 1 && <Icon name="arrow" size={14} className="text-dim" />}</li>)}
+          </ol>);
+        if ("kv" in b) return (
+          <dl key={i} className="grid gap-x-6 gap-y-3 sm:grid-cols-[minmax(140px,220px)_1fr]">
+            {b.kv.map(([k, v]) => <div key={k} className="contents"><dt className="label pt-1">{k}</dt><dd className="text-[#C9D2CD]">{v}</dd></div>)}
+          </dl>);
+        if ("table" in b) return (
+          <div key={i} tabIndex={0} role="region" aria-label={b.table.caption ?? `Table ${i + 1}: ${b.table.head.filter(Boolean).slice(0, 2).join(", ")}`} className="relative overflow-x-auto rounded-xl border border-line">
+            <table className="w-full min-w-[520px] text-left text-[15px]">
+              {b.table.caption && <caption className="caption-bottom px-4 py-2 text-left text-sm text-dim">{b.table.caption}</caption>}
+              <thead className="bg-raise"><tr>{b.table.head.map((h, hi) => <th key={hi} scope="col" className="px-4 py-3 text-[11.5px] font-semibold uppercase tracking-[.08em] text-muted">{h || <span className="sr-only">Unlabelled column</span>}</th>)}</tr></thead>
+              <tbody>{b.table.rows.map((r, ri) => <tr key={ri} className="border-t border-line-soft">{r.map((c, ci) => <td key={ci} className="px-4 py-2.5 align-top text-[#C9D2CD]">{c}</td>)}</tr>)}</tbody>
+            </table>
+          </div>);
+        if ("quote" in b) return <blockquote key={i} className="border-l-2 border-green pl-4 text-lg text-ink"><p>“{b.quote}”</p>{b.cite && <footer className="label mt-2">{b.cite}</footer>}</blockquote>;
+        return null;
+      })}
+    </div>
+  );
+}
+
+export function SourceLinks({ ids, className = "" }: { ids: string[]; className?: string }) {
+  if (!ids.length) return null;
+  return (
+    <p className={cx("flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-dim", className)}>
+      <span className="label">Source</span>
+      {ids.map((id) => {
+        const s = SOURCES[id];
+        if (!s) return null;
+        if (!s.href) return <span key={id}>{s.label}</span>;
+        const ext = s.href.startsWith("http");
+        return ext
+          ? <a key={id} href={s.href} target="_blank" rel="noopener noreferrer" className="inline-block py-1 underline decoration-line underline-offset-4 hover:text-ink">{s.label}</a>
+          : <Link key={id} to={s.href} className="inline-block py-1 underline decoration-line underline-offset-4 hover:text-ink">{s.label}</Link>;
+      })}
+    </p>
+  );
+}
+
+export function ClaimList({ claims }: { claims: Claim[] }) {
+  return (
+    <ul className="grid gap-3">
+      {claims.map((c) => (
+        <li key={c.text} className="flex gap-3">
+          <Icon name="check" size={18} className="mt-1 shrink-0 text-green" />
+          <span className="text-[#C9D2CD]">{c.text} <Pill tone={evidenceTone(c.status)} className="ml-1 align-middle">{c.status}</Pill></span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export function Empty({ title, children }: { title: string; children?: ReactNode }) {
+  return <div role="status" className="card p-8 text-center"><p className="font-display text-xl">{title}</p>{children && <div className="mt-2 text-muted">{children}</div>}</div>;
+}

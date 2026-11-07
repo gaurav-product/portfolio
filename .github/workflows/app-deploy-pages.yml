@@ -1,0 +1,41 @@
+# Deploys app/ to GitHub Pages. MANUAL ONLY — it runs when someone presses
+# "Run workflow". Nothing deploys automatically. See app/README.md → Deploying.
+name: app-deploy-pages
+on:
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: "Public URL the site will live at (used for canonical URLs and sitemap)"
+        required: true
+        default: "https://gaurav-product.github.io/portfolio"
+      base_path:
+        description: "Path prefix — '/portfolio/' for a project Pages site, '/' for a custom domain"
+        required: true
+        default: "/portfolio/"
+permissions: { contents: read, pages: write, id-token: write }
+concurrency: { group: pages, cancel-in-progress: false }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: app } }
+    env:
+      VITE_SITE_URL: ${{ inputs.site_url }}
+      BASE_PATH: ${{ inputs.base_path }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: app/package-lock.json }
+      - run: npm ci
+      - run: npm run prepare-data   # generated data is not committed
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: app/build/client }
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: { name: github-pages, url: "${{ steps.d.outputs.page_url }}" }
+    steps:
+      - id: d
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,92 @@
+/* Oz, the Gaurav.OS mascot: all motion lives here and is keyed off data-state.
+   transform-box: view-box keeps every transform in SVG units. */
+.oz { --ex: 0; --ey: 0; --mouth: .35; overflow: visible; }
+.oz * { transform-box: view-box; }
+.oz-float, .oz-body, .oz-arm, .oz-antenna, .oz-pupil, .oz-lid, .oz-eye, .oz-talk, .oz-shadow { transform-origin: 60px 74px; }
+.oz-shadow { transform-origin: 60px 125px; }
+.oz-arm-l { transform-origin: 26px 72px; } .oz-arm-r { transform-origin: 94px 72px; }
+.oz-antenna { transform-origin: 60px 30px; }
+.oz-talk { transform-origin: 60px 93px; transform: scaleY(calc(.25 + var(--mouth) * .9)); transition: transform 70ms linear; }
+
+/* eyes follow the cursor (and look up while thinking) */
+.oz-pupil { transform: translate(calc(var(--ex) * 4.2px), calc(var(--ey) * 3.4px)); transition: transform 160ms ease-out; }
+.oz-lid { transform-origin: 60px 50px; transform: scaleY(0); }
+
+/* which mouth / eyes / extras each state shows */
+.oz-mouth, .oz-x, .oz-eyes-happy { display: none; }
+.oz-mouth-smile { display: inline; }
+.oz[data-state="speaking"] .oz-mouth-smile, .oz[data-state="listening"] .oz-mouth-smile, .oz[data-state="confused"] .oz-mouth-smile,
+.oz[data-state="happy"] .oz-mouth-smile, .oz[data-state="sleeping"] .oz-mouth-smile, .oz[data-state="error"] .oz-mouth-smile,
+.oz[data-state="greeting"] .oz-mouth-smile, .oz[data-mood="poke"] .oz-mouth-smile { display: none; }
+.oz[data-state="speaking"] .oz-mouth-talk { display: inline; }
+.oz[data-state="listening"] .oz-mouth-o, .oz[data-state="sleeping"] .oz-mouth-o, .oz[data-mood="poke"] .oz-mouth-o { display: inline; }
+.oz[data-state="confused"] .oz-mouth-wobble, .oz[data-state="error"] .oz-mouth-wobble { display: inline; }
+.oz[data-state="happy"] .oz-mouth-grin, .oz[data-state="greeting"] .oz-mouth-grin { display: inline; }
+.oz[data-state="happy"] .oz-eye, .oz[data-state="greeting"] .oz-eye { display: none; }
+.oz[data-state="happy"] .oz-eyes-happy, .oz[data-state="greeting"] .oz-eyes-happy { display: inline; }
+.oz[data-state="sleeping"] .oz-zzz, .oz[data-state="confused"] .oz-q, .oz[data-state="thinking"] .oz-dots,
+.oz[data-state="listening"] .oz-waves, .oz[data-state="happy"] .oz-sparkles, .oz[data-state="error"] .oz-sweat { display: inline; }
+.oz[data-state="sleeping"] .oz-lid { transform: scaleY(.62); }
+.oz[data-state="thinking"] .oz-pupil { transform: translate(-3px, -4px); }
+.oz[data-state="listening"] .oz-eye { transform: scale(1.08); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .oz-float { animation: oz-float 3.2s ease-in-out infinite; }
+  .oz-shadow { animation: oz-shadow 3.2s ease-in-out infinite; }
+  .oz-lid { animation: oz-blink 5.2s infinite; }
+  .oz-bulb { animation: oz-bulb 2.6s ease-in-out infinite; }
+  .oz-antenna { animation: oz-sway 4s ease-in-out infinite; }
+
+  .oz[data-state="sleeping"] .oz-float { animation: oz-float 5.5s ease-in-out infinite; }
+  .oz[data-state="sleeping"] .oz-lid { animation: none; }
+  .oz[data-state="sleeping"] .oz-zzz { animation: oz-zzz 2.4s ease-in-out infinite; }
+  .oz[data-state="greeting"] .oz-arm-r { animation: oz-wave .5s ease-in-out 4 alternate; }
+  .oz[data-state="greeting"] .oz-body, .oz[data-state="happy"] .oz-body { animation: oz-hop .55s cubic-bezier(.3,1.6,.5,1) 2; }
+  .oz[data-state="happy"] .oz-arm-l { animation: oz-cheer-l .4s ease-in-out 4 alternate; }
+  .oz[data-state="happy"] .oz-arm-r { animation: oz-cheer-r .4s ease-in-out 4 alternate; }
+  .oz[data-state="happy"] .oz-sparkles { animation: oz-twinkle .7s ease-in-out infinite alternate; }
+  .oz[data-state="listening"] .oz-waves { animation: oz-pulse 1s ease-in-out infinite; }
+  .oz[data-state="listening"] .oz-antenna { animation: oz-perk .5s ease-in-out infinite alternate; }
+  .oz[data-state="listening"] .oz-bulb { animation: oz-bulb .6s ease-in-out infinite; }
+  .oz[data-state="thinking"] .oz-body { animation: oz-ponder 1.6s ease-in-out infinite alternate; }
+  .oz[data-state="thinking"] .oz-dots circle { animation: oz-dot 1s ease-in-out infinite; }
+  .oz[data-state="thinking"] .oz-dots circle:nth-child(2) { animation-delay: .15s; }
+  .oz[data-state="thinking"] .oz-dots circle:nth-child(3) { animation-delay: .3s; }
+  .oz[data-state="speaking"] .oz-body { animation: oz-nod .45s ease-in-out infinite alternate; }
+  .oz[data-state="speaking"][data-lipsync="loop"] .oz-talk { animation: oz-talk .22s ease-in-out infinite alternate; }
+  .oz[data-state="confused"] .oz-body { animation: oz-tilt .9s ease-in-out 2 alternate; }
+  .oz[data-state="confused"] .oz-q { animation: oz-bob 1s ease-in-out infinite alternate; }
+  .oz[data-state="error"] .oz-body { animation: oz-shake .4s ease-in-out 2; }
+  .oz[data-mood="dance"] .oz-body { animation: oz-dance 1.6s ease-in-out; }
+  .oz[data-mood="dance"] .oz-arm-l { animation: oz-cheer-l .2s ease-in-out 8 alternate; }
+  .oz[data-mood="dance"] .oz-arm-r { animation: oz-cheer-r .2s ease-in-out 8 alternate; }
+  .oz[data-mood="poke"] .oz-body { animation: oz-squish .5s cubic-bezier(.3,1.6,.5,1); }
+}
+@keyframes oz-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes oz-shadow { 0%, 100% { transform: scaleX(1); opacity: .35; } 50% { transform: scaleX(.82); opacity: .22; } }
+@keyframes oz-blink { 0%, 93%, 100% { transform: scaleY(0); } 95.5% { transform: scaleY(1); } }
+@keyframes oz-bulb { 0%, 100% { filter: drop-shadow(0 0 2px #35D6D0); } 50% { filter: drop-shadow(0 0 7px #35D6D0); } }
+@keyframes oz-sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(6deg); } }
+@keyframes oz-perk { from { transform: rotate(-9deg) translateY(-1px); } to { transform: rotate(9deg) translateY(-3px); } }
+@keyframes oz-zzz { 0%, 100% { transform: translateY(0); opacity: .5; } 50% { transform: translateY(-4px); opacity: 1; } }
+@keyframes oz-wave { from { transform: rotate(0); } to { transform: rotate(-70deg); } }
+@keyframes oz-cheer-l { from { transform: rotate(0); } to { transform: rotate(55deg); } }
+@keyframes oz-cheer-r { from { transform: rotate(0); } to { transform: rotate(-55deg); } }
+@keyframes oz-hop { 0%, 100% { transform: translateY(0) scale(1); } 30% { transform: translateY(2px) scale(1.06, .92); } 60% { transform: translateY(-10px) scale(.96, 1.05); } }
+@keyframes oz-twinkle { from { opacity: .4; } to { opacity: 1; } }
+@keyframes oz-pulse { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+@keyframes oz-ponder { from { transform: rotate(-5deg); } to { transform: rotate(4deg); } }
+@keyframes oz-dot { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes oz-nod { from { transform: translateY(0) rotate(-1.5deg); } to { transform: translateY(-2px) rotate(1.5deg); } }
+@keyframes oz-talk { from { transform: scaleY(.3); } to { transform: scaleY(1.1); } }
+@keyframes oz-tilt { from { transform: rotate(0); } to { transform: rotate(-12deg); } }
+@keyframes oz-bob { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+@keyframes oz-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+@keyframes oz-dance { 0%, 100% { transform: rotate(0) translateY(0); } 15% { transform: rotate(-14deg) translateY(-6px); } 30% { transform: rotate(12deg) translateY(0); } 45% { transform: rotate(-12deg) translateY(-8px); } 60% { transform: rotate(10deg) translateY(0); } 80% { transform: rotate(-4deg) scale(1.06, .94); } }
+@keyframes oz-squish { 0% { transform: scale(1); } 25% { transform: scale(1.18, .8); } 55% { transform: scale(.9, 1.12) translateY(-6px); } 100% { transform: scale(1); } }
+
+/* speech bubble beside the launcher */
+.oz-bubble { animation: oz-bubble .45s cubic-bezier(.3,1.5,.5,1) both; }
+@keyframes oz-bubble { from { opacity: 0; transform: translateY(8px) scale(.9); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .oz-bubble { animation: none; } }
+@media print { .oz-root { display: none !important; } }
