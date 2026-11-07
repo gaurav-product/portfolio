@@ -127,10 +127,14 @@ test.describe("touch and reduced motion keep the native cursor", () => {
 
 /* ------------------------------------------------------------------ Phase 2 */
 const countTransitions = () => {
-  const w = window as unknown as { __vt: number }; w.__vt = 0;
-  const d = document as Document & { startViewTransition?: (cb: () => unknown) => unknown };
+  const w = window as unknown as { __vt: number; __vtDone: number; __vtFlags: string[] }; w.__vt = 0; w.__vtDone = 0; w.__vtFlags = [];
+  const d = document as Document & { startViewTransition?: (cb: () => unknown) => { finished: Promise<unknown> } };
   const orig = d.startViewTransition?.bind(d);
-  if (orig) d.startViewTransition = (cb: () => unknown) => { w.__vt++; return orig(cb); };
+  if (orig) d.startViewTransition = (cb: () => unknown) => { w.__vt++; const t = orig(cb); t.finished.finally(() => { w.__vtDone++; }); return t; };
+  // record every value the reveal flag takes, however briefly (the observer attaches once <html> exists)
+  const watch = () => new MutationObserver(() => { const v = document.documentElement.dataset.vt; if (v) w.__vtFlags.push(v); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ["data-vt"] });
+  if (document.documentElement) watch(); else { const t = setInterval(() => { if (document.documentElement) { clearInterval(t); watch(); } }, 1); }
 };
 const vtCount = (p: Page) => p.evaluate(() => (window as unknown as { __vt: number }).__vt);
 const rot = (p: Page, sel: ReturnType<Page["locator"]>) => sel.evaluate((el) => ({ rx: parseFloat(el.style.getPropertyValue("--rx") || "0"), ry: parseFloat(el.style.getPropertyValue("--ry") || "0"), tilting: el.classList.contains("is-tilting") }));
@@ -202,12 +206,19 @@ test.describe("Phase 2 — page transitions", () => {
   });
 
   test("entering the Universe uses the circular reveal", async ({ page }) => {
+    // CPU_THROTTLE=6 reproduces a slow CI runner (CDP CPU throttling)
+    if (process.env.CPU_THROTTLE) { const cdp = await page.context().newCDPSession(page); await cdp.send("Emulation.setCPUThrottlingRate", { rate: Number(process.env.CPU_THROTTLE) }); }
     await page.addInitScript(countTransitions);
     await page.goto("/?nointro");
     await page.getByRole("link", { name: "Explore my work" }).click();
-    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.vt)).toBe("reveal");
     await expect(page).toHaveURL(/\/universe$/);
-    await expect.poll(() => vtCount(page)).toBe(1); // the router updates the URL first, then starts the transition
+    // 1. the reveal flag was applied (recorded when set, so the check cannot be too late)
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __vtFlags: string[] }).__vtFlags)).toContain("reveal");
+    // 2. the browser's own transition started and finished
+    await expect.poll(() => vtCount(page)).toBe(1);
+    await expect.poll(() => page.evaluate(() => (window as unknown as { __vtDone: number }).__vtDone), { timeout: 10_000 }).toBeGreaterThanOrEqual(1);
+    // 3. only then is the flag cleared
+    await expect.poll(() => page.evaluate(() => document.documentElement.dataset.vt ?? null)).toBeNull();
   });
 
   test("leaves new-tab clicks, same-page anchors and downloads alone", async ({ page, context }) => {
