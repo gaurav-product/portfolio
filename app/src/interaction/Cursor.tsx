@@ -2,6 +2,10 @@ import { isImmersive } from "~/lib/immersive";
 import { useEffect, useRef } from "react";
 import "./interaction.css";
 
+/** Links carry the deploy prefix (e.g. /portfolio/worlds/x); route checks need the app path (/worlds/x). */
+const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+const stripBase = (p: string) => (BASE && (p === BASE || p.startsWith(BASE + "/")) ? p.slice(BASE.length) || "/" : p);
+
 /**
  * The Gaurav.OS signature cursor: a neon dot, a trailing ring with context
  * labels, magnetic primary actions and a soft spotlight — one component, one
@@ -102,7 +106,7 @@ export function Cursor() {
       const link = target.closest<HTMLElement>(INTERACTIVE);
       if (link) {
         const href = link.getAttribute("href") ?? "";
-        { const path = href.replace(/^https?:\/\/[^/]+/, "").split(/[?#]/)[0]; if (/^\/(universe|explore|worlds)(\/|$)/.test(path) || isImmersive(path)) return labelled(link, "explore"); }
+        { const path = stripBase(href.replace(/^https?:\/\/[^/]+/, "").split(/[?#]/)[0]); if (/^\/(universe|explore|worlds|tour)(\/|$)/.test(path) || isImmersive(path)) return labelled(link, "explore"); }
         return setState(kind === "none" ? "idle" : "hover");
       }
       setState("idle");

@@ -50,6 +50,22 @@ const enc = (p) => p.split("/").map(encodeURIComponent).join("/");
 const unescape = (t) => t.replace(/&(amp|lt|gt|quot|#39|#x27|nbsp);/g, (_, e) => ({ amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'", "#x27": "'", nbsp: " " })[e]);
 const BLOB = (p) => `${lock.repo}/blob/${lock.commit}/${enc(p)}`;
 const RAW = (p) => `${lock.repo.replace("github.com", "raw.githubusercontent.com")}/${lock.commit}/${enc(p)}`;
+// External images in the source that no longer resolve (checked: HTTP 404) and have no copy in the
+// repository. No substitute is used: the <img> is replaced at build time by the same plain note the
+// reading page shows for any image that fails at runtime (research-detail.tsx, useMissingImages),
+// so readers see no change and the browser makes no doomed request. Text is unchanged.
+const DEAD_IMAGES = new Set([
+  "https://github.com/user-attachments/assets/eedc9283-d605-4b8b-977c-da07c38e9eb2", // Day 01 Practo cover
+]);
+// External images in the source served from a local copy instead (the original file, unchanged), so the
+// page makes no request to an outside host that can stall. Provenance and licence: public/studies/SOURCES.txt.
+// The <img> keeps its alt, width and position; only src changes. Prefixed with the deploy base path.
+const SITE_BASE = (process.env.BASE_PATH || "/").replace(/\/?$/, "/");
+const LOCAL_IMAGES = new Map([
+  ["https://commons.wikimedia.org/wiki/Special:FilePath/PhonePe_Logo.svg", "studies/phonepe-logo.svg"], // Day 07, public domain (PD-textlogo)
+]);
+const deadImageNote = (alt) =>
+  `<span class="my-2 inline-block rounded-md border border-line-soft px-2.5 py-1 text-xs text-dim" data-missing-image="">Image unavailable at its source${alt ? `: ${alt}` : ""}</span>`;
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const words = (s) => (s.match(/[A-Za-z0-9][A-Za-z0-9'’.%-]*/g) || []).length;
 
@@ -128,14 +144,35 @@ function render(md, dir) {
   // Markdown task-list checkboxes become text marks: a static document has no form controls.
   html = html.replace(/<input[^>]*type="checkbox"[^>]*>/g, (tag) => /checked/.test(tag) ? '<span class="md-check" aria-label="Done">☑</span>' : '<span class="md-check" aria-label="Not done">☐</span>');
   const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+  // Many source tables of contents were written by hand and do not match GitHub's anchors exactly
+  // (single vs double hyphens around a dash, an invisible emoji variation selector, a shortened
+  // heading). A link is re-pointed only when exactly ONE heading matches; otherwise it stays text.
+  const norm = (x) => x.replace(/[\uFE0F\u200D]/g, "").replace(/-+/g, "-").replace(/^-|-$/g, "");
+  const byNorm = new Map();
+  for (const id of ids) { const k = norm(id); byNorm.set(k, [...(byNorm.get(k) || []), id]); }
+  const target = (id) => {
+    if (ids.has(id)) return id;
+    const k = norm(id); if (!k) return null;
+    const exact = byNorm.get(k) || [];
+    if (exact.length === 1) return exact[0];
+    if (exact.length > 1) return null; // ambiguous
+    const prefixed = [...ids].filter((h) => norm(h).startsWith(k + "-")); // a shortened heading, at a word boundary
+    return prefixed.length === 1 ? prefixed[0] : null;
+  };
   let dead = 0;
-  const fixed = html.replace(/<a href="#([^"]*)"[^>]*>([\s\S]*?)<\/a>/g, (all, id, text) => {
-    if (ids.has(id)) return all; dead++; return `<span class="md-deadlink" title="Link target not present in the source document">${text}</span>`;
+  const fixed = html.replace(/<a href="#([^"]*)"([^>]*)>([\s\S]*?)<\/a>/g, (all, raw, rest, text) => {
+    let id = raw; try { id = decodeURIComponent(raw); } catch { /* keep as written */ }
+    const t = target(id);
+    if (t === id || t === raw) return all;
+    if (t) { repointed++; return `<a href="#${esc(t)}"${rest}>${text}</a>`; }
+    dead++; return `<span class="md-deadlink" title="Link target not present in the source document">${text}</span>`;
   });
   deadLinks += dead;
   // Images written as inline HTML in the source bypass the Markdown image renderer: resolve their
   // relative paths the same way (raw file at the pinned commit, or a visible "not in repository" note).
   let out = fixed.replace(/<img\b([^>]*?)\bsrc="([^"]+)"([^>]*)>/g, (all, pre, src, post) => {
+    if (DEAD_IMAGES.has(src)) { const alt = (all.match(/alt="([^"]*)"/) || [])[1]; return deadImageNote(alt); }
+    if (LOCAL_IMAGES.has(src)) return `<img${pre}src="${esc(SITE_BASE + LOCAL_IMAGES.get(src))}"${post}>`;
     if (/^(https?:|data:)/i.test(src)) return all;
     const r = resolve(src.replace(/&amp;/g, "&"));
     if (!fs.existsSync(path.join(CACHE, r))) { const alt = (all.match(/alt="([^"]*)"/) || [])[1]; return `<span class="md-missing">Image not in the repository: ${alt || esc(r)}</span>`; }
@@ -155,7 +192,7 @@ function render(md, dir) {
   out = out.replace(/<th([^>]*)><\/th>/g, '<th$1><span class="sr-only">Unlabelled column</span></th>');
   return { html: out, toc };
 }
-let deadLinks = 0;
+let deadLinks = 0, repointed = 0;
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
@@ -188,5 +225,6 @@ for (const s of studies) {
 }
 if (problems.length) { console.error("build-studies:\n - " + problems.join("\n - ")); process.exit(1); }
 if (redactions.length) console.log(`build-studies: redacted the owner's phone number in ${redactions.join(", ")}`);
-if (deadLinks) console.log(`build-studies: ${deadLinks} in-page links point at headings missing from the source; rendered as plain text`);
+if (repointed) console.log(`build-studies: ${repointed} in-page links re-pointed to their unique matching heading`);
+if (deadLinks) console.log(`build-studies: ${deadLinks} in-page links have no single matching heading in the source; rendered as plain text`);
 console.log(`build-studies: ${studies.length} studies rendered from ${lock.commit.slice(0, 7)} (${(totalWords / 1e6).toFixed(2)}M words)`);

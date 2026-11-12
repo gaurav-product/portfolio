@@ -4,12 +4,14 @@ import { corpus } from "~/content/corpus";
 import type { Study } from "~/content/data";
 import { CAT_COLOR, HAS, LEVELS, LEVEL_NOTE, categoriesOf, filterFromParams, hasFlag, isFiltered, matches, studyLayout, type HasKey, type StudyFilter } from "~/content/studyMap";
 import { EARTH_CREDIT } from "~/content/universe";
+import { planets, planetBySlug, EARTH_SLUG, type Planet } from "~/content/solar";
+import { profile } from "~/content/profile";
 import { Pill, evidenceTone, cx } from "~/components/ui";
 import { Icon } from "~/components/Icon";
 import { seo } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 import { audio } from "~/universe/audio";
-import { CanvasBoundary, Shell, detectTier, shellButton, softwareGL, store, webgl } from "~/universe/shell";
+import { CanvasBoundary, SIDE_QUERY, Shell, detectTier, shellButton, softwareGL, store, webgl } from "~/universe/shell";
 import type { SceneApi, SceneEvents, Tier } from "~/universe/bus";
 
 const Scene = lazy(() => import("~/universe/Scene"));
@@ -19,9 +21,18 @@ const byDay = new Map(studies.map((s) => [s.day, s]));
 const { pins, regions } = studyLayout(studies);
 const CATS = categoriesOf(studies);
 
-export const meta = () => seo("90 product case studies in 3D", `A 3D Earth with one marker for each of the ${studies.length} published product-management case studies, grouped by category and sized by evidence level. Search, filter and open any study.`, "/universe");
+export const meta = () => seo("The Gaurav.OS solar system in 3D", `The portfolio as a solar system: Gaurav.OS at the centre, one planet for each of the seven actual projects, and the Earth holding all ${studies.length} published product-management case studies — searchable and filterable.`, "/universe");
 
-/** /universe: the Earth of the 90 individual case studies. State lives in the URL (?study, ?q, ?cat, ?ev, ?has). */
+/**
+ * /universe: the Gaurav.OS solar system, and inside it the Earth of the 90 individual case studies.
+ * Two stages, both in the URL:
+ *  - the system (default): ?planet=<slug> selects a planet (the Earth or one of the seven projects)
+ *  - the Earth: ?at=earth — or any study / filter link (?study, ?q, ?cat, ?ev, ?has), which always lands on the Earth
+ */
+const EARTH_KEYS = ["study", "q", "cat", "ev", "has"];
+const onEarth = (p: URLSearchParams) => p.get("at") === "earth" || EARTH_KEYS.some((k) => p.has(k));
+const NO_PARAMS = new URLSearchParams();
+
 export default function Universe() {
   const [params, setParams] = useSearchParams();
   const loc = useLocation();
@@ -41,21 +52,30 @@ export default function Universe() {
   const [software, setSoftware] = useState(false);
   const api = useRef<SceneApi | null>(null);
   const preview = useRef<HTMLDivElement | null>(null);
+  const labels = useRef<HTMLDivElement | null>(null);
   const canvasBox = useRef<HTMLDivElement>(null);
 
-  /* URL state */
-  const filter = useMemo(() => filterFromParams(params), [params]);
+  /* URL state. The page is prerendered without a query string: the first browser render must match
+     that HTML (no filter, no selected study), so render-derived URL state is read only after hydration.
+     The mount effect below still reads the real params (it runs after hydration anyway). */
+  const [urlReady, setUrlReady] = useState(false);
+  useEffect(() => setUrlReady(true), []);
+  const view = urlReady ? params : NO_PARAMS;
+  const filter = useMemo(() => filterFromParams(view), [view]);
   const shown = useMemo(() => studies.filter((s) => matches(s, filter)), [filter]);
   const dim = useMemo(() => (isFiltered(filter) ? new Set(shown.map((s) => s.day)) : null), [filter, shown]);
-  const selDay = Number(params.get("study"));
-  const selected = byDay.has(selDay) ? selDay : null;
+  const stage: "system" | "earth" = onEarth(view) ? "earth" : "system";
+  const stageRef = useRef(stage); stageRef.current = stage;
+  const selDay = Number(view.get("study"));
+  const selected = stage === "earth" && byDay.has(selDay) ? selDay : null;
   const study = selected !== null ? byDay.get(selected)! : null;
+  const planet = stage === "system" ? planetBySlug(view.get("planet")) : null;
 
   /* decide 3D or 2D, the tier and the intro, once, in the browser */
   useEffect(() => {
     const rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setReduced(rm); setCompact(innerWidth < 900);
-    const onResize = () => setCompact(innerWidth < 900);
+    setReduced(rm); setCompact(!matchMedia(SIDE_QUERY).matches);
+    const onResize = () => setCompact(!matchMedia(SIDE_QUERY).matches);
     addEventListener("resize", onResize);
     const forced = params.get("view");
     if (forced === "2d") { setMode("2d"); setWhy2d("You chose the list view."); }
@@ -64,17 +84,24 @@ export default function Universe() {
       setTier(detectTier(params.get("tier")));
       if (!params.get("tier") && softwareGL()) { setSoftware(true); setMode("2d"); setWhy2d("This device draws 3D without a graphics processor, which would be slow, so the list leads. You can still start the 3D Earth."); }
       else {
-        // a shared link to a study or a filtered view goes straight to it
-        const wantIntro = !params.get("study") && !isFiltered(filterFromParams(params)) && (params.get("intro") === "1" || !store.get(SEEN));
-        setIntro(wantIntro); setIntroP(wantIntro && !rm ? 0 : 1);
         setMode("3d");
-        track("universe_opened", { slug: "earth" });
+        track("universe_opened", { slug: onEarth(params) ? "earth" : "system" });
       }
     }
     return () => removeEventListener("resize", onResize);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => { audio.ambientWanted(true); audio.cue("enter"); return () => audio.ambientWanted(false); }, []);
+  /* the Earth's cinematic intro plays when the Earth stage is entered (first visit, or ?intro=1) — never on the system,
+     and never for a shared link to a study or a filtered view, which goes straight to it */
+  useEffect(() => {
+    setReady(false); setHovered(null); setListOpen(false);
+    if (mode !== "3d") return;
+    if (stage === "system") { setIntro(false); setIntroP(1); return; }
+    const p = new URLSearchParams(location.search);
+    const wantIntro = !p.get("study") && !isFiltered(filterFromParams(p)) && (p.get("intro") === "1" || !store.get(SEEN));
+    setIntro(wantIntro); setIntroP(wantIntro && !reduced ? 0 : 1); setTitlesOff(false);
+  }, [stage, mode]); // eslint-disable-line react-hooks/exhaustive-deps
   // a new filter turns the Earth to its first match (not on load, and never away from an open study)
   const fkey = `${filter.q}|${filter.cats}|${filter.levels}|${filter.has}`;
   const firstF = useRef(true);
@@ -91,11 +118,28 @@ export default function Universe() {
     api.current?.focus(selected !== null ? String(selected) : null);
   }, [selected, ready]);
 
+  // the system: the camera follows ?planet (selecting, Back and Forward)
+  const lastPlanet = useRef<string | null>(null);
+  useEffect(() => {
+    if (!ready || stage !== "system") { if (stage !== "system") lastPlanet.current = null; return; }
+    const s = planet?.slug ?? null;
+    if (s === lastPlanet.current) return;
+    lastPlanet.current = s;
+    api.current?.focus(s);
+  }, [planet, ready, stage]);
+
   const update = (fn: (p: URLSearchParams) => void, replace: boolean) => {
     const p = new URLSearchParams(params); fn(p);
     ["view", "tier", "intro"].forEach((k) => { if (!params.get(k)) p.delete(k); });
     setParams(p, { replace, preventScrollReset: true });
   };
+  /* system navigation */
+  const pickPlanet = (slug: string) => { track("universe_marker", { slug: `planet-${slug}` }); update((p) => p.set("planet", slug), false); };
+  const closePlanet = () => update((p) => p.delete("planet"), false);
+  // arriving from the system, the visitor has already had the arrival: the Earth's title intro is not repeated
+  const toEarth = () => { store.set(SEEN, "1"); audio.cue("earth"); update((p) => { p.delete("planet"); p.set("at", "earth"); }, false); };
+  const toSystem = () => { audio.cue("back"); update((p) => { [...EARTH_KEYS, "at"].forEach((k) => p.delete(k)); p.set("planet", EARTH_SLUG); }, false); };
+  const stepPlanet = (dir: 1 | -1) => { const i = planet ? planets.indexOf(planet) : -1; pickPlanet(planets[(i + dir + planets.length) % planets.length].slug); };
   const select = (day: number) => {
     track("universe_marker", { slug: `day-${day}` }); setHovered(null); if (compact) setListOpen(false);
     if (intro && introP < 1) skip();
@@ -119,13 +163,26 @@ export default function Universe() {
   const events = useRef<SceneEvents>(null!);
   events.current = {
     onHover: (s) => setHovered(s),
-    onSelect: (s) => select(Number(s)),
+    onSelect: (s) => (stageRef.current === "system" ? pickPlanet(s) : select(Number(s))),
     onIntro: (p) => { setIntroP(p); if (p >= 1) store.set(SEEN, "1"); },
     onHotspot: () => {}, onPanel: () => {},
-    onReady: (k) => { if (k === "earth") setReady(true); },
+    onReady: (k) => { if (k === stageRef.current) setReady(true); },
   };
 
   const onKey = (e: React.KeyboardEvent) => {
+    if (stage === "system") {
+      // stepping through planets is navigation (the URL): it works before the 3D scene has loaded
+      if (e.key === "[" || e.key === "]") { e.preventDefault(); stepPlanet(e.key === "]" ? 1 : -1); return; }
+      if (e.key === "Enter" && hovered) { e.preventDefault(); pickPlanet(hovered); return; }
+      if (e.key === "Escape" && planet) { e.preventDefault(); closePlanet(); return; }
+      const a = api.current; if (!a) return;
+      const m: Record<string, () => void> = {
+        ArrowLeft: () => a.rotate(-0.22, 0), ArrowRight: () => a.rotate(0.22, 0), ArrowUp: () => a.rotate(0, -0.15), ArrowDown: () => a.rotate(0, 0.15),
+        "+": () => a.zoom(0.85), "=": () => a.zoom(0.85), "-": () => a.zoom(1.18), _: () => a.zoom(1.18),
+      };
+      if (m[e.key]) { e.preventDefault(); m[e.key](); }
+      return;
+    }
     const a = api.current; if (!a) return;
     const m: Record<string, () => void> = {
       ArrowLeft: () => a.rotate(-0.22, 0), ArrowRight: () => a.rotate(0.22, 0), ArrowUp: () => a.rotate(0, -0.15), ArrowDown: () => a.rotate(0, 0.15),
@@ -142,23 +199,27 @@ export default function Universe() {
 
   const hs = hovered ? byDay.get(Number(hovered)) : null;
   const inIntro = introP < 1;
-  const showTitles = !titlesOff && intro && mode === "3d";
+  const showTitles = !titlesOff && intro && mode === "3d" && stage === "earth";
+  const earth = stage === "earth";
 
   return (
-    <Shell exit={exit} title="90 case studies"
+    <Shell exit={exit} title={earth ? "90 case studies" : "Solar system"}
       actions={<>
+        {earth && <button type="button" onClick={toSystem} className={shellButton} data-testid="to-system"><Icon name="explore" size={16} /><span className="max-sm:sr-only">Solar system</span></button>}
         <Link to="/worlds" className={shellButton}><Icon name="product" size={16} /><span className="max-sm:sr-only">Project worlds</span></Link>
-        {mode === "3d" && <button type="button" onClick={() => setListOpen(!listOpen)} aria-expanded={listOpen} className={shellButton} data-testid="studies-toggle"><Icon name="search" size={16} /><span className="max-sm:sr-only">Studies</span></button>}
+        {mode === "3d" && earth && <button type="button" onClick={() => setListOpen(!listOpen)} aria-expanded={listOpen} className={shellButton} data-testid="studies-toggle"><Icon name="search" size={16} /><span className="max-sm:sr-only">Studies</span></button>}
       </>}>
-      {mode === "3d" && <h1 className="sr-only">90 product case studies on a 3D Earth</h1>}
+      {mode === "3d" && <h1 className="sr-only">{earth ? "90 product case studies on a 3D Earth" : "The Gaurav.OS solar system: seven project planets and the Earth of the 90 case studies"}</h1>}
       {mode === "3d" && (
-        <div ref={canvasBox} tabIndex={0} onKeyDown={onKey} data-testid="universe-canvas" data-cursor="drag" role="application" aria-roledescription="3D view"
-          aria-label="3D Earth with one marker per case study. Arrow keys rotate, plus and minus zoom, square brackets step through studies. The Studies button opens the searchable list."
+        <div ref={canvasBox} tabIndex={0} onKeyDown={onKey} data-testid="universe-canvas" data-cursor="drag" role="application" aria-roledescription="3D view" data-stage={stage}
+          aria-label={earth
+            ? "3D Earth with one marker per case study. Arrow keys rotate, plus and minus zoom, square brackets step through studies. The Studies button opens the searchable list."
+            : "3D solar system: Gaurav.OS at the centre, the Earth of the 90 case studies and one planet per project. Arrow keys rotate, plus and minus zoom, square brackets step through the planets. The planet list does the same."}
           className="absolute inset-0 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-green/60">
-          <CanvasBoundary onFail={() => { setMode("2d"); setWhy2d("The 3D scene could not start on this device, so every study is listed here instead."); }}>
+          <CanvasBoundary onFail={() => { setMode("2d"); setWhy2d("The 3D scene could not start on this device, so everything is listed here instead."); }}>
             <Suspense fallback={null}>
               <Scene tier={tier} reduced={reduced} paused={false} events={events} api={api}
-                earth={{ pins, regions, dim, selected, hovered, intro, preview }} />
+                {...(earth ? { earth: { pins, regions, dim, selected, hovered, intro, preview } } : { system: { planets, selected: planet?.slug ?? null, hovered, labels } })} />
             </Suspense>
           </CanvasBoundary>
         </div>
@@ -169,7 +230,7 @@ export default function Universe() {
         <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center px-6 text-center" data-testid="title-card">
           <div>
             <p className="font-display text-4xl font-bold sm:text-6xl">Gaurav<span className="text-green">.OS</span></p>
-            <p role="status" className="mt-3 font-mono text-xs uppercase tracking-[.3em] text-white/60">90 case studies · loading</p>
+            <p role="status" className="mt-3 font-mono text-xs uppercase tracking-[.3em] text-white/60">{earth ? "90 case studies" : "Solar system"} · loading</p>
           </div>
         </div>
       )}
@@ -187,24 +248,48 @@ export default function Universe() {
           </div>
         </div>
       )}
-      {inIntro && mode === "3d" && <button type="button" onClick={skip} className="absolute bottom-6 left-1/2 z-20 inline-flex min-h-11 -translate-x-1/2 items-center gap-2 rounded-full border border-white/25 bg-black/50 px-5 text-sm text-white backdrop-blur hover:bg-white/10" data-testid="skip-intro"><Icon name="skip" />Skip intro</button>}
+      {inIntro && mode === "3d" && earth && <button type="button" onClick={skip} className="absolute bottom-6 left-1/2 z-20 inline-flex min-h-11 -translate-x-1/2 items-center gap-2 rounded-full border border-white/25 bg-black/50 px-5 text-sm text-white backdrop-blur hover:bg-white/10" data-testid="skip-intro"><Icon name="skip" />Skip intro</button>}
 
       {/* hover preview that follows its marker */}
-      {mode === "3d" && (
+      {mode === "3d" && earth && (
         <div ref={preview} data-visible="false" aria-hidden className="pointer-events-none absolute left-0 top-0 z-10 w-[250px] opacity-0 transition-opacity duration-200 data-[visible=true]:opacity-100" style={{ marginLeft: 18, marginTop: -40 }}>
           {hs && <PreviewCard s={hs} />}
         </div>
       )}
 
       {/* the accessible list of all 90, with search and filters — also the whole experience in 2D */}
-      {(mode === "2d" || listOpen) && (
+      {/* the system: planet labels, the accessible planet list, the selected planet — or, in 2D, all of it as a page */}
+      {mode === "3d" && !earth && (
+        <>
+          <div ref={labels} aria-hidden className="pointer-events-none absolute inset-0 z-10 overflow-hidden" data-testid="planet-labels">
+            <div data-slug="sun" className="planet-label absolute left-0 top-0"><span className="font-display text-sm font-bold">Gaurav<span className="text-green">.OS</span></span></div>
+            {planets.map((p) => (
+              <div key={p.slug} data-slug={p.slug} className="planet-label absolute left-0 top-0">
+                <span className="block font-display text-[13px] font-bold leading-tight">{p.name}</span>
+                <span className="planet-label-sub block text-[10.5px] text-white/65">{p.kind === "earth" ? "90 case studies" : p.statusLabel}</span>
+              </div>
+            ))}
+          </div>
+          <PlanetRail current={planet?.slug ?? null} onPick={pickPlanet} onFocus={(s) => setHovered(s)} onBlur={() => setHovered(null)} />
+          {ready && !planet && (
+            <p className="pointer-events-none absolute bottom-[104px] left-1/2 z-10 w-[min(560px,calc(100%-2rem))] -translate-x-1/2 text-center text-xs text-white/60 side:bottom-6 side:left-auto side:right-28 side:w-auto side:max-w-[560px] side:translate-x-0 side:text-right" data-testid="system-hint">
+              {compact ? "Tap a planet · drag to turn · pinch to zoom" : "Click a planet · drag to turn · scroll to zoom · [ and ] step through planets"}. Orbits and sizes are a visual layout, not to scale.
+            </p>
+          )}
+          {planet && <PlanetPanel p={planet} onClose={closePlanet} onEarth={toEarth} onPrev={() => stepPlanet(-1)} onNext={() => stepPlanet(1)} />}
+        </>
+      )}
+      {mode === "2d" && !earth && <SystemList why={why2d} onEarth={toEarth} onStart3d={software ? () => { setSoftware(false); setTier("laptop"); setReady(false); setMode("3d"); } : undefined} />}
+
+      {earth && (mode === "2d" || listOpen) && (
         <StudyBrowser flat={mode === "2d"} why={why2d} filter={filter} shown={shown} selected={selected} onFilter={setFilter} onPick={select}
           onFocus={(d) => { setHovered(String(d)); api.current?.face(String(d)); }} onClose={() => { setListOpen(false); canvasBox.current?.focus(); }}
           onStart3d={software ? () => { setSoftware(false); setTier("laptop"); setReady(false); setMode("3d"); } : undefined} />
       )}
 
-      {mode === "3d" && !inIntro && !study && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-end justify-between gap-3 p-4 text-xs text-white/60 sm:p-6">
+      {mode === "3d" && earth && !inIntro && !study && (
+        // right padding keeps the texture credit clear of Oz's resting spot (bottom-right)
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-wrap items-end justify-between gap-3 p-4 pr-24 text-xs text-white/60 sm:p-6 sm:pr-28">
           <p className="pointer-events-auto max-w-md">{compact ? "Drag to turn · pinch to zoom · tap a light" : "Drag to turn · scroll to zoom · click a light · or use Studies"}. {dim ? `${shown.length} of ${studies.length} studies match. ` : ""}Positions are a visual layout by category, not geography.</p>
           <div className="pointer-events-auto flex flex-wrap items-center gap-3">
             <button type="button" onClick={replay} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/20 px-4 text-white/80 hover:bg-white/10"><Icon name="reset" size={16} />Replay intro</button>
@@ -240,7 +325,7 @@ function StudyPanel({ s, index, total, filtered, onPrev, onNext, onClose }: { s:
   const flags = (["prd", "experiment"] as HasKey[]).filter((k) => hasFlag(s, k));
   return (
     <aside aria-label={`Day ${s.day}: ${s.company}`} data-testid="study-panel"
-      className="pointer-events-auto absolute inset-x-0 bottom-0 z-20 flex max-h-[62svh] flex-col rounded-t-3xl border-t border-white/10 bg-[#0B1110]/92 text-ink shadow-2xl backdrop-blur-xl min-[900px]:inset-x-auto min-[900px]:bottom-4 min-[900px]:right-4 min-[900px]:top-[76px] min-[900px]:max-h-none min-[900px]:w-[min(440px,40vw)] min-[900px]:rounded-3xl min-[900px]:border">
+      className="pointer-events-auto absolute inset-x-0 bottom-0 z-20 flex max-h-[56svh] flex-col rounded-t-3xl border-t border-white/10 bg-[#0B1110]/92 text-ink shadow-2xl backdrop-blur-xl side:inset-x-auto side:bottom-4 side:right-[max(1rem,env(safe-area-inset-right))] side:top-[76px] side:max-h-none side:w-[min(440px,40vw)] side:rounded-3xl side:border">
       <header className="flex items-start justify-between gap-3 border-b border-white/10 px-5 pb-4 pt-4">
         <div className="min-w-0">
           <p className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[.16em] text-white/60"><span className="size-2 rounded-full" style={{ background: CAT_COLOR[s.category] }} />Day {s.day} · {s.category} (derived)</p>
@@ -264,10 +349,10 @@ function StudyPanel({ s, index, total, filtered, onPrev, onNext, onClose }: { s:
           <Link to={`/atlas?day=${s.day}`} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10">Show on Atlas</Link>
         </div>
       </div>
-      <footer className="flex flex-wrap items-center gap-2 border-t border-white/10 py-3 pl-5 pr-24">{/* the right edge stays clear for Oz */}
-        <button type="button" onClick={onPrev} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10" data-testid="prev-study"><Icon name="back" size={16} />Previous</button>
-        <button type="button" onClick={onNext} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10" data-testid="next-study">Next<Icon name="arrow" size={16} /></button>
-        <span className="ml-1 text-xs text-white/60" aria-live="polite">{index + 1} of {total}{filtered ? " matching" : ""}</span>
+      <footer className="flex flex-wrap items-center gap-2 border-t border-white/10 pb-[max(0.75rem,env(safe-area-inset-bottom))] pl-5 pr-24 pt-3 side:pb-3">{/* the right edge stays clear for Oz */}
+        <button type="button" onClick={onPrev} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 [@media(max-height:520px)]:px-3 text-sm hover:bg-white/10" data-testid="prev-study"><Icon name="back" size={16} />Previous</button>
+        <button type="button" onClick={onNext} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 [@media(max-height:520px)]:px-3 text-sm hover:bg-white/10" data-testid="next-study">Next<Icon name="arrow" size={16} /></button>
+        <span className="ml-1 text-xs text-white/60 [@media(max-height:520px)]:sr-only" aria-live="polite">{index + 1} of {total}{filtered ? " matching" : ""}</span>
       </footer>
     </aside>
   );
@@ -334,6 +419,112 @@ function StudyBrowser({ flat, why, filter, shown, selected, onFilter, onPick, on
       </ol>
       {!shown.length && <p className="p-4 text-sm text-white/70">No study matches. <button type="button" className="underline underline-offset-4" onClick={() => { setQ(""); onFilter({ q: "", cats: [], levels: [], has: [] }); }}>Clear filters</button></p>}
       {flat && <p className="mt-10 text-sm text-white/60"><Link to="/research" className="underline underline-offset-4">Research index</Link> · <Link to="/atlas" className="underline underline-offset-4">Atlas (2D map)</Link> · <Link to="/worlds" className="underline underline-offset-4">Project worlds</Link></p>}
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- the solar system: list, panel, 2D page */
+const TONE_DOT: Record<Planet["tone"], string> = { green: "#6BE39A", cyan: "#35D6D0", amber: "#F2C14E", violet: "#A98BFF" };
+
+/** Every body in orbit order: the keyboard / screen-reader way into the system (a rail on wide screens, a strip on phones). */
+function PlanetRail({ current, onPick, onFocus, onBlur }: { current: string | null; onPick: (s: string) => void; onFocus: (s: string) => void; onBlur: () => void }) {
+  return (
+    <nav aria-label="Planets" data-testid="planet-list"
+      className="absolute inset-x-0 bottom-0 z-20 pb-[max(0.75rem,env(safe-area-inset-bottom))] side:inset-x-auto side:bottom-auto side:left-[max(1rem,env(safe-area-inset-left))] side:top-[84px] side:pb-0">
+      <p className="sr-only">The Sun at the centre is Gaurav.OS. Choose a planet to see what it holds.</p>
+      {/* phones: the strip's scroller ends before Oz's resting spot (bottom-right), so no chip sits under it */}
+      <ol className="mr-24 flex gap-2 overflow-x-auto px-3 side:mr-0 side:w-[236px] side:flex-col side:gap-1.5 side:overflow-visible side:px-0 side:pr-0">
+        {planets.map((p, i) => (
+          <li key={p.slug} className="shrink-0">
+            <button type="button" onClick={() => onPick(p.slug)} onFocus={() => onFocus(p.slug)} onBlur={onBlur} onMouseEnter={() => onFocus(p.slug)} onMouseLeave={onBlur}
+              aria-current={current === p.slug ? "true" : undefined} data-testid={`planet-${p.slug}`}
+              className={cx("flex min-h-11 w-full items-center gap-2.5 rounded-full border px-3 text-left text-sm backdrop-blur-md transition-colors side:rounded-2xl side:py-1.5",
+                current === p.slug ? "border-green/70 bg-green/15 text-white" : "border-white/12 bg-black/45 text-white/85 hover:border-white/30 hover:bg-white/10")}>
+              <span aria-hidden className="size-3 shrink-0 rounded-full" style={{ background: `radial-gradient(circle at 35% 35%, ${p.look.accent}, ${p.look.base})`, boxShadow: `0 0 10px ${p.look.glow}66` }} />
+              <span className="min-w-0">
+                <span className="block whitespace-nowrap font-medium leading-tight side:whitespace-normal">{p.name}</span>
+                <span className="hidden truncate text-[11px] text-white/55 side:block">{p.kind === "earth" ? "90 product case studies" : p.statusLabel}</span>
+              </span>
+              <span className="ml-auto hidden shrink-0 pl-1 font-mono text-[10px] text-white/40 side:inline">{String(i + 1).padStart(2, "0")}</span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+
+/** The selected planet: what the portfolio records about it, and the way into its world. */
+function PlanetPanel({ p, onClose, onEarth, onPrev, onNext }: { p: Planet; onClose: () => void; onEarth: () => void; onPrev: () => void; onNext: () => void }) {
+  const head = useRef<HTMLHeadingElement>(null);
+  useEffect(() => { head.current?.focus({ preventScroll: true }); }, [p.slug]);
+  const i = planets.indexOf(p);
+  return (
+    <aside aria-label={`${p.name}: planet details`} data-testid="planet-panel" data-planet={p.slug}
+      className="pointer-events-auto absolute inset-x-0 bottom-0 z-30 flex max-h-[58svh] flex-col rounded-t-3xl border-t border-white/10 bg-[#0B1110]/94 text-ink shadow-2xl backdrop-blur-xl side:inset-x-auto side:bottom-4 side:right-[max(1rem,env(safe-area-inset-right))] side:top-[76px] side:max-h-none side:w-[min(420px,38vw)] side:rounded-3xl side:border">
+      <header className="flex items-start justify-between gap-3 border-b border-white/10 px-5 pb-4 pt-4">
+        <div className="min-w-0">
+          <p className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[.16em] text-white/60">
+            <span aria-hidden className="size-2.5 rounded-full" style={{ background: p.look.glow }} />Planet {String(i + 1).padStart(2, "0")} · {p.kind === "earth" ? "Case studies" : "Project"}
+          </p>
+          <h2 ref={head} tabIndex={-1} className="mt-2 font-display text-3xl font-bold outline-none">{p.name}</h2>
+          <p className="mt-1 text-[15px] text-white/75">{p.subtitle}</p>
+        </div>
+        <button type="button" onClick={onClose} className="grid size-10 shrink-0 place-items-center rounded-full border border-white/15 hover:bg-white/10" data-testid="close-planet"><Icon name="close" size={16} /><span className="sr-only">Close and return to the whole system</span></button>
+      </header>
+      <div className="flex-1 overflow-y-auto px-5 py-4">
+        <p className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 font-mono text-[11px] uppercase tracking-[.12em] text-white/85">
+          <span aria-hidden className="size-2 rounded-full" style={{ background: TONE_DOT[p.tone] }} />{p.statusLabel}
+        </p>
+        {p.meta && <p className="mt-3 text-sm text-white/60">{p.meta}</p>}
+        <p className="mt-3 text-[15px] leading-relaxed text-[#D7DEDA]">{p.oneLine}</p>
+        <div className="mt-5 flex flex-wrap gap-2">
+          {p.kind === "earth" ? (
+            <>
+              <button type="button" onClick={onEarth} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-green px-5 text-sm font-semibold text-green-ink" data-testid="enter-earth"><Icon name="explore" size={16} />Explore the 90 case studies</button>
+              <Link to="/research" className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10">Research library</Link>
+            </>
+          ) : (
+            <>
+              <Link to={p.worldPath!} state={{ arrive: true }} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-green px-5 text-sm font-semibold text-green-ink" data-testid="enter-world"><Icon name="explore" size={16} />Enter the 3D world</Link>
+              <Link to={p.href} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10" data-testid="read-case">Read the case study<Icon name="arrow" size={16} /></Link>
+            </>
+          )}
+        </div>
+      </div>
+      <footer className="flex flex-wrap items-center gap-2 border-t border-white/10 pb-[max(0.75rem,env(safe-area-inset-bottom))] pl-5 pr-24 pt-3 side:pb-3">{/* the right edge stays clear for Oz */}
+        <button type="button" onClick={onPrev} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10" data-testid="prev-planet"><Icon name="back" size={16} />Previous</button>
+        <button type="button" onClick={onNext} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10" data-testid="next-planet">Next<Icon name="arrow" size={16} /></button>
+        <span className="ml-1 text-xs text-white/60" aria-live="polite">{i + 1} of {planets.length}</span>
+      </footer>
+    </aside>
+  );
+}
+
+/** Without 3D: the whole system as a page — the Sun, the Earth and the seven project planets. */
+function SystemList({ why, onEarth, onStart3d }: { why: string; onEarth: () => void; onStart3d?: () => void }) {
+  return (
+    <section aria-labelledby="system-2d-h" data-testid="system-2d" className="absolute inset-0 z-10 overflow-y-auto px-4 pb-16 pt-24 text-white sm:px-8">
+      <h1 id="system-2d-h" className="font-display text-4xl font-bold">The Gaurav.OS solar system</h1>
+      <p className="mt-2 max-w-2xl text-white/70">{why}</p>
+      {onStart3d && <button type="button" onClick={onStart3d} className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full border border-green/50 px-5 text-sm text-green hover:bg-green/10"><Icon name="explore" size={16} />Start the 3D solar system anyway</button>}
+      <p className="mt-6 max-w-2xl text-white/80"><b className="text-white">The Sun · Gaurav.OS.</b> {profile.brandLine}: {profile.intro}</p>
+      <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {planets.map((p, i) => (
+          <li key={p.slug} className="flex flex-col rounded-2xl border border-white/10 bg-white/[.03] p-5" data-testid="system-2d-planet">
+            <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.14em] text-white/55"><span aria-hidden className="size-2.5 rounded-full" style={{ background: p.look.glow }} />Planet {String(i + 1).padStart(2, "0")}</p>
+            <h2 className="mt-2 font-display text-2xl font-bold">{p.name}</h2>
+            <p className="text-sm text-white/65">{p.subtitle} · {p.statusLabel}</p>
+            <p className="mt-3 text-sm leading-relaxed text-white/80">{p.oneLine}</p>
+            <div className="mt-auto flex flex-wrap gap-2 pt-4">
+              {p.kind === "earth"
+                ? <button type="button" onClick={onEarth} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-green px-4 text-sm font-semibold text-green-ink">Browse the 90 case studies</button>
+                : <><Link to={p.href} className="inline-flex min-h-10 items-center gap-2 rounded-full bg-green px-4 text-sm font-semibold text-green-ink">Read the case study</Link>
+                   <Link to={p.worldPath!} className="inline-flex min-h-10 items-center gap-2 rounded-full border border-white/15 px-4 text-sm hover:bg-white/10">3D world</Link></>}
+            </div>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }

@@ -7,28 +7,42 @@ import { PageHero, Container, SectionHeader, cx } from "~/components/ui";
 import { Icon } from "~/components/Icon";
 import { ProductOrbit } from "~/components/ProductOrbit";
 import { OperatingLoop } from "~/components/OperatingLoop";
-import { seo, asset } from "~/lib/meta";
+import { seo } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 
 export const meta = () => seo("Product Thinking", "The operating loop, principles, product challenges with reasoning revealed after you answer, and seven working PM tools.", "/product-thinking");
+
+const SECTIONS: [string, string][] = [["s-loop", "Operating loop"], ["s-orbit", "Product Orbit"], ["s-tools", "Working tools"], ["s-challenges", "Challenges"], ["s-principles", "Principles"]];
 
 export default function ProductThinking() {
   return (
     <>
       <PageHero {...heroArt("render-product-thinking")} eyebrow="Product Thinking" title="Discover → define → decide → measure → learn."
         intro="How the work gets done, with the evidence for each step — then tools you can use and challenges you can answer." />
+      {/* section navigator: the page is long, so every part is one tap away (sticky under the header) */}
+      <nav aria-label="On this page" className="sticky top-[72px] z-20 border-y border-line-soft bg-bg/85 backdrop-blur-md" data-testid="pt-nav">
+        <Container wide>
+          <ol className="-mx-4 flex gap-1 overflow-x-auto px-4 py-2 text-sm sm:mx-0 sm:px-0">
+            {SECTIONS.map(([id, label], n) => (
+              <li key={id} className="shrink-0"><a href={`#${id}`} className="inline-flex min-h-10 items-center gap-2 rounded-full px-3.5 text-muted hover:bg-raise hover:text-ink">
+                <span className="font-mono text-[11px] text-green">{String(n + 1).padStart(2, "0")}</span>{label}</a></li>
+            ))}
+          </ol>
+        </Container>
+      </nav>
       <Container wide className="grid gap-20 py-14">
-        <section aria-labelledby="loop">
+        <section aria-labelledby="loop" id="s-loop" className="scroll-mt-32">
           <SectionHeader id="loop" eyebrow="Operating loop" title="Eight stages, each backed by real work" />
-          <OperatingLoop figure={<img src={asset("/brand/sections/section-operating-loop.svg")} alt="The operating loop: observe, frame, research, hypothesize, build, measure, learn, iterate." width={1600} height={900} className="mb-4 w-full rounded-xl border border-line" loading="lazy" />} />
+          {/* the ring is the diagram: it lights up the stage being read (the old static picture never changed) */}
+          <OperatingLoop />
         </section>
 
-        <section aria-labelledby="orbit">
+        <section aria-labelledby="orbit" id="s-orbit" className="scroll-mt-32">
           <SectionHeader id="orbit" eyebrow="Product Orbit" title="Five domains, one loop" intro="The frame the work runs on — use the arrow keys or select a domain." />
           <ProductOrbit />
         </section>
 
-        <section aria-labelledby="tools">
+        <section aria-labelledby="tools" id="s-tools" className="scroll-mt-32">
           <SectionHeader id="tools" eyebrow="Interactive tools" title="Working PM tools" intro="They calculate for real and keep your entries in this browser tab only — nothing is sent anywhere." />
           <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {TOOLS.map((t) => (
@@ -41,12 +55,12 @@ export default function ProductThinking() {
           </ul>
         </section>
 
-        <section aria-labelledby="challenges">
+        <section aria-labelledby="challenges" id="s-challenges" className="scroll-mt-32">
           <SectionHeader id="challenges" eyebrow="Challenge Gaurav" title="Commit to an answer, then see the reasoning" intro="Three real product scenarios. The approach is drawn from documented work — no answer is graded as right or wrong." />
           <div className="grid gap-6">{legacy.challenges.map((c) => <Challenge key={c.id} c={c} />)}</div>
         </section>
 
-        <section aria-labelledby="principles">
+        <section aria-labelledby="principles" id="s-principles" className="scroll-mt-32">
           <SectionHeader id="principles" eyebrow="Principles" title="Seven product principles" />
           <ol className="grid gap-3 md:grid-cols-2">
             {legacy.principles.map(([t, d], i) => <li key={t} className="card p-5"><span className="font-mono text-sm text-green">{String(i + 1).padStart(2, "0")}</span><h3 className="mt-1 text-lg font-bold">{t}</h3><p className="mt-1 text-[#C9D2CD]">{d}</p></li>)}

@@ -39,8 +39,9 @@ export default function CaseStudies() {
                 <ul className="grid grid-cols-2 gap-1.5 sm:grid-cols-4 xl:grid-cols-7" aria-label={`Template coverage for ${p.name}`}>
                   {TEMPLATE.map(([k, label]) => {
                     const ok = have.has(k);
-                    return <li key={k} className={ok ? "rounded-md border border-green/40 bg-green/10 px-2 py-1 text-xs text-green" : "rounded-md border border-line-soft px-2 py-1 text-xs text-dim"}>
-                      {ok ? <Link to={`/projects/${p.slug}#${k}`} className="hover:underline">{label}</Link> : <span><span className="sr-only">Not evidenced: </span>{label}</span>}
+                    // the whole chip is the link (not just its text), so it is a comfortable touch target
+                    return <li key={k} className={ok ? "rounded-md border border-green/40 bg-green/10 text-xs text-green transition-colors hover:bg-green/20" : "rounded-md border border-line-soft px-2 py-1.5 text-xs text-dim"}>
+                      {ok ? <Link to={`/projects/${p.slug}#${k}`} className="block h-full px-2 py-1.5 hover:underline">{label}</Link> : <span><span className="sr-only">Not evidenced: </span>{label}</span>}
                     </li>;
                   })}
                 </ul>

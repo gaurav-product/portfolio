@@ -247,3 +247,15 @@ export const capabilities: Capability[] = RAW.map(([id, name, category, definiti
 }));
 
 export const capabilityById = (id: string) => capabilities.find((c) => c.id === id);
+
+/** The seven domains of the skills library: each groups existing categories (nothing is re-labelled). */
+export const DOMAINS: { id: string; name: string; categories: CapabilityCategory[]; blurb: string }[] = [
+  { id: "strategy-delivery", name: "Product strategy & delivery", categories: ["Product Strategy", "Execution"], blurb: "Vision, roadmaps, prioritization, PRDs and shipping." },
+  { id: "research-analytics", name: "Research & analytics", categories: ["Discovery", "Analytics"], blurb: "Interviews, synthesis, funnels, cohorts and experiments." },
+  { id: "ai-technology", name: "AI & technology", categories: ["AI", "Technical"], blurb: "AI product boundaries, evaluation and the technical depth to build." },
+  { id: "health-safety", name: "Healthcare product safety", categories: ["Healthcare"], blurb: "Safety designed in: guardrails, crisis routing, consent." },
+  { id: "design-ux", name: "Design & UX", categories: ["Design"], blurb: "Prototypes, usability testing and interaction design." },
+  { id: "communication", name: "Communication & collaboration", categories: ["Communication & Collaboration"], blurb: "Stakeholders, writing and changing course on evidence." },
+  { id: "growth", name: "Growth & measurement", categories: ["Growth"], blurb: "Activation, retention and growth mechanics." },
+];
+export const domainOf = (c: CapabilityCategory) => DOMAINS.find((d) => d.categories.includes(c))!;

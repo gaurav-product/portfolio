@@ -131,11 +131,13 @@ export const certificationGroups: CertificationGroup[] = [
 export const certifications = certificationGroups.map((g) => ({ issuer: g.issuer, items: g.items.map((i) => i.title) }));
 export const certificationCount = certificationGroups.reduce((n, g) => n + g.items.length, 0);
 
-export { newsletter } from "./newsletter";
+import { newsletter } from "./newsletter";
+export { newsletter };
 
 export const writing = [
   { title: "90 daily product case studies", detail: "Jul – Sep 2026 · public repository", href: "/research", status: "VERIFIED" },
-  { title: "The Teardown", detail: "Weekly LinkedIn newsletter · 800 subscribers (self-reported, Nov 2026)", href: "https://www.linkedin.com/build-relation/newsletter-follow?entityUrn=7488215816266584064", status: "SELF-REPORTED" }, // mirrors `newsletter`
+  // derived from the dated snapshot, so updating `newsletter` updates this line too
+  { title: newsletter.name, detail: `${newsletter.cadence} ${newsletter.platform} newsletter · ${newsletter.snapshot.subscribers} subscribers, ${newsletter.snapshot.editions} editions (self-reported, ${newsletter.snapshot.asOf})`, href: newsletter.url ?? newsletter.page, status: "SELF-REPORTED" },
 ] as const;
 
 export const tools = {

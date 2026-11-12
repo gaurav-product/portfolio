@@ -37,7 +37,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-const KEEP_QUERY = `(function(){var m=document.querySelector('meta[http-equiv="refresh"]');if(!m||!(location.search||location.hash))return;var u=(m.getAttribute("content")||"").split("url=")[1];if(!u)return;var p=u.split("#");location.replace(p[0]+location.search+(location.hash||(p[1]?"#"+p[1]:"")));})()`;
+const KEEP_QUERY = `(function(){var m=document.querySelector('meta[http-equiv="refresh"]');if(!m||!(location.search||location.hash))return;var u=(m.getAttribute("content")||"").split("url=")[1];if(!u)return;var p=u.split("#");var s=location.search;location.replace(p[0]+(s?(p[0].indexOf("?")<0?s:"&"+s.slice(1)):"")+(location.hash||(p[1]?"#"+p[1]:"")));})()`;
 
 export default function App() {
   // the 3D Earth and the 3D worlds are full-screen cinematic modes with their own top bar (and an Exit)
@@ -54,6 +54,21 @@ export default function App() {
       <Cursor />
       <Transitions />
     </SearchProvider>
+  );
+}
+
+/** The shell for addresses that were not prerendered (404.html on a static host). Every real page is
+ *  prerendered, so this is only seen for unknown links: it gives them a title and readable content
+ *  before (or without) JavaScript, and the app replaces it with the 404 route once it loads. */
+export function HydrateFallback() {
+  return (
+    <Container className="py-24">
+      <title>Gaurav.OS</title>
+      <p className="eyebrow mb-3">Gaurav.OS</p>
+      <p className="text-2xl font-bold">Loading…</p>
+      <p className="mt-4 text-muted">If this page does not load, the link may be out of date.</p>
+      <a href={asset("/")} className="mt-8 inline-block underline underline-offset-4">Go to the homepage</a>
+    </Container>
   );
 }
 

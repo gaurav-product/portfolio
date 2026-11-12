@@ -12,8 +12,9 @@ test("J1 home → explore my work → project → case study → home", async ({
   const errs = noErrors(page);
   await page.goto("/?nointro");
   await expect(page.getByRole("heading", { level: 1, name: "Gaurav Singh" })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Explore 90 case studies in 3D" })).toHaveAttribute("href", "/universe"); // secondary: the 3D Earth
-  await page.getByRole("link", { name: "Explore my work" }).click(); // primary: the project list (owner-approved)
+  await expect(page.locator("#main").getByRole("link", { name: "Solar system in 3D" })).toHaveAttribute("href", "/universe"); // (the footer repeats it) secondary: the 3D solar system (its Earth holds the 90 studies)
+  await expect(page.getByRole("link", { name: "Explore my work" })).toHaveAttribute("href", "/tour"); // primary: the guided tour
+  await page.getByRole("link", { name: "Browse all projects" }).click(); // the project list stays one click away
   await expect(page).toHaveURL(/\/projects$/);
   await page.getByRole("link", { name: "CareConnect", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1, name: "CareConnect" })).toBeVisible();
@@ -121,7 +122,7 @@ test("J6 PRD builder → enter details → export Markdown", async ({ page }) =>
 
 test("J7 research → filter → article → back to library", async ({ page }) => {
   await page.goto("/research");
-  await page.getByLabel("Category").selectOption("Healthcare");
+  await page.getByRole("group", { name: "Category" }).getByRole("button", { name: /^Healthcare/ }).click(); // category chips (was a dropdown)
   await expect(page.getByRole("status").filter({ hasText: /of 90 studies/ })).toContainText("24 of 90");
   await page.getByLabel("Evidence level").selectOption("VERIFIED");
   await expect(page).toHaveURL(/category=Healthcare.*evidence=VERIFIED|evidence=VERIFIED.*category=Healthcare/);

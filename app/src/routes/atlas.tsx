@@ -34,7 +34,7 @@ export default function Atlas() {
     <>
       <PageHero {...heroArt("render-atlas")} eyebrow="Product Atlas" title="The 90-day corpus, mapped"
         intro={`${corpus.counts.written} studies · ${corpus.counts.sources.toLocaleString("en-IN")} references · ${corpus.counts.assumption_files} ASSUMPTIONS files · ${corpus.counts.verified} studies with programmatic checks. Audited ${corpus.audited}.`}>
-        <div className="mt-6"><ButtonLink to="/universe" icon="explore">See the 90 on the 3D Earth</ButtonLink></div>
+        <div className="mt-6"><ButtonLink to="/universe?at=earth" icon="explore">See the 90 on the 3D Earth</ButtonLink></div>
       </PageHero>
       <Container wide className="grid gap-20 py-12">
         <section aria-labelledby="const">
@@ -63,8 +63,8 @@ export default function Atlas() {
           </div>
           <details className="mt-4">
             <summary className="cursor-pointer text-sm text-muted underline underline-offset-4">Accessible list of all {corpus.studies.length} studies</summary>
-            <ol className="mt-3 grid gap-1 text-sm sm:grid-cols-2 lg:grid-cols-3">
-              {corpus.studies.filter((s) => cat === "All" || s.category === cat).map((s) => <li key={s.day}><Link to={`/research/${s.day}`} className="text-muted hover:text-ink">Day {s.day} — {s.company} ({s.evidence_level})</Link></li>)}
+            <ol className="mt-3 grid text-sm sm:grid-cols-2 lg:grid-cols-3">
+              {corpus.studies.filter((s) => cat === "All" || s.category === cat).map((s) => <li key={s.day}><Link to={`/research/${s.day}`} className="inline-flex min-h-8 items-center text-muted hover:text-ink">Day {s.day} — {s.company} ({s.evidence_level})</Link></li>)}
             </ol>
           </details>
         </section>

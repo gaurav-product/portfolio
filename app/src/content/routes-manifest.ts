@@ -12,7 +12,7 @@ export { NAV, TOOLS } from "./nav";
 
 export const STATIC_PAGES = [
   "/", "/about", "/experience", "/projects", "/case-studies", "/product-thinking", "/skills",
-  "/research", "/atlas", "/ai-lab", "/ask", "/lab-notes", "/contact", "/recruiter", "/explore", "/explore/city", "/universe", "/worlds", "/writing/the-teardown", "/ventures", "/cv", "/search",
+  "/research", "/atlas", "/ai-lab", "/ask", "/lab-notes", "/contact", "/recruiter", "/explore", "/explore/city", "/tour", "/universe", "/worlds", "/writing/the-teardown", "/ventures", "/cv", "/search",
 ];
 
 export function staticPaths(): string[] {

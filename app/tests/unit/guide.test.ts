@@ -109,3 +109,25 @@ describe("knowledge pack for the optional AI endpoint", () => {
     expect(k).not.toContain("legalName");
   });
 });
+
+describe("Oz voice: quality ranking and pronunciation", () => {
+  const v = (name: string, lang: string) => ({ name, lang }) as SpeechSynthesisVoice;
+  it("prefers a natural or neural voice over a legacy desktop voice, and an Indian natural voice above all", async () => {
+    const { pickVoice, voiceQuality } = await import("~/guide/voice/tts");
+    const desk = v("Microsoft Hazel Desktop - English (Great Britain)", "en-GB");
+    const google = v("Google UK English Female", "en-GB");
+    const neerja = v("Microsoft Neerja Online (Natural) - English (India)", "en-IN");
+    expect(voiceQuality(desk)).toBeLessThan(voiceQuality(google));
+    expect(pickVoice([desk, google], "en-IN")?.name).toBe(google.name);
+    expect(pickVoice([desk, google, neerja], "en-IN")?.name).toBe(neerja.name);
+    // never crosses languages: no Hindi voice means no voice (the answer stays as text)
+    expect(pickVoice([desk, google, neerja], "hi-IN")).toBeNull();
+  });
+  it("says names and abbreviations the way a person would", async () => {
+    const { pronounce } = await import("~/guide/voice/tts");
+    expect(pronounce("Gaurav.OS shipped a PRD at GharGyaan")).toBe("Gaurav O S shipped a P R D at Ghar Gyaan");
+    expect(pronounce("Nov 2024 – Apr 2026")).toBe("Nov 2024, Apr 2026");
+    expect(pronounce("20–25% lift")).toBe("20 to 25% lift");
+    expect(pronounce("APMs at RAPMATE")).toBe("APMs at RAPMATE"); // whole words only
+  });
+});

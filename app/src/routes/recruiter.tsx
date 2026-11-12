@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router";
+import { Link } from "react-router";
+import { useHydratedSearchParams } from "~/lib/useHydratedSearchParams";
 import { profile, highlights } from "~/content/profile";
 import { experience, education, certifications, writing, tools } from "~/content/experience";
 import { projects } from "~/content/projects";
@@ -23,7 +24,7 @@ const LENSES: { id: string; label: string; projects: Partial<Record<ProjectCateg
 ];
 
 export default function Recruiter() {
-  const [params, setParams] = useSearchParams();
+  const [params, setParams] = useHydratedSearchParams();
   const lens = LENSES.find((l) => l.id === params.get("role")) ?? LENSES[0];
   const [detail, setDetail] = useState(false);
   const ordered = useMemo(() => [...projects].map((p) => ({ p, s: p.categories.reduce((a, c) => a + (lens.projects[c] ?? 0), 0) }))

@@ -6,6 +6,13 @@ import { Container } from "./ui";
 import { Icon } from "./Icon";
 import { asset } from "~/lib/meta";
 
+const FOOTER_EXTRA = [
+  { to: "/skills", label: "Skills" },
+  { to: "/lab-notes", label: "Lab Notes" },
+  { to: "/recruiter", label: "Recruiter Mode" },
+  { to: "/explore/city", label: "3D city (Explore Mode)" },
+] as const;
+
 export function Footer() {
   return (
     <footer className="mt-28 border-t border-line-soft print:hidden">
@@ -24,15 +31,9 @@ export function Footer() {
         </div>
         <nav aria-label="Footer">
           <p className="label mb-3">Site</p>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-sm">
-            {NAV.map((n) => <li key={n.to}><Link to={n.to} className="text-muted hover:text-ink">{n.label}</Link></li>)}
-            <li><Link to="/skills" className="text-muted hover:text-ink">Skills</Link></li>
-            <li><Link to="/lab-notes" className="text-muted hover:text-ink">Lab Notes</Link></li>
-            <li><Link to="/recruiter" className="text-muted hover:text-ink">Recruiter Mode</Link></li>
-            <li><Link to="/worlds" className="text-muted hover:text-ink">Project worlds</Link></li>
-            <li><Link to="/universe" className="text-muted hover:text-ink">90 case studies in 3D</Link></li>
-            <li><Link to="/explore/city" className="text-muted hover:text-ink">3D city (Explore Mode)</Link></li>
-            <li><Link to="/ventures" className="text-muted hover:text-ink">Emerging Ventures</Link></li>
+          {/* NAV already lists Project Worlds, the 3D case studies and Emerging Ventures; only add what it lacks */}
+          <ul className="grid grid-cols-2 gap-x-4 text-sm">
+            {[...NAV, ...FOOTER_EXTRA].map((n) => <li key={n.to}><Link to={n.to} className="inline-flex min-h-8 items-center text-muted hover:text-ink">{n.label}</Link></li>)}
           </ul>
         </nav>
         <div>

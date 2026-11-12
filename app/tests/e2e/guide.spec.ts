@@ -174,6 +174,11 @@ test.describe("mobile", () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
   test("panel fits the screen with no horizontal overflow", async ({ page }) => {
     await page.goto("/?nointro");
+    // on a phone, Oz steps aside while it would cover the homepage introduction (inert, not tappable) …
+    await expect(page.getByTestId("oz")).toHaveAttribute("data-stepped-aside", "");
+    // … and is back once the introduction has scrolled clear
+    await page.locator("[data-oz-avoid]").evaluate((el) => scrollTo(0, el.getBoundingClientRect().bottom + scrollY + 100));
+    await expect(page.getByTestId("oz")).not.toHaveAttribute("data-stepped-aside");
     await page.getByRole("button", { name: "Open Oz, the Gaurav.OS AI Guide" }).tap();
     const panel = page.getByTestId("oz-panel");
     await expect(panel).toBeVisible();

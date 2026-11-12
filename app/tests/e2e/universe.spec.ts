@@ -20,7 +20,7 @@ test("first visit: cinematic intro with Skip, then the Earth; no errors, no Oz b
     window.AudioContext = class extends Orig { constructor(...a: ConstructorParameters<typeof AudioContext>) { super(...a); w.__acCount = (w.__acCount as number) + 1; } } as typeof AudioContext;
   });
   const errs = errorsOf(page);
-  await page.goto("/universe?tier=laptop");
+  await page.goto("/universe?at=earth&tier=laptop");
   await expect(page.getByTestId("intro-titles")).toBeVisible();
   await page.getByTestId("skip-intro").click();
   await expect(page.getByTestId("intro-titles")).toHaveCount(0);
@@ -34,7 +34,7 @@ test("first visit: cinematic intro with Skip, then the Earth; no errors, no Oz b
 });
 
 test("the intro plays to the end and offers Enter exploration", async ({ page }) => {
-  await page.goto("/universe?intro=1&tier=laptop");
+  await page.goto("/universe?at=earth&intro=1&tier=laptop");
   await expect(page.getByRole("button", { name: "Enter exploration" })).toBeVisible({ timeout: 25_000 });
   await page.getByRole("button", { name: "Enter exploration" }).click();
   await expect(page.getByTestId("intro-titles")).toHaveCount(0);
@@ -43,7 +43,7 @@ test("the intro plays to the end and offers Enter exploration", async ({ page })
 
 test("the Earth lists exactly the 90 studies — no projects, concepts, newsletter or corpus marker", async ({ page }) => {
   await seen(page);
-  await page.goto("/universe?tier=laptop");
+  await page.goto("/universe?at=earth&tier=laptop");
   await page.getByTestId("studies-toggle").click();
   await expect(studyList(page).getByRole("button")).toHaveCount(90);
   await expect(page.getByTestId("study-count")).toContainText("90 of 90 studies");
@@ -52,7 +52,7 @@ test("the Earth lists exactly the 90 studies — no projects, concepts, newslett
 
 test("select a study: panel, URL, Previous/Next, Back/Forward, close; the full study is one click away", async ({ page }) => {
   await seen(page);
-  await page.goto("/universe?tier=laptop");
+  await page.goto("/universe?at=earth&tier=laptop");
   await page.getByTestId("studies-toggle").click();
   await studyList(page).getByRole("button", { name: /^Day 12\b/ }).click();
   await expect(page).toHaveURL(/[?&]study=12\b/);
@@ -82,10 +82,12 @@ test("select a study: panel, URL, Previous/Next, Back/Forward, close; the full s
 
 test("search and filters live in the URL, narrow the list, and Previous/Next stays inside the filtered set", async ({ page }) => {
   await seen(page);
-  await page.goto("/universe?tier=laptop");
+  await page.goto("/universe?at=earth&tier=laptop");
   await page.getByTestId("studies-toggle").click();
   await page.getByRole("button", { name: /^Fintech/ }).click();
   await expect(page).toHaveURL(/cat=Fintech/);
+  // the URL can change a frame before React commits the filtered list; count() does not retry, so wait for it to narrow
+  await expect.poll(() => studyList(page).getByRole("button").count()).toBeLessThan(90);
   const n = await studyList(page).getByRole("button").count();
   expect(n).toBeGreaterThan(0); expect(n).toBeLessThan(90);
   await expect(page.getByTestId("study-count")).toContainText(`${n} of 90 studies`);
@@ -114,7 +116,7 @@ test("2D list view works without WebGL and still reaches every study", async ({ 
       return (orig as (...a: unknown[]) => unknown).call(this, type, ...rest);
     } as typeof orig;
   });
-  await page.goto("/universe");
+  await page.goto("/universe?at=earth");
   await expect(page.getByText(/needs WebGL/)).toBeVisible();
   await expect(page.locator("canvas")).toHaveCount(0);
   await expect(page.getByRole("heading", { level: 1, name: "90 product case studies" })).toBeVisible();
@@ -126,7 +128,7 @@ test("2D list view works without WebGL and still reaches every study", async ({ 
 
 test("without a graphics processor the list leads, and 3D can still be started", async ({ page }) => {
   await seen(page);
-  await page.goto("/universe"); // headless Chromium renders WebGL in software
+  await page.goto("/universe?at=earth"); // headless Chromium renders WebGL in software
   await expect(page.getByText(/without a graphics processor/)).toBeVisible();
   await expect(page.locator("canvas")).toHaveCount(0);
   await page.getByRole("button", { name: "Start the 3D Earth anyway" }).click();
@@ -151,7 +153,7 @@ test("sound: off by default, on with a click, remembered; settings popover works
 test("reduced motion: no flight, no skip button; keyboard reaches the search and Escape closes the list", async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: "reduce", baseURL: "http://127.0.0.1:4173" });
   const page = await ctx.newPage();
-  await page.goto("/universe?intro=1&tier=laptop");
+  await page.goto("/universe?at=earth&intro=1&tier=laptop");
   await expect(page.getByTestId("skip-intro")).toHaveCount(0);
   await page.getByTestId("studies-toggle").click();
   await expect(page.getByTestId("study-search")).toBeFocused();
@@ -160,11 +162,11 @@ test("reduced motion: no flight, no skip button; keyboard reaches the search and
   await ctx.close();
 });
 
-test("home: Explore my work opens the project list; the 3D Earth is the secondary CTA; Exit returns", async ({ page }) => {
+test("home: Explore my work opens the guided tour; the 3D Earth is the secondary CTA; Exit returns", async ({ page }) => {
   await seen(page);
   await page.goto("/?nointro");
-  await expect(page.getByRole("link", { name: "Explore my work" })).toHaveAttribute("href", "/projects");
-  await page.getByRole("link", { name: "Explore 90 case studies in 3D" }).click();
+  await expect(page.getByRole("link", { name: "Explore my work" })).toHaveAttribute("href", "/tour");
+  await page.locator("#main").getByRole("link", { name: "Solar system in 3D" }).click(); // the footer has the same link
   await expect(page).toHaveURL(/\/universe$/);
   await expect(page.locator("header").first()).toHaveCount(0); // site header hidden in cinematic mode
   await page.getByTestId("exit-universe").click();
@@ -221,7 +223,7 @@ test("The Teardown and the concepts keep their 3D worlds at their own routes, la
 });
 
 test("old /universe/<slug> addresses redirect to their new homes", async ({ page }) => {
-  for (const [from, to] of [["careconnect", /\/worlds\/careconnect$/], ["the-teardown", /\/writing\/the-teardown$/], ["repass", /\/ventures\/repass\/world$/], ["interview-radar", /\/ventures\/interview-radar\/world$/], ["90-day-case-studies", /\/universe$/]] as const) {
+  for (const [from, to] of [["careconnect", /\/worlds\/careconnect$/], ["the-teardown", /\/writing\/the-teardown$/], ["repass", /\/ventures\/repass\/world$/], ["interview-radar", /\/ventures\/interview-radar\/world$/], ["90-day-case-studies", /\/universe\?at=earth$/]] as const) { // the 90 studies live on the Earth stage
     await page.goto(`/universe/${from}`);
     await expect(page).toHaveURL(to, { timeout: 10_000 });
   }
@@ -231,7 +233,7 @@ test("old addresses keep their query string and hash: with the app running and b
   await page.goto("/universe/careconnect?tier=laptop&view=2d#gallery");
   await expect(page).toHaveURL(/\/worlds\/careconnect\?tier=laptop&view=2d#gallery$/, { timeout: 10_000 });
   await page.goto("/universe/90-day-case-studies?study=40&cat=SaaS");
-  await expect(page).toHaveURL(/\/universe\?study=40&cat=SaaS$/, { timeout: 10_000 });
+  await expect(page).toHaveURL(/\/universe\?at=earth&study=40&cat=SaaS$/, { timeout: 10_000 });
   await expect(page.getByTestId("study-panel")).toContainText("Day 40");
   // the app's scripts never load: the inline head script still carries the query across
   await page.route(/\/assets\/.*\.js$/, (r) => r.abort());
@@ -244,7 +246,7 @@ test("the menu drawer links the 3D Earth exactly once", async ({ page }) => {
   await page.goto("/about");
   await page.getByRole("button", { name: "Open menu" }).click();
   const drawer = page.getByRole("dialog", { name: "Site menu" });
-  await expect(drawer.getByRole("link", { name: "90 case studies in 3D" })).toHaveCount(1);
+  await expect(drawer.getByRole("link", { name: "Solar system in 3D" })).toHaveCount(1);
   await expect(drawer.getByRole("link", { name: "Project Worlds" })).toHaveCount(1);
 });
 
@@ -258,7 +260,22 @@ test("Oz opens a concept page and offers its 3D world, and finds the Earth", asy
   await expect(page.getByRole("link", { name: "Visit Repass in 3D" }).last()).toHaveAttribute("href", "/ventures/repass/world");
   await page.locator("#oz-input").fill("Take me to the Earth");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/universe$/, { timeout: 10_000 });
+  await expect(page).toHaveURL(/\/universe\?at=earth$/, { timeout: 10_000 });
+});
+
+test.describe("phone landscape", () => {
+  test.use({ viewport: { width: 844, height: 390 }, hasTouch: true, isMobile: true });
+  test("short landscape screens get a side panel, not a sheet over the scene; Previous and Next stay reachable", async ({ page }) => {
+    for (const [url, id] of [["/worlds/careconnect?tier=mobile", "case-panel"], ["/universe?tier=mobile&study=40", "study-panel"]] as const) {
+      await page.goto(url);
+      const box = (await page.getByTestId(id).boundingBox())!;
+      expect(box.width, url).toBeLessThan(844 * 0.5);   // a side panel, the scene stays visible beside it
+      expect(box.y + box.height, url).toBeLessThanOrEqual(390);
+    }
+    await expect(page.getByTestId("next-study")).toBeInViewport();
+    await page.getByTestId("next-study").click();
+    await expect(page).toHaveURL(/study=41\b/);
+  });
 });
 
 test.describe("mobile", () => {
@@ -268,6 +285,11 @@ test.describe("mobile", () => {
     const panel = page.getByTestId("case-panel");
     await expect(panel).toBeVisible();
     expect((await panel.boundingBox())!.width).toBeLessThanOrEqual(390);
+    // the sheet leaves the upper part of the screen to the building, and collapsing it gives the whole screen back
+    expect((await panel.boundingBox())!.y).toBeGreaterThan(844 * 0.4);
+    await page.getByTestId("sheet-toggle").click();
+    await expect(panel).toHaveAttribute("data-collapsed", "true");
+    expect((await panel.boundingBox())!.y).toBeGreaterThan(844 * 0.6);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
     await page.goto("/universe?study=40");
     const sp = page.getByTestId("study-panel");

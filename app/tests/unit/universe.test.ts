@@ -103,15 +103,18 @@ describe("routes and redirects", () => {
   });
   it("every old /universe/<slug> address is prerendered and points at its new home", () => {
     expect(Object.keys(UNIVERSE_REDIRECTS).sort()).toEqual([...destinations.map((d) => d.slug), "90-day-case-studies"].sort());
-    for (const [slug, to] of Object.entries(UNIVERSE_REDIRECTS)) { expect(paths).toContain(`/universe/${slug}`); expect(paths.includes(to.split("#")[0]) || to === "/universe").toBe(true); }
+    for (const [slug, to] of Object.entries(UNIVERSE_REDIRECTS)) { expect(paths).toContain(`/universe/${slug}`); expect(paths.includes(to.split(/[#?]/)[0])).toBe(true); }
     expect(UNIVERSE_REDIRECTS["careconnect"]).toBe("/worlds/careconnect");
     expect(UNIVERSE_REDIRECTS["the-teardown"]).toBe("/writing/the-teardown");
     expect(UNIVERSE_REDIRECTS["repass"]).toBe("/ventures/repass/world");
-    expect(UNIVERSE_REDIRECTS["90-day-case-studies"]).toBe("/universe");
+    expect(UNIVERSE_REDIRECTS["90-day-case-studies"]).toBe("/universe?at=earth");
   });
   it("redirects carry the query string and hash", () => {
     expect(withQuery("/worlds/nexus", "?tier=laptop", "#x")).toBe("/worlds/nexus?tier=laptop#x");
     expect(withQuery("/universe", "?study=4", "")).toBe("/universe?study=4");
+    // a target with its own query keeps it and the old address's query is appended (no second "?")
+    expect(withQuery("/universe?at=earth", "?study=4&cat=SaaS", "")).toBe("/universe?at=earth&study=4&cat=SaaS");
+    expect(withQuery("/universe?at=earth", "", "")).toBe("/universe?at=earth");
     expect(withQuery("/about#writing-h", "?a=1", "")).toBe("/about?a=1#writing-h");
     expect(withQuery("/about#writing-h", "", "#other")).toBe("/about#other");
   });
@@ -122,7 +125,7 @@ describe("routes and redirects", () => {
     for (const p of ["/universe", "/universe/repass", "/worlds/nexus", "/writing/the-teardown", "/ventures/repass/world"]) expect(isImmersive(p)).toBe(true);
     for (const p of ["/worlds", "/ventures", "/ventures/repass", "/projects", "/", "/about"]) expect(isImmersive(p)).toBe(false);
     expect(project3dPath("careconnect")).toBe("/worlds/careconnect");
-    expect(project3dPath("90-day-case-studies")).toBe("/universe");
+    expect(project3dPath("90-day-case-studies")).toBe("/universe?at=earth");
   });
 });
 
@@ -146,7 +149,8 @@ describe("Oz and the 3D pages", () => {
     expect(ir.navigate).toBe("/ventures/interview-radar");
     expect(ir.links.map((l) => l.to)).toContain("/ventures/interview-radar/world");
     expect(answerLocally("Show me Repass", "en").navigate).toBe("/ventures/repass");
-    expect(answerLocally("Take me back to Earth", "en").navigate).toBe("/universe");
+    expect(answerLocally("Take me back to Earth", "en").navigate).toBe("/universe?at=earth");
+    expect(answerLocally("Show me the solar system", "en").navigate).toBe("/universe");
     expect(answerLocally("Take me to the project worlds", "en").navigate).toBe("/worlds");
   });
   it("describes a concept as not built, and refuses its revenue", () => {
@@ -158,5 +162,37 @@ describe("Oz and the 3D pages", () => {
     const k = buildKnowledgePack();
     expect(k).toContain("Interview Radar"); expect(k).toContain("never describe them as built");
     expect(k).toContain("/ventures/repass/world"); expect(k).not.toContain("/universe/repass");
+  });
+});
+
+import { planets, projectPlanets, planetBySlug, EARTH_SLUG } from "~/content/solar";
+describe("the Gaurav.OS solar system", () => {
+  it("is the Earth plus exactly the seven actual projects — nothing else", () => {
+    expect(planets).toHaveLength(8);
+    expect(planets.filter((p) => p.kind === "earth").map((p) => p.slug)).toEqual([EARTH_SLUG]);
+    expect(projectPlanets.map((p) => p.slug).sort()).toEqual(worlds.map((w) => w.slug).sort());
+    for (const bad of ["repass", "interview-radar", "the-teardown", "90-day-case-studies"]) expect(planetBySlug(bad)).toBeNull();
+  });
+  it("takes every fact from the world and project content, and links to the real routes", () => {
+    for (const p of projectPlanets) {
+      const w = worlds.find((x) => x.slug === p.slug)!;
+      expect(p).toMatchObject({ name: w.name, statusLabel: w.statusLabel, oneLine: w.oneLine, worldPath: `/worlds/${p.slug}`, href: `/projects/${p.slug}` });
+      expect(p.meta).toMatch(/ · /);
+    }
+    const earth = planetBySlug(EARTH_SLUG)!;
+    expect(earth.oneLine).toMatch(/not products I launched/);
+  });
+  it("lays the orbits out from the inside out: neighbouring planets (with their atmospheres) can never touch", async () => {
+    const { ATMOSPHERE } = await import("~/content/solar");
+    planets.forEach((p, i) => { if (i) expect(p.orbit - planets[i - 1].orbit).toBeGreaterThan((planets[i - 1].size + p.size) * ATMOSPHERE); });
+  });
+});
+
+describe("project-world tour order", () => {
+  it("Previous / Next walk the worlds in the solar system's planet order, so numbering agrees everywhere", async () => {
+    const { worldTour } = await import("~/content/universe");
+    const { projectPlanets } = await import("~/content/solar");
+    expect(worldTour.map((w) => w.slug)).toEqual(projectPlanets.map((p) => p.slug));
+    expect(new Set(worldTour.map((w) => w.slug)).size).toBe(worlds.length);
   });
 });

@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { profile, highlights } from "~/content/profile";
 import { featuredProjects } from "~/content/projects";
-import { experience, writing, newsletter } from "~/content/experience";
+import { experience, newsletter } from "~/content/experience";
 import { NewsletterFeature } from "~/components/Newsletter";
 import { capabilities, CAPABILITY_CATEGORIES } from "~/content/capabilities";
 import { districts } from "~/content/districts";
@@ -10,6 +10,8 @@ import { Container, ButtonLink, SectionHeader, Pill, Button } from "~/components
 import { ProjectCard } from "~/components/cards";
 import { Icon } from "~/components/Icon";
 import { IntroFilm, useIntro } from "~/components/IntroFilm";
+import { Typewriter } from "~/components/Typewriter";
+import { HeroBackdrop } from "~/components/HeroBackdrop";
 import { Portrait } from "~/components/Portrait";
 import { CinematicImage } from "~/components/CinematicImage";
 import { cinematic } from "~/content/cinematic";
@@ -24,6 +26,11 @@ export const links = () => {
 };
 export const meta = () => [...seo(profile.brand, `${profile.seoDescription} ${profile.tagline}`, "/"), structuredData()];
 
+// the approved tagline, typed: each of its three words, then the whole line (profile.tagline)
+const TAG_PREFIX = "Building products with ";
+const TAG_PHRASES = ["evidence.", "intelligence.", "execution."];
+const TAG_FINAL = "evidence, intelligence and execution.";
+
 export default function Home() {
   const intro = useIntro();
   const demonstrated = (c: string) => capabilities.filter((x) => x.category === c && x.status === "Demonstrated in work").length;
@@ -32,43 +39,44 @@ export default function Home() {
       {intro.open && <IntroFilm onClose={intro.close} />}
 
       {/* ------------------------------------------------------------ HERO */}
-      <section aria-labelledby="hero-title" className="relative overflow-hidden">
-        {/* cinematic backdrop — the Gaurav.OS world (illustration); all text below is real HTML */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 max-lg:hidden">
-          {/* lazy: this copy is display:none on phones, so it must not compete with the visible mobile image. Right-anchored and framed from its right edge so the illustration's baked-in wordmark and labels sit under the solid part of the overlay or fully in view — never cut off, never behind the HTML text */}
-          <div className="absolute inset-y-0 right-0 w-[70%]"><CinematicImage id="gaurav-world-hero" decorative sizes="70vw" className="h-full" imgClassName="h-full object-cover object-[100%_58%]" /></div>
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,#0B1110_0%,#0B1110_40%,rgb(11_17_16/.92)_50%,rgb(11_17_16/.4)_66%,rgb(11_17_16/0)_86%)]" />
-          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
-          <div className="absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-bg via-bg/80 to-transparent" />
-        </div>
+      {/* one focused first screen: who, what, why — and one clear way in. Everything else is below the fold. */}
+      <section aria-labelledby="hero-title" className="relative overflow-hidden lg:flex lg:min-h-[calc(100svh-72px)] lg:items-center">
+        <HeroBackdrop />
         <div aria-hidden className="relative lg:hidden">
           <CinematicImage id="gaurav-world-hero" decorative priority sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-b from-bg/60 via-transparent to-bg" />
         </div>
-        <Container wide className="relative pb-16 lg:pb-28 lg:pt-32">
-          <div className="max-w-[640px]">
+        <Container wide className="relative w-full pb-16 lg:py-24">
+          {/* data-oz-avoid: on narrow phones the floating Oz steps aside while it would cover this introduction */}
+          <div className="max-w-[660px]" data-oz-avoid>
             <Portrait size={84} lazy className="-mt-12 mb-6 !mx-0 lg:hidden" />
-            <p className="eyebrow mb-5">Product × AI × Building</p>
+            <p className="eyebrow mb-5">{profile.brandLine}</p>
             <h1 id="hero-title" className="text-[52px] font-bold leading-[.98] sm:text-7xl xl:text-[88px]">{profile.name}</h1>
-            <p className="mt-6 font-display text-[22px] font-medium leading-snug text-ink sm:text-[26px]">{profile.tagline}</p>
-            <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-muted">{profile.intro}</p>
-            <div className="mt-10 flex flex-wrap items-center gap-3">
-              <ButtonLink to="/projects" variant="primary" icon="arrow" onClick={() => track("cta_click", { cta: "explore_work" })}>Explore my work</ButtonLink>
-              <ButtonLink to="/universe" icon="explore" onClick={() => track("cta_click", { cta: "universe_90" })}>Explore 90 case studies in 3D</ButtonLink>
-              <ButtonLink to={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" icon="download" onClick={() => track("cv_downloaded")}>Download CV</ButtonLink>
+            <p className="mt-6 min-h-[2.7em] font-display text-[22px] font-medium leading-snug text-ink sm:text-[28px]">
+              <Typewriter prefix={TAG_PREFIX} phrases={TAG_PHRASES} final={TAG_FINAL} />
+            </p>
+            <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-muted">{profile.intro}</p>
+            <div className="mt-9 flex flex-wrap items-center gap-3">
+              <ButtonLink to="/tour" variant="primary" icon="arrow" onClick={() => track("cta_click", { cta: "explore_work_tour" })}>Explore my work</ButtonLink>
+              <ButtonLink to="/projects" icon="product" onClick={() => track("cta_click", { cta: "browse_projects" })}>Browse all projects</ButtonLink>
             </div>
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-[14px] text-muted">
-              <Link to="/worlds" className="group inline-flex items-center gap-2 hover:text-ink"><Icon name="product" size={16} className="text-green" />Project worlds in 3D<Icon name="arrow" size={14} className="transition-transform group-hover:translate-x-0.5" /></Link>
-              <Link to="/explore/city" onClick={() => track("explore_mode_opened", { from: "hero" })} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="hq" size={16} />3D city</Link>
-              <Link to="/recruiter" onClick={() => track("recruiter_mode_opened")} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="recruiter" size={16} />Recruiter Mode</Link>
-              <button type="button" onClick={intro.play} data-cursor="play" className="inline-flex items-center gap-2 hover:text-ink"><Icon name="play" size={16} />Watch the intro film (1:05)</button>
-            </div>
+            <ul className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-[14px] text-muted">
+              <li><Link to="/universe" onClick={() => track("cta_click", { cta: "solar_system" })} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="explore" size={16} className="text-green" />Solar system in 3D</Link></li>
+              <li><Link to="/worlds" onClick={() => track("cta_click", { cta: "project_worlds" })} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="product" size={16} />Project worlds in 3D</Link></li>
+              <li><Link to="/explore/city" onClick={() => track("explore_mode_opened", { from: "hero" })} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="hq" size={16} />3D city</Link></li>
+              <li><Link to="/recruiter" onClick={() => track("recruiter_mode_opened")} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="recruiter" size={16} />Recruiter Mode</Link></li>
+              <li><a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" onClick={() => track("cv_downloaded")} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="download" size={16} />Download CV</a></li>
+              <li><button type="button" onClick={intro.play} data-cursor="play" className="inline-flex items-center gap-2 hover:text-ink"><Icon name="play" size={16} />Watch the intro film (1:05)</button></li>
+            </ul>
           </div>
         </Container>
+        <a href="#glance" aria-label="Scroll to the overview" className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[.3em] text-dim hover:text-ink lg:flex">
+          Scroll<span aria-hidden className="h-8 w-px bg-gradient-to-b from-green to-transparent motion-safe:animate-pulse" />
+        </a>
       </section>
 
       {/* ---------------------------------------------- PROFILE + EVIDENCE */}
-      <section aria-label="At a glance" className="relative">
+      <section id="glance" aria-label="At a glance" className="relative scroll-mt-20">
         <Container wide>
           <div className="grid gap-10 border-y border-line-soft py-12 lg:grid-cols-[320px_1fr] lg:items-start lg:gap-12">
             <div className="flex items-center gap-5 pt-1 max-lg:hidden">
@@ -113,10 +121,42 @@ export default function Home() {
         </Container>
       </section>
 
+      {/* -------------------------------------------------- CASE STUDY FEATURE */}
+      {/* the owner-supplied "Product Management Case Studies" artwork (brand/owner-art), leading into the 90 studies */}
+      <section aria-labelledby="casestudies" className="py-20" data-testid="case-study-feature">
+        <Container wide>
+          <div className="grid items-center gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
+            <div className="relative">
+              <Link to="/research" aria-label="Open the research library: product management case studies" data-cursor="view" data-tilt
+                className="group relative block overflow-hidden rounded-3xl border border-line-soft bg-surface">
+                <CinematicImage id="brand-90-day-case-studies" sizes="(min-width: 1024px) 55vw, 100vw" className="aspect-[3/2]" imgClassName="h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
+              </Link>
+              <span className="pointer-events-none absolute bottom-3 right-4 rounded-full bg-black/55 px-2.5 py-0.5 text-[10.5px] font-semibold uppercase tracking-[.08em] text-white/80">Project artwork</span>
+            </div>
+            <div>
+              <p className="eyebrow">Featured · research & case studies</p>
+              <h2 id="casestudies" className="mt-4 text-4xl font-bold sm:text-5xl">{corpusSummary.counts.written} product case studies, in public</h2>
+              <p className="mt-5 max-w-xl text-lg leading-relaxed text-muted">{`${(corpusSummary.counts.words / 1e6).toFixed(1)} million words and ${corpusSummary.counts.sources.toLocaleString("en-IN")} references across ${corpusSummary.counts.directories} studies — read straight from the public repository, each with its evidence level shown.`}</p>
+              <p className="mt-3 max-w-xl text-sm text-dim">Research and analysis of real companies’ products — not products I launched.</p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <ButtonLink to="/research" variant="primary" icon="research">Open the research library</ButtonLink>
+                <ButtonLink to="/universe?at=earth" icon="explore">See all 90 on the 3D Earth</ButtonLink>
+              </div>
+              <ul className="mt-8 grid gap-2 border-t border-line-soft pt-6 text-sm">
+                {legacy.lab_notes.slice(0, 2).map((n) => (
+                  <li key={n.slug}><Link to={`/lab-notes/${n.slug}`} className="group inline-flex items-baseline gap-2 text-muted hover:text-ink"><span className="label shrink-0">Lab note</span><span className="underline decoration-line underline-offset-4 group-hover:decoration-green">{n.title}</span></Link></li>
+                ))}
+                <li><Link to="/atlas" className="group inline-flex items-baseline gap-2 text-muted hover:text-ink"><span className="label shrink-0">Atlas</span><span className="underline decoration-line underline-offset-4 group-hover:decoration-green">The 90 studies as a constellation</span></Link></li>
+              </ul>
+            </div>
+          </div>
+        </Container>
+      </section>
+
       {/* -------------------------------------------------------- FEATURED */}
       <section aria-labelledby="featured" className="py-24">
         <Container wide>
-          <SectionHeader id="featured" eyebrow="Featured work" title="Products built, shipped and researched"
+          <SectionHeader id="featured" eyebrow="Featured work" title="Products, Prototypes & Research"
             intro="Each card carries its real status. Employment, independent builds and academic work are labelled differently."
             action={<ButtonLink to="/projects" icon="arrow">All projects</ButtonLink>} />
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -169,31 +209,6 @@ export default function Home() {
               </li>
             ))}
           </ol>
-        </Container>
-      </section>
-
-      {/* -------------------------------------------------------- RESEARCH */}
-      <section aria-labelledby="research" className="border-t border-line-soft py-20">
-        <Container wide className="grid gap-10 lg:grid-cols-[1fr_1fr]">
-          <div>
-            <SectionHeader id="research" eyebrow="Research & writing" title={`${corpusSummary.counts.written} product case studies, in public`}
-              intro={`${(corpusSummary.counts.words / 1e6).toFixed(1)} million words and ${corpusSummary.counts.sources.toLocaleString("en-IN")} references across ${corpusSummary.counts.directories} studies — read straight from the repository.`} />
-            <div className="flex flex-wrap gap-3">
-              <ButtonLink to="/research" variant="primary" icon="research">Research library</ButtonLink>
-              <ButtonLink to="/atlas" icon="arrow">Product Atlas</ButtonLink>
-            </div>
-          </div>
-          <ul className="grid gap-3">
-            {writing.filter((w) => w.title !== newsletter.name).map((w) => (
-              <li key={w.title} className="card p-5">
-                <div className="flex flex-wrap items-center justify-between gap-2"><span className="font-medium">{w.title}</span><Pill tone={w.status === "VERIFIED" ? "green" : "amber"}>{w.status}</Pill></div>
-                <p className="mt-1 text-sm text-muted">{w.detail}</p>
-              </li>
-            ))}
-            {legacy.lab_notes.slice(0, 2).map((n) => (
-              <li key={n.slug}><Link to={`/lab-notes/${n.slug}`} className="card card-link block p-5"><span className="label">Lab note · {n.status}</span><span className="mt-1 block font-medium">{n.title}</span></Link></li>
-            ))}
-          </ul>
         </Container>
       </section>
 

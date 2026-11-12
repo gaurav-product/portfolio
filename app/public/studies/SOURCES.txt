@@ -1,0 +1,13 @@
+Third-party images used in the case studies, stored here so the reading pages make no request to an
+outside host. Each file is the original, byte for byte (SHA-1 given).
+
+phonepe-logo.svg
+  Source:      https://commons.wikimedia.org/wiki/File:PhonePe_Logo.svg
+  Original:    https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg (230x70, 7,499 bytes)
+  SHA-1:       bd5e67432ad2f7105b39f2a02f60f7ca8ad40385
+  Author:      PhonePe (phonepe.com)
+  Licence:     Public domain ("PD-textlogo": text and simple shapes, below the threshold of originality).
+               Attribution not required. Wikimedia Commons notes the logo is a trademark: it is used here
+               only to identify the company in the Day 07 study, which credits the Commons page.
+  Checked:     2026-11-12, Wikimedia Commons API (LicenseShortName "Public domain", AttributionRequired false,
+               Restrictions "trademarked").

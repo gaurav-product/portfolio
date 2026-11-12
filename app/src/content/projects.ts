@@ -213,7 +213,7 @@ export const projects: Project[] = [
         { ul: ["Demo mode with fictional data", "No AI model called in the demo", "Postgres schema applied to a test DB only; not deployed", "No user validation yet"] },
       ]},
       { key: "evidence", title: "Evidence and references", sources: ["repo-nexus"], blocks: [
-        { note: "Facts from the public repository. 12 real screenshots (fictional demo data) await approval for use here." },
+        { note: "Facts from the public repository. The 12 screenshots shown are real product screens with fictional demo data, approved by the owner for this portfolio on 7 Nov 2026." },
       ]},
     ],
   },

@@ -23,6 +23,7 @@ export default [
   route("recruiter", "routes/recruiter.tsx"),
   route("explore", "routes/explore.tsx"),
   route("explore/city", "routes/explore.tsx", { id: "explore-city" }),
+  route("tour", "routes/tour.tsx"),
   route("universe", "routes/universe.tsx"),
   route("universe/:slug", "routes/universe-redirect.tsx"),
   route("worlds", "routes/worlds.tsx"),

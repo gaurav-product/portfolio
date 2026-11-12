@@ -7,35 +7,46 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { EarthView } from "./Earth";
 import { WorldView } from "./World";
+import { SolarView, type SolarProps } from "./Solar";
 import { dotTexture } from "./textures";
 import type { Destination } from "~/content/universe";
 import type { StudyPin, Region } from "~/content/studyMap";
 import type { SceneApi, SceneEvents, Tier } from "./bus";
+import { MotionDriver, useMotionNeed, clampDt } from "./motion";
 
 /** The Earth of the 90 case studies. */
 export interface EarthProps { pins: StudyPin[]; regions: Region[]; dim: Set<number> | null; selected: number | null; hovered: string | null; intro: boolean; preview: MutableRefObject<HTMLElement | null> }
 export interface SceneProps {
-  earth?: EarthProps; world?: Destination | null; tier: Tier; reduced: boolean; paused: boolean;
+  earth?: EarthProps; world?: Destination | null; system?: SolarProps; tier: Tier; reduced: boolean; paused: boolean;
   events: MutableRefObject<SceneEvents>; api: MutableRefObject<SceneApi | null>;
   fromEarth?: boolean; hotspots?: { key: string; title: string }[];
+  /** phones: the bottom sheet is expanded (the world re-frames its building above it) */
+  sheetOpen?: boolean;
 }
 
-/** The 3D canvas: the study Earth or one world, never both (GPU memory stays small). */
+/** The 3D canvas: the solar system, the study Earth or one world — only one at a time (GPU memory stays small). */
 export default function UniverseScene(p: SceneProps) {
   const dpr: [number, number] = p.tier === "high" ? [1, 1.75] : p.tier === "laptop" ? [1, 1.25] : [1, 1.5];
   return (
-    <Canvas dpr={dpr} frameloop={p.paused ? "never" : "always"} camera={{ fov: 42, near: 0.05, far: 900, position: [0, 1.1, 7.2] }}
-      gl={{ antialias: p.tier !== "mobile", powerPreference: "high-performance", alpha: false }}
-      onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.05; gl.outputColorSpace = THREE.SRGBColorSpace; }}
+    <Canvas dpr={dpr} frameloop={p.paused ? "never" : "demand"} camera={{ fov: 42, near: 0.05, far: 900, position: [0, 1.1, 7.2] }}
+      // only the top tier asks for the discrete GPU; laptops and phones keep the power-saving default
+      gl={{ antialias: p.tier !== "mobile", powerPreference: p.tier === "high" ? "high-performance" : "default", alpha: false }}
+      onCreated={({ gl, camera }) => {
+        gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.05; gl.outputColorSpace = THREE.SRGBColorSpace;
+        // ?gldebug=1 exposes the renderer's counters (frames drawn, GPU objects held) for the leak and idle tests
+        if (new URLSearchParams(location.search).has("gldebug")) Object.assign(window, { __gosGL: gl, __gosCam: camera });
+      }}
       aria-hidden>
+      <MotionDriver paused={p.paused} />
       <Backdrop world={!!p.world} />
-      <Stars count={p.tier === "high" ? 4200 : p.tier === "laptop" ? 2400 : 1200} />
+      <Stars count={p.tier === "high" ? 4200 : p.tier === "laptop" ? 2400 : 1200} reduced={p.reduced} />
       <Suspense fallback={null}>
         {p.world
-          ? <WorldView key={p.world.slug} d={p.world} tier={p.tier} reduced={p.reduced} events={p.events} api={p.api} hotspots={p.hotspots ?? []} fromEarth={!!p.fromEarth} />
+          ? <WorldView key={p.world.slug} d={p.world} tier={p.tier} reduced={p.reduced} events={p.events} api={p.api} hotspots={p.hotspots ?? []} fromEarth={!!p.fromEarth} sheetOpen={p.sheetOpen ?? true} />
+          : p.system ? <SolarView tier={p.tier} reduced={p.reduced} events={p.events} api={p.api} {...p.system} />
           : p.earth ? <EarthView tier={p.tier} reduced={p.reduced} events={p.events} api={p.api} {...p.earth} /> : null}
       </Suspense>
-      {p.tier === "high" && <Bloom strength={p.world ? 0.55 : 0.75} />}
+      {p.tier === "high" && <Bloom strength={p.world ? 0.55 : p.system ? 0.9 : 0.75} />}
     </Canvas>
   );
 }
@@ -51,7 +62,7 @@ function Backdrop({ world }: { world: boolean }) {
 }
 
 /** A deep star field: soft points on a far sphere with a faint emerald / cyan cast, drifting very slowly. */
-function Stars({ count }: { count: number }) {
+function Stars({ count, reduced }: { count: number; reduced: boolean }) {
   const { geo, mat } = useMemo(() => {
     const pos = new Float32Array(count * 3), col = new Float32Array(count * 3), c = new THREE.Color();
     for (let i = 0; i < count; i++) {
@@ -66,7 +77,9 @@ function Stars({ count }: { count: number }) {
   }, [count]);
   useEffect(() => () => { geo.dispose(); mat.map?.dispose(); mat.dispose(); }, [geo, mat]);
   const ref = useMemo(() => new THREE.Points(geo, mat), [geo, mat]);
-  useFrame((_, dt) => { ref.rotation.y += dt * 0.002; });
+  // decorative drift: off with reduced motion, and only ever an "ambient" need
+  useMotionNeed(() => (reduced ? null : "ambient"));
+  useFrame((_, dt) => { if (!reduced) ref.rotation.y += clampDt(dt) * 0.002; });
   return <primitive object={ref} />;
 }
 
@@ -79,7 +92,8 @@ function Bloom({ strength }: { strength: number }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl, scene, camera, strength]);
   useEffect(() => { composer.setSize(size.width, size.height); }, [composer, size]);
-  useEffect(() => () => composer.dispose(), [composer]);
+  // the bloom pass owns its own render targets: dispose every pass, not just the composer
+  useEffect(() => () => { composer.passes.forEach((x) => (x as { dispose?: () => void }).dispose?.()); composer.dispose(); }, [composer]);
   useFrame(() => composer.render(), 1);
   return null;
 }

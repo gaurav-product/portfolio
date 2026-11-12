@@ -40,7 +40,7 @@ export default function Contact() {
         <section aria-labelledby="direct" className="grid content-start gap-3">
           <h2 id="direct" className="label mb-1">Direct</h2>
           <div className="card flex flex-wrap items-center justify-between gap-3 p-5">
-            <a href={`mailto:${profile.contact.email}`} onClick={() => track("contact_click", { via: "email" })} className="inline-flex items-center gap-3 text-lg hover:text-green"><Icon name="mail" />{profile.contact.email}</a>
+            <a href={`mailto:${profile.contact.email}`} onClick={() => track("contact_click", { via: "email" })} className="inline-flex min-w-0 items-center gap-3 text-lg hover:text-green"><Icon name="mail" className="shrink-0" /><span className="min-w-0 [overflow-wrap:anywhere]">{profile.contact.email}</span></a>
             <Button onClick={copy} icon="copy" aria-live="polite">{copied ? "Copied" : "Copy email"}</Button>
           </div>
           <a href={profile.contact.linkedin} target="_blank" rel="noopener noreferrer" className="card card-link flex items-center gap-3 p-5"><Icon name="linkedin" />{profile.contact.linkedinLabel}<Icon name="external" size={14} className="ml-auto text-dim" /></a>

@@ -7,7 +7,7 @@ export const NAV = [
   { to: "/experience", label: "Experience" },
   { to: "/projects", label: "Projects" },
   { to: "/worlds", label: "Project Worlds" },
-  { to: "/universe", label: "90 case studies in 3D" },
+  { to: "/universe", label: "Solar system in 3D" },
   { to: "/ventures", label: "Emerging Ventures" },
   { to: "/case-studies", label: "Case Studies" },
   { to: "/product-thinking", label: "Product Thinking" },

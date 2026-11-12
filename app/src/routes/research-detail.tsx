@@ -45,6 +45,7 @@ export default function Study() {
   ];
 
   useMermaid(body, `${day}-${tab}`);
+  useMissingImages(body, `${day}-${tab}`);
 
   return (
     <article>
@@ -103,6 +104,29 @@ export default function Study() {
       </Container>
     </article>
   );
+}
+
+/** Study text is unedited, so it can reference images its source has since deleted (Day 1's cover now
+ *  returns 404 on GitHub). Instead of a broken-image icon, say plainly that the image is unavailable. */
+function useMissingImages(ref: React.RefObject<HTMLDivElement | null>, key: string) {
+  useEffect(() => {
+    const imgs = Array.from(ref.current?.querySelectorAll<HTMLImageElement>("img") ?? []);
+    const replace = (img: HTMLImageElement) => {
+      if (!img.isConnected) return;
+      const note = document.createElement("span");
+      note.className = "my-2 inline-block rounded-md border border-line-soft px-2.5 py-1 text-xs text-dim";
+      note.dataset.missingImage = "";
+      note.textContent = `Image unavailable at its source${img.alt ? `: ${img.alt}` : ""}`;
+      img.replaceWith(note);
+    };
+    const handlers = imgs.map((img) => {
+      if (img.complete && img.naturalWidth === 0 && img.currentSrc) { replace(img); return null; }
+      const h = () => replace(img);
+      img.addEventListener("error", h, { once: true });
+      return [img, h] as const;
+    });
+    return () => handlers.forEach((x) => x && x[0].removeEventListener("error", x[1]));
+  }, [ref, key]);
 }
 
 /** Mermaid is loaded only when a study contains diagrams. The source stays in

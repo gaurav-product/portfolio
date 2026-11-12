@@ -127,7 +127,7 @@ export const aaroh: CaseSection[] = [
 /* ============================================================ CARECONNECT */
 export const careconnect: CaseSection[] = [
   { key: "summary", title: "Executive summary", sources: ["cc-case", "cv"], blocks: [
-    { kv: [["The brief", "Help Indian families discover, evaluate, book and manage home caregivers — a marketplace"], ["What shipped", "A post-discharge care accountability layer that supplies no caregivers at all"], ["Why", "The research said discovery was not the problem"]] },
+    { kv: [["The brief", "Help Indian families discover, evaluate, book and manage home caregivers — a marketplace"], ["What was built", "A post-discharge care accountability layer that supplies no caregivers at all"], ["Why", "The research said discovery was not the problem"]] },
     { note: "Solo project — research, strategy, design, build and QA, over three iterations. Research was secondary only: no user interviews have been run. No users, revenue or retention figures exist." },
   ]},
   { key: "metadata", title: "Project metadata", sources: ["repo-careconnect"], blocks: [

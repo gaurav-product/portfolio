@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, NavLink, useLocation } from "react-router";
 import { NAV, PRIMARY_NAV } from "~/content/nav";
 import { profile } from "~/content/profile";
@@ -58,8 +59,10 @@ export function Header() {
             className="inline-flex size-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:bg-raise"><Icon name="menu" /></button>
         </div>
       </div>
-      {open && (
-        <div className="fixed inset-0 z-50">
+      {/* portalled to <body>: inside the sticky, backdrop-blurred header the drawer was trapped in the header's
+          stacking context (z-40), so Oz (z-45) floated over the open menu */}
+      {open && createPortal(
+        <div className="fixed inset-0 z-[55]">
           <button type="button" aria-label="Close menu" tabIndex={-1} className="absolute inset-0 bg-black/60" onClick={() => setOpen(false)} />
           <div ref={drawerRef} id="nav-drawer" role="dialog" aria-modal="true" aria-label="Site menu"
             onClick={(e) => { if ((e.target as HTMLElement).closest("a")) setOpen(false); /* also closes on the current page's link */ }}
@@ -82,7 +85,8 @@ export function Header() {
               <a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" className="mt-2 flex min-h-12 items-center justify-center gap-2 rounded-full bg-green font-semibold text-green-ink"><Icon name="download" />Download CV</a>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </header>
   );

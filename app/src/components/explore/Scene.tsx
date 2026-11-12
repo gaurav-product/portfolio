@@ -161,6 +161,41 @@ function Roads({ districts }: { districts: District[] }) {
   ))}</>;
 }
 
+/** Traffic: soft light pulses flowing along each road, out from headquarters and back — the city is busy.
+ *  One instanced mesh for all of them. Decorative motion only (no data): static when `live` is false
+ *  (reduced motion, software rendering, or off screen). */
+function Traffic({ districts, live }: { districts: District[]; live: boolean }) {
+  const lanes = useMemo(() => districts.filter((d) => d.pos[0] !== 0 || d.pos[1] !== 0).map((d) => {
+    const dir = new THREE.Vector2(d.pos[0], d.pos[1]); const len = dir.length(); dir.normalize();
+    return { dir, from: PLAZA * 0.9, to: len - PLAZA * 0.9, side: new THREE.Vector2(-dir.y, dir.x), tone: d.tone === "green" ? C.green : C.cyan };
+  }), [districts]);
+  const PER = 7;
+  const mesh = useMemo(() => {
+    const g = new THREE.CapsuleGeometry(0.07, 0.42, 4, 8); g.rotateX(Math.PI / 2);
+    const m = new THREE.MeshBasicMaterial({ toneMapped: false, transparent: true, opacity: 0.9 });
+    const im = new THREE.InstancedMesh(g, m, lanes.length * PER);
+    lanes.forEach((l, i) => { for (let k = 0; k < PER; k++) im.setColorAt(i * PER + k, l.tone); });
+    return im;
+  }, [lanes]);
+  useEffect(() => () => { mesh.geometry.dispose(); (mesh.material as THREE.Material).dispose(); mesh.dispose(); }, [mesh]);
+  const o = useMemo(() => new THREE.Object3D(), []);
+  const place = (t: number) => {
+    lanes.forEach((l, i) => {
+      for (let k = 0; k < PER; k++) {
+        const outbound = k % 2 === 0, phase = (k / PER + t * (0.05 + (k % 3) * 0.012)) % 1;
+        const along = l.from + (outbound ? phase : 1 - phase) * (l.to - l.from), lane = outbound ? 0.22 : -0.22;
+        o.position.set(l.dir.x * along + l.side.x * lane, 0.09, l.dir.y * along + l.side.y * lane);
+        o.rotation.set(0, Math.atan2(l.dir.x, l.dir.y), 0);
+        o.updateMatrix(); mesh.setMatrixAt(i * PER + k, o.matrix);
+      }
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+  };
+  useEffect(() => { place(0); }, [mesh]); // eslint-disable-line react-hooks/exhaustive-deps
+  useFrame((state) => { if (live) place(state.clock.elapsedTime); });
+  return <primitive object={mesh} raycast={() => null} />;
+}
+
 /** Bloom on capable GPUs only: the glow is what makes the city read as light rather than wireframe. */
 function Bloom() {
   const { gl, scene, camera, size } = useThree();
@@ -331,6 +366,7 @@ export default function Scene({ districts, selected, onSelect, resetKey, labels,
       <Atmosphere districts={districts} live={live} />
       {tier === "full" && <Bloom />}
       {built >= order.length && <Roads districts={districts} />}
+      {built >= order.length && <Traffic districts={districts} live={live} />}
       {districts.map((d, i) => shown.has(d.id) && <DistrictBlock key={d.id} d={d} seed={i * 97} selected={selected === d.id} onSelect={() => onSelect(d.id)} />)}
       {tier && <Rig selected={selected} districts={districts} resetKey={resetKey} labels={labels} reduced={reduced} intro={introRef} onIntroDone={onIntroDone} />}
     </Canvas>

@@ -6,7 +6,7 @@ import type { Route } from "./+types/world";
 
 export const meta = ({ params }: Route.MetaArgs) => {
   const d = worldBySlug(params.slug);
-  return d ? seo(`${d.name} — 3D project world`, `${d.name} (${d.statusLabel}). ${d.oneLine}`, `/worlds/${d.slug}`) : seo("Project world not found", "No project world at this address.", "/worlds");
+  return d ? seo(`${d.name} — 3D project world`, `${d.name} (${d.statusLabel}). ${d.oneLine}`, `/worlds/${d.slug}`, `/og/${d.slug}.png`) : seo("Project world not found", "No project world at this address.", "/worlds");
 };
 
 /** /worlds/<slug>: one actual project's 3D world. */

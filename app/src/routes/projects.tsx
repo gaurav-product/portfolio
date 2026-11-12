@@ -1,6 +1,7 @@
 import { project3dPath } from "~/lib/immersive";
 import { useMemo } from "react";
-import { Link, useSearchParams } from "react-router";
+import { Link } from "react-router";
+import { useHydratedSearchParams } from "~/lib/useHydratedSearchParams";
 import { projects, PROJECT_FILTERS } from "~/content/projects";
 import { projectArt, THIRD_PARTY_MARK } from "~/content/cinematic";
 import { PageHero, Container, Empty, Pill, statusTone, evidenceTone, ButtonLink, cx } from "~/components/ui";
@@ -15,7 +16,7 @@ import { ventures, VENTURES_NOTE } from "~/content/ventures";
 export const meta = () => seo("Explore my work", "Eight projects with their real status: Evamastu, Aaroh, CareConnect, GharGyaan, PhonePe Smart Spend Coach (academic), Nexus, RupeeRadar and 90 case studies.", "/projects");
 
 export default function Projects() {
-  const [params, setParams] = useSearchParams();
+  const [params, setParams] = useHydratedSearchParams();
   const filter = (PROJECT_FILTERS as readonly string[]).includes(params.get("filter") ?? "") ? params.get("filter")! : "All";
   const q = params.get("q") ?? "";
   const shown = useMemo(() => projects.filter((p) =>
@@ -29,7 +30,7 @@ export default function Projects() {
         intro="Professional work, independent builds, an academic capstone and published research. Each chapter carries its real status, my role, and only the outcomes the evidence supports.">
         <div className="mt-8 flex flex-wrap gap-3">
           <ButtonLink to="/worlds" variant="primary" icon="explore">Project worlds in 3D</ButtonLink>
-          <ButtonLink to="/universe" icon="explore">Explore 90 case studies in 3D</ButtonLink>
+          <ButtonLink to="/universe" icon="explore">Solar system in 3D</ButtonLink>
           <ButtonLink to="#emerging-ventures" icon="down">Emerging Ventures</ButtonLink>
         </div>
       </PageHero>

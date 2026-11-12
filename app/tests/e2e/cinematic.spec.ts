@@ -7,7 +7,8 @@ const noErrors = (page: Page) => { const errs: string[] = []; page.on("pageerror
 test("J18 home hero: cinematic world image, tagline, Explore + Recruiter entry points", async ({ page }) => {
   const errs = noErrors(page);
   await page.goto("/?nointro");
-  await expect(page.getByText("Building products with evidence, intelligence and execution.")).toBeVisible();
+  await expect(page.getByTestId("typewriter")).toBeVisible(); // tagline (kinetic; the full sentence stays the accessible text)
+  await expect(page.getByTestId("typewriter").locator(".sr-only")).toHaveText("Building products with evidence, intelligence and execution.");
   const hero = page.locator('section[aria-labelledby="hero-title"] [data-cinematic="gaurav-world-hero"] img').filter({ visible: true });
   await expect(hero).toHaveCount(1);
   expect(await hero.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);

@@ -12,7 +12,7 @@ export default function Ventures() {
       <PageHero eyebrow="Emerging Ventures · concepts in development" title="The next chapter"
         intro={<>Two startup concepts I am developing. {VENTURES_NOTE}</>} />
       <Container>
-        <ul className="grid gap-6 pb-20 md:grid-cols-2">
+        <ul className="grid gap-6 pb-20 pt-12 md:grid-cols-2">
           {ventures.map((v) => (
             <li key={v.slug} className="card flex flex-col p-6 sm:p-8">
               <div className="flex flex-wrap items-center gap-2"><Pill tone="amber">{v.status}</Pill><span className="text-sm text-dim">{v.category}</span></div>

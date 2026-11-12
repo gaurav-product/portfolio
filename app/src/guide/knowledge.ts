@@ -40,7 +40,7 @@ export function buildKnowledgePack(): string {
   certifications.forEach((c) => out.push(`- ${c.issuer}: ${c.items.join("; ")}`));
   out.push("", "## Tools and methods");
   Object.entries(tools).forEach(([k, v]) => out.push(`- ${k}: ${v.join(", ")}`));
-  out.push("", "## Newsletter", `${newsletter.name}: ${newsletter.cadence} on ${newsletter.platform} — ${newsletter.tagline}. ${newsletter.subscribers} subscribers (${newsletter.subscribersNote}).`);
+  out.push("", "## Newsletter", `${newsletter.name}: ${newsletter.cadence} on ${newsletter.platform} — ${newsletter.tagline}. ${newsletter.subscribers} subscribers, ${newsletter.snapshot.editions} editions, +${newsletter.snapshot.newLast7Days} subscribers in the 7 days before ${newsletter.snapshot.asOf} (${newsletter.snapshot.verification.toLowerCase()} snapshot from his LinkedIn newsletter page; not live data).`);
 
   out.push("", "## Emerging Ventures (concepts in development — never describe them as built, launched or validated)", VENTURES_NOTE);
   for (const v of ventures) {
@@ -54,6 +54,6 @@ export function buildKnowledgePack(): string {
   for (const e of kb) out.push(`Q: ${e.q}`, `A: ${blocksToText(e.answer)}`, `Links: ${e.links.map((l) => `${l.label} (${l.to})`).join("; ")}`, "");
 
   out.push("## Not in the portfolio (always refuse)", NO_EVIDENCE_TERMS.join(", "));
-  out.push("", "## Site pages", "/, /about, /experience, /projects, /case-studies, /product-thinking, /research, /ai-lab, /skills, /explore, /universe (the 90 case studies on a 3D Earth), /worlds (3D worlds of the 7 projects), /writing/the-teardown (newsletter in 3D), /ventures, /recruiter, /contact, /cv");
+  out.push("", "## Site pages", "/, /about, /experience, /projects, /case-studies, /product-thinking, /research, /ai-lab, /skills, /explore, /universe (the Gaurav.OS solar system: one planet per project, and the Earth holding the 90 case studies — /universe?at=earth), /worlds (3D worlds of the 7 projects), /writing/the-teardown (newsletter in 3D), /ventures, /recruiter, /contact, /cv");
   return out.join("\n");
 }

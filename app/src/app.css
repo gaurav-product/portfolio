@@ -1,4 +1,9 @@
 @import "tailwindcss";
+/* 3D pages: side panel on wide screens and on short landscape phones; bottom sheet otherwise (keep in sync with SIDE_QUERY in universe/shell.tsx) */
+@custom-variant side {
+  @media (min-width: 900px) { @slot; }
+  @media (orientation: landscape) and (max-height: 520px) { @slot; }
+}
 @import "@fontsource-variable/inter/wght.css";
 @import "@fontsource/space-grotesk/500.css";
 @import "@fontsource/space-grotesk/700.css";
@@ -146,3 +151,36 @@
 .md .mermaid-block pre { border: 0; padding: 0; margin: 0; }
 .md .mermaid-source { margin-top: .8em; font-size: 14px; }
 .md .md-missing { display: inline-block; font-family: var(--font-mono); font-size: 12px; color: var(--color-dim); border: 1px dashed var(--color-line); border-radius: 8px; padding: .35em .7em; }
+
+/* WorldKit v2 arrival plaque: in, hold, out */
+@keyframes plaque { 0% { opacity: 0; transform: translate(-50%, -6px); } 8% { opacity: 1; transform: translate(-50%, 0); } 82% { opacity: 1; } 100% { opacity: 0; } }
+
+/* hero: caret blink while typing, and the slow drift of the world illustration */
+@keyframes caretborder { 50% { border-color: transparent; } }
+@keyframes drift { from { transform: scale(1.02) translate3d(0, 0, 0); } to { transform: scale(1.08) translate3d(-1.5%, -1%, 0); } }
+
+/* Oz on narrow screens: hidden until its first overlap check has run (it is in the prerendered HTML) */
+@media (max-width: 639px) { html:not([data-oz-checked]) .oz-launch { opacity: 0; pointer-events: none; } }
+
+/* guided tour (/tour) */
+@keyframes tourprogress { from { width: 0%; } to { width: 100%; } }
+@keyframes stagein { from { opacity: 0; transform: translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
+@layer components {
+  .tour-card { border-radius: 1rem; border: 1px solid rgb(255 255 255 / .12); background: rgb(11 17 16 / .72); padding: 1rem; backdrop-filter: blur(10px); transition: border-color .2s; }
+  a.tour-card:hover, .tour-card:has(a:hover) { border-color: rgb(77 255 77 / .45); }
+  .tour-link { color: #F3F6F4; text-decoration: underline; text-decoration-color: rgb(255 255 255 / .3); text-underline-offset: 4px; }
+  .tour-link:hover { text-decoration-color: #4DFF4D; }
+  .tour-pill { display: inline-flex; min-height: 2.75rem; align-items: center; gap: .5rem; border-radius: 999px; border: 1px solid rgb(255 255 255 / .15); background: rgb(0 0 0 / .4); padding: 0 1rem; font-size: .875rem; backdrop-filter: blur(12px); }
+  .tour-pill:hover:not(:disabled) { background: rgb(255 255 255 / .1); }
+}
+
+/* the solar system's projected planet labels (positioned each frame by universe/Solar.tsx) */
+.planet-label { padding: 2px 8px 3px; border-radius: 10px; text-align: center; white-space: nowrap; color: #F3F6F4;
+  background: rgb(5 9 10 / .55); border: 1px solid rgb(255 255 255 / .08); backdrop-filter: blur(6px);
+  transition: opacity .25s ease, border-color .25s ease, background-color .25s ease; will-change: transform; }
+.planet-label[data-visible="false"] { opacity: 0; }
+.planet-label .planet-label-sub { display: none; }
+.planet-label[data-active="true"] { border-color: rgb(77 255 77 / .55); background: rgb(5 9 10 / .82); }
+.planet-label[data-active="true"] .planet-label-sub { display: block; }
+@media (prefers-reduced-motion: reduce) { .planet-label { transition: none; } }
+@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }

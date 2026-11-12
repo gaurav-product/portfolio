@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type MutableRefObject, type ReactNode } from "react";
+import { useContext, useEffect, useMemo, useRef, type MutableRefObject, type ReactNode } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
@@ -8,6 +8,13 @@ import type { Destination, BuildingSpec, GalleryItem } from "~/content/universe"
 import type { SceneApi, SceneEvents, Tier } from "./bus";
 import { windowsTexture, labelTexture, boardTexture, chartTexture } from "./textures";
 import { audio } from "./audio";
+import { useMotionNeed, clampDt } from "./motion";
+import { ReducedMotion, Plaza, useMats, type Mats, Box, GlassBox, Panel, Directory } from "./kit";
+import { CareConnectScene, CC_ARRIVAL } from "./worlds/CareConnect";
+import { PhonePeTower } from "./worlds/PhonePe";
+import { sideLayout, SHEET, TOP_BAR_PX } from "./layout";
+
+
 import { asset } from "~/lib/meta";
 
 /* A project's world: an original, procedural building on a plaza, the project's
@@ -15,10 +22,23 @@ import { asset } from "~/lib/meta";
  * The architecture is a design device — not a depiction of a real facility. */
 const TARGET = new THREE.Vector3(0, 2.4, 0);
 const VIEW = new THREE.Vector3(9.5, 4.6, 15.5);
+const VIEW_DIST = VIEW.length();
+/**
+ * How to frame the building for the current layout:
+ *  - side panel (wide screens, short landscape phones): shift the picture left of the panel
+ *  - bottom sheet expanded (portrait phones): shift it up into the strip between the top bar and the sheet, and step back
+ *  - bottom sheet collapsed: centred, slightly further back on narrow screens
+ */
+export function frameFor(w: number, h: number, sheetOpen: boolean) {
+  if (sideLayout(w, h)) return { dx: w >= 900 ? Math.min(250, w * 0.17) : w * 0.2, dy: 0, dist: w >= 900 ? 1 : 1.1 };
+  if (!sheetOpen) return { dx: 0, dy: 0, dist: w < h ? 1.25 : 1 };
+  const visibleCentre = (TOP_BAR_PX + h * (1 - SHEET)) / 2;
+  return { dx: 0, dy: Math.max(0, h / 2 - visibleCentre), dist: w < h ? 1.65 : 1.15 };
+}
 
-export function WorldView({ d, tier, reduced, events, api, hotspots, fromEarth }: {
+export function WorldView({ d, tier, reduced, events, api, hotspots, fromEarth, sheetOpen = true }: {
   d: Destination; tier: Tier; reduced: boolean; events: MutableRefObject<SceneEvents>; api: MutableRefObject<SceneApi | null>;
-  hotspots: { key: string; title: string }[]; fromEarth: boolean;
+  hotspots: { key: string; title: string }[]; fromEarth: boolean; sheetOpen?: boolean;
 }) {
   const { camera, gl, scene, invalidate } = useThree();
   const pal = d.building.palette;
@@ -39,88 +59,105 @@ export function WorldView({ d, tier, reduced, events, api, hotspots, fromEarth }
     return c;
   }, [camera, gl, reduced]);
   const animating = useRef(false);
+  const userZoomed = useRef(false);
   useEffect(() => {
     const stopAuto = () => { controls.autoRotate = false; };
     controls.addEventListener("start", stopAuto);
-    const tl = { k: null as gsap.core.Tween | null };
-    const settle = () => { animating.current = false; controls.enabled = true; controls.update(); };
-    if (reduced || !fromEarth) { camera.position.copy(reduced ? VIEW : new THREE.Vector3(16, 9, 26)); camera.lookAt(TARGET); }
+    // once the visitor zooms (wheel or pinch), layout changes no longer move the camera in or out
+    const zoomed = () => { userZoomed.current = true; };
+    const pinch = (e: TouchEvent) => { if (e.touches.length > 1) zoomed(); };
+    gl.domElement.addEventListener("wheel", zoomed, { passive: true });
+    gl.domElement.addEventListener("touchstart", pinch, { passive: true });
+    const tl = { k: null as gsap.core.Animation | null };
+    const endIntro = () => tl.k?.progress(1);
+    let guard: ReturnType<typeof setTimeout> | undefined;
+    const settle = () => { animating.current = false; controls.enabled = true; controls.update(); events.current.onIntro(1); };
+    const fitted = VIEW.clone().setLength(VIEW_DIST * frameFor(gl.domElement.clientWidth, gl.domElement.clientHeight, true).dist);
+    if (reduced || !fromEarth) { camera.position.copy(reduced ? fitted : new THREE.Vector3(16, 9, 26)); camera.lookAt(TARGET); }
     if (!reduced) {
       animating.current = true; controls.enabled = false;
       if (fromEarth) { camera.position.set(0, 26, 46); audio.cue("building"); }
-      tl.k = gsap.to(camera.position, { x: VIEW.x, y: VIEW.y, z: VIEW.z, duration: fromEarth ? 3 : 1.8, ease: "power3.out", onUpdate: () => { camera.lookAt(TARGET); invalidate(); }, onComplete: settle });
+      const to = VIEW.clone().setLength(VIEW_DIST * frameFor(gl.domElement.clientWidth, gl.domElement.clientHeight, true).dist);
+      const look = () => { camera.lookAt(TARGET); invalidate(); };
+      if (d.bespoke === "careconnect") {
+        // bespoke arrival (about 4.6 s): down over the rejected brief, along the handover bridge, out to the walkway
+        const [a, b] = CC_ARRIVAL; camera.position.copy(a); look(); audio.cue("building");
+        const prog = { p: 0 };
+        tl.k = gsap.timeline({ onUpdate: () => events.current.onIntro(prog.p), onComplete: settle })
+          .to(prog, { p: 1, duration: 4.6, ease: "none" }, 0)
+          .to(camera.position, { x: b.x, y: b.y, z: b.z, duration: 2.2, ease: "power2.inOut", onUpdate: look }, 0)
+          .to(camera.position, { x: to.x, y: to.y, z: to.z, duration: 2.4, ease: "power3.out", onUpdate: look }, 2.2);
+      } else {
+        tl.k = gsap.to(camera.position, { x: to.x, y: to.y, z: to.z, duration: fromEarth ? 3 : 1.8, ease: "power3.out", onUpdate: (function (this: gsap.core.Tween) { events.current.onIntro(this.progress()); look(); }), onComplete: settle });
+      }
+      // touching the scene during the arrival ends it at once; and on a slow device it never runs past 7 s
+      // (GSAP stretches tweens over very slow frames, so the wall-clock cap is what bounds the arrival)
+      gl.domElement.addEventListener("pointerdown", endIntro, { once: true });
+      guard = setTimeout(() => tl.k?.progress(1), 7000);
     } else controls.update();
     events.current.onReady(d.slug);
     api.current = {
       rotate(dx, dy) { controls.autoRotate = false; const o = camera.position.clone().sub(TARGET), s = new THREE.Spherical().setFromVector3(o); s.theta -= dx; s.phi = THREE.MathUtils.clamp(s.phi - dy, 0.25, Math.PI / 2 - 0.06); camera.position.copy(TARGET).add(new THREE.Vector3().setFromSpherical(s)); controls.update(); invalidate(); },
-      zoom(f) { const o = camera.position.clone().sub(TARGET); o.setLength(THREE.MathUtils.clamp(o.length() * f, 7, 30)); camera.position.copy(TARGET).add(o); controls.update(); invalidate(); },
+      zoom(f) { userZoomed.current = true; const o = camera.position.clone().sub(TARGET); o.setLength(THREE.MathUtils.clamp(o.length() * f, 7, 30)); camera.position.copy(TARGET).add(o); controls.update(); invalidate(); },
       face() { /* globe only */ }, focus() { /* globe only */ },
       skipIntro() { tl.k?.progress(1); }, replayIntro() { /* globe only */ },
     };
-    return () => { tl.k?.kill(); controls.removeEventListener("start", stopAuto); controls.dispose(); api.current = null; };
+    // the canvas outlives this view (worlds share it), so an unused once-listener must be removed here
+    return () => { clearTimeout(guard); tl.k?.kill(); gl.domElement.removeEventListener("pointerdown", endIntro); controls.removeEventListener("start", stopAuto); gl.domElement.removeEventListener("wheel", zoomed); gl.domElement.removeEventListener("touchstart", pinch); controls.dispose(); api.current = null; };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  useFrame(() => { if (!animating.current) controls.update(); });
-  /* on wide screens the case-study panel covers the right: shift the picture so the building sits in the open area */
+  // on-demand rendering: "fast" while the camera flies or damps, "ambient" for the slow auto-rotate (never with reduced motion)
+  const damping = useRef(false);
+  useMotionNeed(() => (animating.current || damping.current ? "fast" : reduced ? null : "ambient"));
+  useFrame(() => { damping.current = !animating.current && controls.update(); });
+  /* keep the building in the open area: beside the side panel, or above the bottom sheet on phones */
   const { size } = useThree();
   useEffect(() => {
-    const cam = camera as THREE.PerspectiveCamera;
-    const shift = size.width >= 900 ? Math.min(250, size.width * 0.17) : 0;
-    if (shift) cam.setViewOffset(size.width, size.height, shift, 0, size.width, size.height); else cam.clearViewOffset();
+    const cam = camera as THREE.PerspectiveCamera, { width: w, height: h } = size;
+    const f = frameFor(w, h, sheetOpen);
+    if (f.dx || f.dy) cam.setViewOffset(w, h, f.dx, f.dy, w, h); else cam.clearViewOffset();
+    // portrait phones: step back so the whole building fits the narrow visible area (unless the visitor has zoomed)
+    if (!animating.current && !userZoomed.current) { const o = camera.position.clone().sub(TARGET); o.setLength(VIEW_DIST * f.dist); camera.position.copy(TARGET).add(o); controls.update(); }
     invalidate();
     return () => { cam.clearViewOffset(); };
-  }, [camera, size, invalidate]);
+  }, [camera, size, sheetOpen, invalidate, controls]);
 
   const panels = d.gallery.slice(0, tier === "mobile" ? 4 : 8);
+  if (d.bespoke === "careconnect") return (
+    <ReducedMotion.Provider value={reduced}>
+      <BespokeCareConnect d={d} tier={tier} events={events} />
+      {hotspots.length > 0 && <Directory items={hotspots} accent={pal.accent} events={events} at={{ pos: [-12.5, 0, 4.5], rotY: 1.15 }} />}
+    </ReducedMotion.Provider>
+  );
   return (
-    <>
-      <hemisphereLight args={["#CFEFE6", "#0B1110", 0.55]} />
-      <directionalLight position={[10, 16, 8]} intensity={1.5} color="#FFF4E6" />
-      <pointLight position={[0, 3, 5]} intensity={18} distance={20} color={pal.light} />
-      <pointLight position={[-6, 6, -4]} intensity={10} distance={22} color={pal.accent} />
+    <ReducedMotion.Provider value={reduced}>
+      {d.bespoke === "phonepe" ? (
+        // R3: the Financial Intelligence Tower — seven distinct floors, each opening its case-study section (own lighting)
+        <PhonePeTower hotspots={hotspots} events={events} tier={tier} />
+      ) : (
+        <>
+          <hemisphereLight args={["#CFEFE6", "#0B1110", 0.55]} />
+          <directionalLight position={[10, 16, 8]} intensity={1.5} color="#FFF4E6" />
+          <pointLight position={[0, 3, 5]} intensity={18} distance={20} color={pal.light} />
+          <pointLight position={[-6, 6, -4]} intensity={10} distance={22} color={pal.accent} />
+          <Building spec={d.building} seed={d.slug.length * 31} />
+        </>
+      )}
       <Plaza accent={pal.accent} />
-      <Building spec={d.building} seed={d.slug.length * 31} />
       {panels.map((g, i) => <Panel key={i} item={g} index={i} count={panels.length} accent={pal.accent} events={events} />)}
       {hotspots.length > 0 && <Directory items={hotspots} accent={pal.accent} events={events} />}
-    </>
+    </ReducedMotion.Provider>
   );
 }
 
-/* ---------------------------------------------------------------- plaza */
-function Plaza({ accent }: { accent: string }) {
-  return (
-    <group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <circleGeometry args={[60, 64]} />
-        <meshStandardMaterial color="#0C1412" roughness={0.42} metalness={0.55} />
-      </mesh>
-      {[6, 9.5, 14, 20].map((r, i) => (
-        <mesh key={r} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-          <ringGeometry args={[r, r + 0.03, 96]} />
-          <meshBasicMaterial color={accent} transparent opacity={0.28 - i * 0.05} toneMapped={false} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
 
-/* ---------------------------------------------------------------- materials */
-function useMats(spec: BuildingSpec, seed: number) {
-  return useMemo(() => {
-    const p = spec.palette;
-    const win = windowsTexture(p.light, seed);
-    const glass = new THREE.MeshStandardMaterial({ color: p.glass, metalness: 0.9, roughness: 0.08, transparent: true, opacity: 0.42, emissive: new THREE.Color(p.light), emissiveMap: win, emissiveIntensity: 1.25 });
-    const body = new THREE.MeshStandardMaterial({ color: p.body, metalness: 0.35, roughness: 0.55 });
-    const metal = new THREE.MeshStandardMaterial({ color: "#AFC2BC", metalness: 0.95, roughness: 0.22 });
-    const light = new THREE.MeshBasicMaterial({ color: p.light, toneMapped: false });
-    const accent = new THREE.MeshBasicMaterial({ color: p.accent, toneMapped: false });
-    const green = new THREE.MeshStandardMaterial({ color: "#2F6B45", roughness: 0.9 });
-    const water = new THREE.MeshStandardMaterial({ color: "#0A2A2A", metalness: 0.9, roughness: 0.05 });
-    const timber = new THREE.MeshStandardMaterial({ color: "#8A6A4A", roughness: 0.7 });
-    return { win, glass, body, metal, light, accent, green, water, timber };
-  }, [spec, seed]);
+
+/** The bespoke CareConnect scene with its own materials (disposed on exit). */
+function BespokeCareConnect({ d, tier, events }: { d: Destination; tier: Tier; events: MutableRefObject<SceneEvents> }) {
+  const m = useMats(d.building, d.slug.length * 31);
+  useEffect(() => () => { Object.values(m).forEach((x) => (x as { dispose?: () => void }).dispose?.()); }, [m]);
+  return <CareConnectScene d={d} m={m} tier={tier} events={events} />;
 }
-type Mats = ReturnType<typeof useMats>;
 
 function Building({ spec, seed }: { spec: BuildingSpec; seed: number }) {
   const m = useMats(spec, seed);
@@ -133,17 +170,11 @@ function Building({ spec, seed }: { spec: BuildingSpec; seed: number }) {
   return <group>{B[spec.archetype]()}</group>;
 }
 
-const Box = ({ s, p, mat, r }: { s: [number, number, number]; p: [number, number, number]; mat: THREE.Material; r?: [number, number, number] }) =>
-  <mesh position={p} rotation={r} material={mat}><boxGeometry args={s} /></mesh>;
-/** a glass volume with its lit window façade scaled to its size */
-function GlassBox({ s, p, m, r }: { s: [number, number, number]; p: [number, number, number]; m: Mats; r?: [number, number, number] }) {
-  const mat = useMemo(() => { const g = m.glass.clone(); g.emissiveMap = m.win.clone(); g.emissiveMap.needsUpdate = true; g.emissiveMap.repeat.set(Math.max(1, s[0] / 2), Math.max(1, s[1] / 2.2)); return g; }, [m, s]);
-  return <mesh position={p} rotation={r} material={mat}><boxGeometry args={s} /></mesh>;
-}
 
 /* ---------------------------------------------------------------- archetypes */
 function Tower({ m, floors, spec }: { m: Mats; floors: number; spec: BuildingSpec }) {
   const chart = useMemo(() => chartTexture(spec.palette.accent), [spec]);
+  useEffect(() => () => chart.dispose(), [chart]);
   return (
     <group>
       <Box s={[5.2, 0.5, 5.2]} p={[0, 0.25, 0]} mat={m.body} />
@@ -208,7 +239,8 @@ function House({ m }: { m: Mats }) {
 }
 function Facility({ m }: { m: Mats }) {
   const rings = useRef<THREE.Group>(null!);
-  useFrame((_, dt) => { rings.current.children.forEach((c, i) => { c.rotation.x += dt * (0.15 + i * 0.07); c.rotation.y += dt * 0.1; }); });
+  const reduced = useContext(ReducedMotion);
+  useFrame((_, raw) => { if (reduced) return; const dt = clampDt(raw); rings.current.children.forEach((c, i) => { c.rotation.x += dt * (0.15 + i * 0.07); c.rotation.y += dt * 0.1; }); });
   return (
     <group>
       <mesh position={[0, 0.6, 0]} material={m.body}><cylinderGeometry args={[5.4, 5.8, 1.2, 64]} /></mesh>
@@ -224,23 +256,35 @@ function Facility({ m }: { m: Mats }) {
 }
 function Station({ m }: { m: Mats }) {
   const dish = useRef<THREE.Group>(null!);
-  useFrame((_, dt) => { dish.current.rotation.y += dt * 0.25; });
+  const reduced = useContext(ReducedMotion);
+  useFrame((_, raw) => { if (!reduced) dish.current.rotation.y += clampDt(raw) * 0.25; });
+  // the dish is an open shell: draw both faces (front faces only left it invisible from the plaza)
+  const dishMat = useMemo(() => { const d = m.metal.clone(); d.side = THREE.DoubleSide; return d; }, [m]);
+  // the ledger screens: an illustrative board, labelled as such (no real transactions)
+  const ledger = useMemo(() => boardTexture(["STATEMENT LEDGER", "", "date · merchant · category · amount", "cleaned names · recurring payments", "categorised by rules first"], "Illustrative · no real transactions", "#4DFF4D"), []);
+  useEffect(() => () => { dishMat.dispose(); ledger.dispose(); }, [dishMat, ledger]);
   return (
     <group>
       <GlassBox m={m} s={[7, 1.6, 3.4]} p={[0, 0.8, -0.6]} />
       <Box s={[7.3, 0.12, 3.7]} p={[0, 1.66, -0.6]} mat={m.body} />
       <Box s={[0.25, 3.2, 0.25]} p={[2.2, 3.2, -0.6]} mat={m.metal} />
       <group ref={dish} position={[2.2, 4.9, -0.6]}>
-        <mesh rotation={[-0.9, 0, 0]} material={m.metal}><sphereGeometry args={[1.5, 32, 16, 0, Math.PI * 2, 0, 0.75]} /></mesh>
+        <mesh rotation={[-0.9, 0, 0]} material={dishMat}><sphereGeometry args={[1.5, 32, 16, 0, Math.PI * 2, 0, 0.75]} /></mesh>
         <mesh rotation={[-0.9, 0, 0]} position={[0, 0.2, 0.25]} material={m.accent}><coneGeometry args={[0.07, 1.1, 8]} /></mesh>
       </group>
-      {[-2.4, -0.6].map((x) => <Box key={x} s={[1.4, 1.1, 0.08]} p={[x, 2.4, 0.9]} mat={m.light} />)}
+      {[-2.4, -0.6].map((x) => (
+        <group key={x} position={[x, 2.45, 0.9]}>
+          <mesh material={m.body}><boxGeometry args={[1.55, 1.05, 0.08]} /></mesh>
+          <mesh position={[0, 0, 0.045]}><planeGeometry args={[1.45, 0.9]} /><meshBasicMaterial map={ledger} toneMapped={false} /></mesh>
+        </group>
+      ))}
     </group>
   );
 }
 function Workshop({ m }: { m: Mats }) {
   const parts = useRef<THREE.Group>(null!);
-  useFrame(({ clock }) => { parts.current.children.forEach((c, i) => { c.position.y = 3.4 + i * 0.55 + Math.sin(clock.elapsedTime * 0.8 + i) * 0.12; }); });
+  const reduced = useContext(ReducedMotion);
+  useFrame(({ clock }) => { if (reduced) return; parts.current.children.forEach((c, i) => { c.position.y = 3.4 + i * 0.55 + Math.sin(clock.elapsedTime * 0.8 + i) * 0.12; }); });
   return (
     <group>
       <GlassBox m={m} s={[7.2, 2.2, 4]} p={[0, 1.1, -0.8]} />
@@ -254,6 +298,7 @@ function Workshop({ m }: { m: Mats }) {
 }
 function Command({ m }: { m: Mats }) {
   const board = useMemo(() => boardTexture(["Live opportunities", "", "Walk-in drives · today, tomorrow, next 7 days", "Virtual interviews · registration links", "Delhi · Noida · Ghaziabad · Gurgaon"], "Concept visual · no real listings", "#35D6D0"), []);
+  useEffect(() => () => board.dispose(), [board]);
   return (
     <group>
       <mesh position={[0, 1.6, 0]} scale={[1.5, 1, 1]} material={m.glass}><cylinderGeometry args={[3, 3.2, 3.2, 64]} /></mesh>
@@ -267,7 +312,9 @@ function Command({ m }: { m: Mats }) {
 function Hall({ m }: { m: Mats }) {
   const tickets = useRef<THREE.Group>(null!);
   const tex = useMemo(() => boardTexture(["ADMIT ONE", "", "Concept · not a real booking"], "Concept visual", "#FF9E6B"), []);
-  useFrame(({ clock }) => { tickets.current.children.forEach((c, i) => { c.position.y = 3.2 + Math.sin(clock.elapsedTime * 0.7 + i * 1.3) * 0.3; c.rotation.y = Math.sin(clock.elapsedTime * 0.3 + i) * 0.4; }); });
+  useEffect(() => () => tex.dispose(), [tex]);
+  const reduced = useContext(ReducedMotion);
+  useFrame(({ clock }) => { if (reduced) return; tickets.current.children.forEach((c, i) => { c.position.y = 3.2 + Math.sin(clock.elapsedTime * 0.7 + i * 1.3) * 0.3; c.rotation.y = Math.sin(clock.elapsedTime * 0.3 + i) * 0.4; }); });
   return (
     <group>
       <mesh position={[0, 0, 0]} rotation={[0, 0, Math.PI / 2]} material={m.glass}><cylinderGeometry args={[3.4, 3.4, 9, 48, 1, true, 0, Math.PI]} /></mesh>
@@ -277,58 +324,6 @@ function Hall({ m }: { m: Mats }) {
         {[-3, -1, 1, 3].map((x, i) => <mesh key={x} position={[x, 3.2, 1.6 - (i % 2) * 1.2]}><planeGeometry args={[1.6, 1]} /><meshBasicMaterial map={tex} side={THREE.DoubleSide} toneMapped={false} /></mesh>)}
       </group>
       {[-3, 0, 3].map((x) => <mesh key={x} position={[x, 0.1, 2.4]} material={m.accent}><cylinderGeometry args={[0.9, 0.9, 0.04, 32]} /></mesh>)}
-    </group>
-  );
-}
-
-/* ---------------------------------------------------------------- display stands */
-function Panel({ item, index, count, accent, events }: { item: GalleryItem; index: number; count: number; accent: string; events: MutableRefObject<SceneEvents> }) {
-  const { invalidate } = useThree();
-  // a curved gallery behind the building, facing the plaza: the building stays in view, the screens frame it
-  const spread = Math.min(2.7, 0.5 * count), a = Math.PI + (count === 1 ? 0 : -spread / 2 + (spread * index) / (count - 1));
-  const r = 12.5, pos = new THREE.Vector3(Math.sin(a) * r, 0, Math.cos(a) * r);
-  const aspect = item.kind === "screenshot" ? 16 / 10 : item.width && item.height ? item.width / item.height : 16 / 10;
-  const h = 2.7, w = Math.min(4.8, h * aspect);
-  const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: "#111" }), []);
-  const label = useMemo(() => labelTexture(item.label, item.title, accent), [item, accent]);
-  useEffect(() => {
-    let tex: THREE.Texture | null = null, live = true;
-    if (item.kind === "concept" || item.kind === "missing") { tex = boardTexture(item.lines ?? [item.title], item.label, accent); mat.map = tex; mat.color.set("#C8CCCA"); mat.needsUpdate = true; invalidate(); }
-    else if (item.panel) new THREE.TextureLoader().load(asset(item.panel), (t) => { if (!live) { t.dispose(); return; } t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; tex = t; mat.map = t; mat.color.set("#C8CCCA"); mat.needsUpdate = true; invalidate(); });
-    return () => { live = false; tex?.dispose(); mat.dispose(); label.dispose(); };
-  }, [item, mat, label, accent, invalidate]);
-  return (
-    <group position={pos} rotation={[0, a + Math.PI, 0]}>
-      <mesh position={[0, 0.7, 0]}><boxGeometry args={[0.1, 1.4, 0.1]} /><meshStandardMaterial color="#AFC2BC" metalness={0.9} roughness={0.25} /></mesh>
-      <mesh position={[0, 1.45 + h / 2, -0.05]}><boxGeometry args={[w + 0.16, h + 0.16, 0.08]} /><meshStandardMaterial color="#0B1110" metalness={0.6} roughness={0.3} /></mesh>
-      <mesh position={[0, 1.45 + h / 2, 0]} material={mat}
-        onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = "zoom-in"; audio.cue("hover"); }}
-        onPointerOut={() => { document.body.style.cursor = ""; }}
-        onClick={(e) => { e.stopPropagation(); events.current.onPanel(index); }}>
-        <planeGeometry args={[w, h]} />
-      </mesh>
-      <mesh position={[0, 1.12, 0.01]}><planeGeometry args={[Math.max(3, w), 0.47]} /><meshBasicMaterial map={label} transparent /></mesh>
-    </group>
-  );
-}
-
-/* ---------------------------------------------------------------- floor directory (case-study sections) */
-function Directory({ items, accent, events }: { items: { key: string; title: string }[]; accent: string; events: MutableRefObject<SceneEvents> }) {
-  const list = items.slice(0, 7);
-  const labels = useMemo(() => list.map((s, i) => labelTexture(`Floor ${String(i + 1).padStart(2, "0")}`, s.title, accent)), [list, accent]);
-  useEffect(() => () => labels.forEach((l) => l.dispose()), [labels]);
-  return (
-    <group position={[-9.2, 0, 1.6]} rotation={[0, 0.95, 0]}>
-      <mesh position={[0, (list.length * 0.78 + 0.6) / 2, -0.1]}><boxGeometry args={[0.1, list.length * 0.78 + 0.6, 0.1]} /><meshStandardMaterial color="#AFC2BC" metalness={0.9} roughness={0.25} /></mesh>
-      {list.map((s, i) => (
-        <group key={s.key} position={[0, 0.6 + i * 0.78, 0]}
-          onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = "pointer"; audio.cue("hover"); }}
-          onPointerOut={() => { document.body.style.cursor = ""; }}
-          onClick={(e) => { e.stopPropagation(); events.current.onHotspot(s.key); }}>
-          <mesh position={[0.18, 0, 0]}><sphereGeometry args={[0.13, 16, 12]} /><meshBasicMaterial color={accent} toneMapped={false} /></mesh>
-          <mesh position={[2.05, 0, 0]}><planeGeometry args={[3.5, 0.55]} /><meshBasicMaterial map={labels[i]} transparent /></mesh>
-        </group>
-      ))}
     </group>
   );
 }

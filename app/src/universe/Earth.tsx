@@ -6,6 +6,8 @@ import gsap from "gsap";
 import type { StudyPin, Region } from "~/content/studyMap";
 import type { SceneApi, SceneEvents, Tier } from "./bus";
 import { audio } from "./audio";
+import { useMotionNeed, clampDt } from "./motion";
+import { sideLayout, SHEET, TOP_BAR_PX } from "./layout";
 import { asset } from "~/lib/meta";
 
 /* Earth radius 2. The 90 study markers are grouped by derived category — a visual layout, not geography. */
@@ -164,6 +166,10 @@ export function EarthView({ tier, reduced, pins, regions, dim, selected, events,
     sp.scale.set(0.72, 0.135, 1); sp.position.copy(latLon(r.lat + 9, r.lon, R * 1.16));
     return sp;
   }), [regions]);
+  // Upload every label's texture now, once. A label hidden behind the globe is not drawn, so three.js
+  // would otherwise upload it the first time a selection turns it into view (a small hitch mid-flight,
+  // and a GPU count that keeps changing while browsing). initTexture reuses these same textures.
+  useEffect(() => { for (const l of labels) if (l.material.map) gl.initTexture(l.material.map); }, [labels, gl]);
   useEffect(() => () => labels.forEach((l) => { l.material.map?.dispose(); l.material.dispose(); }), [labels]);
   useEffect(() => () => ringGeo.dispose(), [ringGeo]);
 
@@ -263,8 +269,8 @@ export function EarthView({ tier, reduced, pins, regions, dim, selected, events,
   useEffect(() => {
     const cam = camera as THREE.PerspectiveCamera, w = size.width, h = size.height;
     if (selected === null || !w) cam.clearViewOffset();
-    else if (w >= 900) cam.setViewOffset(w, h, Math.min(440, w * 0.4) / 2, 0, w, h);
-    else cam.setViewOffset(w, h, 0, h * 0.27, w, h);
+    else if (sideLayout(w, h)) cam.setViewOffset(w, h, Math.min(440, w * 0.4) / 2, 0, w, h);
+    else cam.setViewOffset(w, h, 0, Math.max(0, h / 2 - (TOP_BAR_PX + h * (1 - SHEET)) / 2), w, h);
     invalidate();
     return () => cam.clearViewOffset();
   }, [selected, size, camera, invalidate]);
@@ -273,11 +279,17 @@ export function EarthView({ tier, reduced, pins, regions, dim, selected, events,
 
   /* per frame: slow spin, clouds, rings, label fade and the preview card */
   const v = useMemo(() => ({ p: new THREE.Vector3(), n: new THREE.Vector3(), c: new THREE.Vector3(), q: new THREE.Quaternion(), up: new THREE.Vector3(0, 0, 1), right: new THREE.Vector3(), upv: new THREE.Vector3(), q2: new THREE.Vector3() }), []);
-  useFrame((state, dt) => {
+  // on-demand rendering: frames only while something moves (see motion.tsx)
+  const damping = useRef(false);
+  useMotionNeed(() => (animating.current || damping.current ? "fast" : reduced ? null : "ambient"));
+  // hover and selection changes redraw rings, labels and the preview card even when nothing else moves
+  useEffect(() => { invalidate(); }, [hovered, selected, dim, invalidate]);
+  useFrame((state, rawDt) => {
+    const dt = clampDt(rawDt);
     const now = performance.now();
     if (!reduced && now > pausedUntil.current && !hoveredRef.current) spin.current.rotation.y += dt * 0.045;
     if (clouds.current && !reduced) clouds.current.rotation.y += dt * 0.008;
-    if (!animating.current) controls.update();
+    damping.current = !animating.current && controls.update();
     const time = state.clock.elapsedTime;
     const placeRing = (mesh: THREE.Mesh, day: number | null, color: string, pulse: number) => {
       const l = day !== null ? local.get(day) : null;

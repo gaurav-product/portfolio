@@ -85,7 +85,7 @@ describe("referential integrity", () => {
     expect(new Set(corpus.studies.map((s) => s.day)).size).toBe(90);
   });
   it("prerenders one route per project, role, skill, tool, study, note, venture, world and old universe address", () => {
-    expect(paths.size).toBe(22 + ventures.length + worlds.length + ventureWorlds.length + Object.keys(UNIVERSE_REDIRECTS).length + projects.length + experience.length + capabilities.length + TOOLS.length + corpus.studies.length + legacy.lab_notes.length + districts.length);
+    expect(paths.size).toBe(23 + ventures.length + worlds.length + ventureWorlds.length + Object.keys(UNIVERSE_REDIRECTS).length + projects.length + experience.length + capabilities.length + TOOLS.length + corpus.studies.length + legacy.lab_notes.length + districts.length);
   });
 });
 
@@ -113,6 +113,21 @@ describe("media and screenshots", () => {
   it("study text never contains the owner's phone number", () => {
     const dir = path.join(SRC, "data/generated/studies");
     for (const f of fs.readdirSync(dir)) expect(fs.readFileSync(path.join(dir, f), "utf8"), f).not.toMatch(/8127\s?5\s?1\s?2340/);
+  });
+  it("every in-page link in a study points at a heading that exists in that document", () => {
+    const dir = path.join(SRC, "data/generated/studies");
+    let links = 0, unlinked = 0;
+    for (const f of fs.readdirSync(dir)) {
+      const j = JSON.parse(fs.readFileSync(path.join(dir, f), "utf8"));
+      for (const html of [j.html, j.assumptions?.html].filter(Boolean) as string[]) {
+        const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+        for (const m of html.matchAll(/<a href="#([^"]*)"/g)) { links++; expect(ids.has(m[1]), `${f}: #${m[1]}`).toBe(true); }
+        unlinked += (html.match(/class="md-deadlink"/g) || []).length;
+      }
+    }
+    expect(links).toBeGreaterThan(3000); // the tables of contents are really linked, not just stripped
+    // at the pinned corpus commit, only 11 source links have no single matching heading (shown as text)
+    expect(unlinked).toBeLessThanOrEqual(11);
   });
 });
 
@@ -168,8 +183,9 @@ describe("public identity", () => {
     expect(profile.seoDescription.startsWith("Gaurav Singh —")).toBe(true);
     expect(profile.portrait.alt).toBe("Gaurav Singh");
     const src = path.resolve(__dirname, "../../src");
-    const offenders = fs.readdirSync(src, { recursive: true }).map(String)
-      .filter((f) => /\.(tsx?|css)$/.test(f) && !f.startsWith("data") && !f.includes("generated"))
+    // readdirSync returns OS-native separators (content\profile.ts on Windows): compare as POSIX paths
+    const offenders = fs.readdirSync(src, { recursive: true }).map((f) => String(f).replace(/\\/g, "/"))
+      .filter((f) => /\.(tsx?|css)$/.test(f) && !f.startsWith("data/") && !f.includes("generated"))
       .filter((f) => fs.readFileSync(path.join(src, f), "utf8").includes("Gaurav Kumar Singh"));
     expect(offenders).toEqual(["content/profile.ts"]); // legalName lives only there
   });
@@ -178,7 +194,9 @@ describe("public identity", () => {
 import { newsletter, writing as writingList } from "../../src/content/experience";
 describe("The Teardown newsletter", () => {
   it("states only the owner-supplied facts, consistently everywhere", () => {
-    expect(newsletter).toMatchObject({ name: "The Teardown", platform: "LinkedIn", cadence: "Weekly", subscribers: "800" });
+    // 806: the count on the author's own LinkedIn newsletter page in his 10 Nov 2026 recording (was 800, self-reported earlier)
+    expect(newsletter).toMatchObject({ name: "The Teardown", platform: "LinkedIn", cadence: "Weekly", subscribers: "806" });
+    expect(newsletter.snapshot).toMatchObject({ asOf: "10 Nov 2026", subscribers: 806, newLast7Days: 7, editions: 10, verification: "Self-reported" });
     const entry = writingList.find((w) => w.title === newsletter.name)!;
     expect(entry.status).toBe("SELF-REPORTED");
     expect(entry.detail).toContain(`${newsletter.subscribers} subscribers`);
@@ -203,5 +221,16 @@ describe("certifications and learning", () => {
     expect(certificationGroups.flatMap((g) => g.items).some((i) => i.url)).toBe(false);
     for (const g of certificationGroups) if (g.logo) expect(fs.existsSync(path.join(ROOT, "public", g.logo)), g.logo).toBe(true);
     expect(certifications.reduce((n, g) => n + g.items.length, 0)).toBe(17);
+  });
+});
+
+describe("districts reach their projects", () => {
+  it("every project assigned to a district is linked from that district", () => {
+    for (const p of projects.filter((x) => x.district)) {
+      const d = districts.find((x) => x.id === p.district)!;
+      // the 90-study corpus is read at /research; every actual project at its own page
+      const home = p.slug === "90-day-case-studies" ? "/research" : `/projects/${p.slug}`;
+      expect(d.destinations.map((x) => x.to), `${p.slug} in ${p.district}`).toContain(home);
+    }
   });
 });

@@ -58,6 +58,7 @@ export const districts: District[] = [
     destinations: [
       { label: "Research Expert, LYBL", to: "/experience/research-expert-lybl", note: "30+ interviews · 500+ users tracked" },
       { label: "PhonePe Smart Spend Coach", to: "/projects/phonepe-smart-spend-coach", note: "Academic case · case data" },
+      { label: "RupeeRadar", to: "/projects/rupee-radar", note: "Prototype · not deployed" },
       { label: "Research library", to: "/research", note: "90 full case studies" },
       { label: "Funnel explorer", to: "/product-thinking/funnel", note: "Working tool" },
     ] },

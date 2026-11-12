@@ -12,7 +12,8 @@ export function fitDescription(d: string) {
   if (out.length > 160) out = out.slice(0, 157).replace(/[\s,;:—-]+\S*$/, "") + "…";
   return out;
 }
-export function seo(title: string, rawDescription: string, path: string) {
+/** `image`: a site-relative social card (e.g. "/og/careconnect.png"); defaults to the site-wide card. */
+export function seo(title: string, rawDescription: string, path: string, image = "/og-default.png") {
   const description = fitDescription(rawDescription);
   const branded = `${title} · ${profile.brand}`;
   // titles over ~65 characters get truncated in results; long ones drop the brand suffix
@@ -29,8 +30,8 @@ export function seo(title: string, rawDescription: string, path: string) {
     { name: "twitter:description", content: description },
   ];
   if (SITE_URL) {
-    tags.push({ property: "og:url", content: SITE_URL + path }, { property: "og:image", content: SITE_URL + "/og-default.png" },
-      { name: "twitter:image", content: SITE_URL + "/og-default.png" }, { tagName: "link", rel: "canonical", href: SITE_URL + path });
+    tags.push({ property: "og:url", content: SITE_URL + path }, { property: "og:image", content: SITE_URL + image },
+      { name: "twitter:image", content: SITE_URL + image }, { tagName: "link", rel: "canonical", href: SITE_URL + path });
   }
   return tags;
 }

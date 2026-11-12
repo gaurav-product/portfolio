@@ -50,7 +50,7 @@ export default function SkillDetail() {
         </div>
         <aside className="grid content-start gap-6">
           {usedBy.length > 0 && <div className="card p-5"><h2 className="label mb-3">Shown in</h2><ul className="grid gap-2">{usedBy.map((p) => <li key={p.slug}><Link to={`/projects/${p.slug}`} className="text-green underline underline-offset-4">{p.name}</Link></li>)}</ul></div>}
-          <div className="card p-5"><h2 className="label mb-3">Related in {c.category}</h2><ul className="grid gap-1.5 text-sm">{related.map((r) => <li key={r.id}><Link to={`/skills/${r.id}`} className="text-muted hover:text-ink">{r.name}</Link></li>)}</ul></div>
+          <div className="card p-5"><h2 className="label mb-3">Related in {c.category}</h2><ul className="grid text-sm">{related.map((r) => <li key={r.id}><Link to={`/skills/${r.id}`} className="inline-flex min-h-8 items-center text-muted hover:text-ink">{r.name}</Link></li>)}</ul></div>
         </aside>
       </div>
     </Container>

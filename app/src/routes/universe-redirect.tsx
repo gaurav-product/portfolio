@@ -15,7 +15,9 @@ import type { Route } from "./+types/universe-redirect";
  */
 export const withQuery = (to: string, search: string, hash: string) => {
   const [path, toHash] = to.split("#");
-  return path + search + (hash || (toHash ? `#${toHash}` : ""));
+  // a target with its own query (e.g. /universe?at=earth) keeps it; the old address's query is appended to it
+  const joined = !search ? path : path.includes("?") ? `${path}&${search.replace(/^\?/, "")}` : path + search;
+  return joined + (hash || (toHash ? `#${toHash}` : ""));
 };
 export const meta = ({ params }: Route.MetaArgs) => {
   const to = UNIVERSE_REDIRECTS[params.slug];

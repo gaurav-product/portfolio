@@ -14,7 +14,8 @@ import type { Route } from "./+types/project-detail";
 
 export const meta = ({ params }: Route.MetaArgs) => {
   const p = projects.find((x) => x.slug === params.slug);
-  return p ? seo(`${p.name} — case study`, `${p.name}: ${p.oneLine}`, `/projects/${p.slug}`) : seo("Not found", "Project not found", "/projects");
+  // each actual project has its own share card (scripts/build-og-projects.mjs); the research corpus uses the site card
+  return p ? seo(`${p.name} — case study`, `${p.name}: ${p.oneLine}`, `/projects/${p.slug}`, p.slug === CORPUS_SLUG ? undefined : `/og/${p.slug}.png`) : seo("Not found", "Project not found", "/projects");
 };
 
 export default function ProjectDetail() {
@@ -50,7 +51,8 @@ export default function ProjectDetail() {
             <div className="absolute inset-0 bg-gradient-to-b from-bg/30 via-transparent to-bg" />
           </div>
         )}
-        <Container wide className="relative py-16 sm:py-20">
+        {/* below lg the cover art sits directly above, so the text needs less top padding there */}
+        <Container wide className={cx("relative pb-16 sm:pb-20 lg:pt-20", projectArt(p.slug) ? "pt-8 sm:pt-10" : "pt-16 sm:pt-20")}>
           <Link to="/projects" className="inline-flex min-h-8 items-center gap-2 text-sm text-muted hover:text-ink"><Icon name="back" size={16} />All projects</Link>
           <div className="mt-6 flex flex-wrap items-center gap-2"><Pill tone={statusTone(p.status)}>{p.status}</Pill><Pill>{p.kindLabel}</Pill></div>
           <h1 className="mt-4 text-4xl font-bold sm:text-6xl">{p.name}</h1>

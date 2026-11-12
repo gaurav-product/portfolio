@@ -1,5 +1,6 @@
 import { heroArt } from "~/components/CinematicImage";
-import { Link, useSearchParams } from "react-router";
+import { Link } from "react-router";
+import { useHydratedSearchParams } from "~/lib/useHydratedSearchParams";
 import { useMemo } from "react";
 import { search } from "~/lib/search";
 import { PageHero, Container, Empty } from "~/components/ui";
@@ -9,7 +10,7 @@ import { seo } from "~/lib/meta";
 export const meta = () => seo("Search", "Search projects, case studies, experience, skills, research and lab notes.", "/search");
 
 export default function SearchPage() {
-  const [params, setParams] = useSearchParams();
+  const [params, setParams] = useHydratedSearchParams();
   const q = params.get("q") ?? "";
   const hits = useMemo(() => search(q, 200), [q]);
   const set = (v: string) => setParams(v ? { q: v } : {}, { replace: true });
