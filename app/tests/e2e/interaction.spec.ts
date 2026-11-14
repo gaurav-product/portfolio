@@ -233,7 +233,23 @@ test.describe("Phase 2 — page transitions", () => {
     await page.goto("/projects"); await ready(page);
     await page.getByRole("link", { name: "Emerging Ventures" }).first().click(); // #hash on the same page
     await expect(page).toHaveURL(/\/projects#emerging-ventures$/);
-    const [popup] = await Promise.all([context.waitForEvent("page"), page.getByRole("link", { name: "Read the case study: CareConnect" }).click({ modifiers: ["ControlOrMeta"] })]);
+    // The button sits in a scroll-driven reveal (.chapter-copy), so it moves while the page scrolls: bring it into
+    // view and wait until it is still, so the click cannot land beside it on a busy CI runner.
+    const read = page.getByRole("link", { name: "Read the case study: CareConnect" });
+    await read.scrollIntoViewIfNeeded();
+    await expect.poll(async () => {
+      const a = await read.boundingBox(); await page.waitForTimeout(100); const b = await read.boundingBox();
+      return !!a && !!b && a.x === b.x && a.y === b.y;
+    }).toBe(true);
+    await page.evaluate(() => document.addEventListener("click", (e) => {
+      (window as unknown as { __click: unknown }).__click = { link: (e.target as Element).closest("a")?.getAttribute("aria-label") ?? null, modified: e.ctrlKey || e.metaKey };
+    }, { capture: true, once: true }));
+    const opened = context.waitForEvent("page");
+    await read.click({ modifiers: ["ControlOrMeta"] });
+    // the click reached the link with Ctrl/Cmd held …
+    expect(await page.evaluate(() => (window as unknown as { __click: unknown }).__click)).toEqual({ link: "Read the case study: CareConnect", modified: true });
+    // … and the browser opened it in a new tab
+    const popup = await opened;
     await popup.close();
     await expect(page).toHaveURL(/\/projects#emerging-ventures$/);
     expect(await vtCount(page)).toBe(0);
