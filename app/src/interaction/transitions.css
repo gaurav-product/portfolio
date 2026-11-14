@@ -1,0 +1,32 @@
+/* Page transitions (View Transitions API). Only active where the browser
+   supports it and motion is allowed; otherwise navigation is instant. */
+
+/* things that persist across pages stay put instead of cross-fading with the page */
+header.sticky { view-transition-name: site-header; }
+.oz-root { view-transition-name: oz-guide; }
+.gos-dot { view-transition-name: gos-dot; }
+.gos-ring { view-transition-name: gos-ring; }
+.gos-spot { view-transition-name: gos-spot; }
+::view-transition-group(site-header), ::view-transition-group(oz-guide),
+::view-transition-group(gos-dot), ::view-transition-group(gos-ring), ::view-transition-group(gos-spot) { animation: none; }
+::view-transition-old(gos-dot), ::view-transition-old(gos-ring), ::view-transition-old(gos-spot) { display: none; }
+::view-transition-new(gos-dot), ::view-transition-new(gos-ring), ::view-transition-new(gos-spot) { animation: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* default: the old page settles back and fades, the new one rises in */
+  ::view-transition-old(root) { animation: gos-vt-out .24s cubic-bezier(.4, 0, 1, 1) both; }
+  ::view-transition-new(root) { animation: gos-vt-in .46s cubic-bezier(.2, .8, .2, 1) .05s both; }
+  /* entering the Product Universe: a circular reveal from where the visitor clicked */
+  html[data-vt="reveal"]::view-transition-old(root) { animation: gos-vt-recede .75s cubic-bezier(.4, 0, .2, 1) both; }
+  html[data-vt="reveal"]::view-transition-new(root) { animation: gos-vt-reveal .8s cubic-bezier(.7, 0, .2, 1) both; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+@keyframes gos-vt-out { to { opacity: 0; transform: translateY(-10px) scale(.992); } }
+@keyframes gos-vt-in { from { opacity: 0; transform: translateY(14px) scale(1.004); } }
+@keyframes gos-vt-recede { to { opacity: .35; transform: scale(.985); } }
+@keyframes gos-vt-reveal {
+  from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 50%)); }
+  to { clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 50%)); }
+}

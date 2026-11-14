@@ -1,0 +1,10 @@
+# Cloudflare Workers config (only used if the owner approves deployment).
+# Secrets are NOT stored here: run `npx wrangler secret put AI_API_KEY`.
+name = "gaurav-os-guide-api"
+main = "src/worker.ts"
+compatibility_date = "2026-10-01"
+
+[vars]
+AI_PROVIDER = "anthropic"
+AI_MODEL = "claude-opus-5-5"
+ALLOWED_ORIGIN = "https://gaurav-product.github.io"
