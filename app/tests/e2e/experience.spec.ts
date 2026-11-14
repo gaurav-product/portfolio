@@ -81,11 +81,11 @@ test.describe("final corrections", () => {
       const page = await ctx.newPage();
       await page.goto("/?nointro");
       const oz = page.getByTestId("oz");
-      const intro = page.locator("[data-oz-avoid]");
+      const intro = page.locator("[data-oz-avoid]").last(); // the hero introduction, then the intro film player
       const covered = () => page.evaluate(() => {
         const l = document.querySelector("[data-testid=oz] .oz-launch")!; const b = l.getBoundingClientRect();
         if (+getComputedStyle(l).opacity < 0.05 || b.left >= innerWidth) return false;
-        return [...document.querySelectorAll("[data-oz-avoid] h1, [data-oz-avoid] p, [data-oz-avoid] a, [data-oz-avoid] button")]
+        return [...document.querySelectorAll("[data-oz-avoid] h1, [data-oz-avoid] p, [data-oz-avoid] a, [data-oz-avoid] button, [data-oz-avoid] video")]
           .some((el) => [...el.getClientRects()].some((r) => r.right > b.left && r.left < b.right && r.bottom > b.top && r.top < b.bottom));
       });
       const bottom = await intro.evaluate((el) => el.getBoundingClientRect().bottom + scrollY);

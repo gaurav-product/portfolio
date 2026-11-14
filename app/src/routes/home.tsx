@@ -9,7 +9,7 @@ import { legacy, corpusSummary } from "~/content/data";
 import { Container, ButtonLink, SectionHeader, Pill, Button } from "~/components/ui";
 import { ProjectCard } from "~/components/cards";
 import { Icon } from "~/components/Icon";
-import { IntroFilm, useIntro } from "~/components/IntroFilm";
+import { IntroFilm, FILM, FILM_ID, useIntroFilm } from "~/components/IntroFilm";
 import { Typewriter } from "~/components/Typewriter";
 import { HeroBackdrop } from "~/components/HeroBackdrop";
 import { Portrait } from "~/components/Portrait";
@@ -32,12 +32,10 @@ const TAG_PHRASES = ["evidence.", "intelligence.", "execution."];
 const TAG_FINAL = "evidence, intelligence and execution.";
 
 export default function Home() {
-  const intro = useIntro();
+  const playFilm = useIntroFilm();
   const demonstrated = (c: string) => capabilities.filter((x) => x.category === c && x.status === "Demonstrated in work").length;
   return (
     <>
-      {intro.open && <IntroFilm onClose={intro.close} />}
-
       {/* ------------------------------------------------------------ HERO */}
       {/* one focused first screen: who, what, why — and one clear way in. Everything else is below the fold. */}
       <section aria-labelledby="hero-title" className="relative overflow-hidden lg:flex lg:min-h-[calc(100svh-72px)] lg:items-center">
@@ -66,13 +64,28 @@ export default function Home() {
               <li><Link to="/explore/city" onClick={() => track("explore_mode_opened", { from: "hero" })} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="hq" size={16} />3D city</Link></li>
               <li><Link to="/recruiter" onClick={() => track("recruiter_mode_opened")} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="recruiter" size={16} />Recruiter Mode</Link></li>
               <li><a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" onClick={() => track("cv_downloaded")} className="inline-flex items-center gap-2 hover:text-ink"><Icon name="download" size={16} />Download CV</a></li>
-              <li><button type="button" onClick={intro.play} data-cursor="play" className="inline-flex items-center gap-2 hover:text-ink"><Icon name="play" size={16} />Watch the intro film (1:05)</button></li>
+              <li><button type="button" onClick={playFilm} data-cursor="play" aria-controls={FILM_ID} className="inline-flex items-center gap-2 rounded-full border border-green/40 bg-surface px-3.5 py-1.5 font-display text-[12.5px] font-semibold uppercase tracking-[.1em] text-green transition-colors hover:border-green hover:text-ink"><Icon name="play" size={14} />Watch the intro film · {FILM.duration}</button></li>
             </ul>
           </div>
         </Container>
         <a href="#glance" aria-label="Scroll to the overview" className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] uppercase tracking-[.3em] text-dim hover:text-ink lg:flex">
           Scroll<span aria-hidden className="h-8 w-px bg-gradient-to-b from-green to-transparent motion-safe:animate-pulse" />
         </a>
+      </section>
+
+      {/* ------------------------------------------------------ INTRO FILM */}
+      {/* the 45-second introduction film, inline at its own 9:16 shape; the hero CTA scrolls here and plays it */}
+      <section id={FILM_ID} aria-labelledby="intro-film-title" className="scroll-mt-20 py-16 lg:py-20">
+        <Container wide>
+          <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
+            <div className="max-w-xl">
+              <p className="eyebrow">Introduction film · {FILM.duration}</p>
+              <h2 id="intro-film-title" className="mt-4 text-4xl font-bold sm:text-5xl">Gaurav.OS in 45 seconds</h2>
+              <p className="mt-5 text-lg leading-relaxed text-muted">A short introduction to me and to what this site holds. It plays only when you press play.</p>
+            </div>
+            <IntroFilm />
+          </div>
+        </Container>
       </section>
 
       {/* ---------------------------------------------- PROFILE + EVIDENCE */}
@@ -228,7 +241,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-3">
               <ButtonLink to="/recruiter" variant="primary" icon="recruiter">Recruiter Mode</ButtonLink>
               <ButtonLink to="/contact" icon="mail">Get in touch</ButtonLink>
-              <Button onClick={intro.play} variant="ghost" icon="play" data-cursor="play">Intro film</Button>
+              <Button onClick={playFilm} variant="ghost" icon="play" data-cursor="play" aria-controls={FILM_ID}>Intro film · {FILM.duration}</Button>
             </div>
           </div>
         </Container>

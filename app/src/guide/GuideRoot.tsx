@@ -85,6 +85,7 @@ export function GuideRoot() {
   useEffect(() => {
     if (hidden || open) { setAvoid(false); document.documentElement.dataset.ozChecked = ""; return; }
     const narrow = matchMedia("(max-width: 639px)");
+    const LEAD = 160;
     let raf = 0;
     const check = () => {
       raf = 0;
@@ -92,7 +93,8 @@ export function GuideRoot() {
       if (!box || !narrow.matches || pos) { setAvoid(false); document.documentElement.dataset.ozChecked = ""; return; }
       const hit = Array.from(document.querySelectorAll("[data-oz-avoid]")).some((el) => {
         const r = el.getBoundingClientRect();
-        return r.width > 0 && r.right > box.left && r.left < box.right && r.bottom > box.top && r.top < box.bottom;
+        // LEAD: step aside slightly before content scrolls under Oz, so its 300 ms fade is done when it arrives
+        return r.width > 0 && r.right > box.left && r.left < box.right && r.bottom > box.top - LEAD && r.top < box.bottom + LEAD;
       });
       setAvoid(hit);
       document.documentElement.dataset.ozChecked = ""; // until this first check, CSS keeps Oz hidden on narrow screens (no flash over the intro)

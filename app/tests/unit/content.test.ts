@@ -98,6 +98,14 @@ describe("media and screenshots", () => {
     }
     expect(fs.existsSync(path.join(ROOT, "public/media/gaurav-os-intro.mp4"))).toBe(false);
   });
+  it("ships the 45-second intro film locally, streamable (index first), with its poster", () => {
+    const p = path.join(ROOT, "public/media/gaurav-os-intro-45s.mp4");
+    const head = fs.readFileSync(p).subarray(0, 64).toString("latin1");
+    expect(head.slice(4, 8)).toBe("ftyp");
+    expect(head.indexOf("moov")).toBeGreaterThan(0); // "faststart": playback can begin before the whole file arrives
+    expect(fs.statSync(p).size).toBeLessThan(25 * 1024 * 1024);
+    expect(fs.existsSync(path.join(ROOT, "public/media/gaurav-os-intro-45s-poster.webp"))).toBe(true);
+  });
   it("the portrait is replaceable and present", () => {
     expect(profile.portrait.src).toBeTruthy();
     expect(fs.existsSync(path.join(ROOT, "public", profile.portrait.src!))).toBe(true);

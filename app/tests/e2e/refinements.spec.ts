@@ -1,39 +1,58 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 
-test("J12 intro film — first visit plays the optimised film, sound toggle, skip, no replay", async ({ page }) => {
-  test.skip((page.viewportSize()?.width ?? 0) < 1024, "Film autoplays on desktop only");
+const FILM_RE = /\/media\/gaurav-os-intro-45s\.mp4$/;
+
+test("J12 intro film — inline 9:16 player, nothing loads before play, the CTA plays it with sound", async ({ page }) => {
+  const filmRequests: string[] = [];
+  page.on("request", (r) => { if (FILM_RE.test(new URL(r.url()).pathname)) filmRequests.push(r.url()); });
+  const errs: string[] = [];
+  page.on("pageerror", (e) => errs.push(e.message));
   await page.goto("/");
-  const dialog = page.getByRole("dialog", { name: "Gaurav.OS introduction film" });
-  await expect(dialog).toBeVisible();
-  const v = page.getByTestId("intro-video");
-  const sources = await v.locator("source").evaluateAll((s) => s.map((x) => (x as HTMLSourceElement).getAttribute("src")));
-  expect(sources).toEqual(["/media/gaurav-os-intro-av1-1080p.mp4", "/media/gaurav-os-intro-h264-720p.mp4"]);
-  await expect.poll(() => v.evaluate((el: HTMLVideoElement) => el.currentTime), { timeout: 15000 }).toBeGreaterThan(0.2);
-  const playing = await v.evaluate((el: HTMLVideoElement) => el.currentSrc);
-  expect(playing).toMatch(/gaurav-os-intro-(av1-1080p|h264-720p)\.mp4$/);
-  await page.getByRole("button", { name: "Turn sound on" }).click();
-  await expect(page.getByRole("button", { name: "Turn sound off" })).toHaveAttribute("aria-pressed", "true");
-  await page.getByRole("button", { name: "Skip intro" }).click();
-  await expect(dialog).toHaveCount(0);
-  await page.reload();
   await expect(page.getByRole("heading", { level: 1, name: "Gaurav Singh" })).toBeVisible();
-  await expect(dialog).toHaveCount(0);
-  await page.getByRole("button", { name: /Watch the intro film/ }).click();
-  await expect(dialog).toBeVisible();
-  await page.keyboard.press("Escape");
-  await expect(dialog).toHaveCount(0);
+  await expect(page.getByRole("dialog")).toHaveCount(0); // never opens by itself
+  const v = page.getByTestId("intro-video");
+  await expect(v).toHaveAccessibleName("Gaurav.OS introduction film, 0:45");
+  expect(await v.evaluate((el: HTMLVideoElement) => ({ controls: el.controls, inline: el.playsInline, preload: el.preload, autoplay: el.autoplay, paused: el.paused, poster: new URL(el.poster).pathname, src: el.querySelector("source")!.getAttribute("src") })))
+    .toEqual({ controls: true, inline: true, preload: "none", autoplay: false, paused: true, poster: "/media/gaurav-os-intro-45s-poster.webp", src: "/media/gaurav-os-intro-45s.mp4" });
+  // 9:16 frame reserved before any media loads (no layout shift), never cropped
+  const box = await v.boundingBox();
+  expect(Math.abs(box!.width / box!.height - 9 / 16)).toBeLessThan(0.01);
+  expect(await v.evaluate((el) => getComputedStyle(el).objectFit)).toBe("contain");
+  const poster = await page.request.get("/media/gaurav-os-intro-45s-poster.webp");
+  expect(poster.status()).toBe(200);
+  expect(poster.headers()["content-type"]).toContain("image/webp");
+  await page.waitForTimeout(1500);
+  expect(filmRequests).toEqual([]); // the 22 MB film is not fetched until someone presses play
+
+  const cta = page.locator('section[aria-labelledby="hero-title"]').getByRole("button", { name: "Watch the intro film · 0:45" });
+  await expect(cta).toBeVisible();
+  await cta.click();
+  await expect.poll(() => v.evaluate((el: HTMLVideoElement) => el.currentTime), { timeout: 15000 }).toBeGreaterThan(0.2);
+  expect(await v.evaluate((el: HTMLVideoElement) => ({ muted: el.muted, w: el.videoWidth, h: el.videoHeight, d: Math.round(el.duration) }))).toEqual({ muted: false, w: 1080, h: 1920, d: 45 });
+  expect(filmRequests.length).toBeGreaterThan(0);
+  await expect(v).toBeInViewport();
+  await expect(v).toBeFocused(); // keyboard users land on the player and its native controls
+  await v.evaluate((el: HTMLVideoElement) => el.pause());
+  // the closing CTA reaches the same film
+  await page.getByRole("button", { name: "Intro film · 0:45", exact: true }).click();
+  await expect.poll(() => v.evaluate((el: HTMLVideoElement) => el.paused)).toBe(false);
+  expect(errs).toEqual([]);
 });
 
-test("J13 reduced motion shows the poster, never the film", async ({ browser }) => {
+test("J13 reduced motion: the film never starts by itself, and still plays on request", async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: "reduce", viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
+  const filmRequests: string[] = [];
+  page.on("request", (r) => { if (FILM_RE.test(new URL(r.url()).pathname)) filmRequests.push(r.url()); });
   await page.goto("/");
-  await expect(page.getByRole("dialog", { name: "Gaurav.OS introduction film" })).toHaveCount(0); // no autoplay
+  await expect(page.getByRole("dialog")).toHaveCount(0); // no autoplay
+  const v = page.getByTestId("intro-video");
+  await page.waitForTimeout(1500);
+  expect(await v.evaluate((el: HTMLVideoElement) => el.paused)).toBe(true);
+  expect(filmRequests).toEqual([]);
   await page.getByRole("button", { name: /Watch the intro film/ }).click();
-  await expect(page.getByRole("img", { name: /Final frame/ })).toBeVisible();
-  await expect(page.getByTestId("intro-video")).toHaveCount(0);
-  await page.getByRole("button", { name: "Enter Gaurav.OS" }).click();
+  await expect.poll(() => v.evaluate((el: HTMLVideoElement) => el.currentTime), { timeout: 15000 }).toBeGreaterThan(0.2);
   await ctx.close();
 });
 
