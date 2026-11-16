@@ -117,7 +117,7 @@ function galleryFor(slug: string, name: string): GalleryItem[] {
   }));
   if (hasCinematic(`brand-${slug}`)) g.push({ kind: "brand", src: cine(`brand-${slug}`), panel: cine(`brand-${slug}`), ...dims(`brand-${slug}`), title: `${name} brand artwork`, label: "Brand artwork · illustration, not a screenshot" });
   if (hasCinematic(`render-project-${slug}`)) g.push({ kind: "render", src: cine(`render-project-${slug}`), panel: cine(`render-project-${slug}`), ...dims(`render-project-${slug}`), title: `${name} — original 3D render`, label: "Original 3D render · not a screenshot" });
-  if (!NO_SCREENS_EXPECTED.has(slug) && !g.some((x) => x.kind === "screenshot")) g.push({ kind: "missing", title: "Product screens not supplied", label: "Placeholder", lines: ["Product screens", "not supplied yet", "", "Nothing is shown in their place."] });
+  if (!NO_SCREENS_EXPECTED.has(slug) && !g.some((x) => x.kind === "screenshot")) g.push({ kind: "missing", title: "Product screens not supplied", label: "Placeholder · real screens only", lines: ["Product screens", "to be added", "", "Only real screens will appear here.", "Nothing is mocked up in their place."] });
   return g;
 }
 

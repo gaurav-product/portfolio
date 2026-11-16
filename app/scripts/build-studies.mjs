@@ -64,6 +64,15 @@ const SITE_BASE = (process.env.BASE_PATH || "/").replace(/\/?$/, "/");
 const LOCAL_IMAGES = new Map([
   ["https://commons.wikimedia.org/wiki/Special:FilePath/PhonePe_Logo.svg", "studies/phonepe-logo.svg"], // Day 07, public domain (PD-textlogo)
 ]);
+// Sentences that describe how THIS site serves something and stopped being true here. Exact match, or the build
+// reports a problem. Findings, references and attribution are never touched.
+const TEXT_FIXES = new Map([
+  [7, [{
+    why: "the logo is served from a local copy, not hotlinked",
+    from: "Logo above is hotlinked directly from Wikimedia Commons [22] via its stable <code>Special:FilePath</code> redirect — the standard method Wikipedia itself uses to embed this file. Public-domain text logo, attributed above.",
+    to: "Logo above is the Wikimedia Commons file [22]. The original study embeds it via its stable <code>Special:FilePath</code> redirect; this site serves an identical local copy of that file. Public-domain text logo, attributed above.",
+  }]],
+]);
 const deadImageNote = (alt) =>
   `<span class="my-2 inline-block rounded-md border border-line-soft px-2.5 py-1 text-xs text-dim" data-missing-image="">Image unavailable at its source${alt ? `: ${alt}` : ""}</span>`;
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -208,6 +217,10 @@ for (const s of studies) {
   if (!fs.existsSync(readmeFile)) { problems.push(`Day ${s.day}: ${s.readme_path} missing at ${lock.commit}`); continue; }
   const md = redact(fs.readFileSync(readmeFile, "utf8"), s.day, "README");
   const readme = render(md, s.dir_path);
+  for (const fix of TEXT_FIXES.get(s.day) || []) {
+    if (!readme.html.includes(fix.from)) { problems.push(`Day ${s.day}: text fix no longer matches the source (${fix.why})`); continue; }
+    readme.html = readme.html.replace(fix.from, fix.to);
+  }
   let assumptions = null;
   if (s.assumptions_path && fs.existsSync(path.join(CACHE, s.assumptions_path))) {
     const a = render(redact(fs.readFileSync(path.join(CACHE, s.assumptions_path), "utf8"), s.day, "ASSUMPTIONS"), s.dir_path);

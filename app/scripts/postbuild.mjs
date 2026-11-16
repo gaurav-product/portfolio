@@ -51,9 +51,16 @@ console.log(`postbuild: stylesheet preload hint added to ${hinted} pages`);
 
 fs.writeFileSync(path.join(OUT, "robots.txt"), `User-agent: *\nAllow: /\n${SITE ? `Sitemap: ${SITE}/sitemap.xml\n` : ""}`);
 // the sitemap lists only pages meant to be indexed: old /universe/<slug> redirect pages carry robots "noindex"
-const indexable = routes.filter((r) => !/<meta name="robots" content="noindex"/.test(fs.readFileSync(path.join(OUT, r === "/" ? "" : r, "index.html"), "utf8")));
+// … and only pages whose canonical names themselves: an alias such as /explore/city (same page as /explore,
+// canonical → /explore) is left out, so the sitemap never contradicts a canonical
+const indexable = routes.filter((r) => {
+  const html = fs.readFileSync(path.join(OUT, r === "/" ? "" : r, "index.html"), "utf8");
+  if (/<meta name="robots" content="noindex"/.test(html)) return false;
+  const canon = (html.match(/<link rel="canonical" href="([^"]+)"/) || [])[1];
+  return !SITE || !canon || canon === `${SITE}${r === "/" ? "/" : `${r}/`}`;
+});
 if (SITE) {
-  fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexable.map((r) => `  <url><loc>${SITE}${r === "/" ? "/" : r}</loc></url>`).join("\n")}\n</urlset>\n`);
+  fs.writeFileSync(path.join(OUT, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${indexable.map((r) => `  <url><loc>${SITE}${r === "/" ? "/" : `${r}/`}</loc></url>`).join("\n")}\n</urlset>\n`);
 } else console.warn("postbuild: VITE_SITE_URL not set — sitemap.xml and canonical URLs skipped (set it for production).");
 // Static hosts serve 404.html for unknown paths; the SPA shell renders the 404 route.
 if (fs.existsSync(path.join(OUT, "__spa-fallback.html"))) fs.copyFileSync(path.join(OUT, "__spa-fallback.html"), path.join(OUT, "404.html"));

@@ -10,6 +10,7 @@ import { asset } from "./lib/meta";
 import { GuideRoot } from "./guide/GuideRoot";
 import { Cursor } from "./interaction/Cursor";
 import { Transitions } from "./interaction/Transitions";
+import { IntroGate, INTRO_HEAD_SCRIPT } from "./components/IntroGate";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: asset("/favicon.svg"), type: "image/svg+xml" },
@@ -26,9 +27,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         {/* old addresses (prerendered redirect pages): carry the query string and hash to the new address before the meta refresh fires */}
         <script dangerouslySetInnerHTML={{ __html: KEEP_QUERY }} />
+        {/* before first paint: decide whether this visit opens with the full-screen introduction (IntroGate) */}
+        <script dangerouslySetInnerHTML={{ __html: INTRO_HEAD_SCRIPT }} />
         <Links />
       </head>
       <body>
+        <IntroGate />
         {children}
         <ScrollRestoration />
         <Scripts />

@@ -184,3 +184,67 @@
 .planet-label[data-active="true"] .planet-label-sub { display: block; }
 @media (prefers-reduced-motion: reduce) { .planet-label { transition: none; } }
 @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* ---------------------------------------------------------------- full-screen introduction (IntroGate) */
+/* Hidden unless the <head> script marks a fresh session (html[data-intro="show"]), so crawlers, visitors without
+   JavaScript and returning visitors get the portfolio straight away. While it shows, the page behind is out of
+   sight and out of the focus order (visibility), and does not scroll. */
+.intro-gate { display: none; }
+html[data-intro="show"], html[data-intro="leaving"] { overflow: hidden; }
+html[data-intro="show"] body > :not(.intro-gate) { visibility: hidden; }
+html[data-intro="show"] .intro-gate, html[data-intro="leaving"] .intro-gate {
+  position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(12px, 2.4vh, 24px);
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  background:
+    radial-gradient(60% 50% at 50% 42%, rgb(107 227 154 / .10), transparent 70%),
+    linear-gradient(rgb(255 255 255 / .025) 1px, transparent 1px) 0 0 / 48px 48px,
+    linear-gradient(90deg, rgb(255 255 255 / .025) 1px, transparent 1px) 0 0 / 48px 48px,
+    var(--color-bg);
+  color: var(--color-ink); opacity: 1; transition: opacity .6s ease;
+}
+html[data-intro="leaving"] .intro-gate { opacity: 0; pointer-events: none; }
+/* the custom cursor lives in the hidden page: the native one is used here */
+html.gos-cursor .intro-gate, html.gos-cursor .intro-gate * { cursor: auto !important; }
+html.gos-cursor .intro-gate button { cursor: pointer !important; }
+.intro-gate__stage { display: flex; min-height: 0; align-items: center; justify-content: center; }
+/* the film keeps its 9:16 shape and is never cropped: as tall as the screen allows (dynamic viewport units,
+   so mobile browser bars are accounted for), never wider than the screen */
+.intro-gate__video {
+  display: block; aspect-ratio: 9 / 16; width: auto; object-fit: contain; background: #000;
+  height: min(calc(100vh - 11rem), calc((100vw - 2rem) * 16 / 9));
+  height: min(calc(100dvh - 11rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)), calc((100vw - 2rem) * 16 / 9));
+  max-width: calc(100vw - 2rem);
+  border-radius: 20px; border: 1px solid var(--color-line);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / .4), 0 30px 90px -30px rgb(107 227 154 / .28);
+}
+.intro-gate__bar { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.intro-gate__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.intro-gate__btn {
+  display: inline-flex; min-height: 44px; align-items: center; gap: 8px; border-radius: 999px; padding: 0 20px;
+  border: 1px solid var(--color-line); background: rgb(18 28 25 / .8); color: var(--color-ink);
+  font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  transition: border-color .2s, background-color .2s, color .2s;
+}
+.intro-gate__btn:hover { border-color: rgb(107 227 154 / .6); }
+.intro-gate__btn--primary { border-color: var(--color-green); background: var(--color-green); color: var(--color-green-ink); }
+.intro-gate__btn--primary:hover { background: #8BEDB0; }
+.intro-gate__btn:focus-visible { outline: 2px solid var(--color-green); outline-offset: 3px; }
+.intro-gate__error { max-width: 34ch; font-size: 14px; color: var(--color-amber); }
+/* phones and small windows turned sideways: film on the left, actions beside it */
+@media (orientation: landscape) and (max-height: 560px) {
+  html[data-intro="show"] .intro-gate, html[data-intro="leaving"] .intro-gate { flex-direction: row; gap: 24px; }
+  .intro-gate__video { height: calc(100vh - 2rem); height: calc(100dvh - 2rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)); }
+  .intro-gate__bar { align-items: flex-start; text-align: left; }
+  .intro-gate__actions { flex-direction: column; align-items: stretch; }
+}
+@media (prefers-reduced-motion: reduce) { html[data-intro] .intro-gate { transition: none; } }
+
+/* Oz rests at the bottom-right corner. Scrollable panels that can sit under it end with an Oz-sized spacer, so
+   their last lines can always be scrolled clear of it (Oz stays draggable; nothing is hidden behind it). */
+.oz-clear::after { content: ""; display: block; height: 92px; flex-shrink: 0; }
+/* the error message adds a line or two to the bar: the film gives up that height so nothing is pushed off-screen */
+.intro-gate[data-phase="error"] .intro-gate__video {
+  height: min(calc(100vh - 15rem), calc((100vw - 2rem) * 16 / 9));
+  height: min(calc(100dvh - 15rem - env(safe-area-inset-top) - env(safe-area-inset-bottom)), calc((100vw - 2rem) * 16 / 9));
+}

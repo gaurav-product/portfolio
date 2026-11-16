@@ -3,7 +3,7 @@ import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { BuildingSpec, GalleryItem } from "~/content/universe";
 import type { SceneEvents } from "./bus";
-import { windowsTexture, labelTexture, boardTexture } from "./textures";
+import { windowsTexture, labelTexture, boardTexture, placeholderTexture } from "./textures";
 import { audio } from "./audio";
 import { asset } from "~/lib/meta";
 
@@ -84,7 +84,7 @@ export function Panel({ item, index, count, accent, events, at, delay = 0 }: { i
   const label = useMemo(() => labelTexture(item.label, item.title, accent), [item, accent]);
   useEffect(() => {
     let tex: THREE.Texture | null = null, live = true, timer: ReturnType<typeof setTimeout> | undefined;
-    if (item.kind === "concept" || item.kind === "missing") { tex = boardTexture(item.lines ?? [item.title], item.label, accent); mat.map = tex; mat.color.set("#C8CCCA"); mat.needsUpdate = true; invalidate(); }
+    if (item.kind === "concept" || item.kind === "missing") { tex = (item.kind === "missing" ? placeholderTexture : boardTexture)(item.lines ?? [item.title], item.label, accent); mat.map = tex; mat.color.set("#C8CCCA"); mat.needsUpdate = true; invalidate(); }
     else if (item.panel) { const src = asset(item.panel); timer = setTimeout(() => new THREE.TextureLoader().load(src, (t) => { if (!live) { t.dispose(); return; } t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; tex = t; mat.map = t; mat.color.set("#C8CCCA"); mat.needsUpdate = true; invalidate(); }), delay); }
     return () => { live = false; clearTimeout(timer); tex?.dispose(); mat.dispose(); label.dispose(); };
   }, [item, mat, label, accent, invalidate, delay]);
