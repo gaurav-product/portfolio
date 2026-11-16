@@ -75,19 +75,30 @@ The film and thumbnail carry a small ✦ mark in the bottom-right corner, as sup
 | Introduction behaviour on the `/portfolio/` build | 83 / 83 checks across desktop, phone portrait and landscape, and tablet: poster, fit, muted autoplay, Enable sound, Play with sound, pause, end → portfolio, focus, session, deep link with query and hash, Back, Esc, keyboard trap, reduced motion, media failure, blocked storage, replay |
 | Homepage network | Desktop 45 requests / 1,592 KB; mobile 37 requests / 402 KB (with `?nointro`). No three.js chunk, no film bytes |
 
-### Verification after the N1–N3 fixes (final source, 16 Nov 2026), which supersedes the table above
+### Verification on the final source (16 Nov 2026, after the N1–N3 and CI fixes), which supersedes the table above
 
 | Check | Result |
 |---|---|
 | Typecheck | Passed (exit 0) |
 | Unit tests | **119 / 119** (8 files) |
-| Playwright, 1 worker, 6 shards | **220 passed, 0 failed, 2 skipped**. Every shard exited 0 on the **first** pass, with no reruns. The skips are by design: J17 at desktop width, and the desktop-only Oz/player test on the mobile project. This adds `resilience.spec.ts` (N1, N2 and scroll restoration, on both projects) |
+| Playwright, 1 worker, 6 shards | **222 passed, 0 failed, 2 skipped**. Every shard exited 0 on the **first** pass, with no reruns. The skips are by design: J17 at desktop width, and the desktop-only Oz/player test on the mobile project. This adds `resilience.spec.ts` (N1, N2 and scroll restoration, on both projects) and the late-`play()` race test |
 | New regression tests, proven | With the old code: the N1 and N2 tests **fail**. With the fixes: they pass (`resilience.spec.ts` 18 / 18 over 3 repetitions × 2 projects) |
 | Accessibility (axe) | **338 / 338 routes, 0 problems**, desktop and mobile |
 | `/portfolio/` production build | 338 routes. 326 self-canonical plus 1 alias (`/explore/city → /explore/`). 326 slash-final sitemap URLs. 22,854 internal refs, 0 broken. No old media; `gaurav-os-poster.jpg` no longer in `build/client/media` |
 | Assets | Poster SHA-256 = the supplied thumbnail (`9b2debd1…`). Film video and audio stream hashes = the supplied master. 45.000 s · 1080 × 1920 · 30 fps · H.264 + AAC stereo; index first |
 | Introduction on the `/portfolio/` build | 83 / 83 checks: fresh session on desktop, phone portrait and landscape, and tablet; poster; muted autoplay and Enable sound; Play with sound; the end → portfolio; deep link with path, query and hash; session memory; Back; Esc; keyboard; reduced motion; media failure; blocked storage; replay |
 | Homepage network | No three.js chunk, no film bytes (desktop 45 requests, mobile 37); `/explore` loads three.js on demand |
+
+**GitHub Actions on `67a16b5`: both runs FAILED one test each** (219 passed, 1 failed, 2 skipped; 2 workers). The two failures were different tests:
+
+1. **PR run, mobile: "Watch full screen" replay. Expected the introduction gone after Close; it was still in the page. A real bug in `IntroGate`, now fixed.**
+   - **Cause:** muted autoplay's `play()` can fulfil while its callback is still queued when the visitor closes. The callback then set the state back to "playing muted", so the (hidden) introduction re-rendered, and its film could keep playing unseen.
+   - **Fix:** a `closed` ref. A late `play()` result after close pauses the film and changes nothing, and late media errors are ignored.
+   - **Regression test** ("skipping before the muted autoplay has started…") models the late result. It **fails on the old code with the CI signature (expected 0, received 1)** and passes on the fix (10 / 10). The replay test passes 40 / 40 on 2 workers.
+   - The single local failure of this test on 16 Nov was most likely the same race; earlier I put it down to Oz covering the button.
+2. **Push run, desktop: "skills: domains filter…". Test race, test fixed, assertions unchanged.**
+   - **Cause:** the per-card snapshot (`cards.all()`) was taken while the filtered list was still re-rendering, so `nth(5)` vanished.
+   - **Fix:** the test now waits until the rendered card count equals the page's own "N of M capabilities" count, then checks every card as before. 20 / 20 on 2 workers.
 
 **Still requiring Gaurav:**
 - physical-device QA (P1-1, `DEVICE-QA-CHECKLIST-2026-11.md`)

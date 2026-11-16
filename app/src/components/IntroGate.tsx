@@ -43,12 +43,15 @@ export function IntroGate() {
   const soundBtn = useRef<HTMLButtonElement>(null);
   const replaying = useRef(false);
   const autoTried = useRef(false);
+  // set once the introduction has been closed: a play() promise that settles afterwards must not bring it back
+  // (or leave the film running, unseen, in the background)
+  const closed = useRef(false);
   const html = () => document.documentElement;
 
   useEffect(() => {
     (window as unknown as { __gosIntroReady: boolean }).__gosIntroReady = true;
     setPhase(html().getAttribute("data-intro") === "show" ? "ready" : "closed");
-    const open = () => { replaying.current = true; autoTried.current = false; html().setAttribute("data-intro", "show"); setPhase("ready"); };
+    const open = () => { replaying.current = true; autoTried.current = false; closed.current = false; html().setAttribute("data-intro", "show"); setPhase("ready"); };
     const skip = () => close("skip");
     addEventListener(OPEN_EVENT, open); addEventListener(SKIP_EVENT, skip);
     return () => { removeEventListener(OPEN_EVENT, open); removeEventListener(SKIP_EVENT, skip); };
@@ -64,7 +67,7 @@ export function IntroGate() {
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
     if (matchMedia("(prefers-reduced-motion: reduce)").matches || saveData) return;
     v.muted = true;
-    v.play().then(() => { if (v.muted) setPhase("muted"); }).catch(() => { v.muted = false; });
+    v.play().then(() => { if (closed.current) { v.pause(); return; } if (v.muted) setPhase("muted"); }).catch(() => { v.muted = false; });
   }, [phase]);
 
   useEffect(() => {
@@ -73,6 +76,7 @@ export function IntroGate() {
   }, [phase]);
 
   const close = useCallback((how: "skip" | "end") => {
+    closed.current = true;
     try { sessionStorage.setItem(INTRO_KEY, "1"); } catch { /* private mode: shown again next load */ }
     track(how === "end" ? "intro_completed" : "intro_skipped", { from: "gate" });
     const v = video.current; if (v && !v.paused) v.pause();
@@ -98,7 +102,7 @@ export function IntroGate() {
     v.muted = false;
     if (v.volume === 0) v.volume = 1;
     setPhase("playing");
-    if (v.paused) v.play().catch(() => setPhase("error")); // refused or failed: say so, and keep the way in open
+    if (v.paused) v.play().then(() => { if (closed.current) v.pause(); }).catch(() => { if (!closed.current) setPhase("error"); }); // refused or failed: say so, and keep the way in open
     v.focus({ preventScroll: true });
   };
 
@@ -118,9 +122,9 @@ export function IntroGate() {
         <video ref={video} className="intro-gate__video" data-testid="intro-gate-video"
           width={FILM.width} height={FILM.height} poster={asset(FILM.poster)} preload="none" playsInline controls={running}
           aria-label={`Gaurav.OS introduction film, ${FILM.duration}`}
-          onEnded={() => close("end")} onError={() => setPhase("error")}
+          onEnded={() => close("end")} onError={() => { if (!closed.current) setPhase("error"); }}
           onVolumeChange={(e) => { if (phase === "muted" && !e.currentTarget.muted) setPhase("playing"); }}>
-          <source src={asset(FILM.src)} type={FILM.type} onError={() => setPhase("error")} />
+          <source src={asset(FILM.src)} type={FILM.type} onError={() => { if (!closed.current) setPhase("error"); }} />
         </video>
       </div>
       <div className="intro-gate__bar">

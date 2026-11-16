@@ -88,6 +88,22 @@ test.describe("full-screen introduction", () => {
     expect(film.length).toBeGreaterThan(0);
   });
 
+  test("skipping before the muted autoplay has started leaves nothing behind (no re-opened introduction, no film playing unseen)", async ({ page }) => {
+    await asVisitor(page);
+    // models the race seen once in CI: play() reports success only after the visitor has already closed the
+    // introduction (its result arrives late, whatever happened to the element in between)
+    await page.addInitScript(() => {
+      const play = HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play = function () { play.call(this).catch(() => {}); return new Promise<void>((res) => setTimeout(res, 1000)); };
+    });
+    await page.goto("/");
+    await page.getByRole("button", { name: "Skip intro · Enter portfolio" }).click(); // before play() has settled
+    await page.waitForTimeout(2000); // past the late play() result
+    await expect(page.getByTestId("intro-gate")).toHaveCount(0);
+    expect(await state(page)).toBeNull();
+    expect(await page.evaluate(() => [...document.querySelectorAll("video")].filter((v) => !v.paused && !v.closest("[data-testid=hero-backdrop]")).length)).toBe(0);
+  });
+
   test("deep link: Skip lands on the exact address (path, query, hash); Esc skips; a new session shows it again", async ({ browser }) => {
     const ctx = await browser.newContext(); await asVisitor(ctx);
     const page = await ctx.newPage();
