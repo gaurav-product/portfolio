@@ -109,14 +109,9 @@ fs.writeFileSync(path.join(OUT, "corpus.json"), JSON.stringify(corpus));
 const { studies: _omit, ...summary } = corpus;
 fs.writeFileSync(path.join(OUT, "corpus-summary.json"), JSON.stringify(summary));
 
-// media: the film and poster live once, in docs/media
-const media = path.join(APP, "public/media");
-fs.mkdirSync(media, { recursive: true });
-// The 11.4 MB original film is no longer shipped: the app uses the AV1/H.264 encodes committed in public/media.
-for (const f of ["gaurav-os-poster.jpg"]) {
-  const src = path.join(REPO, "docs/media", f);
-  if (fs.existsSync(src) && !fs.existsSync(path.join(media, f))) fs.copyFileSync(src, path.join(media, f));
-}
+// media: the app ships ONE film and its poster, both committed in public/media (gaurav-os-intro-45s.mp4 and
+// gaurav-os-intro-45s-poster.jpg). Nothing is copied from docs/media: that folder belongs to the legacy static site.
+fs.mkdirSync(path.join(APP, "public/media"), { recursive: true });
 // cinematic illustrations: the manifest is read by the app; images live in public/cinematic
 fs.copyFileSync(path.join(REPO, "brand/cinematic/manifest.json"), path.join(OUT, "cinematic.json"));
 // brand library

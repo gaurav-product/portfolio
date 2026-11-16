@@ -98,7 +98,9 @@ describe("media and screenshots", () => {
     expect(fs.statSync(p).size).toBeLessThan(25 * 1024 * 1024);
     const media = fs.readdirSync(path.join(ROOT, "public/media"));
     expect(media.filter((f) => /^gaurav-os-intro.*[.](mp4|webm|mov)$/.test(f))).toEqual(["gaurav-os-intro-45s.mp4"]);
-    for (const old of ["gaurav-os-intro-av1-1080p.mp4", "gaurav-os-intro-h264-720p.mp4", "gaurav-os-intro.mp4", "gaurav-os-poster.webp", "gaurav-os-intro-45s-poster.webp"]) expect(media, old).not.toContain(old);
+    for (const old of ["gaurav-os-intro-av1-1080p.mp4", "gaurav-os-intro-h264-720p.mp4", "gaurav-os-intro.mp4", "gaurav-os-poster.webp", "gaurav-os-poster.jpg", "gaurav-os-intro-45s-poster.webp"]) expect(media, old).not.toContain(old);
+    // the data step must not copy the legacy site's poster back in (it lives in docs/media for the old static site)
+    expect(fs.readFileSync(path.join(ROOT, "scripts/prepare-data.mjs"), "utf8")).not.toContain("gaurav-os-poster");
   });
   it("the poster is the owner-supplied thumbnail: a real JPEG, 1080 × 1920 (9:16), referenced by both players", () => {
     const b = fs.readFileSync(path.join(ROOT, "public/media/gaurav-os-intro-45s-poster.jpg"));

@@ -75,11 +75,54 @@ The film and thumbnail carry a small ✦ mark in the bottom-right corner, as sup
 | Introduction behaviour on the `/portfolio/` build | 83 / 83 checks across desktop, phone portrait and landscape, and tablet: poster, fit, muted autoplay, Enable sound, Play with sound, pause, end → portfolio, focus, session, deep link with query and hash, Back, Esc, keyboard trap, reduced motion, media failure, blocked storage, replay |
 | Homepage network | Desktop 45 requests / 1,592 KB; mobile 37 requests / 402 KB (with `?nointro`). No three.js chunk, no film bytes |
 
-### New findings (not fixed in this sprint)
+### Verification after the N1–N3 fixes (final source, 16 Nov 2026), which supersedes the table above
 
-- **N1 (P2):** a click on "Open menu" made before the page has hydrated is lost. Seen twice under full-suite load (J10 on 14 Nov, the drawer test today). It passes on its own. Slow phones could hit it.
-- **N2 (P3):** React Router's `ScrollRestoration` script reads `sessionStorage` without a guard, so it logs an uncaught error when storage is blocked. The page and the introduction still work.
-- **N3 (P3):** `prepare-data` still copies the unused `gaurav-os-poster.jpg` (21 KB) into the build.
+| Check | Result |
+|---|---|
+| Typecheck | Passed (exit 0) |
+| Unit tests | **119 / 119** (8 files) |
+| Playwright, 1 worker, 6 shards | **220 passed, 0 failed, 2 skipped**. Every shard exited 0 on the **first** pass, with no reruns. The skips are by design: J17 at desktop width, and the desktop-only Oz/player test on the mobile project. This adds `resilience.spec.ts` (N1, N2 and scroll restoration, on both projects) |
+| New regression tests, proven | With the old code: the N1 and N2 tests **fail**. With the fixes: they pass (`resilience.spec.ts` 18 / 18 over 3 repetitions × 2 projects) |
+| Accessibility (axe) | **338 / 338 routes, 0 problems**, desktop and mobile |
+| `/portfolio/` production build | 338 routes. 326 self-canonical plus 1 alias (`/explore/city → /explore/`). 326 slash-final sitemap URLs. 22,854 internal refs, 0 broken. No old media; `gaurav-os-poster.jpg` no longer in `build/client/media` |
+| Assets | Poster SHA-256 = the supplied thumbnail (`9b2debd1…`). Film video and audio stream hashes = the supplied master. 45.000 s · 1080 × 1920 · 30 fps · H.264 + AAC stereo; index first |
+| Introduction on the `/portfolio/` build | 83 / 83 checks: fresh session on desktop, phone portrait and landscape, and tablet; poster; muted autoplay and Enable sound; Play with sound; the end → portfolio; deep link with path, query and hash; session memory; Back; Esc; keyboard; reduced motion; media failure; blocked storage; replay |
+| Homepage network | No three.js chunk, no film bytes (desktop 45 requests, mobile 37); `/explore` loads three.js on demand |
+
+**Still requiring Gaurav:**
+- physical-device QA (P1-1, `DEVICE-QA-CHECKLIST-2026-11.md`)
+- caption review
+- PhonePe screens, if shareable
+- the merge and deploy decision
+
+### New findings N1–N3: fixed after owner review (16 Nov 2026)
+
+- **N1, menu tap lost before hydration: fixed.** There were two causes:
+  1. Before the bundle hydrates, the prerendered button has no handler.
+  2. The header's mount effect `setOpen(false)` cancelled a tap that landed just as the page hydrated.
+
+  **The fix:**
+  - A tiny `<head>` script (`MENU_EARLY_SCRIPT`) records an "Open menu" tap made before hydration, and the header opens the drawer the moment it mounts (progressive enhancement).
+  - The route-change reset now ignores the first mount.
+
+  **Regression test** (`resilience.spec.ts`): it holds back every JS bundle, taps "Open menu" on the bare prerendered page (with proof that the header has not mounted), releases the bundles, and requires the drawer to open and then close normally. It **fails** on the old code and passes on the new.
+- **N2, uncaught error with storage blocked: fixed.** React Router 7.18.5's `<ScrollRestoration>` inlines a restore script whose `catch` calls `sessionStorage.removeItem()`, which throws again when storage access itself is blocked.
+
+  **The fix:** `SafeScrollRestoration` keeps React Router's `UNSAFE_useScrollRestoration` hook (already guarded) and inlines the same restore logic with every storage call guarded.
+
+  **Regression tests:**
+  - With `sessionStorage` and `localStorage` both throwing: load, navigation and Back produce no uncaught or console errors. This **fails** on the old code.
+  - With normal storage, Back still restores a scrolled position.
+
+  An A/B run gave identical restore positions with the stock and the new component.
+- **N3, unused poster: fixed.** `gaurav-os-poster.jpg` was only ever copied in by `prepare-data` from `docs/media` (the legacy static site, which keeps its own copy and still uses it). Nothing in the app referenced it.
+
+  **The fix:**
+  - The copy step and its `.gitignore` line are removed.
+  - The local generated duplicate (byte-identical to `docs/media/gaurav-os-poster.jpg`) is deleted.
+
+  **Regression check:** a unit test requires that `public/media` holds no `gaurav-os-poster.*` and that `prepare-data` never mentions it.
+- **N5 (new, P3, existing behaviour, not fixed):** scroll restoration on Back lands a constant 408 px short of the original position on `/projects` (600 → 192, 1600 → 1192, 3000 → 2592). It is the same with React Router's stock component (measured A/B), so it was not introduced here. It is probably content of that height mounting above the page after the position is applied.
 - **N4 (note):** the introduction is a full-screen interstitial for every fresh session, including visitors arriving from search. It is owner-requested. Search engines can treat interstitials that cover content on mobile as a ranking negative, so keep this in mind.
 
 ---
