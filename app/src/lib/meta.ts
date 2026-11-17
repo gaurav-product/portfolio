@@ -3,6 +3,15 @@ import { profile } from "~/content/profile";
 export const SITE_URL = (import.meta.env.VITE_SITE_URL as string | undefined)?.replace(/\/$/, "") || "";
 export const BASE = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
 export const asset = (p: string) => BASE + p;
+/** The address a page is actually served at. Every route is prerendered to <route>/index.html, and GitHub Pages
+ *  answers "/research/7" with a 301 to "/research/7/", so canonical, og:url and sitemap URLs carry the trailing
+ *  slash and point straight at the final page (no redirect). Files (a dot in the last segment) are left alone. */
+export function pagePath(p: string) {
+  const m = p.match(/^([^?#]*)(.*)$/)!;
+  const [, pathname, rest] = m;
+  if (pathname === "" || pathname.endsWith("/") || /\.[a-z0-9]+$/i.test(pathname)) return (pathname || "/") + rest;
+  return `${pathname}/${rest}`;
+}
 
 /** Search snippets read best between 50 and 160 characters: short descriptions gain the site
  *  context, long ones are cut at a word boundary. Content itself is never rewritten. */
@@ -30,8 +39,8 @@ export function seo(title: string, rawDescription: string, path: string, image =
     { name: "twitter:description", content: description },
   ];
   if (SITE_URL) {
-    tags.push({ property: "og:url", content: SITE_URL + path }, { property: "og:image", content: SITE_URL + image },
-      { name: "twitter:image", content: SITE_URL + image }, { tagName: "link", rel: "canonical", href: SITE_URL + path });
+    tags.push({ property: "og:url", content: SITE_URL + pagePath(path) }, { property: "og:image", content: SITE_URL + image },
+      { name: "twitter:image", content: SITE_URL + image }, { tagName: "link", rel: "canonical", href: SITE_URL + pagePath(path) });
   }
   return tags;
 }

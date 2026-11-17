@@ -174,7 +174,7 @@ export default function Explore() {
                 {districts.map((x) => (
                   <li key={x.id}>
                     <button ref={(el) => { labels.current[x.id] = el; }} type="button" onClick={() => { setTour(null); select(x.id); }} aria-pressed={selected === x.id}
-                      className={cx("group pointer-events-auto absolute left-0 top-0 inline-flex min-h-10 items-center whitespace-nowrap rounded-full border px-3 text-sm backdrop-blur-md transition-colors",
+                      className={cx("group pointer-events-auto absolute left-0 top-0 inline-flex min-h-10 focus-visible:z-30 items-center whitespace-nowrap rounded-full border px-3 text-sm backdrop-blur-md transition-colors",
                         selected === x.id ? "border-green bg-green text-green-ink font-semibold" : "border-line bg-bg/75 text-ink hover:border-green/60 focus-visible:border-green")}>
                       <Icon name={x.icon} size={16} />
                       {/* the name is always in the accessible name; visually it opens on hover, focus or selection — the world sign carries it otherwise */}
@@ -205,7 +205,8 @@ export default function Explore() {
               </div>
             )}
             <p className="pointer-events-none absolute bottom-3 left-4 right-4 text-xs text-dim">Drag to orbit · scroll to zoom · Tab through districts · Esc to close · abstract architecture, not real facilities</p>
-            {d && <div className="absolute right-3 top-3 max-h-[calc(100%-24px)] w-[min(400px,calc(100%-24px))] overflow-y-auto rounded-[var(--radius-card)]">{Panel}</div>}
+            {/* z-20: district labels follow their buildings and pass BEHIND the open panel; a keyboard-focused label rises above it */}
+            {d && <div data-oz-avoid className="absolute right-3 top-3 z-20 max-h-[calc(100%-24px)] w-[min(400px,calc(100%-24px))] overflow-y-auto rounded-[var(--radius-card)] oz-clear">{Panel}</div>}
           </div>
         </Container>
       )}

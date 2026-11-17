@@ -59,6 +59,38 @@ export function boardTexture(lines: string[], tag: string, accent: string) {
   });
   return finish(c);
 }
+/** "Screens to be added" board: text on the left, three EMPTY dashed phone outlines on the right. The outlines
+ *  hold no interface at all, so nothing can be mistaken for a real product screen. */
+export function placeholderTexture(lines: string[], tag: string, accent: string) {
+  const { c, g } = canvas(1280, 800);
+  const grd = g.createLinearGradient(0, 0, 1280, 800); grd.addColorStop(0, "#0E1715"); grd.addColorStop(1, "#121D1A");
+  g.fillStyle = grd; g.fillRect(0, 0, 1280, 800);
+  g.strokeStyle = hexA(accent, 0.18); g.lineWidth = 1;
+  for (let x = 40; x < 1280; x += 40) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, 800); g.stroke(); }
+  for (let y = 40; y < 800; y += 40) { g.beginPath(); g.moveTo(0, y); g.lineTo(1280, y); g.stroke(); }
+  g.strokeStyle = hexA(accent, 0.5); g.lineWidth = 3; g.strokeRect(18, 18, 1244, 764);
+  g.fillStyle = accent; g.font = "600 28px 'IBM Plex Mono', ui-monospace, monospace"; g.fillText(tag.toUpperCase(), 72, 102);
+  let y = 210;
+  lines.forEach((l, i) => {
+    if (!l) { y += 22; return; }
+    const head = i < 2;
+    g.font = head ? "700 60px 'Space Grotesk', Inter, sans-serif" : "500 32px Inter, system-ui, sans-serif";
+    g.fillStyle = head ? "#F3F6F4" : "#B9C4BF";
+    for (const part of wrap(g, l, 600)) { g.fillText(part, 72, y); y += head ? 70 : 46; }
+  });
+  // three empty phone outlines, dashed: placeholders, not mock-ups
+  g.setLineDash([12, 10]); g.lineWidth = 3;
+  [[760, 190], [930, 150], [1100, 190]].forEach(([x, top], i) => {
+    const w = 140, h = 300, r = 22;
+    g.strokeStyle = hexA(accent, i === 1 ? 0.75 : 0.45);
+    g.beginPath(); g.moveTo(x + r, top); g.arcTo(x + w, top, x + w, top + h, r); g.arcTo(x + w, top + h, x, top + h, r);
+    g.arcTo(x, top + h, x, top, r); g.arcTo(x, top, x + w, top, r); g.closePath(); g.stroke();
+  });
+  g.setLineDash([]);
+  g.fillStyle = hexA(accent, 0.8); g.font = "600 22px 'IBM Plex Mono', ui-monospace, monospace";
+  g.fillText("AWAITING REAL SCREENS", 838, 560);
+  return finish(c);
+}
 function wrap(g: CanvasRenderingContext2D, s: string, w: number) {
   const out: string[] = []; let line = "";
   for (const word of s.split(" ")) { const t = line ? `${line} ${word}` : word; if (g.measureText(t).width > w && line) { out.push(line); line = word; } else line = t; }

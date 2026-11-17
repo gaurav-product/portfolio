@@ -13,6 +13,11 @@ export function Wordmark({ className = "" }: { className?: string }) {
   return <span className={cx("font-display text-[22px] font-bold tracking-tight", className)}>Gaurav<span className="text-green">.OS</span></span>;
 }
 
+/** "Open menu" works from first paint. Until the header has hydrated, a click on the prerendered button only
+ *  records the intent here; the header opens the drawer the moment it mounts (progressive enhancement: the
+ *  click is never lost on a slow phone or a busy CPU). Inlined in <head> by root.tsx. */
+export const MENU_EARLY_SCRIPT = `document.addEventListener("click",function(e){var t=e.target&&e.target.closest&&e.target.closest("[data-menu-open]");if(t&&!window.__gosMenuReady){window.__gosMenuPending=true;t.setAttribute("aria-expanded","true")}},true)`;
+
 export function Header() {
   const [open, setOpen] = useState(false);
   const { openSearch } = useSearch();
@@ -20,7 +25,14 @@ export function Header() {
   const drawerRef = useRef<HTMLDivElement>(null);
   const menuBtn = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => setOpen(false), [loc.pathname]);
+  // close on navigation, but not on first mount (that would cancel a tap made just as the page hydrated)
+  const lastPath = useRef(loc.pathname);
+  useEffect(() => { if (lastPath.current !== loc.pathname) { lastPath.current = loc.pathname; setOpen(false); } }, [loc.pathname]);
+  useEffect(() => {
+    const w = window as unknown as { __gosMenuReady?: boolean; __gosMenuPending?: boolean };
+    w.__gosMenuReady = true;
+    if (w.__gosMenuPending) { w.__gosMenuPending = false; setOpen(true); } // a tap made before hydration
+  }, []);
   useEffect(() => {
     if (!open) return;
     const prev = document.activeElement as HTMLElement | null;
@@ -55,7 +67,7 @@ export function Header() {
           <Link to="/recruiter" data-magnetic onClick={() => track("recruiter_mode_opened")} aria-label="Recruiter Mode" title="Recruiter Mode"
             className="inline-flex h-10 items-center gap-2 rounded-full px-3 text-sm text-muted transition-colors hover:bg-raise hover:text-ink"><Icon name="recruiter" /><span className="hidden xl:inline whitespace-nowrap">Recruiter Mode</span></Link>
           <a href={asset(profile.cvFile)} download="Gaurav-Kumar-Singh-CV.pdf" data-magnetic onClick={() => track("cv_downloaded")} className="hidden md:inline-flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-sm font-semibold text-bg transition-colors hover:bg-white"><Icon name="download" size={16} />CV</a>
-          <button ref={menuBtn} type="button" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="nav-drawer" aria-label="Open menu" title="Menu"
+          <button ref={menuBtn} type="button" data-menu-open onClick={() => setOpen(true)} aria-expanded={open} aria-controls="nav-drawer" aria-label="Open menu" title="Menu"
             className="inline-flex size-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:bg-raise"><Icon name="menu" /></button>
         </div>
       </div>

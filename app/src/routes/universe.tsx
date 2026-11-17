@@ -334,7 +334,7 @@ function StudyPanel({ s, index, total, filtered, onPrev, onNext, onClose }: { s:
         </div>
         <button type="button" onClick={onClose} className="grid size-10 shrink-0 place-items-center rounded-full border border-white/15 hover:bg-white/10" data-testid="close-study"><Icon name="close" size={16} /><span className="sr-only">Close the study and return to the Earth</span></button>
       </header>
-      <div className="flex-1 overflow-y-auto px-5 py-4">
+      <div className="oz-clear flex-1 overflow-y-auto px-5 py-4">
         <p className="font-mono text-[11px] uppercase tracking-[.14em] text-amber">Case study (research) — not a launched product</p>
         <div className="mt-3 flex flex-wrap items-center gap-1.5">
           <Pill tone={evidenceTone(s.evidence_level)}>{s.evidence_level}</Pill>
@@ -402,7 +402,7 @@ function StudyBrowser({ flat, why, filter, shown, selected, onFilter, onPick, on
           {isFiltered(filter) && <button type="button" onClick={() => { setQ(""); onFilter({ q: "", cats: [], levels: [], has: [] }); }} className="underline underline-offset-4 hover:text-white">Clear filters</button>}
         </p>
       </div>
-      <ol className={cx("grid gap-1.5", flat ? "mt-4 sm:grid-cols-2 lg:grid-cols-3" : "flex-1 overflow-y-auto p-3")} data-testid="study-list">
+      <ol className={cx("grid gap-1.5", flat ? "mt-4 sm:grid-cols-2 lg:grid-cols-3" : "oz-clear flex-1 overflow-y-auto p-3")} data-testid="study-list">
         {shown.map((s) => (
           <li key={s.day}>
             <button type="button" onClick={() => onPick(s.day)} onFocus={() => onFocus(s.day)} onMouseEnter={() => onFocus(s.day)} aria-current={selected === s.day ? "true" : undefined}
@@ -428,12 +428,23 @@ const TONE_DOT: Record<Planet["tone"], string> = { green: "#6BE39A", cyan: "#35D
 
 /** Every body in orbit order: the keyboard / screen-reader way into the system (a rail on wide screens, a strip on phones). */
 function PlanetRail({ current, onPick, onFocus, onBlur }: { current: string | null; onPick: (s: string) => void; onFocus: (s: string) => void; onBlur: () => void }) {
+  // phones: show that the strip continues (edge fade + arrow) until it has been scrolled to its end
+  const strip = useRef<HTMLOListElement>(null);
+  const [more, setMore] = useState(false);
+  useEffect(() => {
+    const el = strip.current; if (!el) return;
+    const check = () => setMore(el.scrollWidth - el.clientWidth - el.scrollLeft > 8);
+    check(); el.addEventListener("scroll", check, { passive: true }); addEventListener("resize", check);
+    return () => { el.removeEventListener("scroll", check); removeEventListener("resize", check); };
+  }, []);
   return (
     <nav aria-label="Planets" data-testid="planet-list"
       className="absolute inset-x-0 bottom-0 z-20 pb-[max(0.75rem,env(safe-area-inset-bottom))] side:inset-x-auto side:bottom-auto side:left-[max(1rem,env(safe-area-inset-left))] side:top-[84px] side:pb-0">
       <p className="sr-only">The Sun at the centre is Gaurav.OS. Choose a planet to see what it holds.</p>
       {/* phones: the strip's scroller ends before Oz's resting spot (bottom-right), so no chip sits under it */}
-      <ol className="mr-24 flex gap-2 overflow-x-auto px-3 side:mr-0 side:w-[236px] side:flex-col side:gap-1.5 side:overflow-visible side:px-0 side:pr-0">
+      <p className="sr-only side:hidden">The planet list scrolls sideways: {planets.length} planets in all.</p>
+      <div className="relative mr-24 side:mr-0">
+      <ol ref={strip} data-testid="planet-strip" className="flex gap-2 overflow-x-auto px-3 side:w-[236px] side:flex-col side:gap-1.5 side:overflow-visible side:px-0 side:pr-0">
         {planets.map((p, i) => (
           <li key={p.slug} className="shrink-0">
             <button type="button" onClick={() => onPick(p.slug)} onFocus={() => onFocus(p.slug)} onBlur={onBlur} onMouseEnter={() => onFocus(p.slug)} onMouseLeave={onBlur}
@@ -450,6 +461,12 @@ function PlanetRail({ current, onPick, onFocus, onBlur }: { current: string | nu
           </li>
         ))}
       </ol>
+      {more && (
+        <span aria-hidden data-testid="planet-strip-more" className="pointer-events-none absolute inset-y-0 right-0 flex w-14 items-center justify-end bg-gradient-to-l from-black/80 via-black/40 to-transparent pr-1.5 text-white/80 side:hidden">
+          <Icon name="right" size={16} />
+        </span>
+      )}
+      </div>
     </nav>
   );
 }
@@ -472,7 +489,7 @@ function PlanetPanel({ p, onClose, onEarth, onPrev, onNext }: { p: Planet; onClo
         </div>
         <button type="button" onClick={onClose} className="grid size-10 shrink-0 place-items-center rounded-full border border-white/15 hover:bg-white/10" data-testid="close-planet"><Icon name="close" size={16} /><span className="sr-only">Close and return to the whole system</span></button>
       </header>
-      <div className="flex-1 overflow-y-auto px-5 py-4">
+      <div className="oz-clear flex-1 overflow-y-auto px-5 py-4">
         <p className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1 font-mono text-[11px] uppercase tracking-[.12em] text-white/85">
           <span aria-hidden className="size-2 rounded-full" style={{ background: TONE_DOT[p.tone] }} />{p.statusLabel}
         </p>

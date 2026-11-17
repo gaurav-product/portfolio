@@ -160,6 +160,10 @@ test.describe("pages", () => {
     const first = await page.getByTestId("skill-source").locator("option").nth(1).getAttribute("value");
     await page.getByTestId("skill-source").selectOption(first!);
     await expect(page).toHaveURL(new RegExp(`source=${encodeURIComponent(first!)}`));
+    // wait for the filtered list to settle (rendered cards = the page's own "N of M capabilities" count) before
+    // taking the per-card snapshot; otherwise a card can drop out between the snapshot and its check
+    const summary = page.getByText(/^\d+ of \d+ capabilities$/);
+    await expect.poll(async () => (await cards.count()) === Number((await summary.textContent())?.split(" ")[0])).toBe(true);
     for (const c of await cards.all()) await expect(c.getByTestId("skill-how")).toHaveAttribute("aria-expanded", "true"); // opened to show that evidence
     expect(errs).toEqual([]);
   });

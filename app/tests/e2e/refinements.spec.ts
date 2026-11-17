@@ -14,14 +14,14 @@ test("J12 intro film — inline 9:16 player, nothing loads before play, the CTA 
   const v = page.getByTestId("intro-video");
   await expect(v).toHaveAccessibleName("Gaurav.OS introduction film, 0:45");
   expect(await v.evaluate((el: HTMLVideoElement) => ({ controls: el.controls, inline: el.playsInline, preload: el.preload, autoplay: el.autoplay, paused: el.paused, poster: new URL(el.poster).pathname, src: el.querySelector("source")!.getAttribute("src") })))
-    .toEqual({ controls: true, inline: true, preload: "none", autoplay: false, paused: true, poster: "/media/gaurav-os-intro-45s-poster.webp", src: "/media/gaurav-os-intro-45s.mp4" });
+    .toEqual({ controls: true, inline: true, preload: "none", autoplay: false, paused: true, poster: "/media/gaurav-os-intro-45s-poster.jpg", src: "/media/gaurav-os-intro-45s.mp4" });
   // 9:16 frame reserved before any media loads (no layout shift), never cropped
   const box = await v.boundingBox();
   expect(Math.abs(box!.width / box!.height - 9 / 16)).toBeLessThan(0.01);
   expect(await v.evaluate((el) => getComputedStyle(el).objectFit)).toBe("contain");
-  const poster = await page.request.get("/media/gaurav-os-intro-45s-poster.webp");
+  const poster = await page.request.get("/media/gaurav-os-intro-45s-poster.jpg");
   expect(poster.status()).toBe(200);
-  expect(poster.headers()["content-type"]).toContain("image/webp");
+  expect(poster.headers()["content-type"]).toContain("image/jpeg");
   await page.waitForTimeout(1500);
   expect(filmRequests).toEqual([]); // the 22 MB film is not fetched until someone presses play
 

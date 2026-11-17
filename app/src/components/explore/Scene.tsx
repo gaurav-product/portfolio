@@ -107,12 +107,13 @@ function Sign({ d, tone, lit, offsetX = 0 }: { d: District; tone: THREE.Color; l
     return t;
   }, [d, tone]);
   useEffect(() => () => tex.dispose(), [tex]);
-  const W = 4.4, H = W * 192 / 1024;
+  // sized and tilted so the name reads at the default view (about 2× the earlier on-screen text height)
+  const W = 6, H = W * 192 / 1024;
   // leans back toward the default camera so the name reads from above the city
   return (
     <group position={[offsetX, 0, PLAZA + 0.45]}>
       {[-W / 2 + 0.25, W / 2 - 0.25].map((x) => <mesh key={x} position={[x, 0.25, -0.05]}><boxGeometry args={[0.07, 0.5, 0.07]} /><meshLambertMaterial color={C.body} /></mesh>)}
-      <group position-y={0.5} rotation-x={-0.55}>
+      <group position-y={0.5} rotation-x={-0.95}>
         <mesh position-y={H / 2}><planeGeometry args={[W, H]} /><meshBasicMaterial map={tex} toneMapped={false} /></mesh>
         <mesh position={[0, 0.015, 0.003]}><planeGeometry args={[W, 0.035]} /><meshBasicMaterial color={tone} transparent opacity={lit ? 1 : 0.7} /></mesh>
       </group>

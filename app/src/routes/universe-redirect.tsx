@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { UNIVERSE_REDIRECTS } from "~/content/universe";
-import { BASE, SITE_URL } from "~/lib/meta";
+import { BASE, SITE_URL, pagePath } from "~/lib/meta";
 import type { Route } from "./+types/universe-redirect";
 
 /**
@@ -26,7 +26,7 @@ export const meta = ({ params }: Route.MetaArgs) => {
     { title: "Moved · Gaurav.OS" },
     { name: "robots", content: "noindex" },
     { httpEquiv: "refresh", content: `0; url=${BASE}${to}` },
-    ...(SITE_URL ? [{ tagName: "link", rel: "canonical", href: SITE_URL + to }] : []),
+    ...(SITE_URL ? [{ tagName: "link", rel: "canonical", href: SITE_URL + pagePath(to) }] : []),
   ];
 };
 

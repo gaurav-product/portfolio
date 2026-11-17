@@ -2,7 +2,6 @@ node_modules/
 build/
 .react-router/
 public/media/gaurav-os-intro.mp4
-public/media/gaurav-os-poster.jpg
 src/data/generated/
 test-results/
 playwright-report/

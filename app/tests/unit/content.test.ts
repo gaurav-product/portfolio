@@ -90,21 +90,29 @@ describe("referential integrity", () => {
 });
 
 describe("media and screenshots", () => {
-  it("ships only the optimised film encodes, each under 5 MB", () => {
-    for (const f of ["gaurav-os-intro-av1-1080p.mp4", "gaurav-os-intro-h264-720p.mp4"]) {
-      const p = path.join(ROOT, "public/media", f);
-      expect(fs.existsSync(p), f).toBe(true);
-      expect(fs.statSync(p).size).toBeLessThan(5 * 1024 * 1024);
-    }
-    expect(fs.existsSync(path.join(ROOT, "public/media/gaurav-os-intro.mp4"))).toBe(false);
-  });
-  it("ships the 45-second intro film locally, streamable (index first), with its poster", () => {
+  it("ships one introduction film: the 45-second master, streamable (index first), and no older encodes", () => {
     const p = path.join(ROOT, "public/media/gaurav-os-intro-45s.mp4");
     const head = fs.readFileSync(p).subarray(0, 64).toString("latin1");
     expect(head.slice(4, 8)).toBe("ftyp");
     expect(head.indexOf("moov")).toBeGreaterThan(0); // "faststart": playback can begin before the whole file arrives
     expect(fs.statSync(p).size).toBeLessThan(25 * 1024 * 1024);
-    expect(fs.existsSync(path.join(ROOT, "public/media/gaurav-os-intro-45s-poster.webp"))).toBe(true);
+    const media = fs.readdirSync(path.join(ROOT, "public/media"));
+    expect(media.filter((f) => /^gaurav-os-intro.*[.](mp4|webm|mov)$/.test(f))).toEqual(["gaurav-os-intro-45s.mp4"]);
+    for (const old of ["gaurav-os-intro-av1-1080p.mp4", "gaurav-os-intro-h264-720p.mp4", "gaurav-os-intro.mp4", "gaurav-os-poster.webp", "gaurav-os-poster.jpg", "gaurav-os-intro-45s-poster.webp"]) expect(media, old).not.toContain(old);
+    // the data step must not copy the legacy site's poster back in (it lives in docs/media for the old static site)
+    expect(fs.readFileSync(path.join(ROOT, "scripts/prepare-data.mjs"), "utf8")).not.toContain("gaurav-os-poster");
+  });
+  it("the poster is the owner-supplied thumbnail: a real JPEG, 1080 × 1920 (9:16), referenced by both players", () => {
+    const b = fs.readFileSync(path.join(ROOT, "public/media/gaurav-os-intro-45s-poster.jpg"));
+    expect([b[0], b[1], b[2]]).toEqual([0xff, 0xd8, 0xff]); // JPEG data under a .jpg name
+    let i = 2, size: number[] = [];
+    while (i < b.length) { const m = b[i + 1], len = b.readUInt16BE(i + 2); if (m >= 0xc0 && m <= 0xc3) { size = [b.readUInt16BE(i + 7), b.readUInt16BE(i + 5)]; break; } i += 2 + len; }
+    expect(size).toEqual([1080, 1920]);
+    const film = fs.readFileSync(path.join(ROOT, "src/components/IntroFilm.tsx"), "utf8");
+    expect(film).toContain('poster: "/media/gaurav-os-intro-45s-poster.jpg"');
+    expect(film).toContain('src: "/media/gaurav-os-intro-45s.mp4"');
+    const gate = fs.readFileSync(path.join(ROOT, "src/components/IntroGate.tsx"), "utf8");
+    expect(gate).toContain("poster={asset(FILM.poster)}"); expect(gate).toContain("src={asset(FILM.src)}");
   });
   it("the portrait is replaceable and present", () => {
     expect(profile.portrait.src).toBeTruthy();

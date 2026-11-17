@@ -82,6 +82,7 @@ export function GuideRoot() {
      clear. Measured on Oz's layout box, which the slide transform does not move, so it cannot flicker.
      A spot the visitor chose by dragging Oz is respected: it never steps away from where it was put. */
   const [avoid, setAvoid] = useState(false);
+  const [bubbleBlocked, setBubbleBlocked] = useState(false);
   useEffect(() => {
     if (hidden || open) { setAvoid(false); document.documentElement.dataset.ozChecked = ""; return; }
     const narrow = matchMedia("(max-width: 639px)");
@@ -90,6 +91,15 @@ export function GuideRoot() {
     const check = () => {
       raf = 0;
       const box = host.current?.getBoundingClientRect();
+      // at every size: hold the speech bubble back while the area it would cover (above Oz, about 260 × 110 px)
+      // overlaps marked content, e.g. the intro film player's controls
+      if (box) {
+        const z = { left: box.right - 260, right: box.right, top: box.top - 110, bottom: box.bottom };
+        setBubbleBlocked(Array.from(document.querySelectorAll("[data-oz-avoid]")).some((el) => {
+          const r = el.getBoundingClientRect();
+          return r.width > 0 && r.right > z.left && r.left < z.right && r.bottom > z.top && r.top < z.bottom;
+        }));
+      }
       if (!box || !narrow.matches || pos) { setAvoid(false); document.documentElement.dataset.ozChecked = ""; return; }
       const hit = Array.from(document.querySelectorAll("[data-oz-avoid]")).some((el) => {
         const r = el.getBoundingClientRect();
@@ -103,19 +113,24 @@ export function GuideRoot() {
     schedule();
     const late = setTimeout(schedule, 400); // the new page's content may mount just after the route change
     addEventListener("scroll", schedule, { passive: true }); addEventListener("resize", schedule);
+    // content that opens without a scroll (e.g. the 3D city's district panel) also needs a re-check
+    const mo = new MutationObserver(schedule); mo.observe(document.body, { childList: true, subtree: true });
     narrow.addEventListener("change", schedule);
-    return () => { cancelAnimationFrame(raf); clearTimeout(late); removeEventListener("scroll", schedule); removeEventListener("resize", schedule); narrow.removeEventListener("change", schedule); };
+    return () => { mo.disconnect(); cancelAnimationFrame(raf); clearTimeout(late); removeEventListener("scroll", schedule); removeEventListener("resize", schedule); narrow.removeEventListener("change", schedule); };
   }, [hidden, open, loc.pathname, pos]);
   useEffect(() => {
     if (open || hidden || cinematic || avoid) return; // never talk over the cinematic universe, or while stepped aside
     const firstVisit = !store.get(KEY.seen);
     const nudged = store.sget(KEY.nudged);
     if (nudged) return;
-    const t = setTimeout(() => {
+    const fire = () => {
       if (document.hidden) return;
+      // the full-screen introduction is showing: say hello once the visitor is in the portfolio
+      if (document.documentElement.hasAttribute("data-intro")) { t = setTimeout(fire, 2000); return; }
       setBubble(firstVisit ? "Hi! I'm Oz 👋 Ask me about Gaurav's work — in English or Hindi!" : NUDGES[Math.floor(Math.random() * NUDGES.length)]);
       store.sset(KEY.nudged, "1");
-    }, firstVisit ? 5000 : 45000);
+    };
+    let t = setTimeout(fire, firstVisit ? 5000 : 45000);
     return () => clearTimeout(t);
   }, [open, hidden, cinematic, avoid]);
   useEffect(() => { if (!bubble) return; const t = setTimeout(() => setBubble(null), 9000); return () => clearTimeout(t); }, [bubble]);
@@ -211,7 +226,7 @@ export function GuideRoot() {
     <GuideCtx.Provider value={{ state, send, open, setOpen, turns, setTurns, lang, setLang, mouth }}>
       <div ref={host} className="oz-root fixed z-[45] print:hidden" style={{ right: `calc(16px + ${off.x}px)`, bottom: `calc(16px + ${off.y}px + env(safe-area-inset-bottom, 0px))` }} data-testid="oz"
         data-stepped-aside={avoid ? "" : undefined} inert={avoid || undefined}>
-        {bubble && !open && !avoid && (
+        {bubble && !open && !avoid && !bubbleBlocked && (
           <div role="status" className={`oz-bubble absolute bottom-[86px] w-max max-w-[240px] rounded-2xl rounded-br-sm border border-green/40 bg-surface px-3.5 py-2.5 text-sm text-ink shadow-[0_12px_40px_-10px_rgb(0_0_0/.8)] ${onLeft ? "left-0 rounded-bl-sm rounded-br-2xl" : "right-0"}`}>
             {bubble}
             <button type="button" onClick={() => setBubble(null)} aria-label="Dismiss message" className="ml-2 inline-flex size-6 items-center justify-center rounded-full align-middle text-dim hover:text-ink">×</button>

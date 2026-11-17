@@ -64,7 +64,7 @@ export function CaseStudyPanel({ d, section, onSection, onGallery, onBack, backL
       </header>
 
       {(open || !compact) && (
-        <div ref={body} role="tabpanel" tabIndex={0} aria-label="Case study content" className="min-h-0 flex-1 overflow-y-auto px-5 py-5 text-[15px] leading-relaxed">
+        <div ref={body} role="tabpanel" tabIndex={0} aria-label="Case study content" className="oz-clear min-h-0 flex-1 overflow-y-auto px-5 py-5 text-[15px] leading-relaxed">
           {tab === "summary" && (v ? <VentureBody v={v} bare headingLevel={1} /> : p ? (
             <div className="grid gap-5">
               <dl className="grid grid-cols-[110px_1fr] gap-x-4 gap-y-2 text-sm">
@@ -119,7 +119,7 @@ export function CaseStudyPanel({ d, section, onSection, onGallery, onBack, backL
                 <li key={i}>
                   <button type="button" onClick={() => onGallery(i)} data-cursor="open" className="group block w-full overflow-hidden rounded-xl border border-white/10 text-left hover:border-green/50">
                     {g.src ? <img src={asset(g.panel ?? g.src)} alt="" loading="lazy" className="aspect-[16/10] w-full object-cover object-top" />
-                      : <span className="grid aspect-[16/10] place-items-center bg-[#121C19] px-3 text-center text-xs text-muted">{g.lines?.[0] ?? g.title}</span>}
+                      : <span className={cx("grid aspect-[16/10] place-items-center bg-[#121C19] px-3 text-center text-xs text-muted", g.kind === "missing" && "border border-dashed border-green/40")}>{g.kind === "missing" && g.lines ? g.lines.slice(0, 2).join(" ") : g.lines?.[0] ?? g.title}</span>}
                     <span className="block px-2.5 py-2 text-xs"><span className="block truncate font-medium text-ink">{g.title}</span><span className="block truncate text-[10.5px] uppercase tracking-[.08em] text-amber">{g.label}</span></span>
                   </button>
                 </li>

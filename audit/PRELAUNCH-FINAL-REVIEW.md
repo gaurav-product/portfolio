@@ -1,6 +1,187 @@
-# Gaurav.OS — Pre-launch final review (Windows, updated 14 Nov 2026)
+# Gaurav.OS — Pre-launch final review (Windows, updated 16 Nov 2026)
 
-## 00. Publication, 14 Nov 2026 (current status; everything below §00 is the pre-launch record)
+## 000. Final production-readiness sprint, 16 Nov 2026: ON A BRANCH, NOT DEPLOYED
+
+**Production is unchanged.** It is still `main` @ `939a416`, deployed on 14 Nov (see §00). All the work below is on branch `postlaunch/final-publication-2026-11`, for the owner's review. Nothing has been merged or deployed.
+
+### New media (owner-supplied, 16 Nov 2026)
+
+| | Source | Measured | In the site |
+|---|---|---|---|
+| Film | `Gaurav_OS_Master_45s_FINAL.mp4`, identical in `portfolio-media-incoming` and `Downloads`. SHA-256 `35f855da…2d1d`, 22,162,290 B | 45.000 s; 1080 × 1920; 30 fps (1,350 frames); H.264 High L4.0, yuv420p; AAC-LC 48 kHz stereo, 45.000 s. Decodes with no errors; mean −24.9 dB, peak −3.6 dB | `app/public/media/gaurav-os-intro-45s.mp4` (same URL as before). Streams are **byte-identical** to the master (ffmpeg streamhash); the only change is a `-c copy -movflags +faststart` remux, putting the index first. It replaces the 14 Nov film, whose streams differ: the new one drops the "AI LAB" title at about 0:36 and has full-length audio |
+| Poster | `Gaurav_OS_Thumbnail.jpg`. SHA-256 `9b2debd1…a532`, 155,451 B | JPEG, 1080 × 1920 (9:16) | `app/public/media/gaurav-os-intro-45s-poster.jpg`, byte-identical. It is used by both players |
+
+**Removed (unused):** `gaurav-os-intro-av1-1080p.mp4`, `gaurav-os-intro-h264-720p.mp4`, `gaurav-os-poster.webp`, `gaurav-os-intro-45s-poster.webp` (the earlier frame-grab poster). No app source referenced them.
+
+**Content check of the film:** every on-screen status label matches the site:
+- Evamastu: Shipped (employer product)
+- Aaroh: Pre-launch · Prototype
+- GharGyaan: Prototype · Demo mode
+- Nexus: Prototype · Demo mode
+- RupeeRadar: Prototype · Not deployed
+- PhonePe Smart Spend Coach: Academic case study
+
+The film and thumbnail carry a small ✦ mark in the bottom-right corner, as supplied. It was not edited.
+
+### Full-screen introduction (new)
+
+`IntroGate`, rendered in the root `Layout`, shows on the **homepage** of a fresh browser session. *(Owner decision, 17 Nov: it was first built to show on any URL.)* A visitor who arrives on a project, case study, About, Recruiter or any other page by a direct link gets that page at once, with no introduction: the address, query, hash and history are as requested. The route is normalised against the deploy base, so `/` locally and `/portfolio/` on GitHub Pages both count as the homepage. No referrer or user-agent checks.
+
+- **Where it lives:**
+  - It overlays the requested page, so the path, query, hash and history are never touched.
+  - Its markup is prerendered but hidden by CSS. A small `<head>` script turns it on before first paint, only when `sessionStorage` has no completion flag. Crawlers and visitors without JavaScript get the portfolio as before.
+- **Playback:**
+  - The film starts muted where the browser allows it, with **Enable sound** focused, and a live status says "playing without sound".
+  - If autoplay is refused, or reduced motion or Data Saver is on, the poster stays with **Play with sound · 0:45**.
+  - **Skip intro · Enter portfolio** is always there, and Esc skips.
+- **Leaving:**
+  - At the end, the portfolio fades in by itself on the requested page, focus moves to `#main`, and a `#fragment` target is scrolled into view.
+  - Completion or Skip is remembered for the browser session.
+- **Failure:**
+  - A media error shows a visible message, "Try again", and Skip.
+  - If storage is blocked, the introduction shows once per page load.
+  - If the main JavaScript fails, the `<head>` fallback still makes Skip and Esc work.
+- **Replay:** "Watch full screen" in the homepage film section.
+- **Bypassed:** with `?nointro`, and in automated browsers (`navigator.webdriver`), so the existing suites and audits see the portfolio. The introduction has its own tests.
+
+### Backlog from §00/§5: what happened
+
+| Item | Result |
+|---|---|
+| P2-1 Day 07 "hotlinked" | **Fixed.** A build-time exact-match text fix (`build-studies.mjs`, `TEXT_FIXES`) now says the site serves an identical local copy of the Wikimedia file. [22], `Special:FilePath` and the attribution are kept. The build fails if the source sentence changes |
+| P2-2 `/explore/city` | **Fixed.** It is the same component and content as `/explore`, so a duplicate. Its canonical stays → `/explore/`, and the sitemap now lists only self-canonical pages (generic rule in `postbuild.mjs`) |
+| P2-3 PhonePe placeholder | **Improved, kept honest.** The 3D board now shows "Product screens / to be added" with three empty dashed phone outlines marked "Awaiting real screens". The gallery thumbnail is a dashed frame. No screens were fabricated. **Owner to supply:** real screens or Figma exports of the capstone's 5-screen prototype, if they can be shared |
+| P2-4 planet strip | **Fixed.** On phones, a right-edge fade and arrow show while more planets lie off-screen and disappear at the end. There is an sr-only hint. It clears Oz (checked) |
+| P2-5 city sign legibility | **Improved.** The signs are 36 % larger and tilted 0.95 rad toward the default camera. No overlaps in desktop screenshots |
+| P2-6 Oz over long panels | **Fixed.** An `.oz-clear` end spacer on the docked scroll panels (world case panel, planet panels, study list, city panel). On the PhonePe panel scrolled to the end, the last text is at 705 px against Oz at 801 px |
+| P2-7 city label bleed | **Fixed.** The panel is above the labels (`z-20`); a keyboard-focused label rises above it (`focus-visible:z-30`). Measured: 0 labels drawn over the open panel |
+| P2-8 three.js | **Kept as is (correct).** The 943 KB chunk is requested on `/explore`, not on the homepage (network log, desktop and mobile) |
+| P2-9 captions | **Draft only, not published.** A local whisper.cpp (`ggml-small.en`) transcript is in `audit/captions/`. It has five mis-heard names or phrases flagged for the owner (`REVIEW.md`) |
+| P2-10 trailing slash | **Fixed.** `pagePath()` gives the canonical, og:url, redirect canonicals and sitemap the slash-final GitHub Pages address (326 sitemap URLs, all final) |
+| P2-11 Oz greeting over the player | **Fixed.** The greeting is held while the area it would cover overlaps marked content (inline player, city panel), at every size, and re-checked when panels open. It waits until the introduction has closed |
+| P2-12 old film files | **Removed** (see above); the unit tests now guard that only the 45-second film ships and that the poster is a 1080 × 1920 JPEG |
+| P1-1 device QA | **Still pending.** Checklist: `audit/DEVICE-QA-CHECKLIST-2026-11.md` |
+
+### Verification (local, Windows, final source)
+
+| Check | Result |
+|---|---|
+| Typecheck | Passed (exit 0) |
+| Unit tests | **119 / 119** (8 files; adds `page-path.test.ts` and new media regression tests) |
+| Playwright, 1 worker, 6 shards | **214 passed, 0 failed, 2 skipped** (J17 at desktop width; the desktop-only Oz/player test on the mobile project). On the first pass, shard 5 had **1 failure**: "the menu drawer links the 3D Earth exactly once". It then passed 15 / 15 on its own and 36 / 36 in a shard rerun. It looks like the same intermittent "menu clicked before hydration" pattern as J10 on 14 Nov (see new item N1) |
+| Introduction tests (`intro-gate.spec.ts`) | Desktop and mobile; 5 consecutive repetitions: 85 passed, 0 failed, 5 skips (the desktop-only test on mobile) |
+| Accessibility (axe), all routes | **338 / 338 routes, 0 problems**, desktop and mobile. The introduction itself (ready and error states, desktop and mobile): 0 problems |
+| `/portfolio/` production build | 338 routes. 326 self-canonical pages plus 1 alias. 22,854 internal href/src/poster references, 0 broken. No old media referenced. `robots.txt` correct |
+| Introduction behaviour on the `/portfolio/` build | 83 / 83 checks across desktop, phone portrait and landscape, and tablet: poster, fit, muted autoplay, Enable sound, Play with sound, pause, end → portfolio, focus, session, deep link with query and hash, Back, Esc, keyboard trap, reduced motion, media failure, blocked storage, replay |
+| Homepage network | Desktop 45 requests / 1,592 KB; mobile 37 requests / 402 KB (with `?nointro`). No three.js chunk, no film bytes |
+
+### Final verification (17 Nov 2026), the current result
+
+**GitHub Actions on `076879c`:**
+- **PR run:** passed (226 passed, 2 skipped).
+- **Push run:** failed two desktop tests. Both are now fixed:
+  1. **J16 "portrait and RoboGuide": a hydration race in the product.**
+     - **Cause:** `RoboGuide` listened for `focusin` only after its effect ran, so focusing the /ask question box earlier was missed.
+     - **Fix:** on attaching, it also checks whether the box already has focus.
+     - **Regression test** (`resilience.spec.ts`): hold the JS bundles, focus the box, release. It **fails on the old code** and passes on the fix.
+  2. **"keyboard stays inside the introduction".**
+     - **Product fix:** when muted autoplay starts, focus moves to Enable sound only if focus has left the introduction. It no longer pulls focus away from a keyboard user who has tabbed elsewhere.
+     - **Test fix:** it now reaches Skip by Tab, allowing for the stops inside the video's native controls (play, timeline, volume, fullscreen), and still asserts that focus never leaves the introduction and that the ring is visible. 30 / 30 on 2 workers.
+
+| Check | Result |
+|---|---|
+| Typecheck | Passed (exit 0) |
+| Unit tests | **119 / 119** |
+| Playwright, 1 worker, 6 shards | **228 passed, 0 failed, 2 skipped** (230 tests). Shard 3 counts from its rerun: its first run failed the keyboard test on that test's original 4-press limit, which I corrected (see above). All other shards passed on their first run |
+| Accessibility (axe) | **338 / 338 routes, 0 problems**, desktop and mobile |
+| `/portfolio/` build and static checks | 326 self-canonical pages plus 1 alias; 326 slash-final sitemap URLs; 22,854 internal refs, 0 broken; no old media |
+| Media | Poster SHA-256 = the supplied thumbnail; film stream hashes = the supplied master |
+| Introduction checks on the `/portfolio/` build | **92 / 92**, including the fresh homepage and direct links (no introduction) |
+| `git diff --check`; patch | clean; `73176f92…f8697` unchanged |
+
+### Verification of the homepage-only introduction (17 Nov 2026), superseded by the final verification above
+
+This run was made on a machine short of memory: 1.85 GB free of 15.3 GB, with Chrome running 31 processes. Claude Code stopped one background audit, which was then re-run in the foreground with concurrency 1. Steps were run one at a time.
+
+| Check | Command | Result |
+|---|---|---|
+| Typecheck | `npm run typecheck` | Passed (exit 0) |
+| Unit tests | `npx vitest run` | **119 / 119** (8 files) |
+| Playwright, 1 worker | `npx playwright test --workers=1 --shard=N/6` × 6 | **224 passed, 2 failed, 2 skipped** of 228. Both failures were the route-sweep "every control works" test (desktop part 4/6, mobile part 5/6) hitting its 240 s test timeout. Those shards ran 12.4 and 17.2 min against about 6 min earlier, under memory pressure. Each passes on its own: **55.5 s and 52.6 s**. Neither touches the introduction. GitHub Actions gives an independent full run |
+| Accessibility (axe) | `node scripts/a11y-audit.cjs … desktop 1` / `… mobile 1` | **338 / 338 routes, 0 problems**, desktop and mobile (exit 0) |
+| `/portfolio/` build | `BASE_PATH=/portfolio/ VITE_SITE_URL=… npm run build` | exit 0; 338 routes |
+| Canonical, sitemap, links | static check on the build | 326 self-canonical pages plus 1 alias (`/explore/city → /explore/`); 326 slash-final sitemap URLs, each its own page's canonical; 22,854 internal href/src/poster references, **0 broken**; no old media; `robots.txt` correct; Day 07 no longer says "hotlinked" |
+| Media | `sha256sum`, ffmpeg `streamhash` | Poster = the supplied thumbnail (`9b2debd1…a532`). The film's video and audio stream hashes equal the supplied master (`35f855da…2d1d`); the film is `1a7c94f4…` because of the faststart remux |
+| Introduction checks on the `/portfolio/` build | scripted Chromium, as a normal visitor's browser | **92 / 92**: fresh **homepage** on desktop, phone portrait and landscape, and tablet; poster; muted autoplay with Enable sound; Play with sound; pause; the end → homepage; session; refresh; navigation; keyboard; reduced motion; media failure; blocked storage; replay. **Direct links** to `/about?…#certifications`, `/worlds/careconnect`, `/research/7`, `/projects/careconnect` and `/recruiter` open at once with no introduction, the address kept, no history entry, and no console errors. Homepage with query and hash: the introduction shows, and Esc keeps the address |
+| `git diff --check` | | Clean |
+| Excluded patch | `sha256sum` | `73176f92…f8697`, unchanged |
+
+Screenshots: `audit/screens/final-2026-11/` (`intro-*`, `direct-link-mobile-*-no-intro.jpg`).
+
+### Verification on the final source (16 Nov 2026, after the N1–N3 and CI fixes), historical
+
+| Check | Result |
+|---|---|
+| Typecheck | Passed (exit 0) |
+| Unit tests | **119 / 119** (8 files) |
+| Playwright, 1 worker, 6 shards | **222 passed, 0 failed, 2 skipped**. Every shard exited 0 on the **first** pass, with no reruns. The skips are by design: J17 at desktop width, and the desktop-only Oz/player test on the mobile project. This adds `resilience.spec.ts` (N1, N2 and scroll restoration, on both projects) and the late-`play()` race test |
+| New regression tests, proven | With the old code: the N1 and N2 tests **fail**. With the fixes: they pass (`resilience.spec.ts` 18 / 18 over 3 repetitions × 2 projects) |
+| Accessibility (axe) | **338 / 338 routes, 0 problems**, desktop and mobile |
+| `/portfolio/` production build | 338 routes. 326 self-canonical plus 1 alias (`/explore/city → /explore/`). 326 slash-final sitemap URLs. 22,854 internal refs, 0 broken. No old media; `gaurav-os-poster.jpg` no longer in `build/client/media` |
+| Assets | Poster SHA-256 = the supplied thumbnail (`9b2debd1…`). Film video and audio stream hashes = the supplied master. 45.000 s · 1080 × 1920 · 30 fps · H.264 + AAC stereo; index first |
+| Introduction on the `/portfolio/` build | 83 / 83 checks: fresh session on desktop, phone portrait and landscape, and tablet; poster; muted autoplay and Enable sound; Play with sound; the end → portfolio; deep link with path, query and hash; session memory; Back; Esc; keyboard; reduced motion; media failure; blocked storage; replay |
+| Homepage network | No three.js chunk, no film bytes (desktop 45 requests, mobile 37); `/explore` loads three.js on demand |
+
+**GitHub Actions on `67a16b5`: both runs FAILED one test each** (219 passed, 1 failed, 2 skipped; 2 workers). The two failures were different tests:
+
+1. **PR run, mobile: "Watch full screen" replay. Expected the introduction gone after Close; it was still in the page. A real bug in `IntroGate`, now fixed.**
+   - **Cause:** muted autoplay's `play()` can fulfil while its callback is still queued when the visitor closes. The callback then set the state back to "playing muted", so the (hidden) introduction re-rendered, and its film could keep playing unseen.
+   - **Fix:** a `closed` ref. A late `play()` result after close pauses the film and changes nothing, and late media errors are ignored.
+   - **Regression test** ("skipping before the muted autoplay has started…") models the late result. It **fails on the old code with the CI signature (expected 0, received 1)** and passes on the fix (10 / 10). The replay test passes 40 / 40 on 2 workers.
+   - The single local failure of this test on 16 Nov was most likely the same race; earlier I put it down to Oz covering the button.
+2. **Push run, desktop: "skills: domains filter…". Test race, test fixed, assertions unchanged.**
+   - **Cause:** the per-card snapshot (`cards.all()`) was taken while the filtered list was still re-rendering, so `nth(5)` vanished.
+   - **Fix:** the test now waits until the rendered card count equals the page's own "N of M capabilities" count, then checks every card as before. 20 / 20 on 2 workers.
+
+**Still requiring Gaurav:**
+- physical-device QA (P1-1, `DEVICE-QA-CHECKLIST-2026-11.md`)
+- caption review
+- PhonePe screens, if shareable
+- the merge and deploy decision
+
+### New findings N1–N3: fixed after owner review (16 Nov 2026)
+
+- **N1, menu tap lost before hydration: fixed.** There were two causes:
+  1. Before the bundle hydrates, the prerendered button has no handler.
+  2. The header's mount effect `setOpen(false)` cancelled a tap that landed just as the page hydrated.
+
+  **The fix:**
+  - A tiny `<head>` script (`MENU_EARLY_SCRIPT`) records an "Open menu" tap made before hydration, and the header opens the drawer the moment it mounts (progressive enhancement).
+  - The route-change reset now ignores the first mount.
+
+  **Regression test** (`resilience.spec.ts`): it holds back every JS bundle, taps "Open menu" on the bare prerendered page (with proof that the header has not mounted), releases the bundles, and requires the drawer to open and then close normally. It **fails** on the old code and passes on the new.
+- **N2, uncaught error with storage blocked: fixed.** React Router 7.18.5's `<ScrollRestoration>` inlines a restore script whose `catch` calls `sessionStorage.removeItem()`, which throws again when storage access itself is blocked.
+
+  **The fix:** `SafeScrollRestoration` keeps React Router's `UNSAFE_useScrollRestoration` hook (already guarded) and inlines the same restore logic with every storage call guarded.
+
+  **Regression tests:**
+  - With `sessionStorage` and `localStorage` both throwing: load, navigation and Back produce no uncaught or console errors. This **fails** on the old code.
+  - With normal storage, Back still restores a scrolled position.
+
+  An A/B run gave identical restore positions with the stock and the new component.
+- **N3, unused poster: fixed.** `gaurav-os-poster.jpg` was only ever copied in by `prepare-data` from `docs/media` (the legacy static site, which keeps its own copy and still uses it). Nothing in the app referenced it.
+
+  **The fix:**
+  - The copy step and its `.gitignore` line are removed.
+  - The local generated duplicate (byte-identical to `docs/media/gaurav-os-poster.jpg`) is deleted.
+
+  **Regression check:** a unit test requires that `public/media` holds no `gaurav-os-poster.*` and that `prepare-data` never mentions it.
+- **N5 (new, P3, existing behaviour, not fixed):** scroll restoration on Back lands a constant 408 px short of the original position on `/projects` (600 → 192, 1600 → 1192, 3000 → 2592). It is the same with React Router's stock component (measured A/B), so it was not introduced here. It is probably content of that height mounting above the page after the position is applied.
+- **N4: resolved by the 17 Nov owner decision.** The introduction now covers only a fresh **homepage** visit. Visitors arriving from search or a shared link on any other page get the content directly. The homepage itself still opens with it (owner-requested), and its content stays in the prerendered HTML for crawlers.
+
+---
+
+## 00. Publication, 14 Nov 2026 (historical; the production record for `939a416`)
 
 **Published.** The site is live at **https://gaurav-product.github.io/portfolio/**, deployed from `main` at merge commit `e0bc2c423bda1d5d6c8bc9d2c2c131d4ae0d5e1d`.
 

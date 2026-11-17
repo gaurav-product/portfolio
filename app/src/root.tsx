@@ -1,8 +1,8 @@
 import { isImmersive } from "~/lib/immersive";
-import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration, Link, useLocation } from "react-router";
+import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, Link, useLocation } from "react-router";
 import type { Route } from "./+types/root";
 import "./app.css";
-import { Header } from "./components/Header";
+import { Header, MENU_EARLY_SCRIPT } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { SearchProvider } from "./components/Search";
 import { Container } from "./components/ui";
@@ -10,6 +10,8 @@ import { asset } from "./lib/meta";
 import { GuideRoot } from "./guide/GuideRoot";
 import { Cursor } from "./interaction/Cursor";
 import { Transitions } from "./interaction/Transitions";
+import { IntroGate, INTRO_HEAD_SCRIPT } from "./components/IntroGate";
+import { SafeScrollRestoration } from "./lib/SafeScrollRestoration";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: asset("/favicon.svg"), type: "image/svg+xml" },
@@ -26,11 +28,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         {/* old addresses (prerendered redirect pages): carry the query string and hash to the new address before the meta refresh fires */}
         <script dangerouslySetInnerHTML={{ __html: KEEP_QUERY }} />
+        {/* before first paint: decide whether this visit opens with the full-screen introduction (IntroGate) */}
+        <script dangerouslySetInnerHTML={{ __html: INTRO_HEAD_SCRIPT }} />
+        {/* "Open menu" taps made before hydration are kept, not lost (Header) */}
+        <script dangerouslySetInnerHTML={{ __html: MENU_EARLY_SCRIPT }} />
         <Links />
       </head>
       <body>
+        <IntroGate />
         {children}
-        <ScrollRestoration />
+        <SafeScrollRestoration />
         <Scripts />
       </body>
     </html>

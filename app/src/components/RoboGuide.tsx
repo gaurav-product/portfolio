@@ -70,6 +70,8 @@ export function RoboGuide({ className = "" }: { className?: string }) {
     window.addEventListener("pointermove", onMove, { passive: true });
     document.addEventListener("focusin", onFocusIn);
     document.addEventListener("focusout", onFocusOut);
+    // the question box may already have focus (a tap made before this effect ran): attend straight away
+    if (document.activeElement?.id === "ask-input") attend();
     return () => {
       if (frame) cancelAnimationFrame(frame);
       io.disconnect();

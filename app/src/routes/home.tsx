@@ -10,6 +10,7 @@ import { Container, ButtonLink, SectionHeader, Pill, Button } from "~/components
 import { ProjectCard } from "~/components/cards";
 import { Icon } from "~/components/Icon";
 import { IntroFilm, FILM, FILM_ID, useIntroFilm } from "~/components/IntroFilm";
+import { replayIntro } from "~/components/IntroGate";
 import { Typewriter } from "~/components/Typewriter";
 import { HeroBackdrop } from "~/components/HeroBackdrop";
 import { Portrait } from "~/components/Portrait";
@@ -78,10 +79,15 @@ export default function Home() {
       <section id={FILM_ID} aria-labelledby="intro-film-title" className="scroll-mt-20 py-16 lg:py-20">
         <Container wide>
           <div className="grid items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
-            <div className="max-w-xl">
+            {/* data-oz-avoid: on phones Oz steps aside rather than sit over "Play here" / "Watch full screen" */}
+            <div className="max-w-xl" data-oz-avoid>
               <p className="eyebrow">Introduction film · {FILM.duration}</p>
               <h2 id="intro-film-title" className="mt-4 text-4xl font-bold sm:text-5xl">Gaurav.OS in 45 seconds</h2>
               <p className="mt-5 text-lg leading-relaxed text-muted">A short introduction to me and to what this site holds. It plays only when you press play.</p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button onClick={playFilm} variant="primary" icon="play" data-cursor="play" aria-controls={FILM_ID}>Play here</Button>
+                <Button onClick={replayIntro} icon="expand" data-testid="intro-replay">Watch full screen</Button>
+              </div>
             </div>
             <IntroFilm />
           </div>
