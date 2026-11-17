@@ -104,25 +104,48 @@ test.describe("full-screen introduction", () => {
     expect(await page.evaluate(() => [...document.querySelectorAll("video")].filter((v) => !v.paused && !v.closest("[data-testid=hero-backdrop]")).length)).toBe(0);
   });
 
-  test("deep link: Skip lands on the exact address (path, query, hash); Esc skips; a new session shows it again", async ({ browser }) => {
+  test("direct links (fresh session) open their content at once: no introduction, address and history untouched", async ({ browser }) => {
+    for (const [path, ready] of [
+      ["/about?from=intro-test#certifications", "#certifications"],
+      ["/worlds/careconnect", "h1:has-text(\"CareConnect\"), h2:has-text(\"CareConnect\")"],
+      ["/research/7", "main h1"],
+      ["/projects/careconnect", "main h1"],
+      ["/recruiter", "main h1"],
+    ] as const) {
+      const ctx = await browser.newContext(); await asVisitor(ctx);
+      const page = await ctx.newPage();
+      await page.goto(path);
+      await expect(page.locator(ready).first(), path).toBeVisible();
+      expect(await state(page), path).toBeNull();
+      await expect(page.getByTestId("intro-gate"), path).toHaveCount(0);
+      const u = new URL(page.url()), want = new URL(path, page.url());
+      expect([u.pathname.replace(/\/$/, ""), u.search, u.hash], path).toEqual([want.pathname.replace(/\/$/, ""), want.search, want.hash]);
+      expect(await page.evaluate(() => history.length), path).toBe(2); // about:blank + the page: nothing added
+      if (path.startsWith("/about")) await expect(page.locator("#certifications")).toBeInViewport();
+      await ctx.close();
+    }
+  });
+
+  test("arriving on a project and then going to the homepage in the same visit does not force the introduction", async ({ page }) => {
+    await asVisitor(page);
+    await page.goto("/projects");
+    await expect(page.locator("main h1").first()).toBeVisible();
+    await page.getByRole("link", { name: "Gaurav.OS — home" }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Gaurav Singh" })).toBeVisible();
+    expect(await state(page)).toBeNull();
+  });
+
+  test("homepage with a query and hash: the introduction shows; Esc skips and the address is kept", async ({ browser }) => {
     const ctx = await browser.newContext(); await asVisitor(ctx);
     const page = await ctx.newPage();
-    await page.goto("/about?from=intro-test#certifications");
+    await page.goto("/?utm_source=intro-test#glance");
     await expect(page.getByTestId("intro-gate")).toBeVisible();
-    await page.getByRole("button", { name: "Skip intro · Enter portfolio" }).click();
-    expect(await state(page)).toBeNull();
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("intro-gate")).toHaveCount(0);
     const u = new URL(page.url());
-    expect([u.pathname.replace(/\/$/, ""), u.search, u.hash]).toEqual(["/about", "?from=intro-test", "#certifications"]);
-    await expect(page.locator("#certifications")).toBeInViewport();
+    expect([u.pathname, u.search, u.hash]).toEqual(["/", "?utm_source=intro-test", "#glance"]);
+    await expect(page.locator("#glance")).toBeInViewport();
     await ctx.close();
-    const ctx2 = await browser.newContext(); await asVisitor(ctx2);
-    const p2 = await ctx2.newPage();
-    await p2.goto("/worlds/careconnect");
-    await expect(p2.getByTestId("intro-gate")).toBeVisible();
-    await p2.keyboard.press("Escape");
-    await expect(p2.getByTestId("intro-gate")).toHaveCount(0);
-    expect(new URL(p2.url()).pathname.replace(/\/$/, "")).toBe("/worlds/careconnect");
-    await ctx2.close();
   });
 
   test("keyboard stays inside the introduction, with a visible focus ring", async ({ page }) => {

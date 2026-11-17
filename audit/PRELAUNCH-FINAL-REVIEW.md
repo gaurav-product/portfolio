@@ -25,7 +25,7 @@ The film and thumbnail carry a small ✦ mark in the bottom-right corner, as sup
 
 ### Full-screen introduction (new)
 
-`IntroGate`, rendered in the root `Layout`, shows before the portfolio on a fresh browser session, on any URL.
+`IntroGate`, rendered in the root `Layout`, shows on the **homepage** of a fresh browser session. *(Owner decision, 17 Nov: it was first built to show on any URL.)* A visitor who arrives on a project, case study, About, Recruiter or any other page by a direct link gets that page at once, with no introduction: the address, query, hash and history are as requested. The route is normalised against the deploy base, so `/` locally and `/portfolio/` on GitHub Pages both count as the homepage. No referrer or user-agent checks.
 
 - **Where it lives:**
   - It overlays the requested page, so the path, query, hash and history are never touched.
@@ -75,7 +75,26 @@ The film and thumbnail carry a small ✦ mark in the bottom-right corner, as sup
 | Introduction behaviour on the `/portfolio/` build | 83 / 83 checks across desktop, phone portrait and landscape, and tablet: poster, fit, muted autoplay, Enable sound, Play with sound, pause, end → portfolio, focus, session, deep link with query and hash, Back, Esc, keyboard trap, reduced motion, media failure, blocked storage, replay |
 | Homepage network | Desktop 45 requests / 1,592 KB; mobile 37 requests / 402 KB (with `?nointro`). No three.js chunk, no film bytes |
 
-### Verification on the final source (16 Nov 2026, after the N1–N3 and CI fixes), which supersedes the table above
+### Verification of the homepage-only introduction (17 Nov 2026), the current result
+
+This run was made on a machine short of memory: 1.85 GB free of 15.3 GB, with Chrome running 31 processes. Claude Code stopped one background audit, which was then re-run in the foreground with concurrency 1. Steps were run one at a time.
+
+| Check | Command | Result |
+|---|---|---|
+| Typecheck | `npm run typecheck` | Passed (exit 0) |
+| Unit tests | `npx vitest run` | **119 / 119** (8 files) |
+| Playwright, 1 worker | `npx playwright test --workers=1 --shard=N/6` × 6 | **224 passed, 2 failed, 2 skipped** of 228. Both failures were the route-sweep "every control works" test (desktop part 4/6, mobile part 5/6) hitting its 240 s test timeout. Those shards ran 12.4 and 17.2 min against about 6 min earlier, under memory pressure. Each passes on its own: **55.5 s and 52.6 s**. Neither touches the introduction. GitHub Actions gives an independent full run |
+| Accessibility (axe) | `node scripts/a11y-audit.cjs … desktop 1` / `… mobile 1` | **338 / 338 routes, 0 problems**, desktop and mobile (exit 0) |
+| `/portfolio/` build | `BASE_PATH=/portfolio/ VITE_SITE_URL=… npm run build` | exit 0; 338 routes |
+| Canonical, sitemap, links | static check on the build | 326 self-canonical pages plus 1 alias (`/explore/city → /explore/`); 326 slash-final sitemap URLs, each its own page's canonical; 22,854 internal href/src/poster references, **0 broken**; no old media; `robots.txt` correct; Day 07 no longer says "hotlinked" |
+| Media | `sha256sum`, ffmpeg `streamhash` | Poster = the supplied thumbnail (`9b2debd1…a532`). The film's video and audio stream hashes equal the supplied master (`35f855da…2d1d`); the film is `1a7c94f4…` because of the faststart remux |
+| Introduction checks on the `/portfolio/` build | scripted Chromium, as a normal visitor's browser | **92 / 92**: fresh **homepage** on desktop, phone portrait and landscape, and tablet; poster; muted autoplay with Enable sound; Play with sound; pause; the end → homepage; session; refresh; navigation; keyboard; reduced motion; media failure; blocked storage; replay. **Direct links** to `/about?…#certifications`, `/worlds/careconnect`, `/research/7`, `/projects/careconnect` and `/recruiter` open at once with no introduction, the address kept, no history entry, and no console errors. Homepage with query and hash: the introduction shows, and Esc keeps the address |
+| `git diff --check` | | Clean |
+| Excluded patch | `sha256sum` | `73176f92…f8697`, unchanged |
+
+Screenshots: `audit/screens/final-2026-11/` (`intro-*`, `direct-link-mobile-*-no-intro.jpg`).
+
+### Verification on the final source (16 Nov 2026, after the N1–N3 and CI fixes), historical
 
 | Check | Result |
 |---|---|
@@ -134,7 +153,7 @@ The film and thumbnail carry a small ✦ mark in the bottom-right corner, as sup
 
   **Regression check:** a unit test requires that `public/media` holds no `gaurav-os-poster.*` and that `prepare-data` never mentions it.
 - **N5 (new, P3, existing behaviour, not fixed):** scroll restoration on Back lands a constant 408 px short of the original position on `/projects` (600 → 192, 1600 → 1192, 3000 → 2592). It is the same with React Router's stock component (measured A/B), so it was not introduced here. It is probably content of that height mounting above the page after the position is applied.
-- **N4 (note):** the introduction is a full-screen interstitial for every fresh session, including visitors arriving from search. It is owner-requested. Search engines can treat interstitials that cover content on mobile as a ranking negative, so keep this in mind.
+- **N4: resolved by the 17 Nov owner decision.** The introduction now covers only a fresh **homepage** visit. Visitors arriving from search or a shared link on any other page get the content directly. The homepage itself still opens with it (owner-requested), and its content stays in the prerendered HTML for crawlers.
 
 ---
 

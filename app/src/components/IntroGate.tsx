@@ -1,16 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { asset } from "~/lib/meta";
+import { asset, BASE } from "~/lib/meta";
 import { track } from "~/lib/analytics";
 import { FILM, showPosterAgain } from "./IntroFilm";
 import { Icon } from "./Icon";
 
-/* The full-screen introduction shown before the portfolio on a fresh visit (once per browser session).
+/* The full-screen introduction shown on the HOMEPAGE of a fresh browser session (once per session).
  *
- * - It overlays whatever page was requested. The URL, query, hash and history are never touched, so a deep
- *   link lands exactly where it pointed once the film ends or is skipped.
+ * - Only the homepage opens with it ("/" after the deploy base, so "/" locally and "/portfolio/" on GitHub
+ *   Pages). A visitor who arrives on a project, case study, About, Recruiter or any other page gets that page
+ *   at once: no interstitial between a search result or shared link and the content. Anyone can watch it
+ *   from "Watch full screen" in the homepage film section.
+ * - It overlays the homepage; the URL, query, hash and history are never touched.
  * - Its markup is in every prerendered page but hidden by CSS. INTRO_HEAD_SCRIPT runs in <head> before first
- *   paint and turns it on (html[data-intro="show"]) only for a fresh session. Crawlers and visitors without
- *   JavaScript get the plain portfolio, and returning visitors never see a flash of it.
+ *   paint and turns it on (html[data-intro="show"]) only for the homepage of a fresh session. Crawlers and
+ *   visitors without JavaScript get the plain portfolio, and returning visitors never see a flash of it.
  * - Browsers allow autoplay only without sound, so the film starts MUTED where allowed, with "Enable sound"
  *   in view. If autoplay is refused (or reduced motion / Data Saver is on), the poster stays with "Play with
  *   sound". Sound is never claimed: the button and a live status say which state the film is in.
@@ -23,7 +26,9 @@ const OPEN_EVENT = "gos:intro-open";
 const SKIP_EVENT = "gos:intro-skip"; // Esc: one listener (in <head>, from first paint) hands over to the app once it is live
 
 export const INTRO_HEAD_SCRIPT = `(function(){var d=document.documentElement;try{
-if(!document.querySelector('meta[http-equiv="refresh"]')&&!/[?&]nointro(=|&|$)/.test(location.search)&&!navigator.webdriver){
+var b=${JSON.stringify(BASE)},p=location.pathname;if(b&&p.indexOf(b)===0)p=p.slice(b.length);
+var home=p===""||p==="/"||p==="/index.html";
+if(home&&!document.querySelector('meta[http-equiv="refresh"]')&&!/[?&]nointro(=|&|$)/.test(location.search)&&!navigator.webdriver){
 var done=null;try{done=sessionStorage.getItem("${INTRO_KEY}")}catch(e){}
 if(!done)d.setAttribute("data-intro","show")}}catch(e){}
 function skip(){if(window.__gosIntroReady||!d.hasAttribute("data-intro"))return;d.removeAttribute("data-intro");try{sessionStorage.setItem("${INTRO_KEY}","1")}catch(x){}}
