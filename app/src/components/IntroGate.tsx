@@ -77,7 +77,8 @@ export function IntroGate() {
 
   useEffect(() => {
     if (phase === "ready") playBtn.current?.focus({ preventScroll: true });
-    if (phase === "muted") soundBtn.current?.focus({ preventScroll: true });
+    // autoplay started: offer Enable sound, unless the visitor has already moved focus within the introduction
+    if (phase === "muted" && !document.activeElement?.closest(".intro-gate")) soundBtn.current?.focus({ preventScroll: true });
   }, [phase]);
 
   const close = useCallback((how: "skip" | "end") => {

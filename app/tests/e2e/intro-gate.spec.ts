@@ -156,8 +156,14 @@ test.describe("full-screen introduction", () => {
       await page.keyboard.press("Tab");
       expect(await page.evaluate(() => !!document.activeElement?.closest(".intro-gate"))).toBe(true);
     }
+    // reach Skip the way a keyboard user does (Tab), then check its visible focus ring. While the film plays, Tab
+    // also walks the video's native controls (play, timeline, volume, fullscreen…), so allow for those stops.
     const skip = page.getByRole("button", { name: "Skip intro · Enter portfolio" });
-    await skip.focus();
+    for (let i = 0; i < 15 && !(await skip.evaluate((e) => document.activeElement === e)); i++) {
+      await page.keyboard.press("Tab");
+      expect(await page.evaluate(() => !!document.activeElement?.closest(".intro-gate"))).toBe(true); // still never leaves
+    }
+    await expect(skip).toBeFocused();
     expect(await skip.evaluate((e) => getComputedStyle(e).outlineStyle)).not.toBe("none");
     await page.keyboard.press("Enter");
     expect(await state(page)).toBeNull();

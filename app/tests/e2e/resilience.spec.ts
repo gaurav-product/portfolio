@@ -22,6 +22,17 @@ test("Open menu tapped before hydration still opens the drawer once the app is l
   await expect(drawer).toHaveCount(0);
 });
 
+/* Same class as N1: focusing the question box on /ask before hydration must still make the RoboGuide attend. */
+test("RoboGuide attends to a question box that was focused before hydration", async ({ page }) => {
+  let release!: () => void;
+  const hold = new Promise<void>((r) => { release = r; });
+  await page.route(/\/assets\/.*\.js$/, async (route) => { await hold; await route.continue(); });
+  await page.goto("/ask", { waitUntil: "domcontentloaded" });
+  await page.getByLabel("Your question").focus();
+  release();
+  await expect(page.getByTestId("robo-guide")).toHaveAttribute("data-attending", "true", { timeout: 15_000 });
+});
+
 /* N2: with storage blocked (some private modes, blocked site data), no uncaught errors, and the site works. */
 test("storage blocked: no uncaught errors on load, navigation and Back", async ({ page }) => {
   await page.addInitScript(() => {

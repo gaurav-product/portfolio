@@ -75,7 +75,31 @@ The film and thumbnail carry a small ✦ mark in the bottom-right corner, as sup
 | Introduction behaviour on the `/portfolio/` build | 83 / 83 checks across desktop, phone portrait and landscape, and tablet: poster, fit, muted autoplay, Enable sound, Play with sound, pause, end → portfolio, focus, session, deep link with query and hash, Back, Esc, keyboard trap, reduced motion, media failure, blocked storage, replay |
 | Homepage network | Desktop 45 requests / 1,592 KB; mobile 37 requests / 402 KB (with `?nointro`). No three.js chunk, no film bytes |
 
-### Verification of the homepage-only introduction (17 Nov 2026), the current result
+### Final verification (17 Nov 2026), the current result
+
+**GitHub Actions on `076879c`:**
+- **PR run:** passed (226 passed, 2 skipped).
+- **Push run:** failed two desktop tests. Both are now fixed:
+  1. **J16 "portrait and RoboGuide": a hydration race in the product.**
+     - **Cause:** `RoboGuide` listened for `focusin` only after its effect ran, so focusing the /ask question box earlier was missed.
+     - **Fix:** on attaching, it also checks whether the box already has focus.
+     - **Regression test** (`resilience.spec.ts`): hold the JS bundles, focus the box, release. It **fails on the old code** and passes on the fix.
+  2. **"keyboard stays inside the introduction".**
+     - **Product fix:** when muted autoplay starts, focus moves to Enable sound only if focus has left the introduction. It no longer pulls focus away from a keyboard user who has tabbed elsewhere.
+     - **Test fix:** it now reaches Skip by Tab, allowing for the stops inside the video's native controls (play, timeline, volume, fullscreen), and still asserts that focus never leaves the introduction and that the ring is visible. 30 / 30 on 2 workers.
+
+| Check | Result |
+|---|---|
+| Typecheck | Passed (exit 0) |
+| Unit tests | **119 / 119** |
+| Playwright, 1 worker, 6 shards | **228 passed, 0 failed, 2 skipped** (230 tests). Shard 3 counts from its rerun: its first run failed the keyboard test on that test's original 4-press limit, which I corrected (see above). All other shards passed on their first run |
+| Accessibility (axe) | **338 / 338 routes, 0 problems**, desktop and mobile |
+| `/portfolio/` build and static checks | 326 self-canonical pages plus 1 alias; 326 slash-final sitemap URLs; 22,854 internal refs, 0 broken; no old media |
+| Media | Poster SHA-256 = the supplied thumbnail; film stream hashes = the supplied master |
+| Introduction checks on the `/portfolio/` build | **92 / 92**, including the fresh homepage and direct links (no introduction) |
+| `git diff --check`; patch | clean; `73176f92…f8697` unchanged |
+
+### Verification of the homepage-only introduction (17 Nov 2026), superseded by the final verification above
 
 This run was made on a machine short of memory: 1.85 GB free of 15.3 GB, with Chrome running 31 processes. Claude Code stopped one background audit, which was then re-run in the foreground with concurrency 1. Steps were run one at a time.
 
